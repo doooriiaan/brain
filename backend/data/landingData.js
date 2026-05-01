@@ -1,0 +1,286 @@
+export const fallbackContent = {
+  source: "fallback",
+  hero: {
+    eyebrow: "Commercial + business + healthcare + Industry 4.0",
+    title: "One AI platform for every sector you want to sell.",
+    subtitle:
+      "brAIn turns your concept into a real product ecosystem: vertical-specific devices, live services, annual plans, and a preweb that feels premium and interactive from the first scroll.",
+    badges: [
+      "Commercial AI screens",
+      "Business automation hub",
+      "Healthcare assistant",
+      "Industry 4.0 edge AI",
+    ],
+    metrics: [
+      { label: "Sectors ready", value: "4 verticals" },
+      { label: "Devices in lineup", value: "4 products" },
+      { label: "Cloud visibility", value: "24/7 linked" },
+    ],
+    primaryCta: {
+      label: "Explore sector solutions",
+      href: "#sectors",
+    },
+    secondaryCta: {
+      label: "Review plans",
+      href: "#plans",
+    },
+    deviceImage: "/media/business-hub.jpeg",
+    plansImage: "/media/business-plans.jpeg",
+  },
+  sectors: [
+    {
+      slug: "commercial",
+      name: "Commercial",
+      title: "AI Stick for retail, hospitality, kiosks, and smart displays",
+      summary:
+        "A compact plug-and-play device for customer-facing screens that adds voice AI, content suggestions, messaging flows, and branded experiences.",
+      audience: "Retail stores, kiosks, hospitality, distributors",
+      statLabel: "Fast rollout",
+      statValue: "Plug & play",
+      accent: "#f2b84b",
+      deviceKey: "ai-stick",
+      imageUrl: "/media/commercial-stick.jpeg",
+      capabilities: [
+        "Voice assistant on screens",
+        "Promotions and product discovery",
+        "Customer self-service flows",
+        "Brand-ready experience",
+      ],
+    },
+    {
+      slug: "business",
+      name: "Business",
+      title: "Business Hub for automation, analytics, and communication",
+      summary:
+        "The core commercial package for companies that want a physical AI device plus a cloud dashboard for tasks, calls, insights, and workflow automation.",
+      audience: "SMBs, agencies, service companies, front desks",
+      statLabel: "Realtime actions",
+      statValue: "Automation + voice",
+      accent: "#63b2ff",
+      deviceKey: "business-hub",
+      imageUrl: "/media/business-hub.jpeg",
+      capabilities: [
+        "Realtime business analytics",
+        "Voice-based task execution",
+        "Cloud dashboard overview",
+        "CRM and workflow expansion",
+      ],
+    },
+    {
+      slug: "healthcare",
+      name: "Healthcare",
+      title: "brAIn MED for clinics, pharmacies, waiting rooms, and staff",
+      summary:
+        "Healthcare-focused assistants for appointments, front desk support, patient information, and role-based access with a medical branding direction.",
+      audience: "Clinics, pharmacies, waiting rooms, medical teams",
+      statLabel: "Compliance ready",
+      statValue: "Secure workflow",
+      accent: "#7ce0d4",
+      deviceKey: "med-assistant",
+      imageUrl: "/media/healthcare-med.jpeg",
+      capabilities: [
+        "Appointments and patient support",
+        "Pharmacy and stock guidance",
+        "Waiting-room information display",
+        "Staff card and access flow",
+      ],
+    },
+    {
+      slug: "industry",
+      name: "Industry 4.0 AI",
+      title: "Edge box for machine monitoring, predictive alerts, and AI ops",
+      summary:
+        "An industrial-grade device that connects to machines and sensors, then streams events into the cloud for dashboards, alerts, and AI recommendations.",
+      audience: "Factories, production lines, SCADA teams, operations leads",
+      statLabel: "Industrial fit",
+      statValue: "PLC / SCADA ready",
+      accent: "#f59d62",
+      deviceKey: "industry-edge",
+      imageUrl: "/media/industry-edge.jpeg",
+      capabilities: [
+        "Realtime machine monitoring",
+        "Predictive maintenance alerts",
+        "Anomaly detection",
+        "Factory dashboard integration",
+      ],
+    },
+  ],
+  devices: [
+    {
+      deviceKey: "business-hub",
+      sectorSlug: "business",
+      name: "brAIn Hub",
+      category: "Business device",
+      tagline: "Desk-ready AI assistant for daily operations and client workflows.",
+      description:
+        "The Hub gives the business vertical a premium physical anchor. It is ideal for sales demos because it shows the product as something you can touch, install, and connect to the brAIn cloud system immediately.",
+      imageUrl: "/media/business-hub-compact.jpeg",
+      ports: ["USB-C", "USB 3.0", "HDMI", "Ethernet", "Wi-Fi 6", "Bluetooth 5.2"],
+      suitedFor: ["Front desks", "SMB offices", "Showrooms", "Sales demos"],
+      metrics: [
+        { label: "Display", value: "7 inch HD" },
+        { label: "Voice", value: "4-mic array" },
+        { label: "Connectivity", value: "LAN + Wi-Fi" },
+      ],
+    },
+    {
+      deviceKey: "ai-stick",
+      sectorSlug: "commercial",
+      name: "brAIn AI Stick",
+      category: "Commercial device",
+      tagline: "Turn any TV or display into a customer-facing AI screen.",
+      description:
+        "The AI Stick is perfect for retail and commercial use cases because it is lightweight, fast to install, and easy to explain. It transforms passive screens into active AI touchpoints.",
+      imageUrl: "/media/commercial-stick.jpeg",
+      ports: ["HDMI", "USB power", "USB-C", "Wi-Fi 6", "Bluetooth 5.2"],
+      suitedFor: ["Retail", "Kiosks", "Hospitality", "Showcase screens"],
+      metrics: [
+        { label: "Footprint", value: "Ultra compact" },
+        { label: "Setup", value: "Minutes" },
+        { label: "Use case", value: "Screen AI" },
+      ],
+    },
+    {
+      deviceKey: "med-assistant",
+      sectorSlug: "healthcare",
+      name: "brAIn MED Assistant",
+      category: "Healthcare device",
+      tagline: "AI support device for clinics, pharmacies, and healthcare front desks.",
+      description:
+        "The medical lineup gives healthcare its own visual identity and workflow story. It can support appointments, patient questions, pharmacy support, and waiting-room information delivery.",
+      imageUrl: "/media/healthcare-med.jpeg",
+      ports: ["USB-C", "USB 3.0", "Ethernet", "Card access", "Wi-Fi"],
+      suitedFor: ["Clinics", "Pharmacies", "Waiting rooms", "Reception desks"],
+      metrics: [
+        { label: "Security", value: "Role-based" },
+        { label: "Experience", value: "Patient support" },
+        { label: "Activation", value: "Card + cloud" },
+      ],
+    },
+    {
+      deviceKey: "industry-edge",
+      sectorSlug: "industry",
+      name: "brAIn Industry Edge Box",
+      category: "Industry 4.0 device",
+      tagline: "Edge AI bridge between machines on-site and cloud insights.",
+      description:
+        "This device makes the industrial story credible because it visually shows how data is collected at the edge and forwarded to the cloud for dashboards, alerts, and optimization logic.",
+      imageUrl: "/media/industry-edge.jpeg",
+      ports: ["Ethernet", "USB", "Industrial I/O", "Sensor inputs", "Wi-Fi", "PLC links"],
+      suitedFor: ["Factories", "Lines", "SCADA teams", "Maintenance teams"],
+      metrics: [
+        { label: "Operation", value: "24/7" },
+        { label: "Use case", value: "Realtime monitoring" },
+        { label: "Outcome", value: "Fewer unplanned stops" },
+      ],
+    },
+  ],
+  plans: [
+    {
+      slug: "starter",
+      name: "Starter",
+      summary: "Entry plan for one device and a focused AI use case.",
+      annualPrice: 180,
+      monthlyPrice: 19,
+      deviceAllowance: "1 device connection",
+      supportLabel: "Email support",
+      automationLabel: "Basic AI actions",
+      featured: false,
+      features: [
+        "Single sector landing activation",
+        "Basic chatbot or voice flow",
+        "Secure cloud account",
+        "Light analytics dashboard",
+      ],
+    },
+    {
+      slug: "professional",
+      name: "Professional",
+      summary: "Best for growing teams that need multiple devices and reporting.",
+      annualPrice: 490,
+      monthlyPrice: 49,
+      deviceAllowance: "Up to 3 devices",
+      supportLabel: "Priority support",
+      automationLabel: "Advanced automations",
+      featured: false,
+      features: [
+        "Multiple device profiles",
+        "Advanced analytics",
+        "Sector-based messaging",
+        "Workflow triggers and alerts",
+      ],
+    },
+    {
+      slug: "business",
+      name: "Business",
+      summary: "The commercial sweet spot for vertical product bundles.",
+      annualPrice: 990,
+      monthlyPrice: 99,
+      deviceAllowance: "Up to 10 devices",
+      supportLabel: "Priority support + onboarding",
+      automationLabel: "Cloud workflows + insights",
+      featured: true,
+      features: [
+        "Cross-sector landing structure",
+        "Cloud dashboard + reporting",
+        "Integrations with CRM / ERP / APIs",
+        "Reusable branded workflows",
+      ],
+    },
+    {
+      slug: "platinum",
+      name: "Platinum",
+      summary: "Enterprise tier for large deployments and deep customization.",
+      annualPrice: 1990,
+      monthlyPrice: 199,
+      deviceAllowance: "Unlimited devices",
+      supportLabel: "Premium support",
+      automationLabel: "Custom workflows + API",
+      featured: false,
+      features: [
+        "White-label experience",
+        "Dedicated AI manager",
+        "Advanced automation orchestration",
+        "Custom model and cloud integrations",
+      ],
+    },
+  ],
+  cloudSystem: {
+    title: "Every sector page is already shaped to connect into the platform backend.",
+    summary:
+      "Instead of presenting the website as a static brochure, this version positions it as the frontend layer of a bigger product: a live platform where devices, dashboards, automations, voice interactions, uploads, and reporting all meet.",
+    highlights: [
+      "Frontend fetches content from Express API endpoints",
+      "MySQL schema is prepared for sectors, devices, and plans",
+      "Fallback seed keeps the site running before database credentials are added",
+      "The structure leaves room for real forms, lead capture, and device activation",
+    ],
+    steps: [
+      {
+        title: "Deploy the right device",
+        detail:
+          "Choose Hub, AI Stick, MED, or Industry Edge depending on the sector and install it on-site.",
+      },
+      {
+        title: "Connect the local environment",
+        detail:
+          "Use Wi-Fi, Ethernet, HDMI, or machine-level links so the device can operate in the real environment.",
+      },
+      {
+        title: "Sync with brAIn Cloud",
+        detail:
+          "The device talks to the Express backend and keeps the product ready for secure orchestration and future service expansion.",
+      },
+      {
+        title: "Automate, analyze, and scale",
+        detail:
+          "Dashboards, voice flows, alerts, analytics, and plan-based access all scale from one central platform story.",
+      },
+    ],
+  },
+  integrations: {
+    protocols: ["REST API", "Webhooks", "MQTT", "PLC / SCADA", "SIP / Voice"],
+    platforms: ["CRM", "ERP", "Dashboards", "Automation flows", "Activation system"],
+    cloudPartners: ["AWS", "Azure", "Google Cloud", "SAP", "Siemens"],
+  },
+};

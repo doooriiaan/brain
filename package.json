@@ -1,15 +1,37 @@
 {
-  "name": "scaffold",
+  "name": "brain-preweb",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "vite",
+    "dev:server": "nodemon backend/server.js",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "start": "node backend/server.js"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react-swc": "^4.3.0",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.14",
+    "tailwindcss": "^4.2.4",
     "typescript": "~6.0.2",
     "vite": "^8.0.10"
+  },
+  "dependencies": {
+    "axios": "^1.15.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.14.0",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   }
 }
