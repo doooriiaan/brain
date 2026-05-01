@@ -21,8 +21,8 @@ export const fallbackContent = {
       href: "#sectors",
     },
     secondaryCta: {
-      label: "Review plans",
-      href: "#plans",
+      label: "Book a live demo",
+      href: "#lead-capture",
     },
     deviceImage: "/media/business-hub.jpeg",
     plansImage: "/media/business-plans.jpeg",

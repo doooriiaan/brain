@@ -115,3 +115,67 @@ export interface UploadItem {
   uploadedAt: string;
   url: string;
 }
+
+export interface LeadItem {
+  id: string;
+  name: string;
+  email: string;
+  company: string;
+  sector: string;
+  sectorLabel: string;
+  message: string;
+  status: "new";
+  createdAt: string;
+}
+
+export interface ActivationItem {
+  id: string;
+  company: string;
+  sector: string;
+  sectorLabel: string;
+  deviceKey: string;
+  deviceName: string;
+  plan: string;
+  planName: string;
+  site: string;
+  status: "queued" | "provisioning" | "live";
+  createdAt: string;
+}
+
+export interface TicketItem {
+  id: string;
+  company: string;
+  contactEmail: string;
+  priority: "critical" | "priority" | "standard";
+  category: "automation" | "integration" | "support";
+  summary: string;
+  status: "open" | "investigating" | "resolved";
+  createdAt: string;
+}
+
+export interface RuntimeMetric {
+  key: string;
+  label: string;
+  value: string;
+  detail: string;
+}
+
+export interface RuntimeEvent {
+  id: string;
+  type: "notification" | "upload" | "lead" | "activation" | "ticket";
+  title: string;
+  detail: string;
+  status: "info" | "success" | "warning";
+  createdAt: string;
+}
+
+export interface OperationsOverview {
+  services: ServiceStatus[];
+  notifications: NotificationItem[];
+  uploads: UploadItem[];
+  leads: LeadItem[];
+  activations: ActivationItem[];
+  tickets: TicketItem[];
+  metrics: RuntimeMetric[];
+  timeline: RuntimeEvent[];
+}

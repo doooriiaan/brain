@@ -1,0 +1,37 @@
+<svg width="980" height="280" viewBox="0 0 980 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brainGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD77A"/>
+      <stop offset="100%" stop-color="#D89A2F"/>
+    </linearGradient>
+    <linearGradient id="brainLine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF1C8"/>
+      <stop offset="100%" stop-color="#D89A2F"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(26 24)">
+    <rect x="0" y="0" width="192" height="192" rx="48" fill="#0A1124" stroke="url(#brainGold)" stroke-width="6"/>
+    <path d="M54 108C54 82 74 62 100 62C113 62 124 67 132 76C138 66 149 60 162 60C184 60 202 78 202 100C202 109 199 118 194 125C199 132 202 141 202 150C202 172 184 190 162 190C149 190 138 184 132 174C124 183 113 188 100 188C74 188 54 168 54 142C54 132 57 123 62 116C57 112 54 110 54 108Z" transform="translate(-18 -12)" stroke="url(#brainLine)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M96 50V166" stroke="url(#brainLine)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M73 73C82 76 87 82 89 92" stroke="url(#brainLine)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M58 110C74 112 84 122 88 138" stroke="url(#brainLine)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M72 156C80 150 87 144 90 133" stroke="url(#brainLine)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M112 78H146" stroke="url(#brainGold)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M112 110H154" stroke="url(#brainGold)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M112 142H146" stroke="url(#brainGold)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M146 78L164 64" stroke="url(#brainGold)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M154 110L176 110" stroke="url(#brainGold)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M146 142L166 158" stroke="url(#brainGold)" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="164" cy="64" r="7" fill="#0A1124" stroke="url(#brainGold)" stroke-width="4"/>
+    <circle cx="176" cy="110" r="7" fill="#0A1124" stroke="url(#brainGold)" stroke-width="4"/>
+    <circle cx="166" cy="158" r="7" fill="#0A1124" stroke="url(#brainGold)" stroke-width="4"/>
+  </g>
+
+  <g transform="translate(250 62)">
+    <text x="0" y="102" fill="#F8FAFC" font-size="124" font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-4">br</text>
+    <text x="164" y="102" fill="url(#brainGold)" font-size="124" font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-6">AI</text>
+    <text x="382" y="102" fill="#F8FAFC" font-size="124" font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-4">n</text>
+    <text x="4" y="164" fill="#C9D4EE" font-size="34" font-family="Arial, Helvetica, sans-serif" letter-spacing="8">YOUR BUSINESS BRAIN. POWERED BY AI.</text>
+  </g>
+</svg>

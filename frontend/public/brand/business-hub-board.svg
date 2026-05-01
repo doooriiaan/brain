@@ -1,0 +1,67 @@
+<svg width="1400" height="980" viewBox="0 0 1400 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="980" rx="40" fill="#0A1124"/>
+  <rect x="48" y="46" width="330" height="186" rx="26" fill="#0F162C" stroke="#F1E6CF"/>
+  <text x="76" y="94" fill="#9DA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif" letter-spacing="5">BUSINESS DEVICE</text>
+  <text x="76" y="146" fill="#FFFFFF" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn Hub</text>
+  <text x="76" y="196" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">Desk-ready AI assistant for daily operations</text>
+  <text x="76" y="234" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">and client workflows.</text>
+
+  <rect x="48" y="264" width="330" height="186" rx="26" fill="#0E152A" stroke="rgba(255,255,255,0.08)"/>
+  <text x="76" y="312" fill="#9DA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif" letter-spacing="5">COMMERCIAL DEVICE</text>
+  <text x="76" y="364" fill="#FFFFFF" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn AI Stick</text>
+  <text x="76" y="414" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">Turn any TV or display into a customer-facing</text>
+  <text x="76" y="452" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">AI screen.</text>
+
+  <rect x="48" y="482" width="330" height="186" rx="26" fill="#0E152A" stroke="rgba(255,255,255,0.08)"/>
+  <text x="76" y="530" fill="#9DA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif" letter-spacing="5">HEALTHCARE DEVICE</text>
+  <text x="76" y="582" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn MED Assistant</text>
+  <text x="76" y="632" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">AI support device for clinics, pharmacies,</text>
+  <text x="76" y="670" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">and healthcare front desks.</text>
+
+  <rect x="48" y="700" width="330" height="210" rx="26" fill="#0E152A" stroke="rgba(255,255,255,0.08)"/>
+  <text x="76" y="748" fill="#9DA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif" letter-spacing="5">INDUSTRY 4.0 DEVICE</text>
+  <text x="76" y="800" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn Industry Edge Box</text>
+  <text x="76" y="850" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">Edge AI bridge between machines on-site</text>
+  <text x="76" y="888" fill="#C8D3EE" font-size="28" font-family="Arial, Helvetica, sans-serif">and cloud insights.</text>
+
+  <rect x="434" y="46" width="918" height="864" rx="34" fill="#121C39" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="474" y="88" width="294" height="738" rx="28" fill="#0D1524"/>
+  <rect x="520" y="150" width="204" height="230" rx="28" fill="#171F31" stroke="#2C3B58"/>
+  <rect x="548" y="406" width="64" height="92" rx="16" fill="#141B2F"/>
+  <rect x="628" y="406" width="64" height="92" rx="16" fill="#141B2F"/>
+  <rect x="560" y="516" width="130" height="48" rx="20" fill="#121931" stroke="#354562"/>
+  <rect x="560" y="582" width="130" height="48" rx="20" fill="#121931" stroke="#354562"/>
+  <rect x="560" y="648" width="130" height="48" rx="20" fill="#121931" stroke="#354562"/>
+  <rect x="560" y="714" width="130" height="48" rx="20" fill="#121931" stroke="#354562"/>
+
+  <text x="816" y="112" fill="#BBA072" font-size="20" font-family="Arial, Helvetica, sans-serif" letter-spacing="5">DEVICE DETAILS</text>
+  <text x="816" y="178" fill="#FFFFFF" font-size="66" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn Hub</text>
+  <text x="816" y="252" fill="#C8D3EE" font-size="34" font-family="Arial, Helvetica, sans-serif">Premium physical anchor for business demos,</text>
+  <text x="816" y="298" fill="#C8D3EE" font-size="34" font-family="Arial, Helvetica, sans-serif">client workflows, analytics and communication.</text>
+
+  <rect x="816" y="364" width="140" height="140" rx="28" fill="#18223D" stroke="#2F4063"/>
+  <rect x="978" y="364" width="140" height="140" rx="28" fill="#18223D" stroke="#2F4063"/>
+  <rect x="1140" y="364" width="140" height="140" rx="28" fill="#18223D" stroke="#2F4063"/>
+  <text x="840" y="404" fill="#8A96B3" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">DISPLAY</text>
+  <text x="840" y="466" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">7 inch</text>
+  <text x="840" y="516" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">HD</text>
+  <text x="1004" y="404" fill="#8A96B3" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">VOICE</text>
+  <text x="1004" y="466" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">4-mic</text>
+  <text x="1004" y="516" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">array</text>
+  <text x="1166" y="404" fill="#8A96B3" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">CONNECTIVITY</text>
+  <text x="1166" y="466" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">LAN +</text>
+  <text x="1166" y="516" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">Wi-Fi</text>
+
+  <rect x="816" y="540" width="188" height="286" rx="28" fill="#18223D" stroke="#2F4063"/>
+  <rect x="1026" y="540" width="254" height="286" rx="28" fill="#18223D" stroke="#2F4063"/>
+  <text x="844" y="586" fill="#8A96B3" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">PORTS &amp; CONNECTIVITY</text>
+  <text x="848" y="646" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">USB-C</text>
+  <text x="848" y="706" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">USB 3.0</text>
+  <text x="848" y="766" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">HDMI</text>
+  <text x="848" y="826" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">Ethernet</text>
+  <text x="1054" y="586" fill="#8A96B3" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">SUITED FOR</text>
+  <text x="1054" y="646" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">Front desks</text>
+  <text x="1054" y="706" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">SMB offices</text>
+  <text x="1054" y="766" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">Showrooms</text>
+  <text x="1054" y="826" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif">Sales demos</text>
+</svg>

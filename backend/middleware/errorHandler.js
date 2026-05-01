@@ -11,7 +11,7 @@ export function errorHandler(error, _request, response, next) {
     return;
   }
 
-  response.status(500).json({
+  response.status(error.statusCode ?? 500).json({
     message: error.message || "Unexpected server error.",
   });
 }

@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "dev:client": "vite",
+    "dev:client": "vite --config frontend/vite.config.js",
     "dev:server": "nodemon backend/server.js",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
+    "build": "tsc --noEmit -p frontend/tsconfig.json && vite build --config frontend/vite.config.js",
+    "preview": "vite preview --config frontend/vite.config.js",
     "start": "node backend/server.js"
   },
   "devDependencies": {

@@ -1,0 +1,42 @@
+<svg width="1400" height="980" viewBox="0 0 1400 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="980" rx="40" fill="#0A1124"/>
+  <text x="74" y="110" fill="#F8FAFC" font-size="66" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn AI Stick</text>
+  <text x="74" y="160" fill="#E2A53A" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">Commercial sector</text>
+  <text x="74" y="224" fill="#C8D3EE" font-size="30" font-family="Arial, Helvetica, sans-serif">Turns any TV into an AI-powered smart screen for</text>
+  <text x="74" y="264" fill="#C8D3EE" font-size="30" font-family="Arial, Helvetica, sans-serif">retail, kiosks, hospitality, and interactive displays.</text>
+
+  <rect x="72" y="332" width="348" height="456" rx="36" fill="#111826" stroke="#31415B"/>
+  <rect x="192" y="414" width="128" height="268" rx="30" fill="#161E2E" stroke="#495C7C"/>
+  <rect x="310" y="510" width="84" height="72" rx="12" fill="#161E2E" stroke="#495C7C"/>
+  <circle cx="256" cy="646" r="8" fill="#4FA7FF"/>
+  <text x="120" y="760" fill="#E2A53A" font-size="26" font-family="Arial, Helvetica, sans-serif" font-weight="700">Plug &amp; Play · Voice AI · Wi-Fi 6</text>
+
+  <rect x="470" y="96" width="860" height="354" rx="34" fill="#111826" stroke="#2F4063"/>
+  <rect x="534" y="152" width="494" height="236" rx="22" fill="#0F162C" stroke="#25344E"/>
+  <text x="586" y="234" fill="#FFFFFF" font-size="58" font-family="Arial, Helvetica, sans-serif" font-weight="800">Hello!</text>
+  <text x="586" y="296" fill="#FFFFFF" font-size="54" font-family="Arial, Helvetica, sans-serif" font-weight="800">How can I help your customer today?</text>
+  <circle cx="768" cy="344" r="48" fill="#142645" stroke="#436FA9"/>
+  <text x="1054" y="190" fill="#AAB5CE" font-size="24" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">POPULAR APPS</text>
+  <rect x="1054" y="228" width="104" height="56" rx="18" fill="#161F34"/><text x="1080" y="264" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">News</text>
+  <rect x="1172" y="228" width="124" height="56" rx="18" fill="#161F34"/><text x="1194" y="264" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Weather</text>
+  <rect x="1054" y="306" width="104" height="56" rx="18" fill="#161F34"/><text x="1076" y="342" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Movies</text>
+  <rect x="1172" y="306" width="124" height="56" rx="18" fill="#161F34"/><text x="1198" y="342" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Offers</text>
+
+  <rect x="470" y="490" width="278" height="304" rx="28" fill="#111826" stroke="#2F4063"/>
+  <text x="506" y="544" fill="#E2A53A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">ULTRA COMPACT</text>
+  <text x="506" y="592" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">90 mm x 30 mm</text>
+  <text x="506" y="634" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">12 mm thin body</text>
+  <text x="506" y="676" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">HDMI + USB power</text>
+
+  <rect x="776" y="490" width="278" height="304" rx="28" fill="#111826" stroke="#2F4063"/>
+  <text x="812" y="544" fill="#E2A53A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">FEATURES</text>
+  <text x="812" y="592" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Voice assistant</text>
+  <text x="812" y="634" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Promotions on screen</text>
+  <text x="812" y="676" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Smart TV experience</text>
+
+  <rect x="1082" y="490" width="248" height="304" rx="28" fill="#111826" stroke="#2F4063"/>
+  <text x="1118" y="544" fill="#E2A53A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">SUITED FOR</text>
+  <text x="1118" y="592" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Retail stores</text>
+  <text x="1118" y="634" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Kiosks</text>
+  <text x="1118" y="676" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Distributors</text>
+</svg>

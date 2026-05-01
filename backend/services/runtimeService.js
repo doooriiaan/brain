@@ -1,8 +1,10 @@
+import { createId } from "./serviceHelpers.js";
+
 const runtimeNotifications = [
   {
     id: "notification-1",
     title: "Platform ready",
-    body: "Frontend, Express API, and MySQL-ready content service are available.",
+    body: "Frontend, Express API, lead capture, activations, support tickets, and MySQL-ready content service are available.",
     level: "success",
     createdAt: new Date().toISOString(),
   },
@@ -23,10 +25,6 @@ const runtimeNotifications = [
 ];
 
 const runtimeUploads = [];
-
-function createId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
 
 export function getNotifications() {
   return runtimeNotifications;

@@ -1,0 +1,73 @@
+<svg width="1600" height="1080" viewBox="0 0 1600 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="plansBg" x1="0" y1="0" x2="1600" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F8F3EA"/>
+      <stop offset="100%" stop-color="#EEE7DA"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1080" rx="42" fill="url(#plansBg)"/>
+  <text x="800" y="120" text-anchor="middle" fill="#1B2235" font-size="48" font-family="Arial, Helvetica, sans-serif" font-weight="800">
+    ANNUAL SUBSCRIPTION PLANS
+  </text>
+  <text x="800" y="168" text-anchor="middle" fill="#B8842A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+    SAVE UP TO 20% WITH ANNUAL BILLING
+  </text>
+
+  <g transform="translate(92 218)">
+    <rect width="264" height="650" rx="30" fill="#FFFFFF" stroke="#D7DFEA"/>
+    <text x="42" y="68" fill="#4D8B34" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="800">STARTER</text>
+    <text x="42" y="168" fill="#14213A" font-size="70" font-family="Arial, Helvetica, sans-serif" font-weight="800">€180</text>
+    <text x="42" y="214" fill="#4F5D79" font-size="26" font-family="Arial, Helvetica, sans-serif">/ year</text>
+    <text x="42" y="266" fill="#4F5D79" font-size="26" font-family="Arial, Helvetica, sans-serif">600k tokens · 1 device</text>
+    <text x="42" y="322" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Basic AI tools</text>
+    <text x="42" y="362" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Email support</text>
+    <text x="42" y="402" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Text + light automation</text>
+  </g>
+  <g transform="translate(388 218)">
+    <rect width="264" height="650" rx="30" fill="#FFFFFF" stroke="#D7DFEA"/>
+    <text x="42" y="68" fill="#2467CF" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="800">PROFESSIONAL</text>
+    <text x="42" y="168" fill="#14213A" font-size="70" font-family="Arial, Helvetica, sans-serif" font-weight="800">€490</text>
+    <text x="42" y="214" fill="#4F5D79" font-size="26" font-family="Arial, Helvetica, sans-serif">/ year</text>
+    <text x="42" y="266" fill="#4F5D79" font-size="26" font-family="Arial, Helvetica, sans-serif">2.4M tokens · 3 devices</text>
+    <text x="42" y="322" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Analytics dashboard</text>
+    <text x="42" y="362" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Advanced AI content</text>
+    <text x="42" y="402" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Priority support</text>
+  </g>
+  <g transform="translate(684 218)">
+    <rect width="264" height="650" rx="30" fill="#FFFFFF" stroke="#E2B052" stroke-width="3"/>
+    <text x="42" y="68" fill="#C58A21" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="800">BUSINESS</text>
+    <text x="42" y="168" fill="#14213A" font-size="70" font-family="Arial, Helvetica, sans-serif" font-weight="800">€990</text>
+    <text x="42" y="214" fill="#4F5D79" font-size="26" font-family="Arial, Helvetica, sans-serif">/ year</text>
+    <text x="42" y="266" fill="#4F5D79" font-size="26" font-family="Arial, Helvetica, sans-serif">6M tokens · 10 devices</text>
+    <text x="42" y="322" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Voice + automation</text>
+    <text x="42" y="362" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• CRM integrations</text>
+    <text x="42" y="402" fill="#1B2235" font-size="24" font-family="Arial, Helvetica, sans-serif">• Advanced insights</text>
+  </g>
+  <g transform="translate(980 198)">
+    <rect width="264" height="690" rx="30" fill="#1C1442"/>
+    <rect x="0" y="0" width="264" height="78" rx="30" fill="#6A46F2"/>
+    <text x="132" y="48" text-anchor="middle" fill="#FFFFFF" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">MOST POPULAR</text>
+    <text x="42" y="128" fill="#D2C1FF" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="800">PLATINUM</text>
+    <text x="42" y="232" fill="#FFFFFF" font-size="70" font-family="Arial, Helvetica, sans-serif" font-weight="800">€1,990</text>
+    <text x="42" y="278" fill="#D2DAF8" font-size="26" font-family="Arial, Helvetica, sans-serif">/ year</text>
+    <text x="42" y="330" fill="#D2DAF8" font-size="26" font-family="Arial, Helvetica, sans-serif">18M tokens · unlimited</text>
+    <text x="42" y="386" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">• AI Voice + call automation</text>
+    <text x="42" y="426" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">• Custom workflows</text>
+    <text x="42" y="466" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">• Premium support</text>
+  </g>
+  <g transform="translate(1276 218)">
+    <rect width="232" height="650" rx="30" fill="#FFFFFF" stroke="#D7DFEA"/>
+    <text x="34" y="68" fill="#111827" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="800">PLATINUM+</text>
+    <text x="34" y="168" fill="#14213A" font-size="66" font-family="Arial, Helvetica, sans-serif" font-weight="800">€1,990</text>
+    <text x="34" y="214" fill="#4F5D79" font-size="24" font-family="Arial, Helvetica, sans-serif">+ usage</text>
+    <text x="34" y="266" fill="#4F5D79" font-size="24" font-family="Arial, Helvetica, sans-serif">white-label &amp; tokens</text>
+    <text x="34" y="322" fill="#1B2235" font-size="22" font-family="Arial, Helvetica, sans-serif">• Extra token packs</text>
+    <text x="34" y="360" fill="#1B2235" font-size="22" font-family="Arial, Helvetica, sans-serif">• Dedicated AI manager</text>
+    <text x="34" y="398" fill="#1B2235" font-size="22" font-family="Arial, Helvetica, sans-serif">• Enterprise support</text>
+  </g>
+
+  <rect x="92" y="914" width="1416" height="104" rx="28" fill="#FFFFFF" stroke="#D7DFEA"/>
+  <text x="136" y="972" fill="#1B2235" font-size="26" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+    Payments model: hardware + annual software + optional token packs
+  </text>
+</svg>
