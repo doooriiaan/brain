@@ -1,47 +1,82 @@
-import { startTransition, useEffect, useState, type FormEvent } from "react";
+import { startTransition, useEffect, useMemo, useState, type FormEvent } from "react";
 import axios from "axios";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Activity,
   ArrowRight,
   BellRing,
   BriefcaseBusiness,
   Building2,
-  Cable,
-  Check,
-  Cloud,
+  CheckCheck,
   Cpu,
-  Database,
+  CreditCard,
   Factory,
   HeartPulse,
+  LayoutDashboard,
   LoaderCircle,
+  LockKeyhole,
+  LogOut,
+  MessageSquareText,
+  RefreshCw,
   ShieldCheck,
-  Sparkles,
   Store,
   Upload,
+  UserRound,
+  WalletCards,
   Workflow,
 } from "lucide-react";
 import type {
   ActivationItem,
+  AdminOverview,
+  AuthSession,
+  ClientOverview,
   Device,
   LandingContent,
-  LeadItem,
   OperationsOverview,
-  Plan,
   RuntimeEvent,
   RuntimeMetric,
-  Sector,
+  SmartCardItem,
   TicketItem,
 } from "./types";
 
 const sectionMotion = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: 0.55, ease: "easeOut" },
   },
 };
+
+const cardToneClasses = {
+  info: "tone-info",
+  success: "tone-success",
+  warning: "tone-warning",
+} as const;
+
+const serviceToneClasses = {
+  online: "tone-success",
+  ready: "tone-info",
+  setup: "tone-warning",
+} as const;
+
+const activationToneClasses = {
+  queued: "tone-warning",
+  provisioning: "tone-info",
+  live: "tone-success",
+} as const;
+
+const ticketToneClasses = {
+  open: "tone-warning",
+  investigating: "tone-info",
+  resolved: "tone-success",
+} as const;
+
+const smartCardToneClasses = {
+  available: "tone-info",
+  assigned: "tone-warning",
+  activated: "tone-success",
+} as const;
 
 const sectorIcons = {
   commercial: Store,
@@ -50,34 +85,62 @@ const sectorIcons = {
   industry: Factory,
 } as const;
 
-const architectureIcons = [Cpu, Cable, Cloud, Workflow];
-
-const runtimeToneClasses = {
-  info: "bg-sky-400/12 text-sky-200",
-  success: "bg-emerald-400/12 text-emerald-200",
-  warning: "bg-amber-300/12 text-amber-100",
+const paymentBrandLabels = {
+  visa: "Visa",
+  mastercard: "Mastercard",
+  amex: "American Express",
 } as const;
 
-const activationToneClasses = {
-  queued: "bg-amber-300/12 text-amber-100",
-  provisioning: "bg-sky-400/12 text-sky-200",
-  live: "bg-emerald-400/12 text-emerald-200",
-} as const;
+const acceptedTestCards = [
+  { label: "Visa", cardNumber: "4242424242424242" },
+  { label: "Mastercard", cardNumber: "5555555555554444" },
+  { label: "American Express", cardNumber: "378282246310005" },
+];
 
-const ticketPriorityClasses = {
-  critical: "bg-amber-300/14 text-amber-100",
-  priority: "bg-sky-400/14 text-sky-200",
-  standard: "bg-white/10 text-white/72",
-} as const;
-
-const opsTabs = [
-  { key: "timeline", label: "Live pulse", icon: Activity },
-  { key: "activations", label: "Activations", icon: Cpu },
-  { key: "tickets", label: "Support desk", icon: Workflow },
-  { key: "leads", label: "Leads", icon: BellRing },
+const adminTabs = [
+  { key: "overview", label: "Overview", icon: LayoutDashboard },
+  { key: "payments", label: "Payments", icon: CreditCard },
+  { key: "cards", label: "SC Cards", icon: WalletCards },
+  { key: "ops", label: "Runtime Ops", icon: Workflow },
 ] as const;
 
-type OpsTabKey = (typeof opsTabs)[number]["key"];
+const clientTabs = [
+  { key: "overview", label: "Client Home", icon: LayoutDashboard },
+  { key: "payments", label: "Payments", icon: CreditCard },
+  { key: "support", label: "Support + Deploy", icon: MessageSquareText },
+] as const;
+
+const siteTabs = [
+  { key: "commercial", label: "Commercial" },
+  { key: "business", label: "Business" },
+  { key: "healthcare", label: "Healthcare" },
+  { key: "industry", label: "Industry AI" },
+  { key: "vpn", label: "VPN" },
+  { key: "system", label: "Access" },
+  { key: "client", label: "Client Page" },
+  { key: "admin", label: "Admin Page" },
+] as const;
+
+const publicNavTabKeys = new Set([
+  "commercial",
+  "business",
+  "healthcare",
+  "industry",
+  "vpn",
+  "system",
+]);
+const sectorQuickTabKeys = new Set([
+  "commercial",
+  "business",
+  "healthcare",
+  "industry",
+]);
+
+type AuthRole = "admin" | "client";
+type AuthMode = "login" | "register";
+type SiteView = (typeof siteTabs)[number]["key"];
+type AdminTabKey = (typeof adminTabs)[number]["key"];
+type ClientTabKey = (typeof clientTabs)[number]["key"];
 
 type LeadFormState = {
   name: string;
@@ -85,6 +148,25 @@ type LeadFormState = {
   company: string;
   sector: string;
   message: string;
+};
+
+type AuthFormState = {
+  role: AuthRole;
+  name: string;
+  email: string;
+  password: string;
+  company: string;
+  sector: string;
+  plan: string;
+};
+
+type PaymentFormState = {
+  company: string;
+  plan: string;
+  cardholder: string;
+  cardNumber: string;
+  expiry: string;
+  amount: number;
 };
 
 type ActivationFormState = {
@@ -103,12 +185,91 @@ type TicketFormState = {
   summary: string;
 };
 
+type BroadcastFormState = {
+  title: string;
+  body: string;
+  level: "info" | "success" | "warning";
+};
+
+type AssignCardsFormState = {
+  company: string;
+  sector: string;
+  plan: string;
+  deviceKey: string;
+  quantity: number;
+};
+
+type DeviceRuntimeState = {
+  uptimeMinutes: number;
+  latencyMs: number;
+  throughput: number;
+  health: number;
+};
+
+const getRoleHomeView = (role: "admin" | "client"): SiteView =>
+  role === "admin" ? "admin" : "client";
+
+const emptyOperations: OperationsOverview = {
+  services: [],
+  notifications: [],
+  uploads: [],
+  leads: [],
+  activations: [],
+  tickets: [],
+  metrics: [],
+  timeline: [],
+};
+
+const emptyAdminOverview: AdminOverview = {
+  ...emptyOperations,
+  payments: [],
+  smartCardStats: {
+    total: 0,
+    available: 0,
+    assigned: 0,
+    activated: 0,
+  },
+  smartCards: [],
+  accounts: [],
+  adminMetrics: [],
+};
+
+const emptyClientOverview: ClientOverview = {
+  account: null,
+  clients: [],
+  payments: [],
+  smartCards: [],
+  activations: [],
+  tickets: [],
+  notifications: [],
+  quickMetrics: [],
+};
+
 const initialLeadForm: LeadFormState = {
   name: "",
   email: "",
   company: "",
-  sector: "business",
+  sector: "commercial",
   message: "",
+};
+
+const initialAuthForm: AuthFormState = {
+  role: "client",
+  name: "",
+  email: "",
+  password: "",
+  company: "",
+  sector: "business",
+  plan: "business",
+};
+
+const initialPaymentForm: PaymentFormState = {
+  company: "",
+  plan: "business",
+  cardholder: "",
+  cardNumber: "",
+  expiry: "12/28",
+  amount: 990,
 };
 
 const initialActivationForm: ActivationFormState = {
@@ -123,54 +284,150 @@ const initialTicketForm: TicketFormState = {
   company: "",
   contactEmail: "",
   priority: "priority",
-  category: "automation",
+  category: "support",
   summary: "",
 };
 
-const emptyOperations: OperationsOverview = {
-  services: [],
-  notifications: [],
-  uploads: [],
-  leads: [],
-  activations: [],
-  tickets: [],
-  metrics: [],
-  timeline: [],
+const initialBroadcastForm: BroadcastFormState = {
+  title: "",
+  body: "",
+  level: "info",
 };
 
-const formatPrice = (plan: Plan, billing: "annual" | "monthly") =>
-  billing === "annual" ? plan.annualPrice : plan.monthlyPrice;
+const initialAssignCardsForm: AssignCardsFormState = {
+  company: "",
+  sector: "business",
+  plan: "business",
+  deviceKey: "business-hub",
+  quantity: 5,
+};
 
-const formatCycle = (billing: "annual" | "monthly") =>
-  billing === "annual" ? "/ year" : "/ month";
+const finalLogoAsset = "/brand/brain-logo-final.jpeg";
 
-const formatTime = (value: string) =>
-  new Date(value).toLocaleString("en-GB", {
+const languageOptions = [
+  { code: "sq", locale: "sq-XK", label: "Shqip" },
+  { code: "en", locale: "en-US", label: "English" },
+  { code: "de", locale: "de-DE", label: "Deutsch" },
+  { code: "fr", locale: "fr-FR", label: "Francais" },
+  { code: "it", locale: "it-IT", label: "Italiano" },
+  { code: "es", locale: "es-ES", label: "Espanol" },
+  { code: "pt", locale: "pt-PT", label: "Portugues" },
+  { code: "tr", locale: "tr-TR", label: "Turkce" },
+  { code: "nl", locale: "nl-NL", label: "Nederlands" },
+  { code: "sv", locale: "sv-SE", label: "Svenska" },
+  { code: "no", locale: "nb-NO", label: "Norsk" },
+  { code: "da", locale: "da-DK", label: "Dansk" },
+  { code: "fi", locale: "fi-FI", label: "Suomi" },
+  { code: "pl", locale: "pl-PL", label: "Polski" },
+  { code: "cs", locale: "cs-CZ", label: "Cestina" },
+  { code: "sk", locale: "sk-SK", label: "Slovencina" },
+  { code: "hu", locale: "hu-HU", label: "Magyar" },
+  { code: "ro", locale: "ro-RO", label: "Romana" },
+  { code: "bg", locale: "bg-BG", label: "Bulgarski" },
+  { code: "sr", locale: "sr-RS", label: "Srpski" },
+  { code: "hr", locale: "hr-HR", label: "Hrvatski" },
+  { code: "sl", locale: "sl-SI", label: "Slovenscina" },
+  { code: "el", locale: "el-GR", label: "Ellinika" },
+  { code: "uk", locale: "uk-UA", label: "Ukrainska" },
+  { code: "ru", locale: "ru-RU", label: "Russkiy" },
+  { code: "ar", locale: "ar-SA", label: "Arabic" },
+  { code: "he", locale: "he-IL", label: "Hebrew" },
+  { code: "fa", locale: "fa-IR", label: "Farsi" },
+  { code: "hi", locale: "hi-IN", label: "Hindi" },
+  { code: "bn", locale: "bn-BD", label: "Bangla" },
+  { code: "ur", locale: "ur-PK", label: "Urdu" },
+  { code: "zh", locale: "zh-CN", label: "Chinese" },
+  { code: "ja", locale: "ja-JP", label: "Japanese" },
+  { code: "ko", locale: "ko-KR", label: "Korean" },
+  { code: "th", locale: "th-TH", label: "Thai" },
+  { code: "vi", locale: "vi-VN", label: "Vietnamese" },
+  { code: "id", locale: "id-ID", label: "Bahasa Indonesia" },
+  { code: "ms", locale: "ms-MY", label: "Bahasa Melayu" },
+  { code: "sw", locale: "sw-KE", label: "Swahili" },
+  { code: "af", locale: "af-ZA", label: "Afrikaans" },
+];
+
+const countryOptions = [
+  { code: "XK", label: "Kosovo", currency: "EUR" },
+  { code: "AL", label: "Albania", currency: "ALL" },
+  { code: "DE", label: "Germany", currency: "EUR" },
+  { code: "CH", label: "Switzerland", currency: "CHF" },
+  { code: "AT", label: "Austria", currency: "EUR" },
+  { code: "IT", label: "Italy", currency: "EUR" },
+  { code: "FR", label: "France", currency: "EUR" },
+  { code: "ES", label: "Spain", currency: "EUR" },
+  { code: "GB", label: "United Kingdom", currency: "GBP" },
+  { code: "US", label: "United States", currency: "USD" },
+  { code: "CA", label: "Canada", currency: "CAD" },
+  { code: "AE", label: "United Arab Emirates", currency: "AED" },
+  { code: "TR", label: "Turkey", currency: "TRY" },
+  { code: "SA", label: "Saudi Arabia", currency: "SAR" },
+  { code: "IN", label: "India", currency: "INR" },
+  { code: "JP", label: "Japan", currency: "JPY" },
+  { code: "KR", label: "South Korea", currency: "KRW" },
+  { code: "CN", label: "China", currency: "CNY" },
+  { code: "AU", label: "Australia", currency: "AUD" },
+  { code: "BR", label: "Brazil", currency: "BRL" },
+];
+
+const dashboardTranslations = {
+  sq: {
+    dashboard: "Dashboard",
+    search: "Kerko ne dashboard",
+    vpn: "VPN",
+    language: "Gjuha",
+    country: "Shteti",
+    refresh: "Rifresko",
+    logout: "Dil",
+    adminCenter: "Qendra Admin",
+    clientWorkspace: "Hapesira Klient",
+  },
+  en: {
+    dashboard: "Dashboard",
+    search: "Search dashboard",
+    vpn: "VPN",
+    language: "Language",
+    country: "Country",
+    refresh: "Refresh",
+    logout: "Logout",
+    adminCenter: "Admin command center",
+    clientWorkspace: "Client workspace",
+  },
+  de: {
+    dashboard: "Dashboard",
+    search: "Dashboard durchsuchen",
+    vpn: "VPN",
+    language: "Sprache",
+    country: "Land",
+    refresh: "Aktualisieren",
+    logout: "Abmelden",
+    adminCenter: "Admin Zentrale",
+    clientWorkspace: "Client Arbeitsbereich",
+  },
+} as const;
+
+const authStorageKey = "brain-auth-session";
+const localeStorageKey = "brain-ui-locale";
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleString("en-GB", {
     day: "2-digit",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
   });
+}
 
-const getSectorDeviceIndex = (devices: Device[], sector: Sector) => {
-  const matchedIndex = devices.findIndex(
-    (device) => device.deviceKey === sector.deviceKey,
-  );
-
-  return matchedIndex >= 0 ? matchedIndex : 0;
-};
-
-async function fetchOperationsOverview() {
-  const response = await axios.get<OperationsOverview>("/api/operations/overview");
-  return response.data;
+function formatCurrency(value: number) {
+  return `EUR ${value.toLocaleString("en-GB")}`;
 }
 
 function getRequestErrorMessage(error: unknown, fallback: string) {
   if (axios.isAxiosError(error)) {
-    const apiMessage = error.response?.data?.message;
+    const message = error.response?.data?.message;
 
-    if (typeof apiMessage === "string") {
-      return apiMessage;
+    if (typeof message === "string") {
+      return message;
     }
 
     return error.message || fallback;
@@ -181,22 +438,23 @@ function getRequestErrorMessage(error: unknown, fallback: string) {
 
 function LoadingScreen() {
   return (
-    <div className="grid min-h-screen place-items-center bg-[var(--bg)] px-6 text-white">
-      <div className="glass-panel flex max-w-md flex-col items-center gap-5 p-8 text-center">
+    <div className="page-center">
+      <div className="glass-card max-w-md text-center">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 2.4, ease: "linear", repeat: Infinity }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
+          className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5"
         >
-          <LoaderCircle className="h-10 w-10 text-[var(--accent)]" />
+          <LoaderCircle className="h-7 w-7 text-[var(--accent)]" />
         </motion.div>
-        <div className="space-y-2">
-          <p className="font-display text-2xl font-semibold">
-            Loading brAIn system
-          </p>
-          <p className="text-sm text-white/68">
-            Preparing devices, services, workflows, and runtime signal flow.
-          </p>
-        </div>
+        <p className="section-kicker justify-center">Booting system</p>
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+          Preparing sector-based brAIn experience
+        </h1>
+        <p className="mt-3 text-sm text-white/66">
+          Loading commercial, business, healthcare, industry, payments, smart
+          cards, notifications, and portal runtime.
+        </p>
       </div>
     </div>
   );
@@ -204,28 +462,73 @@ function LoadingScreen() {
 
 function ErrorScreen({ message }: { message: string }) {
   return (
-    <div className="grid min-h-screen place-items-center bg-[var(--bg)] px-6 text-white">
-      <div className="glass-panel max-w-xl space-y-5 p-8">
-        <p className="eyebrow">Connection issue</p>
-        <h1 className="font-display text-4xl font-semibold">
-          The frontend could not reach the brAIn API.
+    <div className="page-center">
+      <div className="glass-card max-w-xl">
+        <p className="section-kicker">Connection issue</p>
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+          Frontend could not reach the brAIn API.
         </h1>
-        <p className="text-white/72">{message}</p>
+        <p className="mt-3 text-white/70">{message}</p>
         <button
-          className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
+          className="accent-button mt-6"
           onClick={() => window.location.reload()}
           type="button"
         >
-          Retry
+          Retry now
         </button>
       </div>
     </div>
   );
 }
 
-function EmptyRuntimeCard({ message }: { message: string }) {
+function SectionHeading({
+  eyebrow,
+  title,
+  copy,
+}: {
+  eyebrow: string;
+  title: string;
+  copy: string;
+}) {
   return (
-    <div className="rounded-[1.45rem] border border-dashed border-white/14 bg-white/3 p-4 text-sm text-white/58">
+    <div className="space-y-3">
+      <p className="section-kicker">{eyebrow}</p>
+      <h2 className="section-title">{title}</h2>
+      <p className="section-copy">{copy}</p>
+    </div>
+  );
+}
+
+function MetricCard({ metric }: { metric: RuntimeMetric }) {
+  return (
+    <div className="data-card compact-card">
+      <p className="text-xs uppercase tracking-[0.28em] text-white/45">
+        {metric.label}
+      </p>
+      <p className="mt-4 text-2xl font-semibold text-white">{metric.value}</p>
+      <p className="mt-3 text-sm leading-6 text-white/62">{metric.detail}</p>
+    </div>
+  );
+}
+
+function FeedItem({ item }: { item: RuntimeEvent }) {
+  return (
+    <div className="feed-row">
+      <div className={`status-pill ${cardToneClasses[item.status]}`}>
+        {item.type}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold text-white">{item.title}</p>
+        <p className="mt-1 text-sm text-white/58">{item.detail}</p>
+      </div>
+      <div className="text-xs text-white/42">{formatDate(item.createdAt)}</div>
+    </div>
+  );
+}
+
+function EmptyCard({ message }: { message: string }) {
+  return (
+    <div className="rounded-[1.3rem] border border-dashed border-white/10 bg-white/[0.03] px-4 py-5 text-sm text-white/55">
       {message}
     </div>
   );
@@ -234,223 +537,647 @@ function EmptyRuntimeCard({ message }: { message: string }) {
 function App() {
   const [content, setContent] = useState<LandingContent | null>(null);
   const [operations, setOperations] = useState<OperationsOverview>(emptyOperations);
+  const [adminOverview, setAdminOverview] =
+    useState<AdminOverview>(emptyAdminOverview);
+  const [clientOverview, setClientOverview] =
+    useState<ClientOverview>(emptyClientOverview);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeSectorIndex, setActiveSectorIndex] = useState(0);
-  const [activeDeviceIndex, setActiveDeviceIndex] = useState(0);
+  const [siteView, setSiteView] = useState<SiteView>("commercial");
   const [billing, setBilling] = useState<"annual" | "monthly">("annual");
-  const [opsTab, setOpsTab] = useState<OpsTabKey>("timeline");
-  const [uploading, setUploading] = useState(false);
-  const [runtimeMessage, setRuntimeMessage] = useState<string | null>(null);
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  const [authSession, setAuthSession] = useState<AuthSession | null>(null);
+  const [selectedClientCompany, setSelectedClientCompany] = useState("");
+  const [adminTab, setAdminTab] = useState<AdminTabKey>("overview");
+  const [clientTab, setClientTab] = useState<ClientTabKey>("overview");
   const [leadForm, setLeadForm] = useState<LeadFormState>(initialLeadForm);
-  const [leadSubmitting, setLeadSubmitting] = useState(false);
-  const [leadMessage, setLeadMessage] = useState<string | null>(null);
+  const [authForm, setAuthForm] = useState<AuthFormState>(initialAuthForm);
+  const [paymentForm, setPaymentForm] =
+    useState<PaymentFormState>(initialPaymentForm);
   const [activationForm, setActivationForm] =
     useState<ActivationFormState>(initialActivationForm);
-  const [activationSubmitting, setActivationSubmitting] = useState(false);
-  const [activationMessage, setActivationMessage] = useState<string | null>(null);
   const [ticketForm, setTicketForm] = useState<TicketFormState>(initialTicketForm);
-  const [ticketSubmitting, setTicketSubmitting] = useState(false);
+  const [broadcastForm, setBroadcastForm] =
+    useState<BroadcastFormState>(initialBroadcastForm);
+  const [assignCardsForm, setAssignCardsForm] =
+    useState<AssignCardsFormState>(initialAssignCardsForm);
+  const [leadMessage, setLeadMessage] = useState<string | null>(null);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
+  const [activationMessage, setActivationMessage] = useState<string | null>(null);
   const [ticketMessage, setTicketMessage] = useState<string | null>(null);
+  const [broadcastMessage, setBroadcastMessage] = useState<string | null>(null);
+  const [assignCardsMessage, setAssignCardsMessage] = useState<string | null>(null);
+  const [adminCardMessage, setAdminCardMessage] = useState<string | null>(null);
+  const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+  const [clientCardMessage, setClientCardMessage] = useState<string | null>(null);
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
+  const [authSubmitting, setAuthSubmitting] = useState(false);
+  const [paymentSubmitting, setPaymentSubmitting] = useState(false);
+  const [activationSubmitting, setActivationSubmitting] = useState(false);
+  const [ticketSubmitting, setTicketSubmitting] = useState(false);
+  const [broadcastSubmitting, setBroadcastSubmitting] = useState(false);
+  const [assigningCards, setAssigningCards] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [validatingCardCode, setValidatingCardCode] = useState<string | null>(null);
+  const [adminCardQuery, setAdminCardQuery] = useState("");
+  const [adminCardFilter, setAdminCardFilter] = useState<
+    SmartCardItem["status"] | "all"
+  >("all");
+  const [clientCardCode, setClientCardCode] = useState("");
+  const [validatedClientCard, setValidatedClientCard] =
+    useState<SmartCardItem | null>(null);
+  const [clientCardBackVisible, setClientCardBackVisible] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("sq");
+  const [selectedCountry, setSelectedCountry] = useState("XK");
+  const [networkMode, setNetworkMode] = useState<"live" | "country" | "private">(
+    "live",
+  );
+  const [dashboardSearch, setDashboardSearch] = useState("");
+  const [selectedDeviceKey, setSelectedDeviceKey] = useState("business-hub");
+  const [deviceRuntime, setDeviceRuntime] = useState<DeviceRuntimeState>({
+    uptimeMinutes: 960,
+    latencyMs: 18,
+    throughput: 98,
+    health: 99,
+  });
+
+  const sectors = content?.sectors ?? [];
+  const devices = content?.devices ?? [];
+  const plans = content?.plans ?? [];
+  const activeLanguage =
+    languageOptions.find((language) => language.code === selectedLanguage) ??
+    languageOptions[0];
+  const activeCountry =
+    countryOptions.find((country) => country.code === selectedCountry) ??
+    countryOptions[0];
+  const currentLocale = activeLanguage.locale;
+  const currentCurrency = activeCountry.currency;
+  const languageCode = selectedLanguage as keyof typeof dashboardTranslations;
+  const uiText = dashboardTranslations[languageCode] ?? dashboardTranslations.en;
+  const sectorSlug =
+    siteView === "commercial"
+      ? "commercial"
+      : siteView === "business" || siteView === "healthcare" || siteView === "industry"
+        ? siteView
+        : "business";
+  const activeSector =
+    sectors.find((sector) => sector.slug === sectorSlug) ?? sectors[0] ?? null;
+  const sectorDevices = devices.filter((device) => device.sectorSlug === sectorSlug);
+  const activeDevice =
+    sectorDevices.find((device) => device.deviceKey === selectedDeviceKey) ??
+    sectorDevices[0] ??
+    devices.find((device) => device.deviceKey === activeSector?.deviceKey) ??
+    devices[0] ??
+    null;
+  const adminVisibleCards = adminOverview.smartCards.filter((card) => {
+    const matchesFilter =
+      adminCardFilter === "all" ? true : card.status === adminCardFilter;
+    const searchValue = adminCardQuery.trim().toLowerCase();
+    const matchesQuery =
+      searchValue.length === 0
+        ? true
+        : [
+            card.code,
+            card.planName,
+            card.sectorLabel,
+            card.ownerCompany ?? "",
+          ]
+            .join(" ")
+            .toLowerCase()
+            .includes(searchValue);
+
+    return matchesFilter && matchesQuery;
+  });
+  const normalizedDashboardSearch = dashboardSearch.trim().toLowerCase();
+  const filteredAdminAccounts = useMemo(
+    () =>
+      adminOverview.accounts.filter((account) =>
+        normalizedDashboardSearch.length === 0
+          ? true
+          : [
+              account.company,
+              account.sectorLabel,
+              account.planName,
+              String(account.smartCards),
+            ]
+              .join(" ")
+              .toLowerCase()
+              .includes(normalizedDashboardSearch),
+      ),
+    [adminOverview.accounts, normalizedDashboardSearch],
+  );
+  const filteredAdminPayments = useMemo(
+    () =>
+      adminOverview.payments.filter((payment) =>
+        normalizedDashboardSearch.length === 0
+          ? true
+          : [payment.company, payment.planName, payment.last4]
+              .join(" ")
+              .toLowerCase()
+              .includes(normalizedDashboardSearch),
+      ),
+    [adminOverview.payments, normalizedDashboardSearch],
+  );
+  const filteredClientCards = useMemo(
+    () =>
+      clientOverview.smartCards.filter((card) =>
+        normalizedDashboardSearch.length === 0
+          ? true
+          : [card.code, card.planName, card.sectorLabel, card.status]
+              .join(" ")
+              .toLowerCase()
+              .includes(normalizedDashboardSearch),
+      ),
+    [clientOverview.smartCards, normalizedDashboardSearch],
+  );
+  const filteredClientPayments = useMemo(
+    () =>
+      clientOverview.payments.filter((payment) =>
+        normalizedDashboardSearch.length === 0
+          ? true
+          : [payment.planName, payment.last4, payment.cardBrand]
+              .join(" ")
+              .toLowerCase()
+              .includes(normalizedDashboardSearch),
+      ),
+    [clientOverview.payments, normalizedDashboardSearch],
+  );
+
+  const resolvePlanPrice = (planSlug: string, currentBilling = billing) => {
+    const match = plans.find((item) => item.slug === planSlug);
+
+    if (!match) {
+      return 0;
+    }
+
+    return currentBilling === "annual" ? match.annualPrice : match.monthlyPrice;
+  };
+
+  const getDeviceKeyForSector = (nextSector: string) => {
+    const sector = sectors.find((item) => item.slug === nextSector);
+    return sector?.deviceKey ?? "business-hub";
+  };
+
+  const formatMoney = (value: number) => {
+    try {
+      return new Intl.NumberFormat(currentLocale, {
+        style: "currency",
+        currency: currentCurrency,
+        maximumFractionDigits: 0,
+      }).format(value);
+    } catch {
+      return formatCurrency(value);
+    }
+  };
+
+  const formatLocalDate = (value: string) => {
+    try {
+      return new Date(value).toLocaleString(currentLocale, {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return formatDate(value);
+    }
+  };
+
+  const syncClientForms = ({
+    company,
+    sector,
+    plan,
+    email,
+  }: {
+    company: string;
+    sector: string;
+    plan: string;
+    email: string;
+  }) => {
+    setSelectedClientCompany(company);
+    setPaymentForm((current) => ({
+      ...current,
+      company,
+      plan,
+      cardholder: current.cardholder || authSession?.user.name || "",
+      amount: resolvePlanPrice(plan) || current.amount,
+    }));
+    setActivationForm((current) => ({
+      ...current,
+      company,
+      sector,
+      plan,
+      deviceKey: getDeviceKeyForSector(sector),
+    }));
+    setTicketForm((current) => ({
+      ...current,
+      company,
+      contactEmail: email || current.contactEmail,
+    }));
+  };
+
+  const openSiteView = (view: SiteView) => {
+    if ((view === "admin" || view === "client") && !authSession) {
+      setAuthMode("login");
+      setAuthForm((current) => ({
+        ...current,
+        role: view === "admin" ? "admin" : "client",
+      }));
+      setSiteView("system");
+      return;
+    }
+
+    setSiteView(view);
+
+    if (
+      view === "commercial" ||
+      view === "business" ||
+      view === "healthcare" ||
+      view === "industry"
+    ) {
+      setLeadForm((current) => ({
+        ...current,
+        sector: view,
+      }));
+    }
+  };
 
   const refreshOperations = async () => {
-    const overview = await fetchOperationsOverview();
+    const response = await axios.get<OperationsOverview>("/api/operations/overview");
+
     startTransition(() => {
-      setOperations(overview);
+      setOperations(response.data);
     });
-    return overview;
+  };
+
+  const refreshAdminOverview = async () => {
+    const response = await axios.get<AdminOverview>("/api/admin/overview");
+
+    startTransition(() => {
+      setAdminOverview(response.data);
+    });
+  };
+
+  const refreshClientOverview = async (company?: string) => {
+    const targetCompany =
+      company || selectedClientCompany || authSession?.user.company || "";
+
+    const response = await axios.get<ClientOverview>("/api/client/overview", {
+      params: targetCompany ? { company: targetCompany } : undefined,
+    });
+
+    startTransition(() => {
+      setClientOverview(response.data);
+    });
+
+    if (response.data.account) {
+      syncClientForms({
+        company: response.data.account.company,
+        sector: response.data.account.sector,
+        plan: response.data.account.plan,
+        email: authSession?.user.email ?? ticketForm.contactEmail,
+      });
+    }
+  };
+
+  const refreshPortal = async (session = authSession) => {
+    if (!session) {
+      return;
+    }
+
+    if (session.user.role === "admin") {
+      await refreshAdminOverview();
+      return;
+    }
+
+    await refreshClientOverview(session.user.company);
   };
 
   useEffect(() => {
-    let active = true;
+    const savedLocaleContext = window.localStorage.getItem(localeStorageKey);
+    if (savedLocaleContext) {
+      try {
+        const parsed = JSON.parse(savedLocaleContext) as {
+          language?: string;
+          country?: string;
+          network?: "live" | "country" | "private";
+        };
+
+        if (parsed.language) {
+          setSelectedLanguage(parsed.language);
+        }
+        if (parsed.country) {
+          setSelectedCountry(parsed.country);
+        }
+        if (parsed.network) {
+          setNetworkMode(parsed.network);
+        }
+      } catch {
+        window.localStorage.removeItem(localeStorageKey);
+      }
+    }
+
+    const savedSession = window.localStorage.getItem(authStorageKey);
+
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession) as AuthSession;
+        setAuthSession(parsed);
+        setSiteView(getRoleHomeView(parsed.user.role));
+        setSelectedClientCompany(parsed.user.company);
+        setAuthForm((current) => ({
+          ...current,
+          role: parsed.user.role,
+          email: parsed.user.email,
+          company: parsed.user.company,
+          sector: parsed.user.sector ?? current.sector,
+          plan: parsed.user.plan ?? current.plan,
+          password: "",
+        }));
+      } catch {
+        window.localStorage.removeItem(authStorageKey);
+      }
+    }
 
     const bootstrap = async () => {
       try {
-        const contentResponse = await axios.get<LandingContent>("/api/content");
+        const [contentResponse, operationsResponse] =
+          await Promise.all([
+            axios.get<LandingContent>("/api/content"),
+            axios.get<OperationsOverview>("/api/operations/overview"),
+          ]);
 
-        if (!active) {
-          return;
-        }
-
-        setContent(contentResponse.data);
+        startTransition(() => {
+          setContent(contentResponse.data);
+          setOperations(operationsResponse.data);
+        });
       } catch (requestError) {
-        if (!active) {
-          return;
-        }
-
-        setError(getRequestErrorMessage(requestError, "Unknown API error"));
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-
-      try {
-        await refreshOperations();
-
-        if (!active) {
-          return;
-        }
-
-        setRuntimeMessage(null);
-      } catch (runtimeError) {
-        if (!active) {
-          return;
-        }
-
-        setRuntimeMessage(
+        setError(
           getRequestErrorMessage(
-            runtimeError,
-            "Live services are temporarily unavailable.",
+            requestError,
+            "Unable to load frontend bootstrap data.",
           ),
         );
+      } finally {
+        setLoading(false);
       }
     };
 
     void bootstrap();
-
-    const intervalId = window.setInterval(() => {
-      void refreshOperations().catch((runtimeError) => {
-        if (!active) {
-          return;
-        }
-
-        setRuntimeMessage(
-          getRequestErrorMessage(
-            runtimeError,
-            "Live services are temporarily unavailable.",
-          ),
-        );
-      });
-    }, 12000);
-
-    return () => {
-      active = false;
-      window.clearInterval(intervalId);
-    };
   }, []);
 
   useEffect(() => {
-    if (!content) {
-      return;
-    }
-
-    setActiveDeviceIndex(
-      getSectorDeviceIndex(content.devices, content.sectors[activeSectorIndex]),
-    );
-  }, [activeSectorIndex, content]);
+    document.documentElement.lang = currentLocale;
+  }, [currentLocale]);
 
   useEffect(() => {
-    if (!content) {
+    if (sectorDevices.length === 0) {
       return;
     }
 
-    const matchingDevices = content.devices.filter(
-      (device) => device.sectorSlug === activationForm.sector,
+    if (!sectorDevices.some((device) => device.deviceKey === selectedDeviceKey)) {
+      setSelectedDeviceKey(sectorDevices[0].deviceKey);
+    }
+  }, [sectorDevices, selectedDeviceKey]);
+
+  useEffect(() => {
+    const networkLabel =
+      networkMode === "private"
+        ? "vpn-private"
+        : networkMode === "country"
+          ? "country-route"
+          : "live";
+
+    axios.defaults.headers.common["x-brain-language"] = selectedLanguage;
+    axios.defaults.headers.common["x-brain-country"] = selectedCountry;
+    axios.defaults.headers.common["x-brain-network"] = networkLabel;
+    axios.defaults.headers.common["x-brain-vpn-active"] =
+      networkMode === "private" ? "true" : "false";
+
+    window.localStorage.setItem(
+      localeStorageKey,
+      JSON.stringify({
+        language: selectedLanguage,
+        country: selectedCountry,
+        network: networkMode,
+      }),
     );
+  }, [selectedLanguage, selectedCountry, networkMode]);
 
-    if (
-      matchingDevices.length > 0 &&
-      !matchingDevices.some(
-        (device) => device.deviceKey === activationForm.deviceKey,
-      )
-    ) {
-      setActivationForm((current) => ({
-        ...current,
-        deviceKey: matchingDevices[0].deviceKey,
-      }));
-    }
-  }, [activationForm.deviceKey, activationForm.sector, content]);
-
-  const handleUpload = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const fileInput = event.currentTarget.elements.namedItem(
-      "files",
-    ) as HTMLInputElement | null;
-    const files = fileInput?.files;
-
-    if (!files?.length) {
-      setRuntimeMessage("Choose at least one file before uploading.");
+  useEffect(() => {
+    if (!authSession) {
       return;
     }
 
-    const formData = new FormData();
-    Array.from(files).forEach((file) => {
-      formData.append("files", file);
-    });
+    void refreshPortal(authSession);
+  }, [authSession, selectedClientCompany]);
 
-    try {
-      setUploading(true);
-      await axios.post("/api/uploads", formData);
-      await refreshOperations();
-      setRuntimeMessage("Upload completed successfully.");
-      event.currentTarget.reset();
-      setOpsTab("timeline");
-    } catch (uploadError) {
-      setRuntimeMessage(
-        getRequestErrorMessage(uploadError, "Upload failed unexpectedly."),
-      );
-    } finally {
-      setUploading(false);
+  useEffect(() => {
+    if (!authSession) {
+      return;
     }
-  };
+
+    const roleHome = getRoleHomeView(authSession.user.role);
+    if (siteView !== roleHome) {
+      setSiteView(roleHome);
+    }
+  }, [authSession, siteView]);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      void refreshOperations();
+
+      if (authSession) {
+        void refreshPortal(authSession);
+      }
+    }, 12000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [authSession, selectedClientCompany]);
+
+  useEffect(() => {
+    if (siteView === "admin") {
+      setAuthMode("login");
+      setAdminTab("overview");
+      setAuthForm((current) => ({ ...current, role: "admin" }));
+    }
+
+    if (siteView === "client") {
+      setAuthMode("login");
+      setClientTab("overview");
+      setAuthForm((current) => ({ ...current, role: "client" }));
+    }
+  }, [siteView]);
+
+  useEffect(() => {
+    if (
+      siteView !== "business" &&
+      siteView !== "healthcare" &&
+      siteView !== "industry"
+    ) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setDeviceRuntime((current) => ({
+        uptimeMinutes: current.uptimeMinutes + 1,
+        latencyMs: Math.max(7, Math.min(72, current.latencyMs + (Math.random() > 0.5 ? 1 : -1))),
+        throughput: Math.max(
+          72,
+          Math.min(100, current.throughput + (Math.random() > 0.5 ? 1 : -1)),
+        ),
+        health: Math.max(85, Math.min(100, current.health + (Math.random() > 0.6 ? 1 : -1))),
+      }));
+    }, 3000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [siteView]);
 
   const handleLeadSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLeadSubmitting(true);
+    setLeadMessage(null);
 
     try {
-      setLeadSubmitting(true);
-      const leadResponse = await axios.post<{ lead: LeadItem }>(
-        "/api/leads",
-        leadForm,
-      );
-
+      await axios.post("/api/leads", leadForm);
+      setLeadForm((current) => ({
+        ...initialLeadForm,
+        sector: leadForm.sector,
+      }));
+      setLeadMessage("Demo request captured and added to the live pipeline.");
       await refreshOperations();
-      setLeadForm({ ...initialLeadForm });
+      if (authSession?.user.role === "admin") {
+        await refreshAdminOverview();
+      }
+    } catch (requestError) {
       setLeadMessage(
-        `Demo request saved for ${leadResponse.data.lead.company} under ${leadResponse.data.lead.sectorLabel}.`,
-      );
-      setOpsTab("leads");
-    } catch (leadError) {
-      setLeadMessage(
-        getRequestErrorMessage(
-          leadError,
-          "Could not send the demo request right now.",
-        ),
+        getRequestErrorMessage(requestError, "Unable to send demo request."),
       );
     } finally {
       setLeadSubmitting(false);
     }
   };
 
-  const handleActivationSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleAuthSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setAuthSubmitting(true);
+    setAuthMessage(null);
 
     try {
-      setActivationSubmitting(true);
-      const activationResponse = await axios.post<{ activation: ActivationItem }>(
-        "/api/activations",
-        activationForm,
+      const endpoint =
+        authMode === "login" ? "/api/auth/login" : "/api/auth/register";
+
+      const payload =
+        authMode === "login"
+          ? {
+              role: authForm.role,
+              email: authForm.email,
+              password: authForm.password,
+            }
+          : authForm;
+
+      const response = await axios.post<{ session: AuthSession }>(
+        endpoint,
+        payload,
       );
 
-      await refreshOperations();
-      setActivationForm({
-        ...initialActivationForm,
-        sector: activationForm.sector,
-        deviceKey: activationForm.deviceKey,
-        plan: activationForm.plan,
-      });
-      setActivationMessage(
-        `${activationResponse.data.activation.deviceName} is queued for ${activationResponse.data.activation.site}.`,
+      const nextSession = response.data.session;
+      window.localStorage.setItem(authStorageKey, JSON.stringify(nextSession));
+      setAuthSession(nextSession);
+      setAuthMessage(
+        authMode === "login"
+          ? "Portal login successful."
+          : "Portal account created successfully.",
       );
-      setOpsTab("activations");
-    } catch (activationError) {
+      setAdminTab("overview");
+      setClientTab("overview");
+      setSiteView(getRoleHomeView(nextSession.user.role));
+
+      if (nextSession.user.role === "client") {
+        syncClientForms({
+          company: nextSession.user.company,
+          sector: nextSession.user.sector ?? "business",
+          plan: nextSession.user.plan ?? "business",
+          email: nextSession.user.email,
+        });
+      }
+
+      setAuthForm((current) => ({
+        ...current,
+        password: "",
+      }));
+
+      await refreshOperations();
+      await refreshPortal(nextSession);
+    } catch (requestError) {
+      setAuthMessage(
+        getRequestErrorMessage(requestError, "Unable to complete auth request."),
+      );
+    } finally {
+      setAuthSubmitting(false);
+    }
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem(authStorageKey);
+    setAuthSession(null);
+    setSelectedClientCompany("");
+    setAdminOverview(emptyAdminOverview);
+    setClientOverview(emptyClientOverview);
+    setAuthForm((current) => ({
+      ...current,
+      password: "",
+    }));
+    setAuthMessage("Session closed.");
+    setSiteView("system");
+  };
+
+  const handlePaymentSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPaymentSubmitting(true);
+    setPaymentMessage(null);
+
+    try {
+      await axios.post("/api/payments", paymentForm);
+      setPaymentMessage("Payment captured live and visible in the portal.");
+      setPaymentForm((current) => ({
+        ...current,
+        cardNumber: "",
+        expiry: "12/28",
+      }));
+      await refreshOperations();
+      await refreshPortal();
+    } catch (requestError) {
+      setPaymentMessage(
+        getRequestErrorMessage(requestError, "Unable to process payment."),
+      );
+    } finally {
+      setPaymentSubmitting(false);
+    }
+  };
+
+  const handleActivationSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setActivationSubmitting(true);
+    setActivationMessage(null);
+
+    try {
+      await axios.post("/api/activations", activationForm);
+      setActivationMessage("Activation request queued successfully.");
+      setActivationForm((current) => ({
+        ...current,
+        site: "",
+      }));
+      await refreshOperations();
+      await refreshPortal();
+    } catch (requestError) {
       setActivationMessage(
-        getRequestErrorMessage(
-          activationError,
-          "Could not queue the activation workflow.",
-        ),
+        getRequestErrorMessage(requestError, "Unable to queue activation."),
       );
     } finally {
       setActivationSubmitting(false);
@@ -459,1502 +1186,2649 @@ function App() {
 
   const handleTicketSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setTicketSubmitting(true);
+    setTicketMessage(null);
 
     try {
-      setTicketSubmitting(true);
-      const ticketResponse = await axios.post<{ ticket: TicketItem }>(
-        "/api/tickets",
-        ticketForm,
-      );
-
+      await axios.post("/api/tickets", ticketForm);
+      setTicketMessage("Support ticket opened and added to live runtime.");
+      setTicketForm((current) => ({
+        ...current,
+        summary: "",
+      }));
       await refreshOperations();
-      setTicketForm({ ...initialTicketForm });
+      await refreshPortal();
+    } catch (requestError) {
       setTicketMessage(
-        `${ticketResponse.data.ticket.company} ticket opened with ${ticketResponse.data.ticket.priority} priority.`,
-      );
-      setOpsTab("tickets");
-    } catch (ticketError) {
-      setTicketMessage(
-        getRequestErrorMessage(
-          ticketError,
-          "Could not open the support workflow right now.",
-        ),
+        getRequestErrorMessage(requestError, "Unable to open support ticket."),
       );
     } finally {
       setTicketSubmitting(false);
     }
   };
 
+  const handleBroadcastSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setBroadcastSubmitting(true);
+    setBroadcastMessage(null);
+
+    try {
+      await axios.post("/api/admin/notifications", broadcastForm);
+      setBroadcastForm(initialBroadcastForm);
+      setBroadcastMessage("Admin notification broadcasted.");
+      await refreshOperations();
+      await refreshAdminOverview();
+    } catch (requestError) {
+      setBroadcastMessage(
+        getRequestErrorMessage(
+          requestError,
+          "Unable to broadcast notification.",
+        ),
+      );
+    } finally {
+      setBroadcastSubmitting(false);
+    }
+  };
+
+  const handleAssignCardsSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAssigningCards(true);
+    setAssignCardsMessage(null);
+
+    try {
+      await axios.post("/api/admin/cards/assign", assignCardsForm);
+      setAssignCardsMessage("SC card allocation completed.");
+      await refreshOperations();
+      await refreshAdminOverview();
+    } catch (requestError) {
+      setAssignCardsMessage(
+        getRequestErrorMessage(requestError, "Unable to assign smart cards."),
+      );
+    } finally {
+      setAssigningCards(false);
+    }
+  };
+
+  const handleAdminCardActivate = async (card: SmartCardItem) => {
+    if (card.status === "activated") {
+      return;
+    }
+
+    setValidatingCardCode(card.code);
+    setAdminCardMessage(null);
+
+    try {
+      await axios.post("/api/cards/validate", {
+        code: card.code,
+        company: card.ownerCompany ?? undefined,
+      });
+      setAdminCardMessage(`${card.code} activated successfully.`);
+      await refreshOperations();
+      await refreshAdminOverview();
+    } catch (requestError) {
+      setAdminCardMessage(
+        getRequestErrorMessage(requestError, `Unable to activate ${card.code}.`),
+      );
+    } finally {
+      setValidatingCardCode(null);
+    }
+  };
+
+  const handleUploadSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const fileInput = formElement.elements.namedItem(
+      "admin-files",
+    ) as HTMLInputElement | null;
+    const files = fileInput?.files;
+
+    if (!files || files.length === 0) {
+      setUploadMessage("Choose one or more files first.");
+      return;
+    }
+
+    setUploading(true);
+    setUploadMessage(null);
+
+    try {
+      const formData = new FormData();
+
+      Array.from(files).forEach((file) => {
+        formData.append("files", file);
+      });
+
+      await axios.post("/api/uploads", formData);
+      formElement.reset();
+      setUploadMessage("Files uploaded and added to the runtime feed.");
+      await refreshOperations();
+      if (authSession?.user.role === "admin") {
+        await refreshAdminOverview();
+      }
+    } catch (requestError) {
+      setUploadMessage(
+        getRequestErrorMessage(requestError, "Unable to upload files."),
+      );
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleActivationStatusUpdate = async (
+    activationId: string,
+    status: ActivationItem["status"],
+  ) => {
+    try {
+      await axios.patch(`/api/admin/activations/${activationId}`, { status });
+      await refreshOperations();
+      await refreshPortal();
+    } catch (requestError) {
+      setBroadcastMessage(
+        getRequestErrorMessage(
+          requestError,
+          "Unable to update activation status.",
+        ),
+      );
+    }
+  };
+
+  const handleTicketStatusUpdate = async (
+    ticketId: string,
+    status: TicketItem["status"],
+  ) => {
+    try {
+      await axios.patch(`/api/admin/tickets/${ticketId}`, { status });
+      await refreshOperations();
+      await refreshPortal();
+    } catch (requestError) {
+      setBroadcastMessage(
+        getRequestErrorMessage(requestError, "Unable to update ticket status."),
+      );
+    }
+  };
+
+  const applyDemoCredential = (credential: DemoCredential) => {
+    setAuthMode("login");
+    setAuthForm((current) => ({
+      ...current,
+      role: credential.role,
+      name: credential.name,
+      email: credential.email,
+      password: credential.password,
+      company: credential.company,
+    }));
+  };
+
+  const applyPaymentTestCard = (cardNumber: string) => {
+    setPaymentForm((current) => ({
+      ...current,
+      cardNumber,
+      expiry: "12/28",
+    }));
+  };
+
+  const openActivationPrefill = () => {
+    if (!activeDevice) {
+      return;
+    }
+
+    setActivationForm((current) => ({
+      ...current,
+      company: authSession?.user.company ?? current.company,
+      sector: activeSector?.slug ?? current.sector,
+      plan: authSession?.user.plan ?? current.plan,
+      deviceKey: activeDevice.deviceKey,
+      site: `${activeCountry.label} site`,
+    }));
+    setSiteView("system");
+    setActivationMessage("Device deployment prefilled. Continue in support + deploy.");
+  };
+
+  const openSupportPrefill = () => {
+    if (!activeDevice) {
+      return;
+    }
+
+    setTicketForm((current) => ({
+      ...current,
+      company: authSession?.user.company ?? current.company,
+      contactEmail: authSession?.user.email ?? current.contactEmail,
+      summary: `${activeDevice.name} rollout for ${activeSector?.name ?? "selected sector"} (${networkMode} mode)`,
+    }));
+    setSiteView("system");
+    setTicketMessage("Support draft prepared. Continue in support + deploy.");
+  };
+
+  const accessView =
+    siteView === "admin" ? "admin" : siteView === "client" ? "client" : "system";
+  const publicNavTabs = siteTabs.filter((tab) => publicNavTabKeys.has(tab.key));
+  const sectorQuickTabs = siteTabs.filter((tab) => sectorQuickTabKeys.has(tab.key));
+
   if (loading) {
     return <LoadingScreen />;
   }
 
   if (error || !content) {
-    return <ErrorScreen message={error ?? "Content was empty."} />;
+    return (
+      <ErrorScreen
+        message={error ?? "Frontend content was not available from the API."}
+      />
+    );
   }
 
-  const activeSector = content.sectors[activeSectorIndex] ?? content.sectors[0];
-  const activeDevice = content.devices[activeDeviceIndex] ?? content.devices[0];
-  const activationDevices = content.devices.filter(
-    (device) => device.sectorSlug === activationForm.sector,
-  );
-
-  const renderTimeline = (timeline: RuntimeEvent[]) => {
-    if (timeline.length === 0) {
-      return <EmptyRuntimeCard message="No live events yet. Trigger a form or upload to populate the system pulse." />;
-    }
-
-    return timeline.map((event, index) => (
-      <motion.div
-        className="timeline-card"
-        initial={{ opacity: 0, x: 18 }}
-        key={event.id}
-        transition={{ delay: index * 0.05, duration: 0.28 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, x: 0 }}
-      >
-        <div className="flex items-start gap-4">
-          <div className="timeline-dot" />
-          <div className="flex-1">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="font-semibold text-white">{event.title}</p>
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold ${runtimeToneClasses[event.status]}`}
-              >
-                {event.type}
-              </span>
-            </div>
-            <p className="mt-2 text-sm leading-7 text-white/68">{event.detail}</p>
-            <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/36">
-              {formatTime(event.createdAt)}
-            </p>
-          </div>
-        </div>
-      </motion.div>
-    ));
-  };
-
-  const renderActivations = (activations: ActivationItem[]) => {
-    if (activations.length === 0) {
-      return <EmptyRuntimeCard message="No activations queued yet. Use the workflow studio below to start one." />;
-    }
-
-    return activations.map((activation) => (
-      <div className="timeline-card" key={activation.id}>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="font-semibold text-white">{activation.company}</p>
-            <p className="mt-1 text-sm text-white/66">
-              {activation.deviceName} for {activation.site}
-            </p>
-          </div>
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold ${activationToneClasses[activation.status]}`}
-          >
-            {activation.status}
-          </span>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <span className="soft-chip">{activation.sectorLabel}</span>
-          <span className="soft-chip">{activation.planName}</span>
-        </div>
-        <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/36">
-          {formatTime(activation.createdAt)}
-        </p>
-      </div>
-    ));
-  };
-
-  const renderTickets = (tickets: TicketItem[]) => {
-    if (tickets.length === 0) {
-      return <EmptyRuntimeCard message="No support workflows open yet. Submit one to test the help-desk runtime." />;
-    }
-
-    return tickets.map((ticket) => (
-      <div className="timeline-card" key={ticket.id}>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="font-semibold text-white">{ticket.company}</p>
-            <p className="mt-1 text-sm leading-7 text-white/66">{ticket.summary}</p>
-          </div>
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold ${ticketPriorityClasses[ticket.priority]}`}
-          >
-            {ticket.priority}
-          </span>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <span className="soft-chip">{ticket.category}</span>
-          <span className="soft-chip">{ticket.status}</span>
-        </div>
-        <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/36">
-          {formatTime(ticket.createdAt)}
-        </p>
-      </div>
-    ));
-  };
-
-  const renderLeads = (leads: LeadItem[]) => {
-    if (leads.length === 0) {
-      return <EmptyRuntimeCard message="No demo requests yet. The consultation form is ready when you want to test it." />;
-    }
-
-    return leads.map((lead) => (
-      <div className="timeline-card" key={lead.id}>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="font-semibold text-white">{lead.company}</p>
-            <p className="mt-1 text-sm text-white/66">
-              {lead.name} requested a {lead.sectorLabel} walkthrough
-            </p>
-          </div>
-          <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/72">
-            {lead.status}
-          </span>
-        </div>
-        {lead.message ? (
-          <p className="mt-3 text-sm leading-7 text-white/68">{lead.message}</p>
-        ) : null}
-        <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/36">
-          {formatTime(lead.createdAt)}
-        </p>
-      </div>
-    ));
-  };
-
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[var(--bg)] text-white">
-      <div className="page-grid" />
-      <div className="orb orb-left" />
-      <div className="orb orb-right" />
+    <div className="brain-shell">
+      <div className="ambient-orb ambient-orb-gold" />
+      <div className="ambient-orb ambient-orb-blue" />
 
-      <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-        <a className="flex items-center gap-3" href="#hero">
-          <div className="logo-chip">br</div>
-          <div>
-            <p className="font-display text-xl font-semibold tracking-[0.2em] text-white">
-              brAIn
-            </p>
-            <p className="text-xs uppercase tracking-[0.32em] text-white/45">
-              AI powered business ecosystem
-            </p>
+      <header className="sticky top-0 z-40 border-b border-white/8 bg-[rgba(4,8,18,0.72)] backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
+          <button className="flex items-center gap-3" onClick={() => openSiteView("commercial")} type="button">
+            <img
+              src="/brand/brain-logo.svg"
+              alt="brAIn"
+              className="h-12 w-auto rounded-xl"
+            />
+            <div className="text-left">
+              <p className="text-xs uppercase tracking-[0.32em] text-white/40">
+                brAIn sectors
+              </p>
+              <p className="text-sm font-medium text-white/85">
+                Final logo + sector pages
+              </p>
+            </div>
+          </button>
+
+          <nav className="hidden items-center gap-2 lg:flex">
+            {publicNavTabs.map((tab) => (
+              <button
+                className={`nav-chip ${siteView === tab.key ? "nav-chip-active" : ""}`}
+                key={tab.key}
+                onClick={() => openSiteView(tab.key)}
+                type="button"
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1.5 xl:flex">
+              <select
+                className="topbar-select"
+                onChange={(event) => setSelectedLanguage(event.target.value)}
+                value={selectedLanguage}
+              >
+                {languageOptions.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="topbar-select"
+                onChange={(event) => setSelectedCountry(event.target.value)}
+                value={selectedCountry}
+              >
+                {countryOptions.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.label}
+                  </option>
+                ))}
+              </select>
+              <div className="segmented-control nav-segmented-control">
+                <button
+                  className={networkMode === "live" ? "segment-active" : ""}
+                  onClick={() => setNetworkMode("live")}
+                  type="button"
+                >
+                  Live
+                </button>
+                <button
+                  className={networkMode === "country" ? "segment-active" : ""}
+                  onClick={() => setNetworkMode("country")}
+                  type="button"
+                >
+                  Region
+                </button>
+                <button
+                  className={networkMode === "private" ? "segment-active" : ""}
+                  onClick={() => setNetworkMode("private")}
+                  type="button"
+                >
+                  VPN
+                </button>
+              </div>
+            </div>
+            {authSession ? (
+              <>
+                <div className="hidden rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/74 md:block">
+                  {authSession.user.role} / {authSession.user.company} /{" "}
+                  {activeLanguage.label} / {activeCountry.code} / {networkMode}
+                </div>
+                <button
+                  className="secondary-button"
+                  onClick={handleLogout}
+                  type="button"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button
+                className="accent-button"
+                onClick={() => openSiteView("system")}
+                type="button"
+              >
+                Open portal
+              </button>
+            )}
           </div>
-        </a>
-
-        <nav className="hidden items-center gap-7 text-sm text-white/68 lg:flex">
-          <a href="#cloud-system">Platform</a>
-          <a href="#sectors">Sectors</a>
-          <a href="#live-services">Live Services</a>
-          <a href="#operations-center">Operations</a>
-          <a href="#devices">Devices</a>
-          <a href="#workflow-studio">Workflows</a>
-          <a href="#lead-capture">Demo</a>
-        </nav>
-
-        <a className="ghost-button hidden lg:inline-flex" href="#operations-center">
-          View System
-        </a>
+        </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 pb-16 lg:px-10">
-        <motion.section
-          animate="visible"
-          className="grid gap-10 pb-10 pt-4 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:pb-16 lg:pt-10"
-          id="hero"
-          initial="hidden"
-          variants={sectionMotion}
-        >
-          <div className="space-y-7">
-            <div className="space-y-5">
-              <p className="eyebrow">{content.hero.eyebrow}</p>
-              <h1 className="font-display text-5xl font-semibold leading-[0.95] sm:text-6xl lg:text-7xl">
-                {content.hero.title}
-              </h1>
-              <p className="max-w-2xl text-lg leading-8 text-white/72">
-                {content.hero.subtitle}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              {content.hero.badges.map((badge) => (
-                <span className="metric-chip" key={badge}>
-                  <Sparkles className="h-4 w-4 text-[var(--accent)]" />
-                  {badge}
-                </span>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <a className="primary-button" href="#operations-center">
-                Launch command center
-                <ArrowRight className="h-4 w-4" />
-              </a>
-              <a className="ghost-button" href="#workflow-studio">
-                Activate workflows
-              </a>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              {content.hero.metrics.map((metric) => (
-                <div className="glass-panel p-5" key={metric.label}>
-                  <p className="text-sm uppercase tracking-[0.24em] text-white/45">
-                    {metric.label}
-                  </p>
-                  <p className="mt-3 font-display text-3xl font-semibold text-white">
-                    {metric.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative">
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              className="hero-frame"
-              transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
+      <main className="mx-auto flex max-w-7xl flex-col gap-7 px-5 py-7 lg:px-8">
+        {siteView === "commercial" ? (
+          <>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionMotion}
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,208,122,0.18),transparent_44%)]" />
-              <img
-                alt="brAIn main business hub"
-                className="hero-image"
-                src={content.hero.deviceImage}
-              />
+              <div className="sector-hero-grid">
+                <div className="space-y-6">
+                  <p className="section-kicker">Sector 1 / Commercial</p>
+                  <h1 className="hero-title">{content.hero.title}</h1>
+                  <p className="section-copy max-w-2xl">{content.hero.subtitle}</p>
 
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                className="floating-panel right-[-1rem] top-6 w-52"
-                transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-              >
-                <p className="text-xs uppercase tracking-[0.28em] text-white/45">
-                  Runtime linked
-                </p>
-                <p className="mt-2 font-display text-2xl font-semibold">
-                  Live operations
-                </p>
-                <p className="mt-2 text-sm text-white/68">
-                  Leads, activations, uploads, and tickets run through one product flow.
-                </p>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                className="floating-panel bottom-[-1.5rem] left-[-1rem] w-60"
-                transition={{ duration: 5.5, ease: "easeInOut", repeat: Infinity }}
-              >
-                <p className="text-xs uppercase tracking-[0.28em] text-white/45">
-                  Services online
-                </p>
-                <div className="mt-3 grid gap-2">
-                  {operations.metrics.slice(0, 2).map((metric) => (
-                    <div
-                      className="rounded-[1.2rem] border border-white/10 bg-white/4 px-4 py-3"
-                      key={metric.key}
-                    >
-                      <p className="text-xs uppercase tracking-[0.22em] text-white/38">
-                        {metric.label}
-                      </p>
-                      <p className="mt-2 font-display text-2xl font-semibold">
-                        {metric.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        <motion.section
-          className="glass-panel grid gap-8 overflow-hidden p-7 lg:grid-cols-[0.95fr_1.05fr] lg:p-9"
-          id="cloud-system"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-        >
-          <div className="space-y-5">
-            <p className="eyebrow">Cloud system ready</p>
-            <h2 className="font-display text-4xl font-semibold">
-              {content.cloudSystem.title}
-            </h2>
-            <p className="text-base leading-8 text-white/70">
-              {content.cloudSystem.summary}
-            </p>
-
-            <div className="space-y-3">
-              {content.cloudSystem.highlights.map((highlight) => (
-                <div className="flex items-center gap-3 text-sm text-white/72" key={highlight}>
-                  <ShieldCheck className="h-4 w-4 text-[var(--accent)]" />
-                  <span>{highlight}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {[
-                {
-                  label: "Protocols",
-                  values: content.integrations.protocols,
-                },
-                {
-                  label: "Platforms",
-                  values: content.integrations.platforms,
-                },
-                {
-                  label: "Cloud",
-                  values: content.integrations.cloudPartners,
-                },
-              ].map((group) => (
-                <div className="rounded-[1.75rem] border border-white/10 bg-white/4 p-4" key={group.label}>
-                  <p className="text-xs uppercase tracking-[0.28em] text-white/42">
-                    {group.label}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {group.values.map((value) => (
-                      <span className="soft-chip" key={value}>
-                        {value}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {content.cloudSystem.steps.map((step, index) => {
-              const StepIcon = architectureIcons[index] ?? Activity;
-
-              return (
-                <motion.div
-                  className="architecture-card"
-                  initial={{ opacity: 0, x: 18 }}
-                  key={step.title}
-                  transition={{ delay: index * 0.08, duration: 0.45 }}
-                  viewport={{ once: true }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                >
-                  <div className="architecture-icon">
-                    <StepIcon className="h-5 w-5 text-[var(--accent)]" />
-                  </div>
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.28em] text-white/40">
-                      Step {index + 1}
-                    </p>
-                    <h3 className="mt-2 font-display text-2xl font-semibold">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-7 text-white/68">
-                      {step.detail}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.section>
-
-        <motion.section
-          className="space-y-8 pt-6"
-          id="sectors"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-4">
-              <p className="eyebrow">Sector focus</p>
-              <h2 className="font-display text-4xl font-semibold lg:text-5xl">
-                One product story, four market-ready verticals.
-              </h2>
-              <p className="max-w-3xl text-base leading-8 text-white/72">
-                The structure stays clear: sector message first, device second,
-                then live workflows, automation, and commercial model.
-              </p>
-            </div>
-            <span className="rounded-full border border-emerald-400/20 bg-emerald-400/8 px-4 py-2 text-sm text-emerald-200">
-              {content.source === "database"
-                ? "Synced from MySQL"
-                : "Fallback data until MySQL credentials are added"}
-            </span>
-          </div>
-
-          <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
-            <div className="grid gap-4">
-              {content.sectors.map((sector, index) => {
-                const SectorIcon =
-                  sectorIcons[sector.slug as keyof typeof sectorIcons] ?? Building2;
-                const isActive = index === activeSectorIndex;
-
-                return (
-                  <button
-                    className={`sector-card ${isActive ? "sector-card-active" : ""}`}
-                    key={sector.slug}
-                    onClick={() => setActiveSectorIndex(index)}
-                    type="button"
-                  >
-                    <div
-                      className="sector-icon"
-                      style={{ boxShadow: `0 0 0 1px ${sector.accent}33 inset` }}
-                    >
-                      <SectorIcon
-                        className="h-5 w-5"
-                        style={{ color: sector.accent }}
-                      />
-                    </div>
-
-                    <div className="flex-1 text-left">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.26em] text-white/40">
-                            {sector.name}
-                          </p>
-                          <h3 className="mt-2 font-display text-2xl font-semibold">
-                            {sector.title}
-                          </h3>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
-                            {sector.statLabel}
-                          </p>
-                          <p className="mt-2 text-xl font-semibold text-white">
-                            {sector.statValue}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="mt-4 text-sm leading-7 text-white/66">
-                        {sector.summary}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="glass-panel overflow-hidden p-5 md:p-7">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="grid gap-6 lg:grid-cols-[1fr_0.88fr]"
-                  exit={{ opacity: 0, y: -18 }}
-                  initial={{ opacity: 0, y: 18 }}
-                  key={activeSector.slug}
-                  transition={{ duration: 0.35 }}
-                >
-                  <div className="space-y-5">
-                    <div
-                      className="inline-flex rounded-full px-4 py-2 text-xs uppercase tracking-[0.28em]"
-                      style={{
-                        backgroundColor: `${activeSector.accent}18`,
-                        color: activeSector.accent,
-                      }}
-                    >
-                      {activeSector.name}
-                    </div>
-                    <h3 className="font-display text-4xl font-semibold">
-                      {activeSector.title}
-                    </h3>
-                    <p className="text-base leading-8 text-white/70">
-                      {activeSector.summary}
-                    </p>
-                    <p className="text-sm uppercase tracking-[0.28em] text-white/40">
-                      Best fit: {activeSector.audience}
-                    </p>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {activeSector.capabilities.map((capability) => (
-                        <div className="capability-chip" key={capability}>
-                          <Check className="h-4 w-4 text-[var(--accent)]" />
-                          <span>{capability}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative">
-                    <div className="preview-frame">
-                      <img
-                        alt={activeSector.title}
-                        className="h-full w-full object-cover"
-                        src={activeSector.imageUrl}
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </motion.section>
-
-        <motion.section
-          className="space-y-8 pt-6"
-          id="live-services"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="space-y-4">
-            <p className="eyebrow">Live services</p>
-            <h2 className="font-display text-4xl font-semibold lg:text-5xl">
-              Uploads, notifications, activations, tickets, and service health are functional here too.
-            </h2>
-            <p className="max-w-3xl text-base leading-8 text-white/72">
-              The experience now behaves like a system: users can trigger runtime
-              events and the backend responds immediately with updated states and queues.
-            </p>
-          </div>
-
-          <div className="grid gap-5 xl:grid-cols-[0.9fr_1.05fr_1.05fr]">
-            <div className="glass-panel space-y-5 p-6">
-              <div className="flex items-center gap-3">
-                <Activity className="h-5 w-5 text-[var(--accent)]" />
-                <h3 className="font-display text-2xl font-semibold">
-                  Service health
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {operations.services.map((service) => (
-                  <div
-                    className="rounded-[1.45rem] border border-white/10 bg-white/4 p-4"
-                    key={service.key}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-semibold text-white">{service.label}</p>
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          service.status === "online"
-                            ? "bg-emerald-400/12 text-emerald-200"
-                            : service.status === "ready"
-                              ? "bg-sky-400/12 text-sky-200"
-                              : "bg-amber-300/12 text-amber-100"
-                        }`}
-                      >
-                        {service.status}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm leading-7 text-white/66">
-                      {service.detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="glass-panel space-y-5 p-6">
-              <div className="flex items-center gap-3">
-                <BellRing className="h-5 w-5 text-[var(--accent)]" />
-                <h3 className="font-display text-2xl font-semibold">
-                  Live notifications
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {operations.notifications.length === 0 ? (
-                  <EmptyRuntimeCard message="Notifications will appear here as workflows fire." />
-                ) : (
-                  operations.notifications.map((notification) => (
-                    <div
-                      className="rounded-[1.45rem] border border-white/10 bg-white/4 p-4"
-                      key={notification.id}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="font-semibold text-white">
-                          {notification.title}
-                        </p>
-                        <span className="text-xs uppercase tracking-[0.24em] text-white/40">
-                          {notification.level}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm leading-7 text-white/68">
-                        {notification.body}
-                      </p>
-                      <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/36">
-                        {formatTime(notification.createdAt)}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div className="glass-panel space-y-5 p-6">
-              <div className="flex items-center gap-3">
-                <Upload className="h-5 w-5 text-[var(--accent)]" />
-                <h3 className="font-display text-2xl font-semibold">
-                  Upload tester
-                </h3>
-              </div>
-
-              <form className="space-y-4" onSubmit={handleUpload}>
-                <label className="upload-zone">
-                  <input className="hidden" multiple name="files" type="file" />
-                  <span className="font-semibold text-white">
-                    Drop files here or click to upload
-                  </span>
-                  <span className="mt-2 text-sm text-white/60">
-                    Assets are stored by the Express backend and instantly reflected in the runtime pulse.
-                  </span>
-                </label>
-
-                <button
-                  className="primary-button w-full justify-center"
-                  disabled={uploading}
-                  type="submit"
-                >
-                  {uploading ? "Uploading..." : "Upload files"}
-                </button>
-              </form>
-
-              <div className="space-y-3">
-                {operations.uploads.length === 0 ? (
-                  <EmptyRuntimeCard message="No uploads yet. Use the panel above to test the storage service live." />
-                ) : (
-                  operations.uploads.map((uploadItem) => (
-                    <div
-                      className="rounded-[1.45rem] border border-white/10 bg-white/4 p-4"
-                      key={uploadItem.id}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="font-semibold text-white">
-                          {uploadItem.fileName}
-                        </p>
-                        <span className="text-xs uppercase tracking-[0.24em] text-white/40">
-                          {uploadItem.sizeKb} KB
-                        </span>
-                      </div>
-                      <a
-                        className="mt-2 inline-flex text-sm text-[var(--accent)] underline decoration-transparent transition hover:decoration-[var(--accent)]"
-                        href={uploadItem.url}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        Open uploaded file
-                      </a>
-                      <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/36">
-                        {formatTime(uploadItem.uploadedAt)}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-
-          {runtimeMessage ? (
-            <p className="text-sm text-white/64">{runtimeMessage}</p>
-          ) : null}
-        </motion.section>
-
-        <motion.section
-          className="space-y-8 pt-6"
-          id="operations-center"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-4">
-              <p className="eyebrow">Operations center</p>
-              <h2 className="font-display text-4xl font-semibold lg:text-5xl">
-                One animated runtime console for the whole product story.
-              </h2>
-              <p className="max-w-3xl text-base leading-8 text-white/72">
-                Instead of spreading state across isolated sections, the frontend now consumes one
-                aggregated operations overview and turns it into a live command center.
-              </p>
-            </div>
-            <a className="ghost-button" href="#workflow-studio">
-              Trigger workflows
-            </a>
-          </div>
-
-          <div className="grid gap-5 xl:grid-cols-[0.92fr_1.08fr]">
-            <div className="glass-panel overflow-hidden p-6">
-              <div className="command-stage">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  className="command-ring command-ring-primary"
-                  transition={{ duration: 32, ease: "linear", repeat: Infinity }}
-                />
-                <motion.div
-                  animate={{ rotate: -360 }}
-                  className="command-ring command-ring-secondary"
-                  transition={{ duration: 28, ease: "linear", repeat: Infinity }}
-                />
-                <motion.div
-                  animate={{ scale: [1, 1.08, 1] }}
-                  className="command-core"
-                  transition={{ duration: 4.2, ease: "easeInOut", repeat: Infinity }}
-                />
-                <motion.div
-                  animate={{ y: [0, -10, 0], opacity: [0.5, 1, 0.5] }}
-                  className="command-node command-node-top"
-                  transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity }}
-                />
-                <motion.div
-                  animate={{ x: [0, 8, 0], opacity: [0.45, 0.9, 0.45] }}
-                  className="command-node command-node-right"
-                  transition={{ duration: 4.1, ease: "easeInOut", repeat: Infinity }}
-                />
-                <motion.div
-                  animate={{ y: [0, 9, 0], opacity: [0.4, 0.95, 0.4] }}
-                  className="command-node command-node-bottom"
-                  transition={{ duration: 4.8, ease: "easeInOut", repeat: Infinity }}
-                />
-                <motion.div
-                  animate={{ x: [0, -9, 0], opacity: [0.45, 1, 0.45] }}
-                  className="command-node command-node-left"
-                  transition={{ duration: 4.4, ease: "easeInOut", repeat: Infinity }}
-                />
-
-                <div className="command-copy">
-                  <p className="eyebrow">Runtime orchestration</p>
-                  <h3 className="mt-4 font-display text-4xl font-semibold">
-                    Signals move through leads, uploads, activations, and support.
-                  </h3>
-                  <p className="mt-4 max-w-2xl text-base leading-8 text-white/70">
-                    This module behaves like a live console: forms below generate backend events,
-                    and the overview updates into a single operational pulse.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {operations.metrics.map((metric: RuntimeMetric) => (
-                  <motion.div
-                    className="metric-card"
-                    key={metric.key}
-                    transition={{ duration: 0.2 }}
-                    whileHover={{ y: -4 }}
-                  >
-                    <p className="text-xs uppercase tracking-[0.24em] text-white/40">
-                      {metric.label}
-                    </p>
-                    <p className="mt-3 font-display text-4xl font-semibold">
-                      {metric.value}
-                    </p>
-                    <p className="mt-3 text-sm leading-7 text-white/62">
-                      {metric.detail}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            <div className="glass-panel space-y-6 p-6">
-              <div className="command-tabs">
-                {opsTabs.map((tab) => {
-                  const TabIcon = tab.icon;
-                  const isActive = opsTab === tab.key;
-
-                  return (
+                  <div className="flex flex-wrap gap-3">
                     <button
-                      className={`command-tab ${isActive ? "command-tab-active" : ""}`}
-                      key={tab.key}
-                      onClick={() => setOpsTab(tab.key)}
+                      className="accent-button"
+                      onClick={() => openSiteView("system")}
                       type="button"
                     >
-                      <TabIcon className="h-4 w-4" />
-                      {tab.label}
+                      Open system center
+                      <ArrowRight className="h-4 w-4" />
                     </button>
-                  );
-                })}
+                    <button
+                      className="secondary-button"
+                      onClick={() => openSiteView("business")}
+                      type="button"
+                    >
+                      Open business sector
+                    </button>
+                  </div>
+
+                  <div className="grid gap-3 md:grid-cols-3">
+                    {content.hero.metrics.map((metric) => (
+                      <div className="data-card compact-card" key={metric.label}>
+                        <p className="text-xs uppercase tracking-[0.26em] text-white/44">
+                          {metric.label}
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {metric.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    {sectorQuickTabs.map((tab) => {
+                        const sector = sectors.find((item) => item.slug === tab.key);
+                        const Icon =
+                          sectorIcons[(sector?.slug ?? "commercial") as keyof typeof sectorIcons];
+
+                        return (
+                          <button
+                            className={`mini-sector-card ${siteView === tab.key ? "mini-sector-card-active" : ""}`}
+                            key={tab.key}
+                            onClick={() => openSiteView(tab.key)}
+                            type="button"
+                          >
+                            <div className="sector-icon-wrap">
+                              <Icon className="h-5 w-5" />
+                            </div>
+                            <div className="text-left">
+                              <p className="text-[0.68rem] uppercase tracking-[0.3em] text-white/38">
+                                Sector
+                              </p>
+                              <p className="mt-2 text-base font-semibold text-white">
+                                {tab.label}
+                              </p>
+                              <p className="mt-2 text-sm leading-6 text-white/58">
+                                {sector?.summary ?? "Open sector page"}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="hero-visual-shell">
+                    <img
+                      src={content.hero.plansImage}
+                      alt="Commercial overview"
+                      className="sector-board-image"
+                    />
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="glass-card compact-card">
+                      <p className="section-kicker">Final identity</p>
+                      <img
+                        src="/brand/brain-logo.svg"
+                        alt="Final brAIn logo"
+                        className="mt-4 h-24 w-auto"
+                      />
+                    </div>
+                    <div className="glass-card compact-card">
+                      <p className="section-kicker">Commercial fit</p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <span className="outline-chip">Retail</span>
+                        <span className="outline-chip">Kiosks</span>
+                        <span className="outline-chip">Hospitality</span>
+                        <span className="outline-chip">Promotions</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+            </motion.section>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3"
-                  exit={{ opacity: 0, y: -14 }}
-                  initial={{ opacity: 0, y: 14 }}
-                  key={opsTab}
-                  transition={{ duration: 0.25 }}
-                >
-                  {opsTab === "timeline" ? renderTimeline(operations.timeline) : null}
-                  {opsTab === "activations"
-                    ? renderActivations(operations.activations)
-                    : null}
-                  {opsTab === "tickets" ? renderTickets(operations.tickets) : null}
-                  {opsTab === "leads" ? renderLeads(operations.leads) : null}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </motion.section>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionMotion}
+            >
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <SectionHeading
+                  eyebrow="Annual subscription plans"
+                  title="Commercial page with plans, billing, and lead capture"
+                  copy="This sector now behaves like a proper first page: pricing is clear, plans are structured, and the CTA feeds directly into the backend pipeline."
+                />
 
-        <motion.section
-          className="space-y-8 pt-6"
-          id="devices"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="space-y-4">
-            <p className="eyebrow">Device lineup</p>
-            <h2 className="font-display text-4xl font-semibold lg:text-5xl">
-              Hardware that makes the platform tangible.
-            </h2>
-            <p className="max-w-3xl text-base leading-8 text-white/72">
-              The software story is now paired with live activation workflows, so each
-              device has an operational path from demo to deployment.
-            </p>
-          </div>
-
-          <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr]">
-            <div className="grid gap-3">
-              {content.devices.map((device, index) => {
-                const isActive = index === activeDeviceIndex;
-
-                return (
+                <div className="billing-toggle">
                   <button
-                    className={`device-tab ${isActive ? "device-tab-active" : ""}`}
-                    key={device.deviceKey}
-                    onClick={() => setActiveDeviceIndex(index)}
+                    className={billing === "annual" ? "billing-active" : ""}
+                    onClick={() => setBilling("annual")}
                     type="button"
                   >
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.26em] text-white/40">
-                        {device.category}
-                      </p>
-                      <h3 className="mt-2 font-display text-2xl font-semibold">
-                        {device.name}
-                      </h3>
-                      <p className="mt-2 text-sm leading-7 text-white/64">
-                        {device.tagline}
-                      </p>
-                    </div>
-                    <ArrowRight className="h-5 w-5 text-white/35" />
+                    Annual
                   </button>
-                );
-              })}
-            </div>
+                  <button
+                    className={billing === "monthly" ? "billing-active" : ""}
+                    onClick={() => setBilling("monthly")}
+                    type="button"
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
 
-            <div className="glass-panel overflow-hidden p-5 md:p-7">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="grid gap-7 lg:grid-cols-[0.95fr_1.05fr]"
-                  exit={{ opacity: 0, y: -18 }}
-                  initial={{ opacity: 0, y: 18 }}
-                  key={activeDevice.deviceKey}
-                  transition={{ duration: 0.35 }}
-                >
-                  <div className="preview-frame h-full min-h-[320px]">
-                    <img
-                      alt={activeDevice.name}
-                      className="h-full w-full object-cover"
-                      src={activeDevice.imageUrl}
-                    />
-                  </div>
-
-                  <div className="space-y-5">
-                    <div>
-                      <p className="eyebrow">Device details</p>
-                      <h3 className="mt-4 font-display text-4xl font-semibold">
-                        {activeDevice.name}
-                      </h3>
-                      <p className="mt-3 text-base leading-8 text-white/70">
-                        {activeDevice.description}
-                      </p>
+              <div className="mt-7 grid gap-4 xl:grid-cols-5">
+                {plans.map((plan) => (
+                  <div
+                    className={`plan-card-shell ${plan.featured ? "plan-card-featured" : ""}`}
+                    key={plan.slug}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[0.72rem] uppercase tracking-[0.28em] text-white/40">
+                          {plan.name}
+                        </p>
+                        <h3 className="mt-3 text-3xl font-semibold text-white">
+                          {formatMoney(
+                            billing === "annual" ? plan.annualPrice : plan.monthlyPrice,
+                          )}
+                        </h3>
+                        <p className="mt-2 text-sm text-white/56">
+                          {billing === "annual" ? "/ year" : "/ month"}
+                        </p>
+                      </div>
+                      {plan.featured ? (
+                        <span className="status-pill tone-warning">Popular</span>
+                      ) : null}
                     </div>
 
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      {activeDevice.metrics.map((metric) => (
-                        <div className="rounded-[1.5rem] border border-white/10 bg-white/4 p-4" key={metric.label}>
-                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
-                            {metric.label}
-                          </p>
-                          <p className="mt-2 text-xl font-semibold text-white">
-                            {metric.value}
-                          </p>
+                    <p className="mt-5 text-sm leading-7 text-white/60">
+                      {plan.summary}
+                    </p>
+
+                    <div className="mt-5 space-y-2">
+                      {plan.features.map((feature) => (
+                        <div
+                          className="flex items-start gap-2 text-sm text-white/74"
+                          key={feature}
+                        >
+                          <CheckCheck className="mt-0.5 h-4 w-4 text-[var(--accent)]" />
+                          <span>{feature}</span>
                         </div>
                       ))}
                     </div>
+                  </div>
+                ))}
+              </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="rounded-[1.5rem] border border-white/10 bg-white/4 p-5">
-                        <p className="text-xs uppercase tracking-[0.24em] text-white/40">
-                          Ports & connectivity
-                        </p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {activeDevice.ports.map((port) => (
-                            <span className="soft-chip" key={port}>
-                              {port}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="rounded-[1.5rem] border border-white/10 bg-white/4 p-5">
-                        <p className="text-xs uppercase tracking-[0.24em] text-white/40">
-                          Suited for
-                        </p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {activeDevice.suitedFor.map((target) => (
-                            <span className="soft-chip" key={target}>
-                              {target}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+              <div className="mt-7 grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <div className="glass-card compact-card">
+                  <p className="section-kicker">Commercial advantages</p>
+                  <div className="mt-5 grid gap-4 md:grid-cols-2">
+                    <div className="data-card compact-card">
+                      <p className="text-sm font-semibold text-white">
+                        Secure & private
+                      </p>
+                      <p className="mt-2 text-sm text-white/60">
+                        Encrypted runtime, private smart-card activation, and
+                        sector-aware onboarding.
+                      </p>
+                    </div>
+                    <div className="data-card compact-card">
+                      <p className="text-sm font-semibold text-white">
+                        Scale without limits
+                      </p>
+                      <p className="mt-2 text-sm text-white/60">
+                        Add devices, cards, automations, and payment-backed plan
+                        upgrades anytime.
+                      </p>
+                    </div>
+                    <div className="data-card compact-card">
+                      <p className="text-sm font-semibold text-white">
+                        All-in-one platform
+                      </p>
+                      <p className="mt-2 text-sm text-white/60">
+                        Website, hardware, cloud runtime, cards, notifications,
+                        payments, and portal in one flow.
+                      </p>
+                    </div>
+                    <div className="data-card compact-card">
+                      <p className="text-sm font-semibold text-white">
+                        Human support
+                      </p>
+                      <p className="mt-2 text-sm text-white/60">
+                        Client and admin areas are ready for activation requests,
+                        support tickets, and live status changes.
+                      </p>
                     </div>
                   </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </motion.section>
+                </div>
 
-        <motion.section
-          className="space-y-8 pt-6"
-          id="plans"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-4">
-              <p className="eyebrow">Commercial model</p>
-              <h2 className="font-display text-4xl font-semibold lg:text-5xl">
-                Pricing plans that match device scale and cloud power.
-              </h2>
-              <p className="max-w-3xl text-base leading-8 text-white/72">
-                The plans come after devices so buyers understand the hardware, then
-                choose the subscription layer that fits activation and workflow depth.
-              </p>
-            </div>
-
-            <div className="billing-switch">
-              <button
-                className={billing === "annual" ? "billing-active" : ""}
-                onClick={() => setBilling("annual")}
-                type="button"
-              >
-                Annual
-              </button>
-              <button
-                className={billing === "monthly" ? "billing-active" : ""}
-                onClick={() => setBilling("monthly")}
-                type="button"
-              >
-                Monthly
-              </button>
-            </div>
-          </div>
-
-          <div className="grid gap-5 xl:grid-cols-4">
-            {content.plans.map((plan) => (
-              <motion.div
-                className={`plan-card ${plan.featured ? "plan-card-featured" : ""}`}
-                key={plan.slug}
-                whileHover={{ y: -8 }}
-              >
-                <div className="space-y-5">
+                <div className="glass-card compact-card">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.24em] text-white/42">
-                        {plan.name}
-                      </p>
-                      <h3 className="mt-3 font-display text-3xl font-semibold">
-                        EUR {formatPrice(plan, billing)}
+                      <p className="section-kicker">Lead capture</p>
+                      <h3 className="mt-3 text-2xl font-semibold text-white">
+                        Request the commercial walkthrough
                       </h3>
                     </div>
-                    {plan.featured ? (
-                      <span className="rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-semibold text-slate-950">
-                        Most popular
+                    <BellRing className="h-6 w-6 text-[var(--accent)]" />
+                  </div>
+
+                  <form className="mt-5 grid gap-3" onSubmit={handleLeadSubmit}>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <input
+                        className="input-shell"
+                        onChange={(event) =>
+                          setLeadForm((current) => ({
+                            ...current,
+                            name: event.target.value,
+                          }))
+                        }
+                        placeholder="Name"
+                        value={leadForm.name}
+                      />
+                      <input
+                        className="input-shell"
+                        onChange={(event) =>
+                          setLeadForm((current) => ({
+                            ...current,
+                            email: event.target.value,
+                          }))
+                        }
+                        placeholder="Email"
+                        value={leadForm.email}
+                      />
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
+                      <input
+                        className="input-shell"
+                        onChange={(event) =>
+                          setLeadForm((current) => ({
+                            ...current,
+                            company: event.target.value,
+                          }))
+                        }
+                        placeholder="Company"
+                        value={leadForm.company}
+                      />
+                      <select
+                        className="select-shell"
+                        onChange={(event) =>
+                          setLeadForm((current) => ({
+                            ...current,
+                            sector: event.target.value,
+                          }))
+                        }
+                        value={leadForm.sector}
+                      >
+                        {sectors.map((sector) => (
+                          <option key={sector.slug} value={sector.slug}>
+                            {sector.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <textarea
+                      className="textarea-shell"
+                      onChange={(event) =>
+                        setLeadForm((current) => ({
+                          ...current,
+                          message: event.target.value,
+                        }))
+                      }
+                      placeholder="Tell us what you want automated"
+                      rows={3}
+                      value={leadForm.message}
+                    />
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        className="accent-button"
+                        disabled={leadSubmitting}
+                        type="submit"
+                      >
+                        {leadSubmitting ? "Sending..." : "Send request"}
+                      </button>
+                      {leadMessage ? (
+                        <p className="text-sm text-white/64">{leadMessage}</p>
+                      ) : null}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </motion.section>
+          </>
+        ) : null}
+
+        {siteView === "business" ||
+        siteView === "healthcare" ||
+        siteView === "industry" ? (
+          <>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionMotion}
+            >
+              <div className="sector-hero-grid">
+                <div className="space-y-6">
+                  <p className="section-kicker">
+                    {siteView === "business"
+                      ? "Sector 2 / Business"
+                      : siteView === "healthcare"
+                        ? "Sector 3 / Healthcare"
+                        : "Sector 4 / Industry AI"}
+                  </p>
+                  <h1 className="hero-title">{activeSector?.title}</h1>
+                  <p className="section-copy max-w-2xl">{activeSector?.summary}</p>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      className="accent-button"
+                      onClick={() => openSiteView("system")}
+                      type="button"
+                    >
+                      Open system center
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="secondary-button"
+                      onClick={() => openSiteView("commercial")}
+                      type="button"
+                    >
+                      Back to commercial
+                    </button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {(activeSector?.capabilities ?? []).map((capability) => (
+                      <span className="outline-chip" key={capability}>
+                        {capability}
                       </span>
-                    ) : null}
+                    ))}
                   </div>
 
-                  <div className="space-y-1">
-                    <p className="text-sm text-white/72">{formatCycle(billing)}</p>
-                    <p className="text-base leading-7 text-white/68">{plan.summary}</p>
+                  <div className="device-switch-grid">
+                    {sectorDevices.map((device) => (
+                      <button
+                        className={`nav-chip ${activeDevice?.deviceKey === device.deviceKey ? "nav-chip-active" : ""}`}
+                        key={device.deviceKey}
+                        onClick={() => setSelectedDeviceKey(device.deviceKey)}
+                        type="button"
+                      >
+                        {device.name}
+                      </button>
+                    ))}
                   </div>
+                </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                    <div className="rounded-[1.25rem] border border-white/10 bg-white/4 p-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-white/42">
-                        Devices
-                      </p>
-                      <p className="mt-2 text-sm text-white">{plan.deviceAllowance}</p>
-                    </div>
-                    <div className="rounded-[1.25rem] border border-white/10 bg-white/4 p-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-white/42">
-                        Support
-                      </p>
-                      <p className="mt-2 text-sm text-white">{plan.supportLabel}</p>
-                    </div>
-                  </div>
+                <div className="hero-visual-shell">
+                  <img
+                    src={activeDevice?.imageUrl}
+                    alt={activeDevice?.name}
+                    className="sector-board-image"
+                  />
+                </div>
+              </div>
+            </motion.section>
 
-                  <div className="rounded-[1.25rem] border border-white/10 bg-white/4 p-4">
-                    <p className="text-xs uppercase tracking-[0.24em] text-white/42">
-                      Automation level
-                    </p>
-                    <p className="mt-2 text-sm text-white">{plan.automationLabel}</p>
-                  </div>
-
-                  <div className="space-y-3">
-                    {plan.features.map((feature) => (
-                      <div className="flex gap-3 text-sm text-white/74" key={feature}>
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" />
-                        <span>{feature}</span>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionMotion}
+            >
+              <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <div className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {activeDevice?.metrics.map((metric) => (
+                      <div className="data-card compact-card" key={metric.label}>
+                        <p className="text-[0.7rem] uppercase tracking-[0.3em] text-white/38">
+                          {metric.label}
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {metric.value}
+                        </p>
                       </div>
                     ))}
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
 
-        <motion.section
-          className="space-y-8 pt-6"
-          id="workflow-studio"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="space-y-4">
-            <p className="eyebrow">Workflow studio</p>
-            <h2 className="font-display text-4xl font-semibold lg:text-5xl">
-              Device rollout and support intake now work as live services.
-            </h2>
-            <p className="max-w-3xl text-base leading-8 text-white/72">
-              These flows make the product feel operational: activation routes hardware into rollout,
-              while support tickets simulate ongoing automation and integration work.
-            </p>
-          </div>
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">Device live runtime</p>
+                    <div className="device-runtime-grid mt-5">
+                      <div className="data-card compact-card">
+                        <p className="text-[0.7rem] uppercase tracking-[0.3em] text-white/38">
+                          Uptime
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {Math.floor(deviceRuntime.uptimeMinutes / 60)}h{" "}
+                          {deviceRuntime.uptimeMinutes % 60}m
+                        </p>
+                      </div>
+                      <div className="data-card compact-card">
+                        <p className="text-[0.7rem] uppercase tracking-[0.3em] text-white/38">
+                          Latency
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {deviceRuntime.latencyMs} ms
+                        </p>
+                      </div>
+                      <div className="data-card compact-card">
+                        <p className="text-[0.7rem] uppercase tracking-[0.3em] text-white/38">
+                          Throughput
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {deviceRuntime.throughput}%
+                        </p>
+                      </div>
+                      <div className="data-card compact-card">
+                        <p className="text-[0.7rem] uppercase tracking-[0.3em] text-white/38">
+                          Health
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {deviceRuntime.health}%
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-4 text-sm text-white/58">
+                      Network profile:{" "}
+                      <span className="font-semibold text-white/84">{networkMode}</span> /
+                      region {activeCountry.code}
+                    </p>
+                  </div>
 
-          <div className="grid gap-5 xl:grid-cols-2">
-            <div className="glass-panel p-6">
-              <div className="space-y-4">
-                <p className="eyebrow">Activation workflow</p>
-                <h3 className="font-display text-3xl font-semibold">
-                  Queue a device rollout
-                </h3>
-                <p className="text-sm leading-7 text-white/66">
-                  Choose the sector, device, and plan, then attach an installation site to create
-                  a provisioning event in the live runtime system.
-                </p>
-              </div>
-
-              <form className="mt-8 space-y-4" onSubmit={handleActivationSubmit}>
-                <label>
-                  <span className="form-label">Company</span>
-                  <input
-                    className="form-input"
-                    maxLength={120}
-                    onChange={(event) =>
-                      setActivationForm((current) => ({
-                        ...current,
-                        company: event.target.value,
-                      }))
-                    }
-                    placeholder="Client or partner name"
-                    required
-                    type="text"
-                    value={activationForm.company}
-                  />
-                </label>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label>
-                    <span className="form-label">Sector</span>
-                    <select
-                      className="form-select"
-                      onChange={(event) =>
-                        setActivationForm((current) => ({
-                          ...current,
-                          sector: event.target.value,
-                        }))
-                      }
-                      value={activationForm.sector}
-                    >
-                      {content.sectors.map((sector) => (
-                        <option key={sector.slug} value={sector.slug}>
-                          {sector.name}
-                        </option>
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">Ports and deployment</p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {activeDevice?.ports.map((port) => (
+                        <span className="outline-chip" key={port}>
+                          {port}
+                        </span>
                       ))}
-                    </select>
-                  </label>
+                    </div>
 
-                  <label>
-                    <span className="form-label">Plan</span>
-                    <select
-                      className="form-select"
-                      onChange={(event) =>
-                        setActivationForm((current) => ({
-                          ...current,
-                          plan: event.target.value,
-                        }))
-                      }
-                      value={activationForm.plan}
-                    >
-                      {content.plans.map((plan) => (
-                        <option key={plan.slug} value={plan.slug}>
-                          {plan.name}
-                        </option>
+                    <p className="section-kicker mt-7">Suited for</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {activeDevice?.suitedFor.map((item) => (
+                        <span className="outline-chip" key={item}>
+                          {item}
+                        </span>
                       ))}
-                    </select>
-                  </label>
+                    </div>
+
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      <button
+                        className="secondary-button"
+                        onClick={openActivationPrefill}
+                        type="button"
+                      >
+                        Prepare activation
+                      </button>
+                      <button
+                        className="secondary-button"
+                        onClick={openSupportPrefill}
+                        type="button"
+                      >
+                        Open support draft
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-[0.92fr_1.08fr]">
-                  <label>
-                    <span className="form-label">Device</span>
-                    <select
-                      className="form-select"
-                      onChange={(event) =>
-                        setActivationForm((current) => ({
-                          ...current,
-                          deviceKey: event.target.value,
-                        }))
-                      }
-                      value={activationForm.deviceKey}
-                    >
-                      {activationDevices.map((device) => (
-                        <option key={device.deviceKey} value={device.deviceKey}>
-                          {device.name}
-                        </option>
+                <div className="space-y-4">
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">Live supporting signals</p>
+                    <div className="mt-5 grid gap-4 md:grid-cols-2">
+                      {operations.metrics.slice(0, 4).map((metric) => (
+                        <MetricCard key={metric.key} metric={metric} />
                       ))}
-                    </select>
-                  </label>
+                    </div>
+                  </div>
 
-                  <label>
-                    <span className="form-label">Installation site</span>
-                    <input
-                      className="form-input"
-                      maxLength={160}
-                      onChange={(event) =>
-                        setActivationForm((current) => ({
-                          ...current,
-                          site: event.target.value,
-                        }))
-                      }
-                      placeholder="Storefront, clinic desk, factory line..."
-                      required
-                      type="text"
-                      value={activationForm.site}
-                    />
-                  </label>
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">
+                      {siteView === "business"
+                        ? "Smart-card and dashboard story"
+                        : siteView === "healthcare"
+                          ? "Care, compliance, and monitoring"
+                          : "Edge deployment and integrations"}
+                    </p>
+                    <div className="mt-5 space-y-3">
+                      {operations.timeline.slice(0, 4).map((item) => (
+                        <FeedItem item={item} key={item.id} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
-
-                <button
-                  className="primary-button w-full justify-center"
-                  disabled={activationSubmitting}
-                  type="submit"
-                >
-                  {activationSubmitting ? "Queueing..." : "Queue activation"}
-                </button>
-              </form>
-
-              {activationMessage ? (
-                <p className="mt-4 text-sm text-white/70">{activationMessage}</p>
-              ) : null}
-            </div>
-
-            <div className="glass-panel p-6">
-              <div className="space-y-4">
-                <p className="eyebrow">Support workflow</p>
-                <h3 className="font-display text-3xl font-semibold">
-                  Open an automation or integration ticket
-                </h3>
-                <p className="text-sm leading-7 text-white/66">
-                  Create a support workflow with priority and category so the desk above shows
-                  how operational follow-up would look in the real product.
-                </p>
               </div>
+            </motion.section>
+          </>
+        ) : null}
 
-              <form className="mt-8 space-y-4" onSubmit={handleTicketSubmit}>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label>
-                    <span className="form-label">Company</span>
-                    <input
-                      className="form-input"
-                      maxLength={120}
-                      onChange={(event) =>
-                        setTicketForm((current) => ({
-                          ...current,
-                          company: event.target.value,
-                        }))
-                      }
-                      placeholder="Company or operator"
-                      required
-                      type="text"
-                      value={ticketForm.company}
-                    />
-                  </label>
+        {siteView === "system" || siteView === "admin" || siteView === "client" ? (
+          <>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionMotion}
+            >
+              <SectionHeading
+                eyebrow="Live pulse"
+                title="Notifications, services, uploads, leads, tickets, and activations in one place"
+                copy="This layer gives the product the cloud-system feel: runtime metrics update, timeline items roll in, and service readiness is visible before the user even enters the admin or client portal."
+              />
 
-                  <label>
-                    <span className="form-label">Contact email</span>
-                    <input
-                      className="form-input"
-                      maxLength={120}
-                      onChange={(event) =>
-                        setTicketForm((current) => ({
-                          ...current,
-                          contactEmail: event.target.value,
-                        }))
-                      }
-                      placeholder="ops@company.com"
-                      required
-                      type="email"
-                      value={ticketForm.contactEmail}
-                    />
-                  </label>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label>
-                    <span className="form-label">Priority</span>
-                    <select
-                      className="form-select"
-                      onChange={(event) =>
-                        setTicketForm((current) => ({
-                          ...current,
-                          priority: event.target.value as TicketFormState["priority"],
-                        }))
-                      }
-                      value={ticketForm.priority}
-                    >
-                      <option value="critical">Critical</option>
-                      <option value="priority">Priority</option>
-                      <option value="standard">Standard</option>
-                    </select>
-                  </label>
-
-                  <label>
-                    <span className="form-label">Category</span>
-                    <select
-                      className="form-select"
-                      onChange={(event) =>
-                        setTicketForm((current) => ({
-                          ...current,
-                          category: event.target.value as TicketFormState["category"],
-                        }))
-                      }
-                      value={ticketForm.category}
-                    >
-                      <option value="automation">Automation</option>
-                      <option value="integration">Integration</option>
-                      <option value="support">Support</option>
-                    </select>
-                  </label>
-                </div>
-
-                <label>
-                  <span className="form-label">Summary</span>
-                  <textarea
-                    className="form-textarea"
-                    maxLength={280}
-                    onChange={(event) =>
-                      setTicketForm((current) => ({
-                        ...current,
-                        summary: event.target.value,
-                      }))
-                    }
-                    placeholder="Describe the workflow, issue, or integration that needs attention."
-                    required
-                    rows={5}
-                    value={ticketForm.summary}
-                  />
-                </label>
-
-                <button
-                  className="primary-button w-full justify-center"
-                  disabled={ticketSubmitting}
-                  type="submit"
-                >
-                  {ticketSubmitting ? "Opening workflow..." : "Open support workflow"}
-                </button>
-              </form>
-
-              {ticketMessage ? (
-                <p className="mt-4 text-sm text-white/70">{ticketMessage}</p>
-              ) : null}
-            </div>
-          </div>
-        </motion.section>
-
-        <motion.section
-          className="glass-panel grid gap-8 p-7 lg:grid-cols-[1fr_0.94fr] lg:p-9"
-          id="lead-capture"
-          initial="hidden"
-          variants={sectionMotion}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="space-y-4">
-            <p className="eyebrow">Conversion flow</p>
-            <h2 className="font-display text-4xl font-semibold">
-              Sales intake now feeds the same operational layer as the product workflows.
-            </h2>
-            <p className="text-base leading-8 text-white/70">
-              The landing no longer stops at storytelling. Demo requests, device rollouts,
-              support intake, notifications, and uploads now live in one coherent runtime model.
-            </p>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                {
-                  icon: ShieldCheck,
-                  title: "Sector-specific intake",
-                  body: "Demo requests already carry sector context so the follow-up path can stay commercial and focused.",
-                },
-                {
-                  icon: Database,
-                  title: "One runtime overview",
-                  body: "Frontend sections refresh from the same operations endpoint instead of stitching state from scattered calls.",
-                },
-                {
-                  icon: BellRing,
-                  title: "Instant visibility",
-                  body: "Every new action triggers notifications and appears inside the animated operations center immediately.",
-                },
-                {
-                  icon: Workflow,
-                  title: "Ready for admin next",
-                  body: "The current service model can be extended into CRM sync, device onboarding, and internal dashboards later.",
-                },
-              ].map((item) => (
-                <div className="rounded-[1.75rem] border border-white/10 bg-white/4 p-5" key={item.title}>
-                  <item.icon className="h-5 w-5 text-[var(--accent)]" />
-                  <h3 className="mt-4 font-display text-2xl font-semibold">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-white/68">{item.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="cta-frame">
-            <div className="space-y-5">
-              <p className="eyebrow">Request a walkthrough</p>
-              <h2 className="font-display text-4xl font-semibold">
-                Send a live demo request straight into brAIn.
-              </h2>
-              <p className="text-base leading-8 text-white/72">
-                Pick the sector, add company context, and the request will be stored by the backend
-                and reflected in the command center above.
-              </p>
-            </div>
-
-            <form className="mt-8 space-y-4" onSubmit={handleLeadSubmit}>
-              <div className="grid gap-4 md:grid-cols-2">
-                <label>
-                  <span className="form-label">Name</span>
-                  <input
-                    className="form-input"
-                    maxLength={80}
-                    onChange={(event) =>
-                      setLeadForm((current) => ({
-                        ...current,
-                        name: event.target.value,
-                      }))
-                    }
-                    placeholder="Your name"
-                    required
-                    type="text"
-                    value={leadForm.name}
-                  />
-                </label>
-
-                <label>
-                  <span className="form-label">Work email</span>
-                  <input
-                    className="form-input"
-                    maxLength={120}
-                    onChange={(event) =>
-                      setLeadForm((current) => ({
-                        ...current,
-                        email: event.target.value,
-                      }))
-                    }
-                    placeholder="name@company.com"
-                    required
-                    type="email"
-                    value={leadForm.email}
-                  />
-                </label>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-[1fr_0.72fr]">
-                <label>
-                  <span className="form-label">Company</span>
-                  <input
-                    className="form-input"
-                    maxLength={120}
-                    onChange={(event) =>
-                      setLeadForm((current) => ({
-                        ...current,
-                        company: event.target.value,
-                      }))
-                    }
-                    placeholder="Company or organization"
-                    required
-                    type="text"
-                    value={leadForm.company}
-                  />
-                </label>
-
-                <label>
-                  <span className="form-label">Sector</span>
-                  <select
-                    className="form-select"
-                    onChange={(event) =>
-                      setLeadForm((current) => ({
-                        ...current,
-                        sector: event.target.value,
-                      }))
-                    }
-                    value={leadForm.sector}
-                  >
-                    {content.sectors.map((sector) => (
-                      <option key={sector.slug} value={sector.slug}>
-                        {sector.name}
-                      </option>
+              <div className="mt-7 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+                <div className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {operations.metrics.map((metric) => (
+                      <MetricCard key={metric.key} metric={metric} />
                     ))}
-                  </select>
-                </label>
+                  </div>
+
+                  <div className="glass-card compact-card">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="section-kicker">Timeline</p>
+                        <h3 className="mt-3 text-2xl font-semibold text-white">
+                          Live runtime feed
+                        </h3>
+                      </div>
+                      <Activity className="h-5 w-5 text-[var(--accent)]" />
+                    </div>
+
+                    <div className="mt-5 space-y-3">
+                      {operations.timeline.length > 0 ? (
+                        operations.timeline.map((item) => (
+                          <FeedItem item={item} key={item.id} />
+                        ))
+                      ) : (
+                        <EmptyCard message="Runtime feed will appear here once the first live action lands." />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">Service status</p>
+                    <div className="mt-5 space-y-3">
+                      {operations.services.map((service) => (
+                        <div className="feed-row" key={service.key}>
+                          <div
+                            className={`status-pill ${serviceToneClasses[service.status]}`}
+                          >
+                            {service.status}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-white">
+                              {service.label}
+                            </p>
+                            <p className="mt-1 text-sm text-white/58">
+                              {service.detail}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">Live notifications</p>
+                    <div className="mt-5 space-y-3">
+                      {operations.notifications.length > 0 ? (
+                        operations.notifications.map((notification) => (
+                          <div className="feed-row" key={notification.id}>
+                            <div
+                              className={`status-pill ${cardToneClasses[notification.level]}`}
+                            >
+                              {notification.level}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-semibold text-white">
+                                {notification.title}
+                              </p>
+                              <p className="mt-1 text-sm text-white/58">
+                                {notification.body}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <EmptyCard message="No notifications have been emitted yet." />
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
+            </motion.section>
 
-              <label>
-                <span className="form-label">Context</span>
-                <textarea
-                  className="form-textarea"
-                  maxLength={600}
-                  onChange={(event) =>
-                    setLeadForm((current) => ({
-                      ...current,
-                      message: event.target.value,
-                    }))
-                  }
-                  placeholder="Tell us which device, workflow, or use case you want to present."
-                  rows={5}
-                  value={leadForm.message}
-                />
-              </label>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              variants={sectionMotion}
+            >
+              <SectionHeading
+                eyebrow={
+                  accessView === "admin"
+                    ? "Admin page"
+                    : accessView === "client"
+                      ? "Client page"
+                      : "System center"
+                }
+                title={
+                  accessView === "admin"
+                    ? "Admin control page with live operations and payment control"
+                    : accessView === "client"
+                      ? "Client workspace page with payments, cards, and support"
+                      : "Login / register gates for admin and client"
+                }
+                copy={
+                  accessView === "admin"
+                    ? "Use the admin page to monitor runtime, manage payments, assign smart cards, and control activation plus ticket status in real time."
+                    : accessView === "client"
+                      ? "Use the client page to check account metrics, complete payments, track smart cards, and request deployment support."
+                      : "Admin gets full control over runtime operations, payments, SC cards, uploads, notifications, and status changes. Client gets account metrics, payments, card visibility, activations, and support."
+                }
+              />
 
-              <button
-                className="primary-button w-full justify-center"
-                disabled={leadSubmitting}
-                type="submit"
-              >
-                {leadSubmitting ? "Sending request..." : "Request live demo"}
-              </button>
-            </form>
+              {!authSession ? (
+                <div className="mt-7 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+                  <div className="glass-card compact-card">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="section-kicker">Portal roles</p>
+                        <h3 className="mt-3 text-2xl font-semibold text-white">
+                          Choose who is entering the system
+                        </h3>
+                      </div>
+                      <LockKeyhole className="h-6 w-6 text-[var(--accent)]" />
+                    </div>
 
-            {leadMessage ? (
-              <p className="mt-4 text-sm text-white/70">{leadMessage}</p>
-            ) : null}
-          </div>
-        </motion.section>
+                    <div className="mt-5 grid gap-3 md:grid-cols-2">
+                      <button
+                        className={`role-card ${authForm.role === "client" ? "role-card-active" : ""}`}
+                        onClick={() =>
+                          setAuthForm((current) => ({
+                            ...current,
+                            role: "client",
+                          }))
+                        }
+                        type="button"
+                      >
+                        <UserRound className="h-5 w-5 text-[var(--accent)]" />
+                        <div className="text-left">
+                          <p className="text-lg font-semibold text-white">Client</p>
+                          <p className="mt-2 text-sm leading-6 text-white/58">
+                            View company metrics, cards, payments, activations, and
+                            support.
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        className={`role-card ${authForm.role === "admin" ? "role-card-active" : ""}`}
+                        onClick={() =>
+                          setAuthForm((current) => ({
+                            ...current,
+                            role: "admin",
+                          }))
+                        }
+                        type="button"
+                      >
+                        <ShieldCheck className="h-5 w-5 text-[var(--accent)]" />
+                        <div className="text-left">
+                          <p className="text-lg font-semibold text-white">Admin</p>
+                          <p className="mt-2 text-sm leading-6 text-white/58">
+                            Control notifications, payments, smart cards, uploads,
+                            activations, tickets, and accounts.
+                          </p>
+                        </div>
+                      </button>
+                    </div>
+
+                    <div className="mt-6 rounded-[1.6rem] border border-white/8 bg-white/[0.03] p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="section-kicker">Demo credentials</p>
+                          <p className="mt-2 text-sm text-white/58">
+                            Click one to prefill login instantly.
+                          </p>
+                        </div>
+                        <Sparkles className="h-5 w-5 text-[var(--accent)]" />
+                      </div>
+                      <div className="mt-4 space-y-3">
+                        {demoCredentials.map((credential) => (
+                          <button
+                            className="demo-credential"
+                            key={credential.email}
+                            onClick={() => applyDemoCredential(credential)}
+                            type="button"
+                          >
+                            <div className="text-left">
+                              <p className="text-sm font-semibold text-white">
+                                {credential.name}
+                              </p>
+                              <p className="mt-1 text-xs text-white/50">
+                                {credential.role} / {credential.company}
+                              </p>
+                            </div>
+                            <div className="text-right text-xs text-white/54">
+                              <p>{credential.email}</p>
+                              <p>{credential.password}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[1rem] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/70">
+                      Target page:{" "}
+                      <span className="font-semibold text-white">
+                        {accessView === "admin"
+                          ? "Admin login"
+                          : accessView === "client"
+                            ? "Client login"
+                            : "System access"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="glass-card compact-card">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="section-kicker">Auth</p>
+                        <h3 className="mt-3 text-2xl font-semibold text-white">
+                          {authMode === "login"
+                            ? "Login to the portal"
+                            : "Register a new portal account"}
+                        </h3>
+                      </div>
+
+                      <div className="segmented-control">
+                        <button
+                          className={authMode === "login" ? "segment-active" : ""}
+                          onClick={() => setAuthMode("login")}
+                          type="button"
+                        >
+                          Login
+                        </button>
+                        <button
+                          className={authMode === "register" ? "segment-active" : ""}
+                          onClick={() => setAuthMode("register")}
+                          type="button"
+                        >
+                          Register
+                        </button>
+                      </div>
+                    </div>
+
+                    <form className="mt-6 grid gap-3" onSubmit={handleAuthSubmit}>
+                      {authMode === "register" ? (
+                        <input
+                          className="input-shell"
+                          onChange={(event) =>
+                            setAuthForm((current) => ({
+                              ...current,
+                              name: event.target.value,
+                            }))
+                          }
+                          placeholder="Full name"
+                          value={authForm.name}
+                        />
+                      ) : null}
+
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <select
+                          className="select-shell"
+                          onChange={(event) =>
+                            setAuthForm((current) => ({
+                              ...current,
+                              role: event.target.value as AuthRole,
+                            }))
+                          }
+                          value={authForm.role}
+                        >
+                          <option value="client">Client</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                        <input
+                          className="input-shell"
+                          onChange={(event) =>
+                            setAuthForm((current) => ({
+                              ...current,
+                              email: event.target.value,
+                            }))
+                          }
+                          placeholder="Email"
+                          value={authForm.email}
+                        />
+                      </div>
+
+                      <input
+                        className="input-shell"
+                        onChange={(event) =>
+                          setAuthForm((current) => ({
+                            ...current,
+                            password: event.target.value,
+                          }))
+                        }
+                        placeholder="Password"
+                        type="password"
+                        value={authForm.password}
+                      />
+
+                      {authMode === "register" && authForm.role === "client" ? (
+                        <>
+                          <input
+                            className="input-shell"
+                            onChange={(event) =>
+                              setAuthForm((current) => ({
+                                ...current,
+                                company: event.target.value,
+                              }))
+                            }
+                            placeholder="Company"
+                            value={authForm.company}
+                          />
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <select
+                              className="select-shell"
+                              onChange={(event) =>
+                                setAuthForm((current) => ({
+                                  ...current,
+                                  sector: event.target.value,
+                                }))
+                              }
+                              value={authForm.sector}
+                            >
+                              {sectors.map((sector) => (
+                                <option key={sector.slug} value={sector.slug}>
+                                  {sector.name}
+                                </option>
+                              ))}
+                            </select>
+                            <select
+                              className="select-shell"
+                              onChange={(event) =>
+                                setAuthForm((current) => ({
+                                  ...current,
+                                  plan: event.target.value,
+                                }))
+                              }
+                              value={authForm.plan}
+                            >
+                              {plans.map((plan) => (
+                                <option key={plan.slug} value={plan.slug}>
+                                  {plan.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </>
+                      ) : null}
+
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          className="accent-button"
+                          disabled={authSubmitting}
+                          type="submit"
+                        >
+                          {authSubmitting
+                            ? "Processing..."
+                            : authMode === "login"
+                              ? "Login now"
+                              : "Create account"}
+                        </button>
+                        {authMessage ? (
+                          <p className="text-sm text-white/64">{authMessage}</p>
+                        ) : null}
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-7 dashboard-layout">
+                  <aside className="glass-card compact-card dashboard-sidebar">
+                    <p className="section-kicker">{uiText.dashboard}</p>
+                    <input
+                      className="input-shell mt-4"
+                      onChange={(event) => setDashboardSearch(event.target.value)}
+                      placeholder={uiText.search}
+                      value={dashboardSearch}
+                    />
+                    <div className="mt-4 space-y-2">
+                      {(authSession.user.role === "admin" ? adminTabs : clientTabs).map((tab) => {
+                        const isActive =
+                          authSession.user.role === "admin"
+                            ? adminTab === tab.key
+                            : clientTab === tab.key;
+                        return (
+                          <button
+                            className={`portal-tab w-full justify-start ${isActive ? "portal-tab-active" : ""}`}
+                            key={tab.key}
+                            onClick={() =>
+                              authSession.user.role === "admin"
+                                ? setAdminTab(tab.key as AdminTabKey)
+                                : setClientTab(tab.key as ClientTabKey)
+                            }
+                            type="button"
+                          >
+                            <tab.icon className="h-4 w-4" />
+                            {tab.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-5 space-y-2 text-sm text-white/70">
+                      <p>
+                        {uiText.vpn}: <span className="text-white">{networkMode}</span>
+                      </p>
+                      <p>
+                        {uiText.language}:{" "}
+                        <span className="text-white">{activeLanguage.label}</span>
+                      </p>
+                      <p>
+                        {uiText.country}:{" "}
+                        <span className="text-white">{activeCountry.label}</span>
+                      </p>
+                    </div>
+                  </aside>
+                  <div className="space-y-4">
+                  <div className="glass-card compact-card">
+                    <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                      <div>
+                        <p className="section-kicker">Portal session</p>
+                        <h3 className="mt-3 text-3xl font-semibold text-white">
+                          {authSession.user.role === "admin"
+                            ? uiText.adminCenter
+                            : uiText.clientWorkspace}
+                        </h3>
+                        <p className="mt-3 text-sm text-white/62">
+                          {authSession.user.name} / {authSession.user.email} /{" "}
+                          {authSession.user.company}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          className="secondary-button"
+                          onClick={() => {
+                            void refreshOperations();
+                            void refreshPortal();
+                          }}
+                          type="button"
+                        >
+                          <RefreshCw className="h-4 w-4" />
+                          {uiText.refresh}
+                        </button>
+                        <button
+                          className="secondary-button"
+                          onClick={handleLogout}
+                          type="button"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          {uiText.logout}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {authSession.user.role === "admin" ? (
+                    <>
+                      <div className="portal-tab-row">
+                        {adminTabs.map((tab) => {
+                          const Icon = tab.icon;
+
+                          return (
+                            <button
+                              className={`portal-tab ${adminTab === tab.key ? "portal-tab-active" : ""}`}
+                              key={tab.key}
+                              onClick={() => setAdminTab(tab.key)}
+                              type="button"
+                            >
+                              <Icon className="h-4 w-4" />
+                              {tab.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {adminTab === "overview" ? (
+                        <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                          <div className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                              {adminOverview.adminMetrics.map((metric) => (
+                                <MetricCard key={metric.key} metric={metric} />
+                              ))}
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <div className="flex items-center justify-between gap-3">
+                                <div>
+                                  <p className="section-kicker">Accounts</p>
+                                  <h3 className="mt-3 text-2xl font-semibold text-white">
+                                    Client organizations
+                                  </h3>
+                                </div>
+                                <Building2 className="h-5 w-5 text-[var(--accent)]" />
+                              </div>
+
+                              <div className="mt-5 overflow-x-auto overflow-y-hidden rounded-[1.5rem] border border-white/8">
+                                <div className="table-head grid-cols-[1.2fr_0.8fr_0.6fr_0.6fr_0.8fr]">
+                                  <span>Company</span>
+                                  <span>Sector</span>
+                                  <span>Plan</span>
+                                  <span>Cards</span>
+                                  <span>Sales</span>
+                                </div>
+                                <div className="table-body">
+                                  {filteredAdminAccounts.map((account) => (
+                                    <div
+                                      className="table-row grid-cols-[1.2fr_0.8fr_0.6fr_0.6fr_0.8fr]"
+                                      key={account.id}
+                                    >
+                                      <span>{account.company}</span>
+                                      <span>{account.sectorLabel}</span>
+                                      <span>{account.planName}</span>
+                                      <span>{account.smartCards}</span>
+                                      <span>{formatMoney(account.salesToday)}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Payments snapshot</p>
+                              <div className="mt-5 space-y-3">
+                                {filteredAdminPayments.length > 0 ? (
+                                  filteredAdminPayments.slice(0, 6).map((payment) => (
+                                    <div className="feed-row" key={payment.id}>
+                                      <div className="status-pill tone-success">
+                                        {paymentBrandLabels[payment.cardBrand]}
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-white">
+                                          {payment.company}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          {payment.planName} / **** {payment.last4}
+                                        </p>
+                                      </div>
+                                      <div className="text-sm font-semibold text-white">
+                                        {formatMoney(payment.amount)}
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <EmptyCard message="Payments will appear here once the first checkout lands." />
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Notifications</p>
+                              <div className="mt-5 space-y-3">
+                                {adminOverview.notifications.slice(0, 5).map((item) => (
+                                  <div className="feed-row" key={item.id}>
+                                    <div
+                                      className={`status-pill ${cardToneClasses[item.level]}`}
+                                    >
+                                      {item.level}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <p className="text-sm font-semibold text-white">
+                                        {item.title}
+                                      </p>
+                                      <p className="mt-1 text-sm text-white/56">
+                                        {item.body}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {adminTab === "payments" ? (
+                        <div className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
+                          <div className="glass-card compact-card">
+                            <p className="section-kicker">Accepted cards</p>
+                            <h3 className="mt-3 text-2xl font-semibold text-white">
+                              Visa, Mastercard, and American Express
+                            </h3>
+                            <div className="mt-5 flex flex-wrap gap-2">
+                              {acceptedTestCards.map((card) => (
+                                <span className="outline-chip" key={card.label}>
+                                  {card.label}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                              {adminOverview.payments.slice(0, 4).map((payment) => (
+                                <div className="data-card compact-card" key={payment.id}>
+                                  <p className="text-xs uppercase tracking-[0.28em] text-white/38">
+                                    {paymentBrandLabels[payment.cardBrand]}
+                                  </p>
+                                  <p className="mt-3 text-xl font-semibold text-white">
+                                    {formatMoney(payment.amount)}
+                                  </p>
+                                  <p className="mt-2 text-sm text-white/58">
+                                    {payment.company} / {payment.planName}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="glass-card compact-card">
+                            <p className="section-kicker">Payment records</p>
+                            <div className="mt-5 overflow-x-auto overflow-y-hidden rounded-[1.5rem] border border-white/8">
+                              <div className="table-head grid-cols-[1fr_0.7fr_0.7fr_0.7fr_0.8fr]">
+                                <span>Company</span>
+                                <span>Plan</span>
+                                <span>Brand</span>
+                                <span>Last 4</span>
+                                <span>Amount</span>
+                              </div>
+                              <div className="table-body">
+                                {filteredAdminPayments.map((payment) => (
+                                  <div
+                                    className="table-row grid-cols-[1fr_0.7fr_0.7fr_0.7fr_0.8fr]"
+                                    key={payment.id}
+                                  >
+                                    <span>{payment.company}</span>
+                                    <span>{payment.planName}</span>
+                                    <span>{paymentBrandLabels[payment.cardBrand]}</span>
+                                    <span>**** {payment.last4}</span>
+                                    <span>{formatMoney(payment.amount)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {adminTab === "cards" ? (
+                        <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">SC card control</p>
+                              <h3 className="mt-3 text-2xl font-semibold text-white">
+                                Assign from the 500-card inventory
+                              </h3>
+
+                              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                                <div className="data-card compact-card">
+                                  <p className="text-xs uppercase tracking-[0.3em] text-white/38">
+                                    Total
+                                  </p>
+                                  <p className="mt-3 text-3xl font-semibold text-white">
+                                    {adminOverview.smartCardStats.total}
+                                  </p>
+                                </div>
+                                <div className="data-card compact-card">
+                                  <p className="text-xs uppercase tracking-[0.3em] text-white/38">
+                                    Available
+                                  </p>
+                                  <p className="mt-3 text-3xl font-semibold text-white">
+                                    {adminOverview.smartCardStats.available}
+                                  </p>
+                                </div>
+                                <div className="data-card compact-card">
+                                  <p className="text-xs uppercase tracking-[0.3em] text-white/38">
+                                    Activated
+                                  </p>
+                                  <p className="mt-3 text-3xl font-semibold text-white">
+                                    {adminOverview.smartCardStats.activated}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <form
+                                className="mt-6 grid gap-3"
+                                onSubmit={handleAssignCardsSubmit}
+                              >
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) =>
+                                    setAssignCardsForm((current) => ({
+                                      ...current,
+                                      company: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="Company"
+                                  value={assignCardsForm.company}
+                                />
+                                <div className="grid gap-3 md:grid-cols-2">
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setAssignCardsForm((current) => ({
+                                        ...current,
+                                        sector: event.target.value,
+                                        deviceKey: getDeviceKeyForSector(
+                                          event.target.value,
+                                        ),
+                                      }))
+                                    }
+                                    value={assignCardsForm.sector}
+                                  >
+                                    {sectors.map((sector) => (
+                                      <option key={sector.slug} value={sector.slug}>
+                                        {sector.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setAssignCardsForm((current) => ({
+                                        ...current,
+                                        plan: event.target.value,
+                                      }))
+                                    }
+                                    value={assignCardsForm.plan}
+                                  >
+                                    {plans.map((plan) => (
+                                      <option key={plan.slug} value={plan.slug}>
+                                        {plan.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="grid gap-3 md:grid-cols-2">
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setAssignCardsForm((current) => ({
+                                        ...current,
+                                        deviceKey: event.target.value,
+                                      }))
+                                    }
+                                    value={assignCardsForm.deviceKey}
+                                  >
+                                    {devices.map((device) => (
+                                      <option
+                                        key={device.deviceKey}
+                                        value={device.deviceKey}
+                                      >
+                                        {device.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <input
+                                    className="input-shell"
+                                    min={1}
+                                    onChange={(event) =>
+                                      setAssignCardsForm((current) => ({
+                                        ...current,
+                                        quantity: Number(event.target.value) || 1,
+                                      }))
+                                    }
+                                    type="number"
+                                    value={assignCardsForm.quantity}
+                                  />
+                                </div>
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <button
+                                    className="accent-button"
+                                    disabled={assigningCards}
+                                    type="submit"
+                                  >
+                                    {assigningCards ? "Assigning..." : "Assign cards"}
+                                  </button>
+                                  {assignCardsMessage ? (
+                                    <p className="text-sm text-white/64">
+                                      {assignCardsMessage}
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+
+                          <div className="glass-card compact-card">
+                            <p className="section-kicker">Inventory preview</p>
+                            <div className="mt-4 grid gap-3 md:grid-cols-[1fr_0.5fr]">
+                              <input
+                                className="input-shell"
+                                onChange={(event) => setAdminCardQuery(event.target.value)}
+                                placeholder="Search by code, sector, plan, owner"
+                                value={adminCardQuery}
+                              />
+                              <select
+                                className="select-shell"
+                                onChange={(event) =>
+                                  setAdminCardFilter(
+                                    event.target.value as SmartCardItem["status"] | "all",
+                                  )
+                                }
+                                value={adminCardFilter}
+                              >
+                                <option value="all">All statuses</option>
+                                <option value="available">Available</option>
+                                <option value="assigned">Assigned</option>
+                                <option value="activated">Activated</option>
+                              </select>
+                            </div>
+                            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                              <p className="text-sm text-white/62">
+                                Showing {adminVisibleCards.length} of{" "}
+                                {adminOverview.smartCardStats.total} SC cards
+                              </p>
+                              {adminCardMessage ? (
+                                <p className="text-sm text-white/70">{adminCardMessage}</p>
+                              ) : null}
+                            </div>
+                            <div className="mt-5 overflow-x-auto overflow-y-hidden rounded-[1.5rem] border border-white/8">
+                              <div className="table-head grid-cols-[0.9fr_0.7fr_0.7fr_0.8fr_0.6fr_0.75fr]">
+                                <span>Code</span>
+                                <span>Sector</span>
+                                <span>Plan</span>
+                                <span>Owner</span>
+                                <span>Status</span>
+                                <span>Action</span>
+                              </div>
+                              <div className="table-body">
+                                {adminVisibleCards.map((card) => (
+                                  <div
+                                    className="table-row grid-cols-[0.9fr_0.7fr_0.7fr_0.8fr_0.6fr_0.75fr]"
+                                    key={card.id}
+                                  >
+                                    <span>{card.code}</span>
+                                    <span>{card.sectorLabel}</span>
+                                    <span>{card.planName}</span>
+                                    <span>{card.ownerCompany ?? "Inventory"}</span>
+                                    <span>
+                                      <span
+                                        className={`status-pill ${smartCardToneClasses[card.status]}`}
+                                      >
+                                        {card.status}
+                                      </span>
+                                    </span>
+                                    <span>
+                                      <button
+                                        className="inline-action"
+                                        disabled={
+                                          card.status === "activated" ||
+                                          validatingCardCode === card.code
+                                        }
+                                        onClick={() => void handleAdminCardActivate(card)}
+                                        type="button"
+                                      >
+                                        {validatingCardCode === card.code
+                                          ? "Activating..."
+                                          : card.status === "activated"
+                                            ? "Activated"
+                                            : "Activate"}
+                                      </button>
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {adminTab === "ops" ? (
+                        <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Broadcast</p>
+                              <form
+                                className="mt-5 grid gap-3"
+                                onSubmit={handleBroadcastSubmit}
+                              >
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) =>
+                                    setBroadcastForm((current) => ({
+                                      ...current,
+                                      title: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="Notification title"
+                                  value={broadcastForm.title}
+                                />
+                                <select
+                                  className="select-shell"
+                                  onChange={(event) =>
+                                    setBroadcastForm((current) => ({
+                                      ...current,
+                                      level: event.target.value as BroadcastFormState["level"],
+                                    }))
+                                  }
+                                  value={broadcastForm.level}
+                                >
+                                  <option value="info">Info</option>
+                                  <option value="success">Success</option>
+                                  <option value="warning">Warning</option>
+                                </select>
+                                <textarea
+                                  className="textarea-shell"
+                                  onChange={(event) =>
+                                    setBroadcastForm((current) => ({
+                                      ...current,
+                                      body: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="Notification body"
+                                  rows={3}
+                                  value={broadcastForm.body}
+                                />
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <button
+                                    className="accent-button"
+                                    disabled={broadcastSubmitting}
+                                    type="submit"
+                                  >
+                                    {broadcastSubmitting
+                                      ? "Broadcasting..."
+                                      : "Send broadcast"}
+                                  </button>
+                                  {broadcastMessage ? (
+                                    <p className="text-sm text-white/64">
+                                      {broadcastMessage}
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </form>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Upload center</p>
+                              <form className="mt-5 grid gap-3" onSubmit={handleUploadSubmit}>
+                                <label className="upload-panel" htmlFor="admin-files">
+                                  <Upload className="h-5 w-5 text-[var(--accent)]" />
+                                  <span>Upload assets or docs into live runtime</span>
+                                </label>
+                                <input
+                                  className="hidden"
+                                  id="admin-files"
+                                  multiple
+                                  name="admin-files"
+                                  type="file"
+                                />
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <button
+                                    className="secondary-button"
+                                    disabled={uploading}
+                                    type="submit"
+                                  >
+                                    {uploading ? "Uploading..." : "Upload files"}
+                                  </button>
+                                  {uploadMessage ? (
+                                    <p className="text-sm text-white/64">
+                                      {uploadMessage}
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Activations</p>
+                              <div className="mt-5 space-y-3">
+                                {adminOverview.activations.map((activation) => (
+                                  <div className="feed-row flex-col items-start" key={activation.id}>
+                                    <div className="flex w-full items-start justify-between gap-3">
+                                      <div>
+                                        <p className="text-sm font-semibold text-white">
+                                          {activation.company} / {activation.deviceName}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          {activation.site} / {activation.planName}
+                                        </p>
+                                      </div>
+                                      <span
+                                        className={`status-pill ${activationToneClasses[activation.status]}`}
+                                      >
+                                        {activation.status}
+                                      </span>
+                                    </div>
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                      {(["queued", "provisioning", "live"] as const).map(
+                                        (status) => (
+                                          <button
+                                            className="inline-action"
+                                            key={status}
+                                            onClick={() =>
+                                              void handleActivationStatusUpdate(
+                                                activation.id,
+                                                status,
+                                              )
+                                            }
+                                            type="button"
+                                          >
+                                            {status}
+                                          </button>
+                                        ),
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Support tickets</p>
+                              <div className="mt-5 space-y-3">
+                                {adminOverview.tickets.map((ticket) => (
+                                  <div className="feed-row flex-col items-start" key={ticket.id}>
+                                    <div className="flex w-full items-start justify-between gap-3">
+                                      <div>
+                                        <p className="text-sm font-semibold text-white">
+                                          {ticket.company} / {ticket.category}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          {ticket.summary}
+                                        </p>
+                                      </div>
+                                      <span
+                                        className={`status-pill ${ticketToneClasses[ticket.status]}`}
+                                      >
+                                        {ticket.status}
+                                      </span>
+                                    </div>
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                      {(["open", "investigating", "resolved"] as const).map(
+                                        (status) => (
+                                          <button
+                                            className="inline-action"
+                                            key={status}
+                                            onClick={() =>
+                                              void handleTicketStatusUpdate(
+                                                ticket.id,
+                                                status,
+                                              )
+                                            }
+                                            type="button"
+                                          >
+                                            {status}
+                                          </button>
+                                        ),
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+                    </>
+                  ) : (
+                    <>
+                      <div className="portal-tab-row">
+                        {clientTabs.map((tab) => {
+                          const Icon = tab.icon;
+
+                          return (
+                            <button
+                              className={`portal-tab ${clientTab === tab.key ? "portal-tab-active" : ""}`}
+                              key={tab.key}
+                              onClick={() => setClientTab(tab.key)}
+                              type="button"
+                            >
+                              <Icon className="h-4 w-4" />
+                              {tab.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {clientTab === "overview" ? (
+                        <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                  <p className="section-kicker">Company view</p>
+                                  <h3 className="mt-3 text-2xl font-semibold text-white">
+                                    {clientOverview.account?.company ?? authSession.user.company}
+                                  </h3>
+                                </div>
+                                <select
+                                  className="select-shell max-w-[16rem]"
+                                  onChange={(event) =>
+                                    setSelectedClientCompany(event.target.value)
+                                  }
+                                  value={selectedClientCompany}
+                                >
+                                  {clientOverview.clients.map((client) => (
+                                    <option key={client.company} value={client.company}>
+                                      {client.company} / {client.sectorLabel}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                                {clientOverview.quickMetrics.map((metric) => (
+                                  <MetricCard key={metric.key} metric={metric} />
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Smart cards in use</p>
+                              <div className="mt-5 space-y-3">
+                                {filteredClientCards.length > 0 ? (
+                                  filteredClientCards.slice(0, 8).map((card) => (
+                                    <div className="feed-row" key={card.id}>
+                                      <div
+                                        className={`status-pill ${smartCardToneClasses[card.status]}`}
+                                      >
+                                        {card.status}
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-white">
+                                          {card.code}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          {card.planName} / {card.sectorLabel}
+                                        </p>
+                                      </div>
+                                      <div className="text-xs text-white/42">
+                                        {formatLocalDate(card.updatedAt)}
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <EmptyCard message="No cards are assigned to this company yet." />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Latest notifications</p>
+                              <div className="mt-5 space-y-3">
+                                {clientOverview.notifications.map((notification) => (
+                                  <div className="feed-row" key={notification.id}>
+                                    <div
+                                      className={`status-pill ${cardToneClasses[notification.level]}`}
+                                    >
+                                      {notification.level}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <p className="text-sm font-semibold text-white">
+                                        {notification.title}
+                                      </p>
+                                      <p className="mt-1 text-sm text-white/56">
+                                        {notification.body}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Recent payments</p>
+                              <div className="mt-5 space-y-3">
+                                {filteredClientPayments.length > 0 ? (
+                                  filteredClientPayments.map((payment) => (
+                                    <div className="feed-row" key={payment.id}>
+                                      <div className="status-pill tone-success">
+                                        {paymentBrandLabels[payment.cardBrand]}
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-white">
+                                          {payment.planName}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          **** {payment.last4}
+                                        </p>
+                                      </div>
+                                      <div className="text-sm font-semibold text-white">
+                                        {formatMoney(payment.amount)}
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <EmptyCard message="No payments have been captured yet." />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {clientTab === "payments" ? (
+                        <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+                          <div className="glass-card compact-card">
+                            <div className="flex items-center justify-between gap-3">
+                              <div>
+                                <p className="section-kicker">Checkout</p>
+                                <h3 className="mt-3 text-2xl font-semibold text-white">
+                                  Live plan payment form
+                                </h3>
+                              </div>
+                              <CreditCard className="h-5 w-5 text-[var(--accent)]" />
+                            </div>
+
+                            <div className="mt-5 flex flex-wrap gap-2">
+                              {acceptedTestCards.map((card) => (
+                                <button
+                                  className="outline-chip"
+                                  key={card.label}
+                                  onClick={() => applyPaymentTestCard(card.cardNumber)}
+                                  type="button"
+                                >
+                                  {card.label}
+                                </button>
+                              ))}
+                            </div>
+
+                            <form className="mt-6 grid gap-3" onSubmit={handlePaymentSubmit}>
+                              <input
+                                className="input-shell"
+                                onChange={(event) =>
+                                  setPaymentForm((current) => ({
+                                    ...current,
+                                    company: event.target.value,
+                                  }))
+                                }
+                                placeholder="Company"
+                                value={paymentForm.company}
+                              />
+                              <div className="grid gap-3 md:grid-cols-2">
+                                <select
+                                  className="select-shell"
+                                  onChange={(event) =>
+                                    setPaymentForm((current) => ({
+                                      ...current,
+                                      plan: event.target.value,
+                                      amount:
+                                        resolvePlanPrice(event.target.value) ||
+                                        current.amount,
+                                    }))
+                                  }
+                                  value={paymentForm.plan}
+                                >
+                                  {plans.map((plan) => (
+                                    <option key={plan.slug} value={plan.slug}>
+                                      {plan.name}
+                                    </option>
+                                  ))}
+                                </select>
+                                <input
+                                  className="input-shell"
+                                  min={1}
+                                  onChange={(event) =>
+                                    setPaymentForm((current) => ({
+                                      ...current,
+                                      amount: Number(event.target.value) || 0,
+                                    }))
+                                  }
+                                  type="number"
+                                  value={paymentForm.amount}
+                                />
+                              </div>
+                              <input
+                                className="input-shell"
+                                onChange={(event) =>
+                                  setPaymentForm((current) => ({
+                                    ...current,
+                                    cardholder: event.target.value,
+                                  }))
+                                }
+                                placeholder="Cardholder"
+                                value={paymentForm.cardholder}
+                              />
+                              <div className="grid gap-3 md:grid-cols-2">
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) =>
+                                    setPaymentForm((current) => ({
+                                      ...current,
+                                      cardNumber: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="Card number"
+                                  value={paymentForm.cardNumber}
+                                />
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) =>
+                                    setPaymentForm((current) => ({
+                                      ...current,
+                                      expiry: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="MM/YY"
+                                  value={paymentForm.expiry}
+                                />
+                              </div>
+                              <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                  className="accent-button"
+                                  disabled={paymentSubmitting}
+                                  type="submit"
+                                >
+                                  {paymentSubmitting ? "Processing..." : "Pay now"}
+                                </button>
+                                {paymentMessage ? (
+                                  <p className="text-sm text-white/64">
+                                    {paymentMessage}
+                                  </p>
+                                ) : null}
+                              </div>
+                            </form>
+                          </div>
+
+                          <div className="glass-card compact-card">
+                            <p className="section-kicker">Payment history</p>
+                            <div className="mt-5 overflow-x-auto overflow-y-hidden rounded-[1.5rem] border border-white/8">
+                              <div className="table-head grid-cols-[0.8fr_0.8fr_0.8fr_0.8fr]">
+                                <span>Plan</span>
+                                <span>Brand</span>
+                                <span>Last 4</span>
+                                <span>Amount</span>
+                              </div>
+                              <div className="table-body">
+                                {clientOverview.payments.map((payment) => (
+                                  <div
+                                    className="table-row grid-cols-[0.8fr_0.8fr_0.8fr_0.8fr]"
+                                    key={payment.id}
+                                  >
+                                    <span>{payment.planName}</span>
+                                    <span>{paymentBrandLabels[payment.cardBrand]}</span>
+                                    <span>**** {payment.last4}</span>
+                                    <span>{formatMoney(payment.amount)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {clientTab === "support" ? (
+                        <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Activation request</p>
+                              <form
+                                className="mt-5 grid gap-3"
+                                onSubmit={handleActivationSubmit}
+                              >
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) =>
+                                    setActivationForm((current) => ({
+                                      ...current,
+                                      company: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="Company"
+                                  value={activationForm.company}
+                                />
+                                <div className="grid gap-3 md:grid-cols-2">
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setActivationForm((current) => ({
+                                        ...current,
+                                        sector: event.target.value,
+                                        deviceKey: getDeviceKeyForSector(
+                                          event.target.value,
+                                        ),
+                                      }))
+                                    }
+                                    value={activationForm.sector}
+                                  >
+                                    {sectors.map((sector) => (
+                                      <option key={sector.slug} value={sector.slug}>
+                                        {sector.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setActivationForm((current) => ({
+                                        ...current,
+                                        deviceKey: event.target.value,
+                                      }))
+                                    }
+                                    value={activationForm.deviceKey}
+                                  >
+                                    {devices.map((device) => (
+                                      <option
+                                        key={device.deviceKey}
+                                        value={device.deviceKey}
+                                      >
+                                        {device.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="grid gap-3 md:grid-cols-2">
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setActivationForm((current) => ({
+                                        ...current,
+                                        plan: event.target.value,
+                                      }))
+                                    }
+                                    value={activationForm.plan}
+                                  >
+                                    {plans.map((plan) => (
+                                      <option key={plan.slug} value={plan.slug}>
+                                        {plan.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <input
+                                    className="input-shell"
+                                    onChange={(event) =>
+                                      setActivationForm((current) => ({
+                                        ...current,
+                                        site: event.target.value,
+                                      }))
+                                    }
+                                    placeholder="Site / branch"
+                                    value={activationForm.site}
+                                  />
+                                </div>
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <button
+                                    className="accent-button"
+                                    disabled={activationSubmitting}
+                                    type="submit"
+                                  >
+                                    {activationSubmitting
+                                      ? "Submitting..."
+                                      : "Request activation"}
+                                  </button>
+                                  {activationMessage ? (
+                                    <p className="text-sm text-white/64">
+                                      {activationMessage}
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </form>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Support ticket</p>
+                              <form className="mt-5 grid gap-3" onSubmit={handleTicketSubmit}>
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) =>
+                                    setTicketForm((current) => ({
+                                      ...current,
+                                      company: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="Company"
+                                  value={ticketForm.company}
+                                />
+                                <div className="grid gap-3 md:grid-cols-2">
+                                  <input
+                                    className="input-shell"
+                                    onChange={(event) =>
+                                      setTicketForm((current) => ({
+                                        ...current,
+                                        contactEmail: event.target.value,
+                                      }))
+                                    }
+                                    placeholder="Contact email"
+                                    value={ticketForm.contactEmail}
+                                  />
+                                  <select
+                                    className="select-shell"
+                                    onChange={(event) =>
+                                      setTicketForm((current) => ({
+                                        ...current,
+                                        priority: event.target.value as TicketFormState["priority"],
+                                      }))
+                                    }
+                                    value={ticketForm.priority}
+                                  >
+                                    <option value="standard">Standard</option>
+                                    <option value="priority">Priority</option>
+                                    <option value="critical">Critical</option>
+                                  </select>
+                                </div>
+                                <select
+                                  className="select-shell"
+                                  onChange={(event) =>
+                                    setTicketForm((current) => ({
+                                      ...current,
+                                      category: event.target.value as TicketFormState["category"],
+                                    }))
+                                  }
+                                  value={ticketForm.category}
+                                >
+                                  <option value="support">Support</option>
+                                  <option value="automation">Automation</option>
+                                  <option value="integration">Integration</option>
+                                </select>
+                                <textarea
+                                  className="textarea-shell"
+                                  onChange={(event) =>
+                                    setTicketForm((current) => ({
+                                      ...current,
+                                      summary: event.target.value,
+                                    }))
+                                  }
+                                  placeholder="What needs attention?"
+                                  rows={3}
+                                  value={ticketForm.summary}
+                                />
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <button
+                                    className="secondary-button"
+                                    disabled={ticketSubmitting}
+                                    type="submit"
+                                  >
+                                    {ticketSubmitting ? "Opening..." : "Open ticket"}
+                                  </button>
+                                  {ticketMessage ? (
+                                    <p className="text-sm text-white/64">
+                                      {ticketMessage}
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Activation queue</p>
+                              <div className="mt-5 space-y-3">
+                                {clientOverview.activations.length > 0 ? (
+                                  clientOverview.activations.map((activation) => (
+                                    <div className="feed-row" key={activation.id}>
+                                      <div
+                                        className={`status-pill ${activationToneClasses[activation.status]}`}
+                                      >
+                                        {activation.status}
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-white">
+                                          {activation.deviceName}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          {activation.site} / {activation.planName}
+                                        </p>
+                                      </div>
+                                      <div className="text-xs text-white/42">
+                                        {formatLocalDate(activation.createdAt)}
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <EmptyCard message="No activation requests yet." />
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="glass-card compact-card">
+                              <p className="section-kicker">Support queue</p>
+                              <div className="mt-5 space-y-3">
+                                {clientOverview.tickets.length > 0 ? (
+                                  clientOverview.tickets.map((ticket) => (
+                                    <div className="feed-row" key={ticket.id}>
+                                      <div
+                                        className={`status-pill ${ticketToneClasses[ticket.status]}`}
+                                      >
+                                        {ticket.status}
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-white">
+                                          {ticket.category}
+                                        </p>
+                                        <p className="mt-1 text-sm text-white/56">
+                                          {ticket.summary}
+                                        </p>
+                                      </div>
+                                      <div className="text-xs text-white/42">
+                                        {formatLocalDate(ticket.createdAt)}
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <EmptyCard message="No support tickets are open." />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null}
+                    </>
+                  )}
+                  </div>
+                </div>
+              )}
+            </motion.section>
+          </>
+        ) : null}
+
+        {siteView === "vpn" ? (
+          <>
+            <motion.section
+              className="section-shell"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={sectionMotion}
+            >
+              <SectionHeading
+                eyebrow="VPN center"
+                title="Dedicated VPN page for secure network routing"
+                copy="This page isolates network controls in one place so VPN mode, region, and language flow are easy to manage before users enter admin or client operations."
+              />
+
+              <div className="mt-7 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+                <div className="glass-card compact-card">
+                  <p className="section-kicker">VPN routing profile</p>
+                  <div className="mt-5 space-y-4">
+                    <div className="segmented-control">
+                      <button
+                        className={networkMode === "live" ? "segment-active" : ""}
+                        onClick={() => setNetworkMode("live")}
+                        type="button"
+                      >
+                        Live
+                      </button>
+                      <button
+                        className={networkMode === "country" ? "segment-active" : ""}
+                        onClick={() => setNetworkMode("country")}
+                        type="button"
+                      >
+                        Region route
+                      </button>
+                      <button
+                        className={networkMode === "private" ? "segment-active" : ""}
+                        onClick={() => setNetworkMode("private")}
+                        type="button"
+                      >
+                        Private VPN
+                      </button>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <select
+                        className="select-shell"
+                        onChange={(event) => setSelectedCountry(event.target.value)}
+                        value={selectedCountry}
+                      >
+                        {countryOptions.map((country) => (
+                          <option key={country.code} value={country.code}>
+                            {country.label} ({country.code})
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        className="select-shell"
+                        onChange={(event) => setSelectedLanguage(event.target.value)}
+                        value={selectedLanguage}
+                      >
+                        {languageOptions.map((language) => (
+                          <option key={language.code} value={language.code}>
+                            {language.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.03] p-4">
+                      <p className="text-sm text-white/64">
+                        Active route headers are automatically attached to every API request.
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <span className="outline-chip">x-brain-network: {networkMode}</span>
+                        <span className="outline-chip">x-brain-country: {activeCountry.code}</span>
+                        <span className="outline-chip">
+                          x-brain-language: {activeLanguage.code}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">VPN readiness</p>
+                    <div className="mt-5 grid gap-4 md:grid-cols-2">
+                      <div className="data-card compact-card">
+                        <p className="text-xs uppercase tracking-[0.28em] text-white/40">
+                          Tunnel
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {networkMode === "private" ? "Encrypted" : "Standard"}
+                        </p>
+                      </div>
+                      <div className="data-card compact-card">
+                        <p className="text-xs uppercase tracking-[0.28em] text-white/40">
+                          Region
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {activeCountry.label}
+                        </p>
+                      </div>
+                      <div className="data-card compact-card">
+                        <p className="text-xs uppercase tracking-[0.28em] text-white/40">
+                          Locale
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          {activeLanguage.label}
+                        </p>
+                      </div>
+                      <div className="data-card compact-card">
+                        <p className="text-xs uppercase tracking-[0.28em] text-white/40">
+                          Access
+                        </p>
+                        <p className="mt-3 text-2xl font-semibold text-white">
+                          Ready
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="glass-card compact-card">
+                    <p className="section-kicker">Next step</p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <button
+                        className="accent-button"
+                        onClick={() => openSiteView("system")}
+                        type="button"
+                      >
+                        Open access login
+                      </button>
+                      {authSession ? (
+                        <button
+                          className="secondary-button"
+                          onClick={() => openSiteView(getRoleHomeView(authSession.user.role))}
+                          type="button"
+                        >
+                          Open my workspace
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.section>
+          </>
+        ) : null}
       </main>
     </div>
   );

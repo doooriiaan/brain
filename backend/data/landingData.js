@@ -1,36 +1,36 @@
 export const fallbackContent = {
   source: "fallback",
   hero: {
-    eyebrow: "Commercial + business + healthcare + Industry 4.0",
-    title: "One AI platform for every sector you want to sell.",
+    eyebrow: "Komercial + Business + Healthcare + Industry 4.0 AI",
+    title: "Smarter business. Stronger results.",
     subtitle:
-      "brAIn turns your concept into a real product ecosystem: vertical-specific devices, live services, annual plans, and a preweb that feels premium and interactive from the first scroll.",
+      "brAIn turns the concept into a full product ecosystem: sector-ready devices, smart-card activation, payments, live services, and a compact high-energy preweb that flows into the real system.",
     badges: [
-      "Commercial AI screens",
-      "Business automation hub",
-      "Healthcare assistant",
-      "Industry 4.0 edge AI",
+      "Komercial",
+      "Business",
+      "Healthcare",
+      "Industry 4.0 AI",
     ],
     metrics: [
       { label: "Sectors ready", value: "4 verticals" },
       { label: "Devices in lineup", value: "4 products" },
-      { label: "Cloud visibility", value: "24/7 linked" },
+      { label: "SC cards live", value: "500 inventory" },
     ],
     primaryCta: {
-      label: "Explore sector solutions",
-      href: "#sectors",
+      label: "Open preweb",
+      href: "#preweb-home",
     },
     secondaryCta: {
-      label: "Book a live demo",
-      href: "#lead-capture",
+      label: "Open system",
+      href: "#system-center",
     },
-    deviceImage: "/media/business-hub.jpeg",
-    plansImage: "/media/business-plans.jpeg",
+    deviceImage: "/brand/brain-hero.svg",
+    plansImage: "/brand/plans-board.svg",
   },
   sectors: [
     {
       slug: "commercial",
-      name: "Commercial",
+      name: "Komercial",
       title: "AI Stick for retail, hospitality, kiosks, and smart displays",
       summary:
         "A compact plug-and-play device for customer-facing screens that adds voice AI, content suggestions, messaging flows, and branded experiences.",
@@ -39,7 +39,7 @@ export const fallbackContent = {
       statValue: "Plug & play",
       accent: "#f2b84b",
       deviceKey: "ai-stick",
-      imageUrl: "/media/commercial-stick.jpeg",
+      imageUrl: "/brand/commercial-stick-board.svg",
       capabilities: [
         "Voice assistant on screens",
         "Promotions and product discovery",
@@ -58,7 +58,7 @@ export const fallbackContent = {
       statValue: "Automation + voice",
       accent: "#63b2ff",
       deviceKey: "business-hub",
-      imageUrl: "/media/business-hub.jpeg",
+      imageUrl: "/brand/business-hub-board.svg",
       capabilities: [
         "Realtime business analytics",
         "Voice-based task execution",
@@ -77,7 +77,7 @@ export const fallbackContent = {
       statValue: "Secure workflow",
       accent: "#7ce0d4",
       deviceKey: "med-assistant",
-      imageUrl: "/media/healthcare-med.jpeg",
+      imageUrl: "/brand/healthcare-med-board.svg",
       capabilities: [
         "Appointments and patient support",
         "Pharmacy and stock guidance",
@@ -96,7 +96,7 @@ export const fallbackContent = {
       statValue: "PLC / SCADA ready",
       accent: "#f59d62",
       deviceKey: "industry-edge",
-      imageUrl: "/media/industry-edge.jpeg",
+      imageUrl: "/brand/industry-edge-board.svg",
       capabilities: [
         "Realtime machine monitoring",
         "Predictive maintenance alerts",
@@ -114,7 +114,7 @@ export const fallbackContent = {
       tagline: "Desk-ready AI assistant for daily operations and client workflows.",
       description:
         "The Hub gives the business vertical a premium physical anchor. It is ideal for sales demos because it shows the product as something you can touch, install, and connect to the brAIn cloud system immediately.",
-      imageUrl: "/media/business-hub-compact.jpeg",
+      imageUrl: "/brand/business-hub-board.svg",
       ports: ["USB-C", "USB 3.0", "HDMI", "Ethernet", "Wi-Fi 6", "Bluetooth 5.2"],
       suitedFor: ["Front desks", "SMB offices", "Showrooms", "Sales demos"],
       metrics: [
@@ -131,7 +131,7 @@ export const fallbackContent = {
       tagline: "Turn any TV or display into a customer-facing AI screen.",
       description:
         "The AI Stick is perfect for retail and commercial use cases because it is lightweight, fast to install, and easy to explain. It transforms passive screens into active AI touchpoints.",
-      imageUrl: "/media/commercial-stick.jpeg",
+      imageUrl: "/brand/commercial-stick-board.svg",
       ports: ["HDMI", "USB power", "USB-C", "Wi-Fi 6", "Bluetooth 5.2"],
       suitedFor: ["Retail", "Kiosks", "Hospitality", "Showcase screens"],
       metrics: [
@@ -148,7 +148,7 @@ export const fallbackContent = {
       tagline: "AI support device for clinics, pharmacies, and healthcare front desks.",
       description:
         "The medical lineup gives healthcare its own visual identity and workflow story. It can support appointments, patient questions, pharmacy support, and waiting-room information delivery.",
-      imageUrl: "/media/healthcare-med.jpeg",
+      imageUrl: "/brand/healthcare-med-board.svg",
       ports: ["USB-C", "USB 3.0", "Ethernet", "Card access", "Wi-Fi"],
       suitedFor: ["Clinics", "Pharmacies", "Waiting rooms", "Reception desks"],
       metrics: [
@@ -165,7 +165,7 @@ export const fallbackContent = {
       tagline: "Edge AI bridge between machines on-site and cloud insights.",
       description:
         "This device makes the industrial story credible because it visually shows how data is collected at the edge and forwarded to the cloud for dashboards, alerts, and optimization logic.",
-      imageUrl: "/media/industry-edge.jpeg",
+      imageUrl: "/brand/industry-edge-board.svg",
       ports: ["Ethernet", "USB", "Industrial I/O", "Sensor inputs", "Wi-Fi", "PLC links"],
       suitedFor: ["Factories", "Lines", "SCADA teams", "Maintenance teams"],
       metrics: [
@@ -179,7 +179,7 @@ export const fallbackContent = {
     {
       slug: "starter",
       name: "Starter",
-      summary: "Entry plan for one device and a focused AI use case.",
+      summary: "Entry annual plan for small teams starting with AI.",
       annualPrice: 180,
       monthlyPrice: 19,
       deviceAllowance: "1 device connection",
@@ -187,16 +187,16 @@ export const fallbackContent = {
       automationLabel: "Basic AI actions",
       featured: false,
       features: [
-        "Single sector landing activation",
-        "Basic chatbot or voice flow",
+        "600,000 tokens per year",
+        "Basic AI tools and text workflows",
+        "1 device connection",
         "Secure cloud account",
-        "Light analytics dashboard",
       ],
     },
     {
       slug: "professional",
       name: "Professional",
-      summary: "Best for growing teams that need multiple devices and reporting.",
+      summary: "For growing companies that need more automation and reporting.",
       annualPrice: 490,
       monthlyPrice: 49,
       deviceAllowance: "Up to 3 devices",
@@ -204,16 +204,16 @@ export const fallbackContent = {
       automationLabel: "Advanced automations",
       featured: false,
       features: [
-        "Multiple device profiles",
-        "Advanced analytics",
-        "Sector-based messaging",
-        "Workflow triggers and alerts",
+        "2,400,000 tokens per year",
+        "Advanced AI content + automation",
+        "Analytics dashboard",
+        "Priority support",
       ],
     },
     {
       slug: "business",
       name: "Business",
-      summary: "The commercial sweet spot for vertical product bundles.",
+      summary: "The commercial sweet spot for scale, integrations, and voice.",
       annualPrice: 990,
       monthlyPrice: 99,
       deviceAllowance: "Up to 10 devices",
@@ -221,16 +221,16 @@ export const fallbackContent = {
       automationLabel: "Cloud workflows + insights",
       featured: true,
       features: [
-        "Cross-sector landing structure",
-        "Cloud dashboard + reporting",
-        "Integrations with CRM / ERP / APIs",
-        "Reusable branded workflows",
+        "6,000,000 tokens per year",
+        "Voice + automation + analytics",
+        "CRM and API integrations",
+        "Advanced insights and onboarding",
       ],
     },
     {
       slug: "platinum",
       name: "Platinum",
-      summary: "Enterprise tier for large deployments and deep customization.",
+      summary: "Enterprise power for unlimited devices and custom workflows.",
       annualPrice: 1990,
       monthlyPrice: 199,
       deviceAllowance: "Unlimited devices",
@@ -238,10 +238,27 @@ export const fallbackContent = {
       automationLabel: "Custom workflows + API",
       featured: false,
       features: [
-        "White-label experience",
-        "Dedicated AI manager",
-        "Advanced automation orchestration",
-        "Custom model and cloud integrations",
+        "18,000,000 tokens per year",
+        "Unlimited devices",
+        "AI voice and call automation",
+        "Custom workflows and API access",
+      ],
+    },
+    {
+      slug: "platinum-plus",
+      name: "Platinum+",
+      summary: "White-label deployments, usage add-ons, and dedicated management.",
+      annualPrice: 1990,
+      monthlyPrice: 199,
+      deviceAllowance: "Unlimited + usage packs",
+      supportLabel: "Dedicated AI manager",
+      automationLabel: "White-label + custom models",
+      featured: false,
+      features: [
+        "18,000,000 base tokens included",
+        "Extra token packs and usage billing",
+        "White-label deployment option",
+        "Priority 24/7 support",
       ],
     },
   ],

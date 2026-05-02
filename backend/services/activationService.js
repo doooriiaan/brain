@@ -39,6 +39,8 @@ const runtimeActivations = [
   },
 ];
 
+const validActivationStatuses = new Set(["queued", "provisioning", "live"]);
+
 export function getActivations() {
   return runtimeActivations;
 }
@@ -91,6 +93,30 @@ export function createActivation(payload) {
     "Activation queued",
     `${company} queued ${deviceRecord.name} for ${site}.`,
     "success",
+  );
+
+  return activation;
+}
+
+export function updateActivationStatus(id, status) {
+  const normalizedStatus = sanitizeText(status).toLowerCase();
+  const activation = runtimeActivations.find((item) => item.id === id);
+
+  if (!activation) {
+    throw createHttpError("Activation not found.", 404);
+  }
+
+  if (!validActivationStatuses.has(normalizedStatus)) {
+    throw createHttpError("Choose a valid activation status.");
+  }
+
+  activation.status = normalizedStatus;
+  activation.createdAt = activation.createdAt;
+
+  createNotification(
+    "Activation updated",
+    `${activation.company} activation is now ${normalizedStatus}.`,
+    normalizedStatus === "live" ? "success" : "info",
   );
 
   return activation;

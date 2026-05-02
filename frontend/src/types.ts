@@ -179,3 +179,104 @@ export interface OperationsOverview {
   metrics: RuntimeMetric[];
   timeline: RuntimeEvent[];
 }
+
+export interface PaymentRecord {
+  id: string;
+  company: string;
+  plan: string;
+  planName: string;
+  amount: number;
+  currency: string;
+  cardBrand: "visa" | "mastercard" | "amex";
+  last4: string;
+  status: "paid";
+  createdAt: string;
+}
+
+export interface SmartCardItem {
+  id: string;
+  code: string;
+  sector: string;
+  sectorLabel: string;
+  plan: string;
+  planName: string;
+  status: "available" | "assigned" | "activated";
+  ownerCompany: string | null;
+  deviceKey: string | null;
+  issuedAt: string;
+  updatedAt: string;
+}
+
+export interface SmartCardStats {
+  total: number;
+  available: number;
+  assigned: number;
+  activated: number;
+}
+
+export interface AccountItem {
+  id: string;
+  company: string;
+  sector: string;
+  sectorLabel: string;
+  plan: string;
+  planName: string;
+  status: "active";
+  devices: number;
+  smartCards: number;
+  monthlyUsage: number;
+  creditsRemaining: number;
+  salesToday: number;
+  callsHandled: number;
+  tasksAutomated: number;
+  newLeads: number;
+  createdAt: string;
+}
+
+export interface AdminOverview extends OperationsOverview {
+  payments: PaymentRecord[];
+  smartCardStats: SmartCardStats;
+  smartCards: SmartCardItem[];
+  accounts: AccountItem[];
+  adminMetrics: RuntimeMetric[];
+}
+
+export interface ClientPickerItem {
+  company: string;
+  sectorLabel: string;
+}
+
+export interface ClientOverview {
+  account: AccountItem | null;
+  clients: ClientPickerItem[];
+  payments: PaymentRecord[];
+  smartCards: SmartCardItem[];
+  activations: ActivationItem[];
+  tickets: TicketItem[];
+  notifications: NotificationItem[];
+  quickMetrics: RuntimeMetric[];
+}
+
+export interface PortalUser {
+  id: string;
+  role: "admin" | "client";
+  name: string;
+  email: string;
+  company: string;
+  sector: string | null;
+  plan: string | null;
+}
+
+export interface AuthSession {
+  token: string;
+  user: PortalUser;
+  issuedAt: string;
+}
+
+export interface DemoCredential {
+  role: "admin" | "client";
+  name: string;
+  email: string;
+  password: string;
+  company: string;
+}

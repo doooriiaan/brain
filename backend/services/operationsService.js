@@ -1,7 +1,9 @@
 import { getActivations } from "./activationService.js";
 import { getLeads } from "./leadService.js";
+import { getPayments } from "./paymentService.js";
 import { getNotifications, getUploads } from "./runtimeService.js";
 import { getServiceStatuses } from "./serviceStatusService.js";
+import { getSmartCardStats } from "./smartCardService.js";
 import { sortByCreatedAtDesc } from "./serviceHelpers.js";
 import { getTickets } from "./ticketService.js";
 
@@ -63,6 +65,8 @@ export function getOperationsOverview() {
   const activations = getActivations();
   const tickets = getTickets();
   const services = getServiceStatuses();
+  const payments = getPayments();
+  const smartCardStats = getSmartCardStats();
 
   return {
     services,
@@ -95,6 +99,18 @@ export function getOperationsOverview() {
         label: "Support desk",
         value: `${tickets.filter((ticket) => ticket.status !== "resolved").length}`,
         detail: "Open or active support workflows in queue.",
+      },
+      {
+        key: "payment-flow",
+        label: "Payments",
+        value: `${payments.length}`,
+        detail: "Visa, Mastercard, and Amex mock payments captured live.",
+      },
+      {
+        key: "smart-cards",
+        label: "SC cards",
+        value: `${smartCardStats.total}`,
+        detail: `${smartCardStats.available} available and ready for assignment.`,
       },
     ],
     timeline: buildTimeline({

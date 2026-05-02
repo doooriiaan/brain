@@ -1,0 +1,77 @@
+import { getAccounts } from "./accountService.js";
+import { getActivations, updateActivationStatus } from "./activationService.js";
+import { getLeads } from "./leadService.js";
+import { getOperationsOverview } from "./operationsService.js";
+import { getPayments } from "./paymentService.js";
+import { createNotification, getNotifications } from "./runtimeService.js";
+import {
+  assignSmartCards,
+  getSmartCards,
+  getSmartCardStats,
+} from "./smartCardService.js";
+import { getTickets, updateTicketStatus } from "./ticketService.js";
+
+export function getAdminOverview() {
+  const operations = getOperationsOverview();
+  const payments = getPayments();
+  const smartCards = getSmartCards();
+  const smartCardStats = getSmartCardStats();
+  const accounts = getAccounts();
+  const activations = getActivations();
+  const tickets = getTickets();
+  const leads = getLeads();
+
+  return {
+    ...operations,
+    payments: payments.slice(0, 12),
+    smartCardStats,
+    smartCards,
+    accounts,
+    activations: activations.slice(0, 12),
+    tickets: tickets.slice(0, 12),
+    leads: leads.slice(0, 12),
+    adminMetrics: [
+      {
+        key: "cards",
+        label: "SC cards",
+        value: `${smartCardStats.total}`,
+        detail: `${smartCardStats.available} available - ${smartCardStats.activated} activated`,
+      },
+      {
+        key: "payments",
+        label: "Payments",
+        value: `EUR ${payments.reduce((sum, payment) => sum + payment.amount, 0)}`,
+        detail: `${payments.length} payment records live in runtime.`,
+      },
+      {
+        key: "accounts",
+        label: "Accounts",
+        value: `${accounts.length}`,
+        detail: "Client organizations visible to the admin console.",
+      },
+      {
+        key: "notifications",
+        label: "Notifications",
+        value: `${getNotifications().length}`,
+        detail: "Broadcasts and workflow updates in live feed.",
+      },
+    ],
+  };
+}
+
+export function broadcastAdminNotification(payload) {
+  createNotification(payload.title, payload.body, payload.level);
+  return getNotifications()[0];
+}
+
+export function setAdminActivationStatus(id, status) {
+  return updateActivationStatus(id, status);
+}
+
+export function setAdminTicketStatus(id, status) {
+  return updateTicketStatus(id, status);
+}
+
+export function assignAdminSmartCards(payload) {
+  return assignSmartCards(payload);
+}

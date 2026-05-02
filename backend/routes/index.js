@@ -1,11 +1,16 @@
 import { Router } from "express";
 import activationRoutes from "./activationRoutes.js";
+import adminRoutes from "./adminRoutes.js";
+import authRoutes from "./authRoutes.js";
+import clientRoutes from "./clientRoutes.js";
 import healthRoutes from "./healthRoutes.js";
 import contentRoutes from "./contentRoutes.js";
 import leadRoutes from "./leadRoutes.js";
 import notificationRoutes from "./notificationRoutes.js";
 import operationsRoutes from "./operationsRoutes.js";
+import paymentRoutes from "./paymentRoutes.js";
 import serviceRoutes from "./serviceRoutes.js";
+import smartCardRoutes from "./smartCardRoutes.js";
 import ticketRoutes from "./ticketRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 
@@ -13,12 +18,17 @@ const router = Router();
 
 router.use("/health", healthRoutes);
 router.use("/content", contentRoutes);
+router.use("/auth", authRoutes);
 router.use("/leads", leadRoutes);
 router.use("/notifications", notificationRoutes);
 router.use("/operations", operationsRoutes);
+router.use("/payments", paymentRoutes);
 router.use("/services", serviceRoutes);
+router.use("/cards", smartCardRoutes);
 router.use("/activations", activationRoutes);
 router.use("/tickets", ticketRoutes);
+router.use("/admin", adminRoutes);
+router.use("/client", clientRoutes);
 router.use("/uploads", uploadRoutes);
 
 export default router;

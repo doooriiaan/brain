@@ -7,6 +7,7 @@ import {
 
 const validPriorities = new Set(["critical", "priority", "standard"]);
 const validCategories = new Set(["automation", "integration", "support"]);
+const validTicketStatuses = new Set(["open", "investigating", "resolved"]);
 
 const runtimeTickets = [
   {
@@ -74,6 +75,29 @@ export function createTicket(payload) {
     "Support workflow opened",
     `${company} opened a ${priority} ${category} ticket.`,
     priority === "critical" ? "warning" : "info",
+  );
+
+  return ticket;
+}
+
+export function updateTicketStatus(id, status) {
+  const normalizedStatus = sanitizeText(status).toLowerCase();
+  const ticket = runtimeTickets.find((item) => item.id === id);
+
+  if (!ticket) {
+    throw createHttpError("Ticket not found.", 404);
+  }
+
+  if (!validTicketStatuses.has(normalizedStatus)) {
+    throw createHttpError("Choose a valid ticket status.");
+  }
+
+  ticket.status = normalizedStatus;
+
+  createNotification(
+    "Ticket updated",
+    `${ticket.company} ticket moved to ${normalizedStatus}.`,
+    normalizedStatus === "resolved" ? "success" : "info",
   );
 
   return ticket;

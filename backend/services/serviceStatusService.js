@@ -1,10 +1,14 @@
 import { getActivations } from "./activationService.js";
 import { isDatabaseConfigured } from "../config/db.js";
 import { getLeads } from "./leadService.js";
+import { getPayments } from "./paymentService.js";
 import { getNotifications, getUploads } from "./runtimeService.js";
+import { getSmartCardStats } from "./smartCardService.js";
 import { getTickets } from "./ticketService.js";
 
 export function getServiceStatuses() {
+  const smartCardStats = getSmartCardStats();
+
   return [
     {
       key: "api",
@@ -43,6 +47,18 @@ export function getServiceStatuses() {
       detail: `${getTickets().length} support or automation ticket(s) are available in the runtime desk.`,
     },
     {
+      key: "payments",
+      label: "Payments",
+      status: "online",
+      detail: `${getPayments().length} Visa, Mastercard, or Amex payment record(s) were processed in the live mock gateway.`,
+    },
+    {
+      key: "smart-cards",
+      label: "Smart card inventory",
+      status: "online",
+      detail: `${smartCardStats.total} SC cards tracked, with ${smartCardStats.available} available for assignment.`,
+    },
+    {
       key: "database",
       label: "MySQL content layer",
       status: isDatabaseConfigured ? "online" : "setup",
@@ -54,7 +70,7 @@ export function getServiceStatuses() {
       key: "automation",
       label: "Platform workflows",
       status: "online",
-      detail: "Lead routing, activations, uploads, and support intake are now functional in the live runtime layer.",
+      detail: "Lead routing, activations, uploads, payments, smart cards, and support intake are now functional in the live runtime layer.",
     },
   ];
 }
