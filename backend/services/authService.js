@@ -143,29 +143,24 @@ export function registerUser(payload) {
     throw createHttpError("Role, name, email, and password are required.");
   }
 
-  if (!["admin", "client"].includes(role)) {
-    throw createHttpError("Role must be admin or client.");
+  if (role !== "client") {
+    throw createHttpError("Only client registration is allowed from this portal.");
   }
 
   if (runtimeUsers.some((user) => user.email.toLowerCase() === email)) {
     throw createHttpError("An account with that email already exists.");
   }
 
-  let company = companyInput || "brAIn HQ";
-  let account = null;
-
-  if (role === "client") {
-    if (!companyInput) {
-      throw createHttpError("Client registration requires a company name.");
-    }
-
-    account = ensureAccount({
-      company: companyInput,
-      sector,
-      plan,
-    });
-    company = account.company;
+  if (!companyInput) {
+    throw createHttpError("Client registration requires a company name.");
   }
+
+  const account = ensureAccount({
+    company: companyInput,
+    sector,
+    plan,
+  });
+  const company = account.company;
 
   const user = {
     id: createId(),
@@ -174,15 +169,15 @@ export function registerUser(payload) {
     email,
     password,
     company,
-    sector: role === "client" ? account?.sector ?? sector : null,
-    plan: role === "client" ? account?.plan ?? plan : null,
+    sector: account.sector ?? sector,
+    plan: account.plan ?? plan,
     createdAt: new Date().toISOString(),
   };
 
   runtimeUsers.unshift(user);
   createNotification(
     "New portal account",
-    `${name} registered as ${role}${role === "client" ? ` for ${company}` : ""}.`,
+    `${name} registered as client for ${company}.`,
     "success",
   );
 

@@ -1,6 +1,7 @@
 import { recordAccountPayment, updateAccountPlan } from "./accountService.js";
 import { getPlanBySlug } from "./catalogService.js";
 import { createNotification } from "./runtimeService.js";
+import { provisionSmartCardForPayment } from "./smartCardService.js";
 import {
   createHttpError,
   createId,
@@ -112,13 +113,21 @@ export function createPayment(payload) {
   runtimePayments.unshift(payment);
   runtimePayments.splice(30);
 
-  updateAccountPlan(company, plan);
+  const account = updateAccountPlan(company, plan);
   recordAccountPayment(company, amount);
+  const linkedCard = provisionSmartCardForPayment({
+    company,
+    plan,
+    sector: account.sector,
+  });
   createNotification(
     "Payment received",
-    `${company} paid EUR ${amount} with ${cardBrand.toUpperCase()}.`,
+    `${company} paid EUR ${amount} with ${cardBrand.toUpperCase()}${linkedCard ? ` and received ${linkedCard.code}.` : "."}`,
     "success",
   );
 
-  return payment;
+  return {
+    ...payment,
+    linkedCardCode: linkedCard?.code ?? null,
+  };
 }

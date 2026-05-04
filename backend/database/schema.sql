@@ -256,6 +256,19 @@ INSERT INTO plans (
   0,
   JSON_ARRAY('White-label experience', 'Dedicated AI manager', 'Advanced automation orchestration', 'Custom model and cloud integrations'),
   4
+),
+(
+  'platinum-plus',
+  'Platinum+',
+  'White-label tier with usage add-ons, dedicated management, and custom AI models.',
+  1990.00,
+  199.00,
+  'Unlimited + usage packs',
+  'Dedicated AI manager',
+  'White-label + custom models',
+  0,
+  JSON_ARRAY('18,000,000 base tokens included', 'Extra token packs and usage billing', 'White-label deployment option', 'Priority 24/7 support'),
+  5
 )
 ON DUPLICATE KEY UPDATE
   name = VALUES(name),

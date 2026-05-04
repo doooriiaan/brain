@@ -280,3 +280,18 @@ export interface DemoCredential {
   password: string;
   company: string;
 }
+
+export interface NetworkSnapshot {
+  language: string;
+  country: string;
+  route: string;
+  vpnActive: boolean;
+  secureTransport: "open" | "regional" | "private";
+  detectedAt: string;
+}
+
+export interface HealthSnapshot {
+  status: "ok";
+  service: string;
+  network: NetworkSnapshot;
+}

@@ -1,14 +1,12 @@
 import { startTransition, useEffect, useMemo, useState, type FormEvent } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import {
-  Activity,
   ArrowRight,
   BellRing,
   BriefcaseBusiness,
   Building2,
   CheckCheck,
-  Cpu,
   CreditCard,
   Factory,
   HeartPulse,
@@ -19,6 +17,7 @@ import {
   MessageSquareText,
   RefreshCw,
   ShieldCheck,
+  Sparkles,
   Store,
   Upload,
   UserRound,
@@ -30,21 +29,37 @@ import type {
   AdminOverview,
   AuthSession,
   ClientOverview,
-  Device,
+  DemoCredential,
+  HealthSnapshot,
   LandingContent,
   OperationsOverview,
-  RuntimeEvent,
-  RuntimeMetric,
   SmartCardItem,
   TicketItem,
 } from "./types";
+import {
+  localizeAdminOverview,
+  localizeClientOverview,
+  localizeLandingContent,
+  localizeOperationsOverview,
+  translateAppText,
+} from "./i18n/translations";
+import { EmptyCard } from "./components/EmptyCard";
+import { FeedItem } from "./components/FeedItem";
+import { MetricCard } from "./components/MetricCard";
+import { PeekBuddy } from "./components/PeekBuddy";
+import { SectionHeading } from "./components/SectionHeading";
+import { SectorSidebar } from "./components/SectorSidebar";
+import { OperationsPulse } from "./components/dashboard/OperationsPulse";
+import { PortalSidebar } from "./components/dashboard/PortalSidebar";
+import { ClientDashboardOverview } from "./components/dashboard/ClientDashboardOverview";
+import { getRequestErrorMessage, syncRuntimeHeaders } from "./services/api";
 
-const sectionMotion = {
+const sectionMotion: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -303,6 +318,9 @@ const initialAssignCardsForm: AssignCardsFormState = {
 };
 
 const finalLogoAsset = "/brand/brain-logo-final.jpeg";
+const planShowcaseAsset = "/brand/brain-plans-showcase.svg";
+const smartCardsPerPlan = 500;
+const translatedUiLanguages = new Set(["sq", "en", "de"]);
 
 const languageOptions = [
   { code: "sq", locale: "sq-XK", label: "Shqip" },
@@ -381,6 +399,12 @@ const dashboardTranslations = {
     logout: "Dil",
     adminCenter: "Qendra Admin",
     clientWorkspace: "Hapesira Klient",
+    inventory: "inventar",
+    cardsPerPlan: "SC per plan",
+    autoTranslate: "Auto-translate",
+    tunnelPrivate: "Enkriptuar",
+    tunnelRegional: "Rajonal",
+    tunnelOpen: "Live",
   },
   en: {
     dashboard: "Dashboard",
@@ -392,6 +416,12 @@ const dashboardTranslations = {
     logout: "Logout",
     adminCenter: "Admin command center",
     clientWorkspace: "Client workspace",
+    inventory: "inventory",
+    cardsPerPlan: "SC per plan",
+    autoTranslate: "Auto translate",
+    tunnelPrivate: "Encrypted",
+    tunnelRegional: "Regional",
+    tunnelOpen: "Live",
   },
   de: {
     dashboard: "Dashboard",
@@ -403,6 +433,12 @@ const dashboardTranslations = {
     logout: "Abmelden",
     adminCenter: "Admin Zentrale",
     clientWorkspace: "Client Arbeitsbereich",
+    inventory: "Inventar",
+    cardsPerPlan: "SC pro Plan",
+    autoTranslate: "Auto-Ubersetzung",
+    tunnelPrivate: "Verschlusselt",
+    tunnelRegional: "Regional",
+    tunnelOpen: "Live",
   },
 } as const;
 
@@ -420,20 +456,6 @@ function formatDate(value: string) {
 
 function formatCurrency(value: number) {
   return `EUR ${value.toLocaleString("en-GB")}`;
-}
-
-function getRequestErrorMessage(error: unknown, fallback: string) {
-  if (axios.isAxiosError(error)) {
-    const message = error.response?.data?.message;
-
-    if (typeof message === "string") {
-      return message;
-    }
-
-    return error.message || fallback;
-  }
-
-  return error instanceof Error ? error.message : fallback;
 }
 
 function LoadingScreen() {
@@ -481,57 +503,24 @@ function ErrorScreen({ message }: { message: string }) {
   );
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  copy,
-}: {
-  eyebrow: string;
-  title: string;
-  copy: string;
-}) {
-  return (
-    <div className="space-y-3">
-      <p className="section-kicker">{eyebrow}</p>
-      <h2 className="section-title">{title}</h2>
-      <p className="section-copy">{copy}</p>
-    </div>
-  );
+function buildNetworkModeLabel(mode: "live" | "country" | "private") {
+  if (mode === "private") {
+    return "vpn-private";
+  }
+
+  if (mode === "country") {
+    return "country-route";
+  }
+
+  return "live";
 }
 
-function MetricCard({ metric }: { metric: RuntimeMetric }) {
-  return (
-    <div className="data-card compact-card">
-      <p className="text-xs uppercase tracking-[0.28em] text-white/45">
-        {metric.label}
-      </p>
-      <p className="mt-4 text-2xl font-semibold text-white">{metric.value}</p>
-      <p className="mt-3 text-sm leading-6 text-white/62">{metric.detail}</p>
-    </div>
-  );
-}
+function maskCardCode(code: string) {
+  if (code.length <= 8) {
+    return code;
+  }
 
-function FeedItem({ item }: { item: RuntimeEvent }) {
-  return (
-    <div className="feed-row">
-      <div className={`status-pill ${cardToneClasses[item.status]}`}>
-        {item.type}
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-white">{item.title}</p>
-        <p className="mt-1 text-sm text-white/58">{item.detail}</p>
-      </div>
-      <div className="text-xs text-white/42">{formatDate(item.createdAt)}</div>
-    </div>
-  );
-}
-
-function EmptyCard({ message }: { message: string }) {
-  return (
-    <div className="rounded-[1.3rem] border border-dashed border-white/10 bg-white/[0.03] px-4 py-5 text-sm text-white/55">
-      {message}
-    </div>
-  );
+  return `${code.slice(0, 7)}••${code.slice(-5)}`;
 }
 
 function App() {
@@ -591,10 +580,12 @@ function App() {
   const [selectedLanguage, setSelectedLanguage] = useState("sq");
   const [selectedCountry, setSelectedCountry] = useState("XK");
   const [networkMode, setNetworkMode] = useState<"live" | "country" | "private">(
-    "live",
+    "private",
   );
   const [dashboardSearch, setDashboardSearch] = useState("");
   const [selectedDeviceKey, setSelectedDeviceKey] = useState("business-hub");
+  const [demoCredentials, setDemoCredentials] = useState<DemoCredential[]>([]);
+  const [healthSnapshot, setHealthSnapshot] = useState<HealthSnapshot | null>(null);
   const [deviceRuntime, setDeviceRuntime] = useState<DeviceRuntimeState>({
     uptimeMinutes: 960,
     latencyMs: 18,
@@ -602,9 +593,25 @@ function App() {
     health: 99,
   });
 
-  const sectors = content?.sectors ?? [];
-  const devices = content?.devices ?? [];
-  const plans = content?.plans ?? [];
+  const localizedContent = useMemo(
+    () => (content ? localizeLandingContent(content, selectedLanguage) : null),
+    [content, selectedLanguage],
+  );
+  const localizedOperations = useMemo(
+    () => localizeOperationsOverview(operations, selectedLanguage),
+    [operations, selectedLanguage],
+  );
+  const localizedAdminOverview = useMemo(
+    () => localizeAdminOverview(adminOverview, selectedLanguage),
+    [adminOverview, selectedLanguage],
+  );
+  const localizedClientOverview = useMemo(
+    () => localizeClientOverview(clientOverview, selectedLanguage),
+    [clientOverview, selectedLanguage],
+  );
+  const sectors = localizedContent?.sectors ?? [];
+  const devices = localizedContent?.devices ?? [];
+  const plans = localizedContent?.plans ?? [];
   const activeLanguage =
     languageOptions.find((language) => language.code === selectedLanguage) ??
     languageOptions[0];
@@ -615,6 +622,18 @@ function App() {
   const currentCurrency = activeCountry.currency;
   const languageCode = selectedLanguage as keyof typeof dashboardTranslations;
   const uiText = dashboardTranslations[languageCode] ?? dashboardTranslations.en;
+  const t = (value: string) => translateAppText(value, selectedLanguage);
+  const networkLabel = buildNetworkModeLabel(networkMode);
+  const translatedUiReady = translatedUiLanguages.has(selectedLanguage);
+  const totalSmartCardInventory = plans.length * smartCardsPerPlan;
+  const heroMetrics = localizedContent?.hero.metrics.map((metric, index) =>
+    index === 2
+      ? {
+          ...metric,
+          value: `${totalSmartCardInventory.toLocaleString(currentLocale)} ${uiText.inventory}`,
+        }
+      : metric,
+  ) ?? [];
   const sectorSlug =
     siteView === "commercial"
       ? "commercial"
@@ -702,6 +721,24 @@ function App() {
               .includes(normalizedDashboardSearch),
       ),
     [clientOverview.payments, normalizedDashboardSearch],
+  );
+  const activeClientCard = validatedClientCard ?? filteredClientCards[0] ?? null;
+  const adminPlanCardStats = useMemo(
+    () =>
+      plans.map((plan) => {
+        const planCards = adminOverview.smartCards.filter(
+          (card) => card.plan === plan.slug,
+        );
+
+        return {
+          slug: plan.slug,
+          name: plan.name,
+          total: planCards.length,
+          available: planCards.filter((card) => card.status === "available").length,
+          activated: planCards.filter((card) => card.status === "activated").length,
+        };
+      }),
+    [adminOverview.smartCards, plans],
   );
 
   const resolvePlanPrice = (planSlug: string, currentBilling = billing) => {
@@ -854,6 +891,14 @@ function App() {
     await refreshClientOverview(session.user.company);
   };
 
+  const refreshHealth = async () => {
+    const response = await axios.get<HealthSnapshot>("/api/health");
+
+    startTransition(() => {
+      setHealthSnapshot(response.data);
+    });
+  };
+
   useEffect(() => {
     const savedLocaleContext = window.localStorage.getItem(localeStorageKey);
     if (savedLocaleContext) {
@@ -902,15 +947,19 @@ function App() {
 
     const bootstrap = async () => {
       try {
-        const [contentResponse, operationsResponse] =
+        const [contentResponse, operationsResponse, demoResponse, healthResponse] =
           await Promise.all([
             axios.get<LandingContent>("/api/content"),
             axios.get<OperationsOverview>("/api/operations/overview"),
+            axios.get<{ credentials: DemoCredential[] }>("/api/auth/demo"),
+            axios.get<HealthSnapshot>("/api/health"),
           ]);
 
         startTransition(() => {
           setContent(contentResponse.data);
           setOperations(operationsResponse.data);
+          setDemoCredentials(demoResponse.data.credentials);
+          setHealthSnapshot(healthResponse.data);
         });
       } catch (requestError) {
         setError(
@@ -932,6 +981,17 @@ function App() {
   }, [currentLocale]);
 
   useEffect(() => {
+    if (authMode !== "register" || authForm.role === "client") {
+      return;
+    }
+
+    setAuthForm((current) => ({
+      ...current,
+      role: "client",
+    }));
+  }, [authForm.role, authMode]);
+
+  useEffect(() => {
     if (sectorDevices.length === 0) {
       return;
     }
@@ -942,18 +1002,12 @@ function App() {
   }, [sectorDevices, selectedDeviceKey]);
 
   useEffect(() => {
-    const networkLabel =
-      networkMode === "private"
-        ? "vpn-private"
-        : networkMode === "country"
-          ? "country-route"
-          : "live";
-
-    axios.defaults.headers.common["x-brain-language"] = selectedLanguage;
-    axios.defaults.headers.common["x-brain-country"] = selectedCountry;
-    axios.defaults.headers.common["x-brain-network"] = networkLabel;
-    axios.defaults.headers.common["x-brain-vpn-active"] =
-      networkMode === "private" ? "true" : "false";
+    syncRuntimeHeaders({
+      language: selectedLanguage,
+      country: selectedCountry,
+      networkLabel,
+      networkMode,
+    });
 
     window.localStorage.setItem(
       localeStorageKey,
@@ -963,7 +1017,11 @@ function App() {
         network: networkMode,
       }),
     );
-  }, [selectedLanguage, selectedCountry, networkMode]);
+
+    void refreshHealth().catch(() => {
+      setHealthSnapshot(null);
+    });
+  }, [networkLabel, networkMode, selectedCountry, selectedLanguage]);
 
   useEffect(() => {
     if (!authSession) {
@@ -983,6 +1041,23 @@ function App() {
       setSiteView(roleHome);
     }
   }, [authSession, siteView]);
+
+  useEffect(() => {
+    if (clientOverview.smartCards.length === 0) {
+      setValidatedClientCard(null);
+      setClientCardCode("");
+      setClientCardBackVisible(false);
+      return;
+    }
+
+    const nextCard =
+      validatedClientCard &&
+      clientOverview.smartCards.find((card) => card.code === validatedClientCard.code);
+
+    const activeCard = nextCard ?? clientOverview.smartCards[0];
+    setValidatedClientCard(activeCard);
+    setClientCardCode((currentCode) => currentCode || activeCard.code);
+  }, [clientOverview.smartCards, validatedClientCard]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -1045,10 +1120,10 @@ function App() {
 
     try {
       await axios.post("/api/leads", leadForm);
-      setLeadForm((current) => ({
+      setLeadForm({
         ...initialLeadForm,
         sector: leadForm.sector,
-      }));
+      });
       setLeadMessage("Demo request captured and added to the live pipeline.");
       await refreshOperations();
       if (authSession?.user.role === "admin") {
@@ -1143,8 +1218,15 @@ function App() {
     setPaymentMessage(null);
 
     try {
-      await axios.post("/api/payments", paymentForm);
-      setPaymentMessage("Payment captured live and visible in the portal.");
+      const response = await axios.post("/api/payments", paymentForm);
+      const linkedCardCode = response.data?.payment?.linkedCardCode as
+        | string
+        | undefined;
+      setPaymentMessage(
+        linkedCardCode
+          ? `Payment captured live. ${linkedCardCode} is now linked to this plan.`
+          : "Payment captured live and visible in the portal.",
+      );
       setPaymentForm((current) => ({
         ...current,
         cardNumber: "",
@@ -1366,6 +1448,113 @@ function App() {
     }));
   };
 
+  const openPlanActivation = (planSlug: string) => {
+    const targetSector = activeSector?.slug ?? "business";
+    const targetDeviceKey = getDeviceKeyForSector(targetSector);
+
+    setAuthMode("register");
+    setAuthForm((current) => ({
+      ...current,
+      role: "client",
+      sector: targetSector,
+      plan: planSlug,
+    }));
+    setPaymentForm((current) => ({
+      ...current,
+      plan: planSlug,
+      amount: resolvePlanPrice(planSlug),
+    }));
+    setActivationForm((current) => ({
+      ...current,
+      company: authSession?.user.company ?? current.company,
+      sector: targetSector,
+      plan: planSlug,
+      deviceKey: targetDeviceKey,
+      site: `${activeCountry.label} site`,
+    }));
+    setActivationMessage(
+      `Plan ${plans.find((plan) => plan.slug === planSlug)?.name ?? planSlug} selected. Continue with activation below.`,
+    );
+
+    if (authSession?.user.role === "client") {
+      setClientTab("support");
+      setSiteView("client");
+      return;
+    }
+
+    setSiteView("system");
+  };
+
+  const handleClientCardReveal = (card: SmartCardItem) => {
+    setValidatedClientCard(card);
+    setClientCardCode(card.code);
+    setClientCardBackVisible(false);
+    setClientCardMessage(`${card.code} loaded. Flip or validate to deploy it.`);
+  };
+
+  const handleClientCardLookup = () => {
+    const normalizedCode = clientCardCode.trim().toUpperCase();
+
+    if (!normalizedCode) {
+      setClientCardMessage("Enter an SC card code first.");
+      return;
+    }
+
+    const matchedCard = clientOverview.smartCards.find(
+      (card) => card.code.toUpperCase() === normalizedCode,
+    );
+
+    if (!matchedCard) {
+      setValidatedClientCard(null);
+      setClientCardBackVisible(false);
+      setClientCardMessage(
+        "This SC card is not linked to the selected client company yet.",
+      );
+      return;
+    }
+
+    setValidatedClientCard(matchedCard);
+    setClientCardBackVisible(true);
+    setClientCardMessage(`${matchedCard.code} revealed for ${matchedCard.ownerCompany}.`);
+  };
+
+  const handleClientCardValidate = async (card?: SmartCardItem) => {
+    const targetCard =
+      card ??
+      validatedClientCard ??
+      clientOverview.smartCards.find(
+        (entry) => entry.code.toUpperCase() === clientCardCode.trim().toUpperCase(),
+      );
+
+    if (!targetCard) {
+      setClientCardMessage("Select or enter an SC card before validation.");
+      return;
+    }
+
+    setValidatingCardCode(targetCard.code);
+    setClientCardMessage(null);
+
+    try {
+      const response = await axios.post<{ card: SmartCardItem }>("/api/cards/validate", {
+        code: targetCard.code,
+        company: clientOverview.account?.company ?? authSession?.user.company,
+      });
+
+      setValidatedClientCard(response.data.card);
+      setClientCardCode(response.data.card.code);
+      setClientCardBackVisible(true);
+      setClientCardMessage(`${response.data.card.code} validated and ready.`);
+      await refreshOperations();
+      await refreshPortal();
+    } catch (requestError) {
+      setClientCardMessage(
+        getRequestErrorMessage(requestError, "Unable to validate this smart card."),
+      );
+    } finally {
+      setValidatingCardCode(null);
+    }
+  };
+
   const openActivationPrefill = () => {
     if (!activeDevice) {
       return;
@@ -1401,13 +1590,16 @@ function App() {
   const accessView =
     siteView === "admin" ? "admin" : siteView === "client" ? "client" : "system";
   const publicNavTabs = siteTabs.filter((tab) => publicNavTabKeys.has(tab.key));
+  const utilityNavTabs = publicNavTabs.filter(
+    (tab) => tab.key === "vpn" || tab.key === "system",
+  );
   const sectorQuickTabs = siteTabs.filter((tab) => sectorQuickTabKeys.has(tab.key));
 
   if (loading) {
     return <LoadingScreen />;
   }
 
-  if (error || !content) {
+  if (error || !localizedContent) {
     return (
       <ErrorScreen
         message={error ?? "Frontend content was not available from the API."}
@@ -1422,37 +1614,45 @@ function App() {
 
       <header className="sticky top-0 z-40 border-b border-white/8 bg-[rgba(4,8,18,0.72)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-          <button className="flex items-center gap-3" onClick={() => openSiteView("commercial")} type="button">
-            <img
-              src="/brand/brain-logo.svg"
-              alt="brAIn"
-              className="h-12 w-auto rounded-xl"
-            />
-            <div className="text-left">
-              <p className="text-xs uppercase tracking-[0.32em] text-white/40">
-                brAIn sectors
-              </p>
-              <p className="text-sm font-medium text-white/85">
-                Final logo + sector pages
-              </p>
-            </div>
+          <button
+            className="peek-shell flex items-center gap-3"
+            onClick={() => openSiteView("commercial")}
+            type="button"
+          >
+            <motion.div
+              animate={{ y: [0, -4, 0], scale: [1, 1.02, 1] }}
+              className="flex items-center gap-3"
+              transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="h-10 w-10 overflow-hidden rounded-2xl border border-[#e8b552]/60 bg-[#091225] md:h-11 md:w-11">
+                <img
+                  alt="brAIn mark"
+                  className="h-full w-full object-cover object-left"
+                  src="/brand/brain-logo.svg"
+                />
+              </div>
+              <div className="font-['Space_Grotesk'] text-2xl font-bold tracking-[-0.08em] text-white md:text-[2rem]">
+                br<span className="text-[#e8b552]">AI</span>n
+              </div>
+            </motion.div>
+            <PeekBuddy />
           </button>
 
           <nav className="hidden items-center gap-2 lg:flex">
-            {publicNavTabs.map((tab) => (
+            {utilityNavTabs.map((tab) => (
               <button
                 className={`nav-chip ${siteView === tab.key ? "nav-chip-active" : ""}`}
                 key={tab.key}
                 onClick={() => openSiteView(tab.key)}
                 type="button"
               >
-                {tab.label}
+                {t(tab.label)}
               </button>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
-            <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1.5 xl:flex">
+            <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1.5 lg:flex">
               <select
                 className="topbar-select"
                 onChange={(event) => setSelectedLanguage(event.target.value)}
@@ -1477,18 +1677,11 @@ function App() {
               </select>
               <div className="segmented-control nav-segmented-control">
                 <button
-                  className={networkMode === "live" ? "segment-active" : ""}
-                  onClick={() => setNetworkMode("live")}
-                  type="button"
-                >
-                  Live
-                </button>
-                <button
                   className={networkMode === "country" ? "segment-active" : ""}
                   onClick={() => setNetworkMode("country")}
                   type="button"
                 >
-                  Region
+                  {t("Region")}
                 </button>
                 <button
                   className={networkMode === "private" ? "segment-active" : ""}
@@ -1498,36 +1691,47 @@ function App() {
                   VPN
                 </button>
               </div>
+              <span className="outline-chip">
+                {uiText.autoTranslate}: {translatedUiReady ? "ON" : "EN"}
+              </span>
+              <span className="outline-chip">
+                VPN: {healthSnapshot?.network.vpnActive ? t("Active") : t("Standby")}
+              </span>
             </div>
+
             {authSession ? (
-              <>
-                <div className="hidden rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/74 md:block">
-                  {authSession.user.role} / {authSession.user.company} /{" "}
-                  {activeLanguage.label} / {activeCountry.code} / {networkMode}
-                </div>
-                <button
-                  className="secondary-button"
-                  onClick={handleLogout}
-                  type="button"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </button>
-              </>
+              <button
+                className="secondary-button"
+                onClick={handleLogout}
+                type="button"
+              >
+                <LogOut className="h-4 w-4" />
+                {t("Logout")}
+              </button>
             ) : (
               <button
                 className="accent-button"
                 onClick={() => openSiteView("system")}
                 type="button"
               >
-                Open portal
+                {t("Open portal")}
               </button>
             )}
           </div>
         </div>
       </header>
 
-      <main className="mx-auto flex max-w-7xl flex-col gap-7 px-5 py-7 lg:px-8">
+      <div className="app-shell">
+        <SectorSidebar
+          activeKey={siteView}
+          icons={sectorIcons}
+          onSelect={(view) => openSiteView(view as SiteView)}
+          sectors={sectors}
+          tabs={sectorQuickTabs}
+          translate={t}
+        />
+
+      <main className="min-w-0 flex flex-col gap-7">
         {siteView === "commercial" ? (
           <>
             <motion.section
@@ -1540,8 +1744,8 @@ function App() {
               <div className="sector-hero-grid">
                 <div className="space-y-6">
                   <p className="section-kicker">Sector 1 / Commercial</p>
-                  <h1 className="hero-title">{content.hero.title}</h1>
-                  <p className="section-copy max-w-2xl">{content.hero.subtitle}</p>
+                  <h1 className="hero-title">{localizedContent.hero.title}</h1>
+                  <p className="section-copy max-w-2xl">{localizedContent.hero.subtitle}</p>
 
                   <div className="flex flex-wrap gap-3">
                     <button
@@ -1562,7 +1766,7 @@ function App() {
                   </div>
 
                   <div className="grid gap-3 md:grid-cols-3">
-                    {content.hero.metrics.map((metric) => (
+                    {heroMetrics.map((metric) => (
                       <div className="data-card compact-card" key={metric.label}>
                         <p className="text-xs uppercase tracking-[0.26em] text-white/44">
                           {metric.label}
@@ -1610,20 +1814,28 @@ function App() {
                 <div className="space-y-4">
                   <div className="hero-visual-shell">
                     <img
-                      src={content.hero.plansImage}
+                      src={planShowcaseAsset}
                       alt="Commercial overview"
                       className="sector-board-image"
                     />
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="glass-card compact-card">
+                    <div className="glass-card compact-card peek-shell">
                       <p className="section-kicker">Final identity</p>
+                      <motion.img
+                        animate={{ y: [0, -8, 0], scale: [1, 1.02, 1] }}
+                        className="mt-4 w-full rounded-[1.4rem] border border-white/10"
+                        src={finalLogoAsset}
+                        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                        alt="Final brAIn logo"
+                      />
                       <img
                         src="/brand/brain-logo.svg"
-                        alt="Final brAIn logo"
-                        className="mt-4 h-24 w-auto"
+                        alt="brAIn wordmark"
+                        className="mt-4 h-16 w-auto"
                       />
+                      <PeekBuddy />
                     </div>
                     <div className="glass-card compact-card">
                       <p className="section-kicker">Commercial fit</p>
@@ -1674,7 +1886,7 @@ function App() {
               <div className="mt-7 grid gap-4 xl:grid-cols-5">
                 {plans.map((plan) => (
                   <div
-                    className={`plan-card-shell ${plan.featured ? "plan-card-featured" : ""}`}
+                    className={`plan-card-shell peek-shell ${plan.featured ? "plan-card-featured" : ""}`}
                     key={plan.slug}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -1700,6 +1912,15 @@ function App() {
                       {plan.summary}
                     </p>
 
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <span className="outline-chip">
+                        {smartCardsPerPlan} {uiText.cardsPerPlan}
+                      </span>
+                      <span className="outline-chip">
+                        {plan.deviceAllowance}
+                      </span>
+                    </div>
+
                     <div className="mt-5 space-y-2">
                       {plan.features.map((feature) => (
                         <div
@@ -1711,6 +1932,20 @@ function App() {
                         </div>
                       ))}
                     </div>
+
+                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                      <button
+                        className="accent-button"
+                        onClick={() => openPlanActivation(plan.slug)}
+                        type="button"
+                      >
+                        Activate
+                      </button>
+                      <span className="text-sm text-white/58">
+                        Client access + SC reveal
+                      </span>
+                    </div>
+                    <PeekBuddy />
                   </div>
                 ))}
               </div>
@@ -2035,9 +2270,9 @@ function App() {
                   <div className="glass-card compact-card">
                     <p className="section-kicker">Live supporting signals</p>
                     <div className="mt-5 grid gap-4 md:grid-cols-2">
-                      {operations.metrics.slice(0, 4).map((metric) => (
-                        <MetricCard key={metric.key} metric={metric} />
-                      ))}
+                    {localizedOperations.metrics.slice(0, 4).map((metric) => (
+                      <MetricCard key={metric.key} metric={metric} />
+                    ))}
                     </div>
                   </div>
 
@@ -2050,8 +2285,13 @@ function App() {
                           : "Edge deployment and integrations"}
                     </p>
                     <div className="mt-5 space-y-3">
-                      {operations.timeline.slice(0, 4).map((item) => (
-                        <FeedItem item={item} key={item.id} />
+                      {localizedOperations.timeline.slice(0, 4).map((item) => (
+                        <FeedItem
+                          formatDate={formatLocalDate}
+                          item={item}
+                          key={item.id}
+                          toneClassName={cardToneClasses[item.status]}
+                        />
                       ))}
                     </div>
                   </div>
@@ -2063,103 +2303,87 @@ function App() {
 
         {siteView === "system" || siteView === "admin" || siteView === "client" ? (
           <>
-            <motion.section
-              className="section-shell"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={sectionMotion}
-            >
-              <SectionHeading
-                eyebrow="Live pulse"
-                title="Notifications, services, uploads, leads, tickets, and activations in one place"
-                copy="This layer gives the product the cloud-system feel: runtime metrics update, timeline items roll in, and service readiness is visible before the user even enters the admin or client portal."
-              />
+            {!authSession ? (
+              <motion.section
+                className="section-shell"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={sectionMotion}
+              >
+                <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+                  <SectionHeading
+                    eyebrow={t("System center")}
+                    title={t("Login / register gates for admin and client")}
+                    copy={t(
+                      "Admin gets full control over runtime operations, payments, SC cards, uploads, notifications, and status changes. Client gets account metrics, payments, card visibility, activations, and support.",
+                    )}
+                  />
 
-              <div className="mt-7 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-                <div className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {operations.metrics.map((metric) => (
-                      <MetricCard key={metric.key} metric={metric} />
-                    ))}
-                  </div>
-
-                  <div className="glass-card compact-card">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="section-kicker">Timeline</p>
-                        <h3 className="mt-3 text-2xl font-semibold text-white">
-                          Live runtime feed
-                        </h3>
-                      </div>
-                      <Activity className="h-5 w-5 text-[var(--accent)]" />
+                  <div className="space-y-3">
+                    <div className="segmented-control">
+                      <button
+                        className={authMode === "login" ? "segment-active" : ""}
+                        onClick={() => setAuthMode("login")}
+                        type="button"
+                      >
+                        {t("Login")}
+                      </button>
+                      <button
+                        className={authMode === "register" ? "segment-active" : ""}
+                        onClick={() => setAuthMode("register")}
+                        type="button"
+                      >
+                        {t("Register")}
+                      </button>
                     </div>
 
-                    <div className="mt-5 space-y-3">
-                      {operations.timeline.length > 0 ? (
-                        operations.timeline.map((item) => (
-                          <FeedItem item={item} key={item.id} />
-                        ))
-                      ) : (
-                        <EmptyCard message="Runtime feed will appear here once the first live action lands." />
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="glass-card compact-card">
-                    <p className="section-kicker">Service status</p>
-                    <div className="mt-5 space-y-3">
-                      {operations.services.map((service) => (
-                        <div className="feed-row" key={service.key}>
-                          <div
-                            className={`status-pill ${serviceToneClasses[service.status]}`}
-                          >
-                            {service.status}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-white">
-                              {service.label}
-                            </p>
-                            <p className="mt-1 text-sm text-white/58">
-                              {service.detail}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="glass-card compact-card">
-                    <p className="section-kicker">Live notifications</p>
-                    <div className="mt-5 space-y-3">
-                      {operations.notifications.length > 0 ? (
-                        operations.notifications.map((notification) => (
-                          <div className="feed-row" key={notification.id}>
-                            <div
-                              className={`status-pill ${cardToneClasses[notification.level]}`}
-                            >
-                              {notification.level}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-semibold text-white">
-                                {notification.title}
-                              </p>
-                              <p className="mt-1 text-sm text-white/58">
-                                {notification.body}
-                              </p>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <EmptyCard message="No notifications have been emitted yet." />
-                      )}
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        className={`role-card ${authForm.role === "client" ? "role-card-active" : ""}`}
+                        onClick={() =>
+                          setAuthForm((current) => ({
+                            ...current,
+                            role: "client",
+                          }))
+                        }
+                        type="button"
+                      >
+                        <UserRound className="h-4 w-4 text-[var(--accent)]" />
+                        <span className="text-sm font-semibold text-white">
+                          {t("Client")}
+                        </span>
+                      </button>
+                      {authMode === "login" ? (
+                        <button
+                          className={`role-card ${authForm.role === "admin" ? "role-card-active" : ""}`}
+                          onClick={() =>
+                            setAuthForm((current) => ({
+                              ...current,
+                              role: "admin",
+                            }))
+                          }
+                          type="button"
+                        >
+                          <ShieldCheck className="h-4 w-4 text-[var(--accent)]" />
+                          <span className="text-sm font-semibold text-white">
+                            {t("Admin")}
+                          </span>
+                        </button>
+                      ) : null}
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.section>
+              </motion.section>
+            ) : null}
+
+            <OperationsPulse
+              cardToneClasses={cardToneClasses}
+              formatLocalDate={formatLocalDate}
+              operations={localizedOperations}
+              serviceToneClasses={serviceToneClasses}
+              translate={t}
+            />
 
             <motion.section
               className="section-shell"
@@ -2171,24 +2395,30 @@ function App() {
               <SectionHeading
                 eyebrow={
                   accessView === "admin"
-                    ? "Admin page"
+                    ? t("Admin page")
                     : accessView === "client"
-                      ? "Client page"
-                      : "System center"
+                      ? t("Client page")
+                      : t("System center")
                 }
                 title={
                   accessView === "admin"
-                    ? "Admin control page with live operations and payment control"
+                    ? t("Admin control page with live operations and payment control")
                     : accessView === "client"
-                      ? "Client workspace page with payments, cards, and support"
-                      : "Login / register gates for admin and client"
+                      ? t("Client workspace page with payments, cards, and support")
+                      : t("Login / register gates for admin and client")
                 }
                 copy={
                   accessView === "admin"
-                    ? "Use the admin page to monitor runtime, manage payments, assign smart cards, and control activation plus ticket status in real time."
+                    ? t(
+                        "Use the admin page to monitor runtime, manage payments, assign smart cards, and control activation plus ticket status in real time.",
+                      )
                     : accessView === "client"
-                      ? "Use the client page to check account metrics, complete payments, track smart cards, and request deployment support."
-                      : "Admin gets full control over runtime operations, payments, SC cards, uploads, notifications, and status changes. Client gets account metrics, payments, card visibility, activations, and support."
+                      ? t(
+                          "Use the client page to check account metrics, complete payments, track smart cards, and request deployment support.",
+                        )
+                      : t(
+                          "Admin gets full control over runtime operations, payments, SC cards, uploads, notifications, and status changes. Client gets account metrics, payments, card visibility, activations, and support.",
+                        )
                 }
               />
 
@@ -2197,9 +2427,9 @@ function App() {
                   <div className="glass-card compact-card">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="section-kicker">Portal roles</p>
+                        <p className="section-kicker">{t("Portal roles")}</p>
                         <h3 className="mt-3 text-2xl font-semibold text-white">
-                          Choose who is entering the system
+                          {t("Choose who is entering the system")}
                         </h3>
                       </div>
                       <LockKeyhole className="h-6 w-6 text-[var(--accent)]" />
@@ -2218,41 +2448,45 @@ function App() {
                       >
                         <UserRound className="h-5 w-5 text-[var(--accent)]" />
                         <div className="text-left">
-                          <p className="text-lg font-semibold text-white">Client</p>
+                          <p className="text-lg font-semibold text-white">{t("Client")}</p>
                           <p className="mt-2 text-sm leading-6 text-white/58">
-                            View company metrics, cards, payments, activations, and
-                            support.
+                            {t(
+                              "View company metrics, cards, payments, activations, and support.",
+                            )}
                           </p>
                         </div>
                       </button>
 
-                      <button
-                        className={`role-card ${authForm.role === "admin" ? "role-card-active" : ""}`}
-                        onClick={() =>
-                          setAuthForm((current) => ({
-                            ...current,
-                            role: "admin",
-                          }))
-                        }
-                        type="button"
-                      >
-                        <ShieldCheck className="h-5 w-5 text-[var(--accent)]" />
-                        <div className="text-left">
-                          <p className="text-lg font-semibold text-white">Admin</p>
-                          <p className="mt-2 text-sm leading-6 text-white/58">
-                            Control notifications, payments, smart cards, uploads,
-                            activations, tickets, and accounts.
-                          </p>
-                        </div>
-                      </button>
+                      {authMode === "login" ? (
+                        <button
+                          className={`role-card ${authForm.role === "admin" ? "role-card-active" : ""}`}
+                          onClick={() =>
+                            setAuthForm((current) => ({
+                              ...current,
+                              role: "admin",
+                            }))
+                          }
+                          type="button"
+                        >
+                          <ShieldCheck className="h-5 w-5 text-[var(--accent)]" />
+                          <div className="text-left">
+                            <p className="text-lg font-semibold text-white">{t("Admin")}</p>
+                            <p className="mt-2 text-sm leading-6 text-white/58">
+                              {t(
+                                "Control notifications, payments, smart cards, uploads, activations, tickets, and accounts.",
+                              )}
+                            </p>
+                          </div>
+                        </button>
+                      ) : null}
                     </div>
 
                     <div className="mt-6 rounded-[1.6rem] border border-white/8 bg-white/[0.03] p-4">
                       <div className="flex items-center justify-between gap-3">
                         <div>
-                          <p className="section-kicker">Demo credentials</p>
+                          <p className="section-kicker">{t("Demo credentials")}</p>
                           <p className="mt-2 text-sm text-white/58">
-                            Click one to prefill login instantly.
+                            {t("Click one to prefill login instantly.")}
                           </p>
                         </div>
                         <Sparkles className="h-5 w-5 text-[var(--accent)]" />
@@ -2283,13 +2517,13 @@ function App() {
                     </div>
 
                     <div className="mt-4 rounded-[1rem] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/70">
-                      Target page:{" "}
+                      {t("Target page")}:{" "}
                       <span className="font-semibold text-white">
                         {accessView === "admin"
-                          ? "Admin login"
+                          ? t("Admin login")
                           : accessView === "client"
-                            ? "Client login"
-                            : "System access"}
+                            ? t("Client login")
+                            : t("System access")}
                       </span>
                     </div>
                   </div>
@@ -2297,11 +2531,11 @@ function App() {
                   <div className="glass-card compact-card">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="section-kicker">Auth</p>
+                        <p className="section-kicker">{t("Auth")}</p>
                         <h3 className="mt-3 text-2xl font-semibold text-white">
                           {authMode === "login"
-                            ? "Login to the portal"
-                            : "Register a new portal account"}
+                            ? t("Login to the portal")
+                            : t("Register a new portal account")}
                         </h3>
                       </div>
 
@@ -2311,14 +2545,14 @@ function App() {
                           onClick={() => setAuthMode("login")}
                           type="button"
                         >
-                          Login
+                          {t("Login")}
                         </button>
                         <button
                           className={authMode === "register" ? "segment-active" : ""}
                           onClick={() => setAuthMode("register")}
                           type="button"
                         >
-                          Register
+                          {t("Register")}
                         </button>
                       </div>
                     </div>
@@ -2339,19 +2573,25 @@ function App() {
                       ) : null}
 
                       <div className="grid gap-3 md:grid-cols-2">
-                        <select
-                          className="select-shell"
-                          onChange={(event) =>
-                            setAuthForm((current) => ({
-                              ...current,
-                              role: event.target.value as AuthRole,
-                            }))
-                          }
-                          value={authForm.role}
-                        >
-                          <option value="client">Client</option>
-                          <option value="admin">Admin</option>
-                        </select>
+                        {authMode === "login" ? (
+                          <select
+                            className="select-shell"
+                            onChange={(event) =>
+                              setAuthForm((current) => ({
+                                ...current,
+                                role: event.target.value as AuthRole,
+                              }))
+                            }
+                            value={authForm.role}
+                          >
+                            <option value="client">Client</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        ) : (
+                          <div className="rounded-[1.1rem] border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100">
+                            Client registration only
+                          </div>
+                        )}
                         <input
                           className="input-shell"
                           onChange={(event) =>
@@ -2449,51 +2689,25 @@ function App() {
                 </div>
               ) : (
                 <div className="mt-7 dashboard-layout">
-                  <aside className="glass-card compact-card dashboard-sidebar">
-                    <p className="section-kicker">{uiText.dashboard}</p>
-                    <input
-                      className="input-shell mt-4"
-                      onChange={(event) => setDashboardSearch(event.target.value)}
-                      placeholder={uiText.search}
-                      value={dashboardSearch}
-                    />
-                    <div className="mt-4 space-y-2">
-                      {(authSession.user.role === "admin" ? adminTabs : clientTabs).map((tab) => {
-                        const isActive =
-                          authSession.user.role === "admin"
-                            ? adminTab === tab.key
-                            : clientTab === tab.key;
-                        return (
-                          <button
-                            className={`portal-tab w-full justify-start ${isActive ? "portal-tab-active" : ""}`}
-                            key={tab.key}
-                            onClick={() =>
-                              authSession.user.role === "admin"
-                                ? setAdminTab(tab.key as AdminTabKey)
-                                : setClientTab(tab.key as ClientTabKey)
-                            }
-                            type="button"
-                          >
-                            <tab.icon className="h-4 w-4" />
-                            {tab.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="mt-5 space-y-2 text-sm text-white/70">
-                      <p>
-                        {uiText.vpn}: <span className="text-white">{networkMode}</span>
-                      </p>
-                      <p>
-                        {uiText.language}:{" "}
-                        <span className="text-white">{activeLanguage.label}</span>
-                      </p>
-                      <p>
-                        {uiText.country}:{" "}
-                        <span className="text-white">{activeCountry.label}</span>
-                      </p>
-                    </div>
-                  </aside>
+                  <PortalSidebar
+                    activeCountryLabel={activeCountry.label}
+                    activeLanguageLabel={activeLanguage.label}
+                    activeTab={
+                      authSession.user.role === "admin" ? adminTab : clientTab
+                    }
+                    dashboardSearch={dashboardSearch}
+                    networkMode={networkMode}
+                    onSearchChange={setDashboardSearch}
+                    onTabChange={(value) =>
+                      authSession.user.role === "admin"
+                        ? setAdminTab(value as AdminTabKey)
+                        : setClientTab(value as ClientTabKey)
+                    }
+                    searchPlaceholder={uiText.search}
+                    sectionLabel={uiText.dashboard}
+                    tabs={authSession.user.role === "admin" ? adminTabs : clientTabs}
+                    translate={t}
+                  />
                   <div className="space-y-4">
                   <div className="glass-card compact-card">
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -2558,9 +2772,9 @@ function App() {
                         <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
                           <div className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                              {adminOverview.adminMetrics.map((metric) => (
-                                <MetricCard key={metric.key} metric={metric} />
-                              ))}
+                                {localizedAdminOverview.adminMetrics.map((metric) => (
+                                  <MetricCard key={metric.key} metric={metric} />
+                                ))}
                             </div>
 
                             <div className="glass-card compact-card">
@@ -2632,7 +2846,7 @@ function App() {
                             <div className="glass-card compact-card">
                               <p className="section-kicker">Notifications</p>
                               <div className="mt-5 space-y-3">
-                                {adminOverview.notifications.slice(0, 5).map((item) => (
+                                {localizedAdminOverview.notifications.slice(0, 5).map((item) => (
                                   <div className="feed-row" key={item.id}>
                                     <div
                                       className={`status-pill ${cardToneClasses[item.level]}`}
@@ -2721,8 +2935,24 @@ function App() {
                             <div className="glass-card compact-card">
                               <p className="section-kicker">SC card control</p>
                               <h3 className="mt-3 text-2xl font-semibold text-white">
-                                Assign from the 500-card inventory
+                                Assign from the {totalSmartCardInventory.toLocaleString(currentLocale)}-card inventory
                               </h3>
+
+                              <div className="plan-breakdown-grid mt-5">
+                                {adminPlanCardStats.map((planStat) => (
+                                  <div className="plan-breakdown-card" key={planStat.slug}>
+                                    <p className="text-xs uppercase tracking-[0.28em] text-white/38">
+                                      {planStat.name}
+                                    </p>
+                                    <p className="mt-3 text-2xl font-semibold text-white">
+                                      {planStat.total}
+                                    </p>
+                                    <p className="mt-2 text-sm text-white/58">
+                                      {planStat.available} available / {planStat.activated} activated
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
 
                               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                                 <div className="data-card compact-card">
@@ -3148,6 +3378,28 @@ function App() {
                       </div>
 
                       {clientTab === "overview" ? (
+                        <div className="space-y-4">
+                          <ClientDashboardOverview
+                            account={clientOverview.account}
+                            activations={clientOverview.activations}
+                            clients={clientOverview.clients}
+                            company={selectedClientCompany || authSession.user.company}
+                            formatMoney={formatMoney}
+                            notifications={localizedClientOverview.notifications}
+                            onOpenCards={() => {
+                              if (filteredClientCards[0]) {
+                                handleClientCardReveal(filteredClientCards[0]);
+                              }
+                            }}
+                            onOpenPayments={() => setClientTab("payments")}
+                            onOpenSupport={() => setClientTab("support")}
+                            onSelectCompany={setSelectedClientCompany}
+                            payments={filteredClientPayments}
+                            smartCards={filteredClientCards}
+                            userEmail={authSession.user.email}
+                            userName={authSession.user.name}
+                          />
+
                         <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
                           <div className="space-y-4">
                             <div className="glass-card compact-card">
@@ -3174,7 +3426,7 @@ function App() {
                               </div>
 
                               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                                {clientOverview.quickMetrics.map((metric) => (
+                                {localizedClientOverview.quickMetrics.map((metric) => (
                                   <MetricCard key={metric.key} metric={metric} />
                                 ))}
                               </div>
@@ -3182,16 +3434,19 @@ function App() {
 
                             <div className="glass-card compact-card">
                               <p className="section-kicker">Smart cards in use</p>
-                              <div className="mt-5 space-y-3">
+                              <div className="client-card-grid mt-5">
                                 {filteredClientCards.length > 0 ? (
-                                  filteredClientCards.slice(0, 8).map((card) => (
-                                    <div className="feed-row" key={card.id}>
+                                  filteredClientCards.slice(0, 6).map((card) => (
+                                    <div
+                                      className={`smart-card-mini ${activeClientCard?.id === card.id ? "smart-card-mini-active" : ""}`}
+                                      key={card.id}
+                                    >
                                       <div
                                         className={`status-pill ${smartCardToneClasses[card.status]}`}
                                       >
                                         {card.status}
                                       </div>
-                                      <div className="min-w-0 flex-1">
+                                      <div className="mt-4">
                                         <p className="text-sm font-semibold text-white">
                                           {card.code}
                                         </p>
@@ -3199,8 +3454,29 @@ function App() {
                                           {card.planName} / {card.sectorLabel}
                                         </p>
                                       </div>
-                                      <div className="text-xs text-white/42">
+                                      <div className="mt-4 text-xs text-white/42">
                                         {formatLocalDate(card.updatedAt)}
+                                      </div>
+                                      <div className="mt-4 flex flex-wrap gap-2">
+                                        <button
+                                          className="inline-action"
+                                          onClick={() => handleClientCardReveal(card)}
+                                          type="button"
+                                        >
+                                          Reveal
+                                        </button>
+                                        <button
+                                          className="inline-action"
+                                          disabled={validatingCardCode === card.code}
+                                          onClick={() => void handleClientCardValidate(card)}
+                                          type="button"
+                                        >
+                                          {validatingCardCode === card.code
+                                            ? "Activating..."
+                                            : card.status === "activated"
+                                              ? "Validated"
+                                              : "Activate"}
+                                        </button>
                                       </div>
                                     </div>
                                   ))
@@ -3215,7 +3491,7 @@ function App() {
                             <div className="glass-card compact-card">
                               <p className="section-kicker">Latest notifications</p>
                               <div className="mt-5 space-y-3">
-                                {clientOverview.notifications.map((notification) => (
+                                {localizedClientOverview.notifications.map((notification) => (
                                   <div className="feed-row" key={notification.id}>
                                     <div
                                       className={`status-pill ${cardToneClasses[notification.level]}`}
@@ -3233,6 +3509,202 @@ function App() {
                                   </div>
                                 ))}
                               </div>
+                            </div>
+
+                            <div className="glass-card compact-card peek-shell">
+                              <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                  <p className="section-kicker">Card reveal studio</p>
+                                  <h3 className="mt-3 text-2xl font-semibold text-white">
+                                    Reveal and validate live client SC cards
+                                  </h3>
+                                </div>
+                                <span className="outline-chip">
+                                  {filteredClientCards.length} linked card(s)
+                                </span>
+                              </div>
+
+                              <div className="mt-5 grid gap-3 md:grid-cols-[1fr_auto_auto]">
+                                <input
+                                  className="input-shell"
+                                  onChange={(event) => setClientCardCode(event.target.value)}
+                                  placeholder="Enter SC code"
+                                  value={clientCardCode}
+                                />
+                                <button
+                                  className="secondary-button"
+                                  onClick={handleClientCardLookup}
+                                  type="button"
+                                >
+                                  Reveal
+                                </button>
+                                <button
+                                  className="accent-button"
+                                  disabled={
+                                    !activeClientCard ||
+                                    validatingCardCode === activeClientCard.code
+                                  }
+                                  onClick={() => void handleClientCardValidate()}
+                                  type="button"
+                                >
+                                  {activeClientCard &&
+                                  validatingCardCode === activeClientCard.code
+                                    ? "Validating..."
+                                    : activeClientCard?.status === "activated"
+                                      ? "Validated"
+                                      : "Validate"}
+                                </button>
+                              </div>
+
+                              {clientCardMessage ? (
+                                <p className="mt-4 text-sm text-white/64">
+                                  {clientCardMessage}
+                                </p>
+                              ) : null}
+
+                              {activeClientCard ? (
+                                <div className="smart-card-stage mt-5">
+                                  <motion.div
+                                    animate={{ rotateY: clientCardBackVisible ? 180 : 0 }}
+                                    className="smart-card-scene"
+                                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                                  >
+                                    <div className="smart-card-face smart-card-front">
+                                      <div className="smart-card-glow" />
+                                      <p className="section-kicker">Front side</p>
+                                      <div className="mt-4 flex items-center gap-3">
+                                        <div className="h-11 w-11 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1.5">
+                                          <img
+                                            alt="brAIn logo"
+                                            className="h-full w-full object-cover object-left"
+                                            src="/brand/brain-logo.svg"
+                                          />
+                                        </div>
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/38">
+                                            brAIn
+                                          </p>
+                                          <p className="mt-1 text-sm text-white/58">
+                                            Client scratch reveal
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="mt-6 flex items-start justify-between gap-3">
+                                        <div>
+                                          <p className="text-sm uppercase tracking-[0.3em] text-white/45">
+                                            brAIn SC
+                                          </p>
+                                          <p className="smart-card-code mt-6 text-2xl font-semibold text-white">
+                                            {maskCardCode(activeClientCard.code)}
+                                          </p>
+                                        </div>
+                                        <div
+                                          className={`status-pill ${smartCardToneClasses[activeClientCard.status]}`}
+                                        >
+                                          {activeClientCard.status}
+                                        </div>
+                                      </div>
+                                      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
+                                            Plan
+                                          </p>
+                                          <p className="mt-2 text-lg font-semibold text-white">
+                                            {activeClientCard.planName}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
+                                            Company
+                                          </p>
+                                          <p className="mt-2 text-lg font-semibold text-white">
+                                            {activeClientCard.ownerCompany ?? "Unassigned"}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="mt-8 flex flex-wrap gap-2">
+                                        <button
+                                          className="secondary-button"
+                                          onClick={() =>
+                                            setClientCardBackVisible((current) => !current)
+                                          }
+                                          type="button"
+                                        >
+                                          Flip card
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    <div className="smart-card-face smart-card-back">
+                                      <div className="smart-card-glow smart-card-glow-secondary" />
+                                      <p className="section-kicker">Back side</p>
+                                      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
+                                            Sector
+                                          </p>
+                                          <p className="mt-2 text-lg font-semibold text-white">
+                                            {activeClientCard.sectorLabel}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
+                                            Device
+                                          </p>
+                                          <p className="mt-2 text-lg font-semibold text-white">
+                                            {activeClientCard.deviceKey ?? "Pending device"}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
+                                            Updated
+                                          </p>
+                                          <p className="mt-2 text-lg font-semibold text-white">
+                                            {formatLocalDate(activeClientCard.updatedAt)}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <p className="text-xs uppercase tracking-[0.24em] text-white/40">
+                                            Route
+                                          </p>
+                                          <p className="mt-2 text-lg font-semibold text-white">
+                                            {healthSnapshot?.network.route ?? networkLabel}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="mt-8 flex flex-wrap gap-2">
+                                        <button
+                                          className="secondary-button"
+                                          onClick={() => setClientCardBackVisible(false)}
+                                          type="button"
+                                        >
+                                          Front
+                                        </button>
+                                        <button
+                                          className="accent-button"
+                                          disabled={
+                                            validatingCardCode === activeClientCard.code ||
+                                            activeClientCard.status === "activated"
+                                          }
+                                          onClick={() =>
+                                            void handleClientCardValidate(activeClientCard)
+                                          }
+                                          type="button"
+                                        >
+                                          {activeClientCard.status === "activated"
+                                            ? "Already active"
+                                            : "Validate now"}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                  <PeekBuddy />
+                                </div>
+                              ) : (
+                                <div className="mt-5">
+                                  <EmptyCard message="Choose an assigned card to reveal it here." />
+                                </div>
+                              )}
                             </div>
 
                             <div className="glass-card compact-card">
@@ -3263,6 +3735,7 @@ function App() {
                               </div>
                             </div>
                           </div>
+                        </div>
                         </div>
                       ) : null}
 
@@ -3830,6 +4303,7 @@ function App() {
           </>
         ) : null}
       </main>
+      </div>
     </div>
   );
 }

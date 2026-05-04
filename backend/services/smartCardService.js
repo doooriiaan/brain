@@ -1,3 +1,4 @@
+import { fallbackContent } from "../data/landingData.js";
 import { getPlanBySlug, getSectorBySlug } from "./catalogService.js";
 import { incrementAccountCards, updateAccountPlan } from "./accountService.js";
 import { createNotification } from "./runtimeService.js";
@@ -7,7 +8,8 @@ import {
 } from "./serviceHelpers.js";
 
 const sectorCycle = ["commercial", "business", "healthcare", "industry"];
-const planCycle = ["starter", "professional", "business", "platinum"];
+const planCycle = fallbackContent.plans.map((plan) => plan.slug);
+const smartCardsPerPlan = 500;
 const assignedPools = [
   { company: "Nova Market", sector: "commercial", plan: "business", count: 126 },
   { company: "Helios Clinic", sector: "healthcare", plan: "professional", count: 84 },
@@ -18,6 +20,7 @@ const assignedPools = [
 function buildSeedCards() {
   const cards = [];
   let sequence = 1;
+  const planCounts = new Map(planCycle.map((plan) => [plan, 0]));
 
   assignedPools.forEach((pool) => {
     const sectorRecord = getSectorBySlug(pool.sector);
@@ -43,31 +46,35 @@ function buildSeedCards() {
         issuedAt: new Date(Date.now() - sequence * 1000 * 60 * 8).toISOString(),
         updatedAt: new Date(Date.now() - sequence * 1000 * 60 * 4).toISOString(),
       });
+      planCounts.set(pool.plan, (planCounts.get(pool.plan) ?? 0) + 1);
       sequence += 1;
     }
   });
 
-  while (cards.length < 500) {
-    const sector = sectorCycle[cards.length % sectorCycle.length];
-    const plan = planCycle[cards.length % planCycle.length];
-    const sectorRecord = getSectorBySlug(sector);
-    const planRecord = getPlanBySlug(plan);
+  planCycle.forEach((plan, planIndex) => {
+    while ((planCounts.get(plan) ?? 0) < smartCardsPerPlan) {
+      const sector =
+        sectorCycle[(sequence + planIndex) % sectorCycle.length];
+      const sectorRecord = getSectorBySlug(sector);
+      const planRecord = getPlanBySlug(plan);
 
-    cards.push({
-      id: `card-${sequence}`,
-      code: `SC-${String(sequence).padStart(4, "0")}-${sector.slice(0, 3).toUpperCase()}`,
-      sector,
-      sectorLabel: sectorRecord?.name ?? sector,
-      plan,
-      planName: planRecord?.name ?? plan,
-      status: "available",
-      ownerCompany: null,
-      deviceKey: null,
-      issuedAt: new Date(Date.now() - sequence * 1000 * 60 * 8).toISOString(),
-      updatedAt: new Date(Date.now() - sequence * 1000 * 60 * 4).toISOString(),
-    });
-    sequence += 1;
-  }
+      cards.push({
+        id: `card-${sequence}`,
+        code: `SC-${String(sequence).padStart(5, "0")}-${plan.slice(0, 3).toUpperCase()}-${sector.slice(0, 3).toUpperCase()}`,
+        sector,
+        sectorLabel: sectorRecord?.name ?? sector,
+        plan,
+        planName: planRecord?.name ?? plan,
+        status: "available",
+        ownerCompany: null,
+        deviceKey: null,
+        issuedAt: new Date(Date.now() - sequence * 1000 * 60 * 8).toISOString(),
+        updatedAt: new Date(Date.now() - sequence * 1000 * 60 * 4).toISOString(),
+      });
+      planCounts.set(plan, (planCounts.get(plan) ?? 0) + 1);
+      sequence += 1;
+    }
+  });
 
   return cards;
 }
@@ -92,7 +99,7 @@ export function assignSmartCards(payload) {
   const sector = sanitizeText(payload.sector).toLowerCase();
   const plan = sanitizeText(payload.plan).toLowerCase();
   const deviceKey = sanitizeText(payload.deviceKey);
-  const quantity = Math.max(1, Math.min(100, Number(payload.quantity ?? 1)));
+  const quantity = Math.max(1, Math.min(smartCardsPerPlan, Number(payload.quantity ?? 1)));
 
   if (!company || !sector || !plan || !deviceKey) {
     throw createHttpError(
@@ -171,4 +178,50 @@ export function validateSmartCard(payload) {
   );
 
   return card;
+}
+
+export function provisionSmartCardForPayment({ company, plan, sector }) {
+  const normalizedCompany = sanitizeText(company);
+  const normalizedPlan = sanitizeText(plan).toLowerCase();
+  const normalizedSector = sanitizeText(sector).toLowerCase();
+
+  if (!normalizedCompany || !normalizedPlan) {
+    return null;
+  }
+
+  const matchedCard =
+    runtimeSmartCards.find(
+      (card) =>
+        card.status === "available" &&
+        card.plan === normalizedPlan &&
+        (!normalizedSector || card.sector === normalizedSector),
+    ) ??
+    runtimeSmartCards.find(
+      (card) => card.status === "available" && card.plan === normalizedPlan,
+    );
+
+  if (!matchedCard) {
+    return null;
+  }
+
+  matchedCard.status = "assigned";
+  matchedCard.ownerCompany = normalizedCompany;
+  matchedCard.deviceKey =
+    matchedCard.sector === "commercial"
+      ? "ai-stick"
+      : matchedCard.sector === "healthcare"
+        ? "med-assistant"
+        : matchedCard.sector === "industry"
+          ? "industry-edge"
+          : "business-hub";
+  matchedCard.updatedAt = new Date().toISOString();
+
+  incrementAccountCards(normalizedCompany, 1);
+  createNotification(
+    "Plan linked to SC card",
+    `${matchedCard.code} was linked to ${normalizedCompany} after plan payment.`,
+    "info",
+  );
+
+  return matchedCard;
 }

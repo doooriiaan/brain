@@ -14,7 +14,7 @@ export const fallbackContent = {
     metrics: [
       { label: "Sectors ready", value: "4 verticals" },
       { label: "Devices in lineup", value: "4 products" },
-      { label: "SC cards live", value: "500 inventory" },
+      { label: "SC cards live", value: "2,500 inventory" },
     ],
     primaryCta: {
       label: "Open preweb",
@@ -25,7 +25,7 @@ export const fallbackContent = {
       href: "#system-center",
     },
     deviceImage: "/brand/brain-hero.svg",
-    plansImage: "/brand/plans-board.svg",
+    plansImage: "/brand/brain-plans-showcase.svg",
   },
   sectors: [
     {
