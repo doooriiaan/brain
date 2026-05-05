@@ -1,4 +1,6 @@
-export function getHealth(request, response) {
+import { controller } from "./controllerUtils.js";
+
+export const getHealth = controller((request, response) => {
   const route = request.get("x-brain-network") ?? "live";
   const vpnActive = request.get("x-brain-vpn-active") === "true";
 
@@ -18,4 +20,4 @@ export function getHealth(request, response) {
       detectedAt: new Date().toISOString(),
     },
   });
-}
+});

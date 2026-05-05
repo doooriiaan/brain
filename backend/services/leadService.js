@@ -1,16 +1,16 @@
 import { getSectorBySlug } from "./catalogService.js";
 import { createNotification } from "./runtimeService.js";
+import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import {
   createHttpError,
   createId,
   sanitizeText,
 } from "./serviceHelpers.js";
 
-const runtimeLeads = [];
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function getLeads() {
-  return runtimeLeads;
+  return getRuntimeState().leads;
 }
 
 export function createLead(payload) {
@@ -37,20 +37,24 @@ export function createLead(payload) {
     throw createHttpError("Message must stay under 600 characters.");
   }
 
-  const lead = {
-    id: createId(),
-    name,
-    email,
-    company,
-    sector,
-    sectorLabel: sectorRecord.name,
-    message,
-    status: "new",
-    createdAt: new Date().toISOString(),
-  };
+  const lead = updateRuntimeState((state) => {
+    const nextLead = {
+      id: createId(),
+      name,
+      email,
+      company,
+      sector,
+      sectorLabel: sectorRecord.name,
+      message,
+      status: "new",
+      createdAt: new Date().toISOString(),
+    };
 
-  runtimeLeads.unshift(lead);
-  runtimeLeads.splice(25);
+    state.leads.unshift(nextLead);
+    state.leads = state.leads.slice(0, 50);
+
+    return nextLead;
+  });
 
   createNotification(
     "New demo request",

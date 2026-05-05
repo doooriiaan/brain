@@ -1,54 +1,49 @@
+import {
+  broadcastNotification,
+  broadcastUploadComplete,
+} from "./realtimeService.js";
+import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import { createId } from "./serviceHelpers.js";
 
-const runtimeNotifications = [
-  {
-    id: "notification-1",
-    title: "Platform ready",
-    body: "Frontend, Express API, lead capture, activations, support tickets, and MySQL-ready content service are available.",
-    level: "success",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "notification-2",
-    title: "Uploads enabled",
-    body: "Use the live upload panel to store files through the backend.",
-    level: "info",
-    createdAt: new Date(Date.now() - 1000 * 60 * 13).toISOString(),
-  },
-  {
-    id: "notification-3",
-    title: "MySQL mode",
-    body: "Add .env credentials to switch from seed content to database content.",
-    level: "warning",
-    createdAt: new Date(Date.now() - 1000 * 60 * 28).toISOString(),
-  },
-];
-
-const runtimeUploads = [];
-
 export function getNotifications() {
-  return runtimeNotifications;
+  return getRuntimeState().notifications;
 }
 
 export function createNotification(title, body, level = "info") {
-  runtimeNotifications.unshift({
-    id: createId(),
-    title,
-    body,
-    level,
-    createdAt: new Date().toISOString(),
+  const notification = updateRuntimeState((state) => {
+    const nextNotification = {
+      id: createId(),
+      title,
+      body,
+      level,
+      createdAt: new Date().toISOString(),
+    };
+
+    state.notifications.unshift(nextNotification);
+    state.notifications = state.notifications.slice(0, 10);
+
+    return nextNotification;
   });
 
-  runtimeNotifications.splice(10);
+  broadcastNotification(notification);
+  return notification;
 }
 
 export function getUploads() {
-  return runtimeUploads;
+  return getRuntimeState().uploads;
 }
 
 export function storeRuntimeUploads(uploads) {
-  runtimeUploads.unshift(...uploads);
-  runtimeUploads.splice(8);
+  updateRuntimeState((state) => {
+    state.uploads.unshift(...uploads);
+    state.uploads = state.uploads.slice(0, 8);
+  });
+
+  uploads.forEach((upload) => {
+    broadcastUploadComplete(upload);
+  });
+
+  return uploads;
 }
 
 export function createUploadRecord(file) {

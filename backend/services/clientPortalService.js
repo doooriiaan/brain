@@ -23,9 +23,9 @@ export function getClientOverview(company) {
     };
   }
 
-  const payments = getPayments().filter(
-    (payment) => payment.company === account.company,
-  );
+  const payments = getPayments({
+    company: account.company,
+  });
   const smartCards = getSmartCards().filter(
     (card) => card.ownerCompany === account.company,
   );

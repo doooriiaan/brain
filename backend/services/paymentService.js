@@ -1,51 +1,18 @@
+import { broadcastPaymentUpdate } from "./realtimeService.js";
 import { recordAccountPayment, updateAccountPlan } from "./accountService.js";
 import { getPlanBySlug } from "./catalogService.js";
 import { createNotification } from "./runtimeService.js";
-import { provisionSmartCardForPayment } from "./smartCardService.js";
+import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import {
   createHttpError,
   createId,
   sanitizeText,
+  sortByCreatedAtDesc,
 } from "./serviceHelpers.js";
-
-const runtimePayments = [
-  {
-    id: "payment-1",
-    company: "Nova Market",
-    plan: "business",
-    planName: "Business",
-    amount: 990,
-    currency: "EUR",
-    cardBrand: "visa",
-    last4: "4812",
-    status: "paid",
-    createdAt: new Date(Date.now() - 1000 * 60 * 80).toISOString(),
-  },
-  {
-    id: "payment-2",
-    company: "Helios Clinic",
-    plan: "professional",
-    planName: "Professional",
-    amount: 490,
-    currency: "EUR",
-    cardBrand: "mastercard",
-    last4: "5188",
-    status: "paid",
-    createdAt: new Date(Date.now() - 1000 * 60 * 144).toISOString(),
-  },
-  {
-    id: "payment-3",
-    company: "Astra Group",
-    plan: "platinum",
-    planName: "Platinum",
-    amount: 1990,
-    currency: "EUR",
-    cardBrand: "amex",
-    last4: "1008",
-    status: "paid",
-    createdAt: new Date(Date.now() - 1000 * 60 * 200).toISOString(),
-  },
-];
+import {
+  getSmartCardByCode,
+  provisionSmartCardForPayment,
+} from "./smartCardService.js";
 
 function detectCardBrand(cardNumber) {
   if (/^4\d{12}(\d{3})?$/.test(cardNumber)) {
@@ -63,8 +30,35 @@ function detectCardBrand(cardNumber) {
   return null;
 }
 
-export function getPayments() {
-  return runtimePayments;
+function buildPaymentRecord(payment) {
+  const linkedCard = payment.linkedCardCode
+    ? getSmartCardByCode(payment.linkedCardCode)
+    : null;
+
+  return {
+    ...payment,
+    linkedCardCode: linkedCard?.code ?? payment.linkedCardCode ?? null,
+    linkedCardStatus: linkedCard?.status ?? null,
+    linkedCardSector: linkedCard?.sector ?? null,
+    linkedCardSectorLabel: linkedCard?.sectorLabel ?? null,
+    linkedDeviceKey: linkedCard?.deviceKey ?? null,
+    linkedCardUpdatedAt: linkedCard?.updatedAt ?? null,
+  };
+}
+
+export function getPayments(options = {}) {
+  const company =
+    typeof options === "string"
+      ? sanitizeText(options)
+      : sanitizeText(options.company);
+
+  const filteredPayments = company
+    ? getRuntimeState().payments.filter(
+        (payment) => payment.company.toLowerCase() === company.toLowerCase(),
+      )
+    : getRuntimeState().payments;
+
+  return sortByCreatedAtDesc(filteredPayments).map(buildPaymentRecord);
 }
 
 export function createPayment(payload) {
@@ -82,11 +76,13 @@ export function createPayment(payload) {
   }
 
   const planRecord = getPlanBySlug(plan);
+
   if (!planRecord) {
     throw createHttpError("Choose a valid subscription plan.");
   }
 
   const cardBrand = detectCardBrand(cardNumber);
+
   if (!cardBrand) {
     throw createHttpError(
       "Only Visa, Mastercard, and American Express are supported in this payment flow.",
@@ -108,10 +104,8 @@ export function createPayment(payload) {
     last4: cardNumber.slice(-4),
     status: "paid",
     createdAt: new Date().toISOString(),
+    linkedCardCode: null,
   };
-
-  runtimePayments.unshift(payment);
-  runtimePayments.splice(30);
 
   const account = updateAccountPlan(company, plan);
   recordAccountPayment(company, amount);
@@ -120,14 +114,19 @@ export function createPayment(payload) {
     plan,
     sector: account.sector,
   });
+  payment.linkedCardCode = linkedCard?.code ?? null;
+
+  updateRuntimeState((state) => {
+    state.payments.unshift(payment);
+    state.payments = state.payments.slice(0, 40);
+  });
+
   createNotification(
     "Payment received",
     `${company} paid EUR ${amount} with ${cardBrand.toUpperCase()}${linkedCard ? ` and received ${linkedCard.code}.` : "."}`,
     "success",
   );
+  broadcastPaymentUpdate(buildPaymentRecord(payment));
 
-  return {
-    ...payment,
-    linkedCardCode: linkedCard?.code ?? null,
-  };
+  return buildPaymentRecord(payment);
 }

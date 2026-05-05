@@ -1,4 +1,6 @@
+import { broadcastTicketUpdate } from "./realtimeService.js";
 import { createNotification } from "./runtimeService.js";
+import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import {
   createHttpError,
   createId,
@@ -9,31 +11,8 @@ const validPriorities = new Set(["critical", "priority", "standard"]);
 const validCategories = new Set(["automation", "integration", "support"]);
 const validTicketStatuses = new Set(["open", "investigating", "resolved"]);
 
-const runtimeTickets = [
-  {
-    id: "ticket-1",
-    company: "Astra Group",
-    contactEmail: "ops@astra-group.com",
-    priority: "priority",
-    category: "integration",
-    summary: "Need CRM sync rules mapped for business hub deployments.",
-    status: "investigating",
-    createdAt: new Date(Date.now() - 1000 * 60 * 21).toISOString(),
-  },
-  {
-    id: "ticket-2",
-    company: "Factory One",
-    contactEmail: "maintenance@factory-one.eu",
-    priority: "standard",
-    category: "automation",
-    summary: "Prepare anomaly alert routing for edge box proof-of-concept.",
-    status: "open",
-    createdAt: new Date(Date.now() - 1000 * 60 * 67).toISOString(),
-  },
-];
-
 export function getTickets() {
-  return runtimeTickets;
+  return getRuntimeState().tickets;
 }
 
 export function createTicket(payload) {
@@ -57,48 +36,58 @@ export function createTicket(payload) {
     throw createHttpError("Summary must stay under 280 characters.");
   }
 
-  const ticket = {
-    id: createId(),
-    company,
-    contactEmail,
-    priority,
-    category,
-    summary,
-    status: priority === "critical" ? "investigating" : "open",
-    createdAt: new Date().toISOString(),
-  };
+  const ticket = updateRuntimeState((state) => {
+    const nextTicket = {
+      id: createId(),
+      company,
+      contactEmail,
+      priority,
+      category,
+      summary,
+      status: priority === "critical" ? "investigating" : "open",
+      createdAt: new Date().toISOString(),
+    };
 
-  runtimeTickets.unshift(ticket);
-  runtimeTickets.splice(12);
+    state.tickets.unshift(nextTicket);
+    state.tickets = state.tickets.slice(0, 20);
+
+    return nextTicket;
+  });
 
   createNotification(
     "Support workflow opened",
     `${company} opened a ${priority} ${category} ticket.`,
     priority === "critical" ? "warning" : "info",
   );
+  broadcastTicketUpdate(ticket);
 
   return ticket;
 }
 
 export function updateTicketStatus(id, status) {
   const normalizedStatus = sanitizeText(status).toLowerCase();
-  const ticket = runtimeTickets.find((item) => item.id === id);
 
-  if (!ticket) {
-    throw createHttpError("Ticket not found.", 404);
-  }
+  const ticket = updateRuntimeState((state) => {
+    const matchedTicket = state.tickets.find((item) => item.id === id);
 
-  if (!validTicketStatuses.has(normalizedStatus)) {
-    throw createHttpError("Choose a valid ticket status.");
-  }
+    if (!matchedTicket) {
+      throw createHttpError("Ticket not found.", 404);
+    }
 
-  ticket.status = normalizedStatus;
+    if (!validTicketStatuses.has(normalizedStatus)) {
+      throw createHttpError("Choose a valid ticket status.");
+    }
+
+    matchedTicket.status = normalizedStatus;
+    return matchedTicket;
+  });
 
   createNotification(
     "Ticket updated",
     `${ticket.company} ticket moved to ${normalizedStatus}.`,
     normalizedStatus === "resolved" ? "success" : "info",
   );
+  broadcastTicketUpdate(ticket);
 
   return ticket;
 }

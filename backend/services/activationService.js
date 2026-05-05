@@ -1,48 +1,22 @@
+import { broadcastActivationUpdate } from "./realtimeService.js";
+import { incrementAccountDevices } from "./accountService.js";
 import {
   getDeviceByKey,
   getPlanBySlug,
   getSectorBySlug,
 } from "./catalogService.js";
 import { createNotification } from "./runtimeService.js";
+import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import {
   createHttpError,
   createId,
   sanitizeText,
 } from "./serviceHelpers.js";
 
-const runtimeActivations = [
-  {
-    id: "activation-1",
-    company: "Nova Market",
-    sector: "commercial",
-    sectorLabel: "Commercial",
-    deviceKey: "ai-stick",
-    deviceName: "brAIn AI Stick",
-    plan: "business",
-    planName: "Business",
-    site: "Prishtine flagship wall",
-    status: "provisioning",
-    createdAt: new Date(Date.now() - 1000 * 60 * 34).toISOString(),
-  },
-  {
-    id: "activation-2",
-    company: "Helios Clinic",
-    sector: "healthcare",
-    sectorLabel: "Healthcare",
-    deviceKey: "med-assistant",
-    deviceName: "brAIn MED Assistant",
-    plan: "professional",
-    planName: "Professional",
-    site: "Reception desk A2",
-    status: "live",
-    createdAt: new Date(Date.now() - 1000 * 60 * 82).toISOString(),
-  },
-];
-
 const validActivationStatuses = new Set(["queued", "provisioning", "live"]);
 
 export function getActivations() {
-  return runtimeActivations;
+  return getRuntimeState().activations;
 }
 
 export function createActivation(payload) {
@@ -72,52 +46,62 @@ export function createActivation(payload) {
     );
   }
 
-  const activation = {
-    id: createId(),
-    company,
-    sector,
-    sectorLabel: sectorRecord.name,
-    deviceKey,
-    deviceName: deviceRecord.name,
-    plan,
-    planName: planRecord.name,
-    site,
-    status: "queued",
-    createdAt: new Date().toISOString(),
-  };
+  const activation = updateRuntimeState((state) => {
+    const nextActivation = {
+      id: createId(),
+      company,
+      sector,
+      sectorLabel: sectorRecord.name,
+      deviceKey,
+      deviceName: deviceRecord.name,
+      plan,
+      planName: planRecord.name,
+      site,
+      status: "queued",
+      createdAt: new Date().toISOString(),
+    };
 
-  runtimeActivations.unshift(activation);
-  runtimeActivations.splice(12);
+    state.activations.unshift(nextActivation);
+    state.activations = state.activations.slice(0, 20);
 
+    return nextActivation;
+  });
+
+  incrementAccountDevices(company, 1);
   createNotification(
     "Activation queued",
     `${company} queued ${deviceRecord.name} for ${site}.`,
     "success",
   );
+  broadcastActivationUpdate(activation);
 
   return activation;
 }
 
 export function updateActivationStatus(id, status) {
   const normalizedStatus = sanitizeText(status).toLowerCase();
-  const activation = runtimeActivations.find((item) => item.id === id);
 
-  if (!activation) {
-    throw createHttpError("Activation not found.", 404);
-  }
+  const activation = updateRuntimeState((state) => {
+    const matchedActivation = state.activations.find((item) => item.id === id);
 
-  if (!validActivationStatuses.has(normalizedStatus)) {
-    throw createHttpError("Choose a valid activation status.");
-  }
+    if (!matchedActivation) {
+      throw createHttpError("Activation not found.", 404);
+    }
 
-  activation.status = normalizedStatus;
-  activation.createdAt = activation.createdAt;
+    if (!validActivationStatuses.has(normalizedStatus)) {
+      throw createHttpError("Choose a valid activation status.");
+    }
+
+    matchedActivation.status = normalizedStatus;
+    return matchedActivation;
+  });
 
   createNotification(
     "Activation updated",
     `${activation.company} activation is now ${normalizedStatus}.`,
     normalizedStatus === "live" ? "success" : "info",
   );
+  broadcastActivationUpdate(activation);
 
   return activation;
 }

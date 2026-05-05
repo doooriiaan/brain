@@ -92,7 +92,7 @@ INSERT INTO sectors (
 ),
 (
   'industry',
-  'Industry 4.0 AI',
+  'Industry 4.0',
   'Edge box for machine monitoring, predictive alerts, and AI ops',
   'An industrial-grade device that connects to machines and sensors, then streams events into the cloud for dashboards, alerts, and AI recommendations.',
   'Factories, production lines, SCADA teams, operations leads',
@@ -281,3 +281,210 @@ ON DUPLICATE KEY UPDATE
   featured = VALUES(featured),
   features_json = VALUES(features_json),
   sort_order = VALUES(sort_order);
+
+CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(64) PRIMARY KEY,
+  role ENUM('admin', 'client') NOT NULL,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  company VARCHAR(160) NOT NULL,
+  sector VARCHAR(50) NULL,
+  plan VARCHAR(50) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  token VARCHAR(120) PRIMARY KEY,
+  user_id VARCHAR(64) NOT NULL,
+  issued_at DATETIME NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_sessions_user_id (user_id),
+  CONSTRAINT fk_sessions_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS accounts (
+  id VARCHAR(64) PRIMARY KEY,
+  company VARCHAR(160) NOT NULL UNIQUE,
+  sector VARCHAR(50) NOT NULL,
+  sector_label VARCHAR(120) NOT NULL,
+  plan VARCHAR(50) NOT NULL,
+  plan_name VARCHAR(120) NOT NULL,
+  status ENUM('active', 'paused', 'trial') NOT NULL DEFAULT 'active',
+  devices INT NOT NULL DEFAULT 0,
+  smart_cards INT NOT NULL DEFAULT 0,
+  monthly_usage INT NOT NULL DEFAULT 0,
+  credits_remaining INT NOT NULL DEFAULT 0,
+  sales_today DECIMAL(12, 2) NOT NULL DEFAULT 0,
+  calls_handled INT NOT NULL DEFAULT 0,
+  tasks_automated INT NOT NULL DEFAULT 0,
+  new_leads INT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_accounts_sector (sector),
+  INDEX idx_accounts_plan (plan)
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id VARCHAR(64) PRIMARY KEY,
+  title VARCHAR(160) NOT NULL,
+  body TEXT NOT NULL,
+  level ENUM('info', 'success', 'warning') NOT NULL DEFAULT 'info',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS uploads (
+  id VARCHAR(64) PRIMARY KEY,
+  file_name VARCHAR(255) NOT NULL,
+  size_kb INT NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  uploaded_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS leads (
+  id VARCHAR(64) PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  company VARCHAR(160) NOT NULL,
+  sector VARCHAR(50) NOT NULL,
+  sector_label VARCHAR(120) NOT NULL,
+  message TEXT NULL,
+  status ENUM('new', 'contacted', 'qualified', 'closed') NOT NULL DEFAULT 'new',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_leads_company (company),
+  INDEX idx_leads_sector (sector),
+  INDEX idx_leads_status (status)
+);
+
+CREATE TABLE IF NOT EXISTS smart_cards (
+  id VARCHAR(64) PRIMARY KEY,
+  code VARCHAR(120) NOT NULL UNIQUE,
+  sector VARCHAR(50) NOT NULL,
+  sector_label VARCHAR(120) NOT NULL,
+  plan VARCHAR(50) NOT NULL,
+  plan_name VARCHAR(120) NOT NULL,
+  status ENUM('available', 'assigned', 'activated') NOT NULL DEFAULT 'available',
+  owner_company VARCHAR(160) NULL,
+  device_key VARCHAR(80) NULL,
+  issued_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  INDEX idx_smart_cards_plan (plan),
+  INDEX idx_smart_cards_sector (sector),
+  INDEX idx_smart_cards_status (status)
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+  id VARCHAR(64) PRIMARY KEY,
+  company VARCHAR(160) NOT NULL,
+  plan VARCHAR(50) NOT NULL,
+  plan_name VARCHAR(120) NOT NULL,
+  amount DECIMAL(12, 2) NOT NULL,
+  currency CHAR(3) NOT NULL DEFAULT 'EUR',
+  card_brand ENUM('visa', 'mastercard', 'amex') NOT NULL,
+  last4 CHAR(4) NOT NULL,
+  status ENUM('paid', 'refunded', 'failed') NOT NULL DEFAULT 'paid',
+  linked_card_code VARCHAR(120) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_payments_company (company),
+  INDEX idx_payments_plan (plan),
+  INDEX idx_payments_status (status),
+  CONSTRAINT fk_payments_card
+    FOREIGN KEY (linked_card_code) REFERENCES smart_cards(code)
+    ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS activations (
+  id VARCHAR(64) PRIMARY KEY,
+  company VARCHAR(160) NOT NULL,
+  sector VARCHAR(50) NOT NULL,
+  sector_label VARCHAR(120) NOT NULL,
+  device_key VARCHAR(80) NOT NULL,
+  device_name VARCHAR(120) NOT NULL,
+  plan VARCHAR(50) NOT NULL,
+  plan_name VARCHAR(120) NOT NULL,
+  site VARCHAR(190) NOT NULL,
+  status ENUM('queued', 'provisioning', 'live') NOT NULL DEFAULT 'queued',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_activations_company (company),
+  INDEX idx_activations_status (status),
+  INDEX idx_activations_sector (sector)
+);
+
+CREATE TABLE IF NOT EXISTS tickets (
+  id VARCHAR(64) PRIMARY KEY,
+  company VARCHAR(160) NOT NULL,
+  contact_email VARCHAR(190) NOT NULL,
+  priority ENUM('critical', 'priority', 'standard') NOT NULL DEFAULT 'standard',
+  category ENUM('automation', 'integration', 'support') NOT NULL,
+  summary VARCHAR(280) NOT NULL,
+  status ENUM('open', 'investigating', 'resolved') NOT NULL DEFAULT 'open',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_tickets_company (company),
+  INDEX idx_tickets_priority (priority),
+  INDEX idx_tickets_status (status)
+);
+
+CREATE TABLE IF NOT EXISTS scratch_card_reveals (
+  id VARCHAR(64) PRIMARY KEY,
+  user_id VARCHAR(64) NOT NULL,
+  company VARCHAR(160) NOT NULL,
+  card_id VARCHAR(64) NOT NULL,
+  code VARCHAR(120) NOT NULL,
+  sector VARCHAR(50) NOT NULL,
+  plan VARCHAR(50) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  validated_at DATETIME NULL,
+  INDEX idx_scratch_reveals_user (user_id),
+  INDEX idx_scratch_reveals_card (card_id)
+);
+
+CREATE TABLE IF NOT EXISTS scratch_card_reservations (
+  id VARCHAR(64) PRIMARY KEY,
+  user_id VARCHAR(64) NOT NULL UNIQUE,
+  company VARCHAR(160) NOT NULL,
+  card_id VARCHAR(64) NOT NULL,
+  code VARCHAR(120) NOT NULL,
+  sector VARCHAR(50) NOT NULL,
+  plan VARCHAR(50) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_scratch_reservations_card (card_id)
+);
+
+CREATE TABLE IF NOT EXISTS vpn_endpoints (
+  id VARCHAR(64) PRIMARY KEY,
+  location VARCHAR(120) NOT NULL,
+  country CHAR(2) NOT NULL,
+  status ENUM('online', 'offline', 'maintenance') NOT NULL DEFAULT 'online'
+);
+
+CREATE TABLE IF NOT EXISTS vpn_sessions (
+  id VARCHAR(64) PRIMARY KEY,
+  user_id VARCHAR(64) NOT NULL,
+  endpoint_id VARCHAR(64) NOT NULL,
+  location VARCHAR(120) NOT NULL,
+  protocol VARCHAR(40) NOT NULL,
+  status ENUM('connected', 'disconnected') NOT NULL DEFAULT 'connected',
+  encryption_level VARCHAR(80) NOT NULL,
+  bandwidth VARCHAR(80) NOT NULL,
+  issued_at DATETIME NOT NULL,
+  expires_at DATETIME NOT NULL,
+  INDEX idx_vpn_sessions_user (user_id),
+  INDEX idx_vpn_sessions_endpoint (endpoint_id),
+  CONSTRAINT fk_vpn_sessions_endpoint
+    FOREIGN KEY (endpoint_id) REFERENCES vpn_endpoints(id)
+    ON DELETE CASCADE
+);
+
+INSERT INTO vpn_endpoints (id, location, country, status) VALUES
+('vpn-eu-1', 'EU Central', 'DE', 'online'),
+('vpn-us-1', 'US East', 'US', 'online'),
+('vpn-asia-1', 'Asia Pacific', 'SG', 'online'),
+('vpn-uk-1', 'UK', 'GB', 'online')
+ON DUPLICATE KEY UPDATE
+  location = VALUES(location),
+  country = VALUES(country),
+  status = VALUES(status);

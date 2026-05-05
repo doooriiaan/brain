@@ -1,70 +1,13 @@
 import { ensureAccount, getAccounts } from "./accountService.js";
 import { createNotification } from "./runtimeService.js";
+import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import {
   createHttpError,
   createId,
   sanitizeText,
 } from "./serviceHelpers.js";
 
-const runtimeUsers = [
-  {
-    id: "user-admin-1",
-    role: "admin",
-    name: "System Admin",
-    email: "admin@brain-ai.com",
-    password: "Admin123!",
-    company: "brAIn HQ",
-    sector: null,
-    plan: null,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 120).toISOString(),
-  },
-  {
-    id: "user-client-1",
-    role: "client",
-    name: "Nova Market Ops",
-    email: "nova@brain-ai.com",
-    password: "Client123!",
-    company: "Nova Market",
-    sector: "commercial",
-    plan: "business",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 56).toISOString(),
-  },
-  {
-    id: "user-client-2",
-    role: "client",
-    name: "Helios Clinic Team",
-    email: "helios@brain-ai.com",
-    password: "Client123!",
-    company: "Helios Clinic",
-    sector: "healthcare",
-    plan: "professional",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 48).toISOString(),
-  },
-  {
-    id: "user-client-3",
-    role: "client",
-    name: "Astra Group Lead",
-    email: "astra@brain-ai.com",
-    password: "Client123!",
-    company: "Astra Group",
-    sector: "business",
-    plan: "platinum",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 37).toISOString(),
-  },
-  {
-    id: "user-client-4",
-    role: "client",
-    name: "Factory One Control",
-    email: "factory@brain-ai.com",
-    password: "Client123!",
-    company: "Factory One",
-    sector: "industry",
-    plan: "business",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 28).toISOString(),
-  },
-];
-
-const runtimeSessions = [];
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function buildPublicUser(user) {
   return {
@@ -78,27 +21,67 @@ function buildPublicUser(user) {
   };
 }
 
+function getUsers() {
+  return getRuntimeState().users;
+}
+
+function getSessions() {
+  return getRuntimeState().sessions;
+}
+
 function createSession(user) {
-  const session = {
-    token: `brain-${createId()}`,
-    user: buildPublicUser(user),
-    issuedAt: new Date().toISOString(),
-  };
+  return updateRuntimeState((state) => {
+    const session = {
+      token: `brain-${createId()}`,
+      user: buildPublicUser(user),
+      issuedAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    };
 
-  runtimeSessions.unshift(session);
-  runtimeSessions.splice(40);
+    state.sessions.unshift(session);
+    state.sessions = state.sessions.slice(0, 100);
 
-  return session;
+    return session;
+  });
+}
+
+function getAdminCredential() {
+  return (
+    getUsers().find((user) => user.role === "admin") ?? null
+  );
 }
 
 export function getDemoCredentials() {
-  return runtimeUsers.map((user) => ({
+  return getUsers().map((user) => ({
     role: user.role,
     name: user.name,
     email: user.email,
     password: user.password,
     company: user.company,
   }));
+}
+
+export function getSessionByToken(token) {
+  const normalizedToken = sanitizeText(token);
+
+  if (!normalizedToken) {
+    return null;
+  }
+
+  const session = getSessions().find((item) => item.token === normalizedToken) ?? null;
+
+  if (!session) {
+    return null;
+  }
+
+  if (session.expiresAt && new Date(session.expiresAt).getTime() < Date.now()) {
+    updateRuntimeState((state) => {
+      state.sessions = state.sessions.filter((item) => item.token !== normalizedToken);
+    });
+    return null;
+  }
+
+  return session;
 }
 
 export function loginUser(payload) {
@@ -110,7 +93,31 @@ export function loginUser(payload) {
     throw createHttpError("Role, email, and password are required.");
   }
 
-  const user = runtimeUsers.find(
+  if (role === "admin") {
+    const adminCredential = getAdminCredential();
+
+    if (!adminCredential || adminCredential.email.toLowerCase() !== email) {
+      throw createHttpError("Admin credentials not found.", 401);
+    }
+
+    if (adminCredential.password !== password) {
+      throw createHttpError("Invalid admin password.", 401);
+    }
+
+    createNotification(
+      "Admin login",
+      `${adminCredential.name} logged into the admin portal.`,
+      "warning",
+    );
+
+    return createSession(adminCredential);
+  }
+
+  if (role !== "client") {
+    throw createHttpError("Invalid role. Only 'client' or 'admin' are allowed.");
+  }
+
+  const user = getUsers().find(
     (item) =>
       item.email.toLowerCase() === email &&
       item.password === password &&
@@ -118,12 +125,12 @@ export function loginUser(payload) {
   );
 
   if (!user) {
-    throw createHttpError("Invalid login credentials.", 401);
+    throw createHttpError("Invalid client credentials.", 401);
   }
 
   createNotification(
-    "User login",
-    `${user.name} opened the ${user.role} portal.`,
+    "Client login",
+    `${user.name} (${user.company}) opened the client portal.`,
     "info",
   );
 
@@ -139,20 +146,35 @@ export function registerUser(payload) {
   const sector = sanitizeText(payload.sector).toLowerCase() || "business";
   const plan = sanitizeText(payload.plan).toLowerCase() || "starter";
 
+  if (role === "admin") {
+    throw createHttpError(
+      "Admin registration is not allowed. Contact system administrator.",
+      403,
+    );
+  }
+
   if (!role || !name || !email || !password) {
     throw createHttpError("Role, name, email, and password are required.");
   }
 
   if (role !== "client") {
-    throw createHttpError("Only client registration is allowed from this portal.");
+    throw createHttpError("Only client registration is allowed from this portal.", 400);
   }
 
-  if (runtimeUsers.some((user) => user.email.toLowerCase() === email)) {
-    throw createHttpError("An account with that email already exists.");
+  if (getUsers().some((user) => user.email.toLowerCase() === email)) {
+    throw createHttpError("An account with that email already exists.", 409);
   }
 
   if (!companyInput) {
-    throw createHttpError("Client registration requires a company name.");
+    throw createHttpError("Client registration requires a company name.", 400);
+  }
+
+  if (password.length < 8) {
+    throw createHttpError("Password must be at least 8 characters long.", 400);
+  }
+
+  if (!emailPattern.test(email)) {
+    throw createHttpError("Please enter a valid email address.", 400);
   }
 
   const account = ensureAccount({
@@ -160,24 +182,27 @@ export function registerUser(payload) {
     sector,
     plan,
   });
-  const company = account.company;
 
-  const user = {
-    id: createId(),
-    role,
-    name,
-    email,
-    password,
-    company,
-    sector: account.sector ?? sector,
-    plan: account.plan ?? plan,
-    createdAt: new Date().toISOString(),
-  };
+  const user = updateRuntimeState((state) => {
+    const nextUser = {
+      id: createId(),
+      role,
+      name,
+      email,
+      password,
+      company: account.company,
+      sector: account.sector ?? sector,
+      plan: account.plan ?? plan,
+      createdAt: new Date().toISOString(),
+    };
 
-  runtimeUsers.unshift(user);
+    state.users.unshift(nextUser);
+    return nextUser;
+  });
+
   createNotification(
     "New portal account",
-    `${name} registered as client for ${company}.`,
+    `${name} registered as client for ${account.company}.`,
     "success",
   );
 
@@ -186,8 +211,8 @@ export function registerUser(payload) {
 
 export function getAuthSnapshot() {
   return {
-    users: runtimeUsers.map(buildPublicUser),
+    users: getUsers().map(buildPublicUser),
     accounts: getAccounts(),
-    sessions: runtimeSessions,
+    sessions: getSessions(),
   };
 }

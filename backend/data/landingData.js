@@ -1,7 +1,7 @@
 export const fallbackContent = {
   source: "fallback",
   hero: {
-    eyebrow: "Komercial + Business + Healthcare + Industry 4.0 AI",
+    eyebrow: "Komercial + Business + Healthcare + Industry 4.0",
     title: "Smarter business. Stronger results.",
     subtitle:
       "brAIn turns the concept into a full product ecosystem: sector-ready devices, smart-card activation, payments, live services, and a compact high-energy preweb that flows into the real system.",
@@ -9,7 +9,7 @@ export const fallbackContent = {
       "Komercial",
       "Business",
       "Healthcare",
-      "Industry 4.0 AI",
+      "Industry 4.0",
     ],
     metrics: [
       { label: "Sectors ready", value: "4 verticals" },
@@ -87,7 +87,7 @@ export const fallbackContent = {
     },
     {
       slug: "industry",
-      name: "Industry 4.0 AI",
+      name: "Industry 4.0",
       title: "Edge box for machine monitoring, predictive alerts, and AI ops",
       summary:
         "An industrial-grade device that connects to machines and sensors, then streams events into the cloud for dashboards, alerts, and AI recommendations.",

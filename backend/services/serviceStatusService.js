@@ -50,7 +50,7 @@ export function getServiceStatuses() {
       key: "payments",
       label: "Payments",
       status: "online",
-      detail: `${getPayments().length} Visa, Mastercard, or Amex payment record(s) were processed in the live mock gateway.`,
+      detail: `${getPayments().length} Visa, Mastercard, or Amex payment record(s) are persisted in the runtime payment layer.`,
     },
     {
       key: "smart-cards",
@@ -60,11 +60,11 @@ export function getServiceStatuses() {
     },
     {
       key: "database",
-      label: "MySQL content layer",
+      label: "Persistence layer",
       status: isDatabaseConfigured ? "online" : "setup",
       detail: isDatabaseConfigured
-        ? "Database credentials detected. API can read structured content from MySQL."
-        : "Add .env credentials to switch from local seed content to MySQL-backed content.",
+        ? "Database credentials detected. Content can be read from MySQL while runtime state stays available locally."
+        : "Local runtime persistence is active. Add .env credentials to switch structured content reads to MySQL.",
     },
     {
       key: "automation",

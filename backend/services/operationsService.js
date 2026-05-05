@@ -11,6 +11,7 @@ function buildTimeline({
   notifications,
   uploads,
   leads,
+  payments,
   activations,
   tickets,
 }) {
@@ -38,6 +39,14 @@ function buildTimeline({
       detail: `${lead.sectorLabel} sector selected by ${lead.name}.`,
       status: "info",
       createdAt: lead.createdAt,
+    })),
+    ...payments.map((payment) => ({
+      id: `payment-${payment.id}`,
+      type: "payment",
+      title: `${payment.company} payment received`,
+      detail: `${payment.planName} / EUR ${payment.amount}${payment.linkedCardCode ? ` / linked ${payment.linkedCardCode}` : ""}.`,
+      status: "success",
+      createdAt: payment.createdAt,
     })),
     ...activations.map((activation) => ({
       id: `activation-${activation.id}`,
@@ -117,6 +126,7 @@ export function getOperationsOverview() {
       notifications,
       uploads,
       leads,
+      payments,
       activations,
       tickets,
     }),
