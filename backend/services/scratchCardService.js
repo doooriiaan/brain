@@ -4,6 +4,8 @@ import { createNotification } from "./runtimeService.js";
 import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import { createHttpError, createId, sanitizeText } from "./serviceHelpers.js";
 
+const FREE_PLAN_SLUG = "free";
+
 function purgeExpiredReservations(state) {
   const now = Date.now();
   state.scratchCardReservations = state.scratchCardReservations.filter(
@@ -42,6 +44,7 @@ export function revealScratchCard(payload) {
     const availableCards = state.smartCards.filter(
       (card) =>
         card.status === "available" &&
+        card.plan === FREE_PLAN_SLUG &&
         card.ownerCompany === null &&
         !reservedCardIds.has(card.id),
     );
@@ -120,6 +123,13 @@ export function validateScratchCard(payload) {
       throw createHttpError("Invalid scratch card code.", 401);
     }
 
+    if (reservation.plan !== FREE_PLAN_SLUG) {
+      throw createHttpError(
+        "Only the Free validation flow can be completed here. Paid plans require admin approval.",
+        403,
+      );
+    }
+
     const card = state.smartCards.find((item) => item.id === reservation.cardId);
 
     if (!card) {
@@ -142,7 +152,9 @@ export function validateScratchCard(payload) {
   });
 
   incrementAccountCards(company, 1);
-  updateAccountPlan(company, result.card.plan);
+  if (result.card.plan !== FREE_PLAN_SLUG) {
+    updateAccountPlan(company, result.card.plan);
+  }
   createNotification(
     "Scratch card activated",
     `${result.card.code} was activated for ${company}.`,
@@ -152,7 +164,10 @@ export function validateScratchCard(payload) {
 
   return {
     success: true,
-    message: `Scratch card activated for ${company}!`,
+    message:
+      result.card.plan === FREE_PLAN_SLUG
+        ? `Free validation activated for ${company}.`
+        : `Scratch card activated for ${company}!`,
     card: {
       id: result.reservation.cardId,
       code: result.reservation.code,
@@ -199,6 +214,8 @@ export function getUserScratchCardStatus(userId) {
     expiresIn: Math.max(reservation.expiresAt - Date.now(), 0),
     sector: reservation.sector,
     plan: reservation.plan,
+    code: reservation.code,
+    message: "Scratch card is ready for validation.",
   };
 }
 

@@ -29,6 +29,37 @@ export function createNotification(title, body, level = "info") {
   return notification;
 }
 
+export function clearNotifications() {
+  return updateRuntimeState((state) => {
+    const deletedCount = state.notifications.length;
+    state.notifications = [];
+    return { deletedCount };
+  });
+}
+
+export function clearRuntimeHistory() {
+  return updateRuntimeState((state) => {
+    const deletedCount =
+      state.notifications.length +
+      state.uploads.length +
+      state.leads.length +
+      state.payments.length +
+      state.activations.length +
+      state.tickets.length +
+      state.scratchCardReveals.length;
+
+    state.notifications = [];
+    state.uploads = [];
+    state.leads = [];
+    state.payments = [];
+    state.activations = [];
+    state.tickets = [];
+    state.scratchCardReveals = [];
+
+    return { deletedCount };
+  });
+}
+
 export function getUploads() {
   return getRuntimeState().uploads;
 }

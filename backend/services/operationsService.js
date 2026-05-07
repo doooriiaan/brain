@@ -43,9 +43,19 @@ function buildTimeline({
     ...payments.map((payment) => ({
       id: `payment-${payment.id}`,
       type: "payment",
-      title: `${payment.company} payment received`,
+      title:
+        payment.status === "pending"
+          ? `${payment.company} payment request`
+          : payment.status === "rejected"
+            ? `${payment.company} payment rejected`
+            : `${payment.company} payment approved`,
       detail: `${payment.planName} / EUR ${payment.amount}${payment.linkedCardCode ? ` / linked ${payment.linkedCardCode}` : ""}.`,
-      status: "success",
+      status:
+        payment.status === "approved"
+          ? "success"
+          : payment.status === "rejected"
+            ? "warning"
+            : "info",
       createdAt: payment.createdAt,
     })),
     ...activations.map((activation) => ({
@@ -76,6 +86,8 @@ export function getOperationsOverview() {
   const services = getServiceStatuses();
   const payments = getPayments();
   const smartCardStats = getSmartCardStats();
+  const approvedPayments = payments.filter((payment) => payment.status === "approved");
+  const pendingPayments = payments.filter((payment) => payment.status === "pending");
 
   return {
     services,
@@ -113,7 +125,7 @@ export function getOperationsOverview() {
         key: "payment-flow",
         label: "Payments",
         value: `${payments.length}`,
-        detail: "Visa, Mastercard, and Amex mock payments captured live.",
+        detail: `${approvedPayments.length} approved / ${pendingPayments.length} pending approval.`,
       },
       {
         key: "smart-cards",

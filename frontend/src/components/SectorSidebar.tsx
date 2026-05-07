@@ -49,6 +49,8 @@ export function SectorSidebar({
     );
   };
 
+  const activeSector = sectors.find((item) => item.slug === activeKey);
+
   return (
     <>
       <div className="sector-mobile-strip lg:hidden">
@@ -61,7 +63,37 @@ export function SectorSidebar({
       </div>
 
       <aside className="sector-side-rail hidden lg:flex">
-        {tabs.map((tab) => renderSectorButton(tab))}
+        <div className="w-full space-y-4">
+          {tabs.map((tab) => renderSectorButton(tab))}
+          
+          {activeSector && (
+            <div className="mt-6 space-y-3 rounded-lg border border-white/10 bg-white/5 p-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/50">Active Sector Info</p>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-white/70 font-semibold">{activeSector.title}</p>
+                  <p className="mt-1 text-xs text-white/60 leading-relaxed">{activeSector.summary}</p>
+                </div>
+                {activeSector.capabilities && activeSector.capabilities.length > 0 && (
+                  <div>
+                    <p className="text-xs text-white/50 mb-2">Capabilities:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {activeSector.capabilities.slice(0, 5).map((cap) => (
+                        <span key={cap} className="rounded-full bg-white/10 px-2.5 py-1 text-xs text-cyan-300 border border-cyan-400/20">
+                          {cap}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="rounded-md border border-white/10 bg-white/5 p-2">
+                  <p className="text-xs text-white/50">Status</p>
+                  <p className="mt-1 text-xs text-green-300 font-semibold">✓ Ready to Deploy</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </aside>
     </>
   );

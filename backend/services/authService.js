@@ -144,7 +144,7 @@ export function registerUser(payload) {
   const password = sanitizeText(payload.password);
   const companyInput = sanitizeText(payload.company);
   const sector = sanitizeText(payload.sector).toLowerCase() || "business";
-  const plan = sanitizeText(payload.plan).toLowerCase() || "starter";
+  const plan = sanitizeText(payload.plan).toLowerCase() || "free";
 
   if (role === "admin") {
     throw createHttpError(

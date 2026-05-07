@@ -95,7 +95,7 @@ export function createRuntimeSeed() {
       id: "account-1",
       company: "Nova Market",
       sector: "commercial",
-      sectorLabel: "Komercial",
+      sectorLabel: "Commercial AI",
       plan: "business",
       planName: "Business",
       status: "active",
@@ -113,7 +113,7 @@ export function createRuntimeSeed() {
       id: "account-2",
       company: "Helios Clinic",
       sector: "healthcare",
-      sectorLabel: "Healthcare",
+      sectorLabel: "Healthcare AI",
       plan: "professional",
       planName: "Professional",
       status: "active",
@@ -131,7 +131,7 @@ export function createRuntimeSeed() {
       id: "account-3",
       company: "Astra Group",
       sector: "business",
-      sectorLabel: "Business",
+      sectorLabel: "Business AI",
       plan: "platinum",
       planName: "Platinum",
       status: "active",
@@ -149,7 +149,7 @@ export function createRuntimeSeed() {
       id: "account-4",
       company: "Factory One",
       sector: "industry",
-      sectorLabel: "Industry 4.0",
+      sectorLabel: "Industry 4.0 AI",
       plan: "business",
       planName: "Business",
       status: "active",
@@ -234,8 +234,13 @@ export function createRuntimeSeed() {
       amount: 990,
       currency: "EUR",
       cardBrand: "visa",
+      paymentMethod: "visa",
       last4: "4812",
-      status: "paid",
+      status: "approved",
+      approvalRequestedAt: minutesAgo(92),
+      approvedAt: minutesAgo(80),
+      rejectedAt: null,
+      approvalNote: "Auto-seeded approved payment.",
       createdAt: minutesAgo(80),
     },
     {
@@ -246,8 +251,13 @@ export function createRuntimeSeed() {
       amount: 490,
       currency: "EUR",
       cardBrand: "mastercard",
+      paymentMethod: "mastercard",
       last4: "5188",
-      status: "paid",
+      status: "approved",
+      approvalRequestedAt: minutesAgo(166),
+      approvedAt: minutesAgo(144),
+      rejectedAt: null,
+      approvalNote: "Auto-seeded approved payment.",
       createdAt: minutesAgo(144),
     },
     {
@@ -258,8 +268,13 @@ export function createRuntimeSeed() {
       amount: 1990,
       currency: "EUR",
       cardBrand: "amex",
+      paymentMethod: "amex",
       last4: "1008",
-      status: "paid",
+      status: "pending",
+      approvalRequestedAt: minutesAgo(200),
+      approvedAt: null,
+      rejectedAt: null,
+      approvalNote: "Waiting for admin approval.",
       createdAt: minutesAgo(200),
     },
   ];
@@ -293,7 +308,7 @@ export function createRuntimeSeed() {
       id: "activation-1",
       company: "Nova Market",
       sector: "commercial",
-      sectorLabel: "Commercial",
+      sectorLabel: "Commercial AI",
       deviceKey: "ai-stick",
       deviceName: "brAIn AI Stick",
       plan: "business",
@@ -306,7 +321,7 @@ export function createRuntimeSeed() {
       id: "activation-2",
       company: "Helios Clinic",
       sector: "healthcare",
-      sectorLabel: "Healthcare",
+      sectorLabel: "Healthcare AI",
       deviceKey: "med-assistant",
       deviceName: "brAIn MED Assistant",
       plan: "professional",
@@ -340,29 +355,7 @@ export function createRuntimeSeed() {
     },
   ];
 
-  const notifications = [
-    {
-      id: "notification-1",
-      title: "Platform ready",
-      body: "Frontend, Express API, lead capture, activations, support tickets, and MySQL-ready content service are available.",
-      level: "success",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "notification-2",
-      title: "Uploads enabled",
-      body: "Use the live upload panel to store files through the backend.",
-      level: "info",
-      createdAt: minutesAgo(13),
-    },
-    {
-      id: "notification-3",
-      title: "Persistence enabled",
-      body: "Runtime state now survives server restarts through the local data store.",
-      level: "warning",
-      createdAt: minutesAgo(28),
-    },
-  ];
+  const notifications = [];
 
   const vpnEndpoints = [
     { id: "vpn-eu-1", location: "EU Central", country: "DE", status: "online" },
@@ -373,7 +366,7 @@ export function createRuntimeSeed() {
 
   return {
     meta: {
-      version: 2,
+      version: 3,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },

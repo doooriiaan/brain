@@ -24,7 +24,7 @@ export const getAllSmartCards = controller((request, response) => {
   const assignedOnly = readQueryBoolean(request, "assignedOnly", null);
   const limit = readQueryNumber(request, "limit", {
     min: 1,
-    max: 120,
+    max: 600,
   });
 
   let cards = getSmartCards();

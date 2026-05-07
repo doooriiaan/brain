@@ -7,8 +7,8 @@ import type {
 
 const contentTranslations = {
   sq: {
-    "Komercial + Business + Healthcare + Industry 4.0 AI":
-      "Komercial + Biznes + Shendetesi + Industri 4.0 AI",
+    "Komercial + Business + Healthcare + Industry 4.0":
+      "Komercial + Biznes + Shendetesi + Industri 4.0",
     "Smarter business. Stronger results.":
       "Biznes me i zgjuar. Rezultate me te forta.",
     "brAIn turns the concept into a full product ecosystem: sector-ready devices, smart-card activation, payments, live services, and a compact high-energy preweb that flows into the real system.":
@@ -23,7 +23,7 @@ const contentTranslations = {
     Commercial: "Komercial",
     Business: "Biznes",
     Healthcare: "Shendetesi",
-    "Industry 4.0 AI": "Industri 4.0 AI",
+    "Industry 4.0": "Industri 4.0",
     "AI Stick for retail, hospitality, kiosks, and smart displays":
       "AI Stick per retail, hospitality, kioska dhe ekrane inteligjente",
     "A compact plug-and-play device for customer-facing screens that adds voice AI, content suggestions, messaging flows, and branded experiences.":

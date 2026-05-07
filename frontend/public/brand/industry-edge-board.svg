@@ -1,48 +1,105 @@
 <svg width="1400" height="980" viewBox="0 0 1400 980" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1400" height="980" rx="40" fill="#111417"/>
-  <text x="74" y="120" fill="#FFFFFF" font-size="64" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn Industry</text>
-  <text x="74" y="170" fill="#E0A526" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">Industry 4.0 AI</text>
-  <text x="74" y="244" fill="#D7E0EC" font-size="30" font-family="Arial, Helvetica, sans-serif">Smart monitoring, predictive maintenance, process</text>
-  <text x="74" y="284" fill="#D7E0EC" font-size="30" font-family="Arial, Helvetica, sans-serif">optimization and secure edge deployment.</text>
+  <defs>
+    <linearGradient id="industryBg" x1="52" y1="40" x2="1340" y2="940" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#12161E"/>
+      <stop offset="55%" stop-color="#090C12"/>
+      <stop offset="100%" stop-color="#05070B"/>
+    </linearGradient>
+    <linearGradient id="industryPanel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B212C"/>
+      <stop offset="100%" stop-color="#10151D"/>
+    </linearGradient>
+    <linearGradient id="industryAmber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFCB61"/>
+      <stop offset="100%" stop-color="#D88A19"/>
+    </linearGradient>
+    <linearGradient id="industryChart" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F7C45B"/>
+      <stop offset="100%" stop-color="#57D194"/>
+    </linearGradient>
+  </defs>
 
-  <rect x="72" y="350" width="478" height="312" rx="34" fill="#171E25" stroke="#37424D"/>
-  <rect x="176" y="432" width="276" height="146" rx="20" fill="#1D232A" stroke="#7F6B2A"/>
-  <rect x="244" y="406" width="24" height="56" rx="10" fill="#2B3138"/>
-  <rect x="358" y="406" width="24" height="56" rx="10" fill="#2B3138"/>
-  <circle cx="250" cy="522" r="8" fill="#28D391"/>
-  <circle cx="288" cy="522" r="8" fill="#28D391"/>
-  <circle cx="326" cy="522" r="8" fill="#28D391"/>
-  <text x="150" y="616" fill="#E0A526" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">PLC / SCADA · Sensors · MQTT · Edge AI</text>
+  <rect width="1400" height="980" rx="40" fill="url(#industryBg)"/>
+  <circle cx="1216" cy="138" r="172" fill="#34260B" opacity="0.28"/>
+  <circle cx="148" cy="868" r="142" fill="#1B1407" opacity="0.42"/>
+  <path d="M84 120H310" stroke="#3E3220" stroke-width="2"/>
+  <path d="M1068 852H1314" stroke="#30271C" stroke-width="2"/>
 
-  <rect x="594" y="92" width="734" height="374" rx="34" fill="#171E25" stroke="#37424D"/>
-  <text x="642" y="150" fill="#FFFFFF" font-size="38" font-family="Arial, Helvetica, sans-serif" font-weight="700">Realtime dashboard</text>
-  <rect x="642" y="190" width="262" height="86" rx="18" fill="#0F1624"/>
-  <rect x="922" y="190" width="172" height="86" rx="18" fill="#0F1624"/>
-  <rect x="1112" y="190" width="172" height="86" rx="18" fill="#0F1624"/>
-  <text x="672" y="230" fill="#85E1B9" font-size="22" font-family="Arial, Helvetica, sans-serif">Machines online</text>
-  <text x="672" y="262" fill="#FFFFFF" font-size="38" font-family="Arial, Helvetica, sans-serif" font-weight="700">24 / 28</text>
-  <text x="952" y="230" fill="#F6C15F" font-size="22" font-family="Arial, Helvetica, sans-serif">Active alarms</text>
-  <text x="952" y="262" fill="#FFFFFF" font-size="38" font-family="Arial, Helvetica, sans-serif" font-weight="700">5</text>
-  <text x="1142" y="230" fill="#7EC4FF" font-size="22" font-family="Arial, Helvetica, sans-serif">Efficiency</text>
-  <text x="1142" y="262" fill="#FFFFFF" font-size="38" font-family="Arial, Helvetica, sans-serif" font-weight="700">78%</text>
+  <rect x="68" y="58" width="284" height="42" rx="21" fill="#171C24" stroke="#43321B"/>
+  <text x="92" y="86" fill="#E8C888" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="2.8">INDUSTRY / EDGE / PLC / PREDICTIVE / AI OPS</text>
+  <text x="72" y="156" fill="#FFFFFF" font-size="68" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn Industry</text>
+  <text x="72" y="206" fill="#F0B34A" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">Industry 4.0 sector board</text>
+  <text x="72" y="264" fill="#D4DDEB" font-size="31" font-family="Arial, Helvetica, sans-serif">Edge processing for machines, alarms, efficiency, predictive maintenance,</text>
+  <text x="72" y="304" fill="#D4DDEB" font-size="31" font-family="Arial, Helvetica, sans-serif">and plant visibility with one industrial-grade control language.</text>
 
-  <rect x="642" y="306" width="642" height="120" rx="22" fill="#0F1624"/>
-  <text x="672" y="352" fill="#D7E0EC" font-size="28" font-family="Arial, Helvetica, sans-serif">AI assistant explains machine alarms, recommends actions,</text>
-  <text x="672" y="390" fill="#D7E0EC" font-size="28" font-family="Arial, Helvetica, sans-serif">and keeps the cloud and mobile app synchronized.</text>
+  <rect x="72" y="356" width="472" height="332" rx="34" fill="url(#industryPanel)" stroke="#43321B"/>
+  <text x="108" y="406" fill="#A6987D" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">EDGE BOX</text>
+  <rect x="154" y="460" width="278" height="146" rx="20" fill="#11161E" stroke="#6C511F"/>
+  <rect x="176" y="438" width="18" height="52" rx="9" fill="#29303A"/>
+  <rect x="392" y="438" width="18" height="52" rx="9" fill="#29303A"/>
+  <rect x="198" y="500" width="116" height="12" rx="6" fill="#1A202A"/>
+  <rect x="198" y="526" width="116" height="12" rx="6" fill="#1A202A"/>
+  <text x="230" y="552" fill="#F4C560" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700">brAIn</text>
+  <text x="230" y="586" fill="#FFFFFF" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">INDUSTRY</text>
+  <circle cx="238" cy="620" r="6" fill="#56D192"/>
+  <circle cx="266" cy="620" r="6" fill="#56D192"/>
+  <circle cx="294" cy="620" r="6" fill="#F4C560"/>
+  <text x="108" y="646" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">PLC / SCADA / Sensors / MQTT</text>
+  <text x="108" y="678" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">24-7 runtime / industrial edge AI</text>
 
-  <rect x="594" y="512" width="228" height="314" rx="28" fill="#171E25" stroke="#37424D"/>
-  <rect x="848" y="512" width="228" height="314" rx="28" fill="#171E25" stroke="#37424D"/>
-  <rect x="1102" y="512" width="226" height="314" rx="28" fill="#171E25" stroke="#37424D"/>
-  <text x="626" y="566" fill="#E0A526" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">KEY BENEFITS</text>
-  <text x="626" y="620" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Reduce downtime</text>
-  <text x="626" y="660" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Predictive maintenance</text>
-  <text x="626" y="700" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Data-driven decisions</text>
+  <rect x="576" y="110" width="754" height="320" rx="34" fill="#11161E" stroke="#43321B"/>
+  <text x="620" y="160" fill="#A6987D" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">MACHINE OVERVIEW</text>
+  <text x="620" y="206" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">Realtime plant pulse</text>
+  <rect x="620" y="238" width="160" height="88" rx="20" fill="#171D28" stroke="#2A313C"/>
+  <rect x="800" y="238" width="160" height="88" rx="20" fill="#171D28" stroke="#2A313C"/>
+  <rect x="980" y="238" width="160" height="88" rx="20" fill="#171D28" stroke="#2A313C"/>
+  <rect x="1160" y="238" width="136" height="88" rx="20" fill="#171D28" stroke="#2A313C"/>
+  <text x="648" y="272" fill="#57D194" font-size="16" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">ONLINE</text>
+  <text x="648" y="308" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700">24 / 28</text>
+  <text x="828" y="272" fill="#F6C15F" font-size="16" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">ALARMS</text>
+  <text x="828" y="308" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700">05</text>
+  <text x="1008" y="272" fill="#7BD0FF" font-size="16" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">EFFICIENCY</text>
+  <text x="1008" y="308" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700">78%</text>
+  <text x="1188" y="272" fill="#D7A44E" font-size="16" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">ENERGY</text>
+  <text x="1188" y="308" fill="#FFFFFF" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700">412 kWh</text>
+  <rect x="620" y="350" width="676" height="48" rx="16" fill="#171D28" stroke="#2A313C"/>
+  <path d="M652 382L694 372L734 378L772 360L814 366L852 348L892 356L934 336L974 342L1014 326L1058 334L1098 316L1140 324L1182 306L1222 314L1264 298" stroke="url(#industryChart)" stroke-width="4" stroke-linecap="round"/>
 
-  <text x="880" y="566" fill="#E0A526" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">INTEGRATES WITH</text>
-  <text x="880" y="620" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">SAP · Azure · AWS</text>
-  <text x="880" y="660" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Google Cloud · Siemens</text>
+  <rect x="576" y="462" width="276" height="306" rx="30" fill="url(#industryPanel)" stroke="#43321B"/>
+  <text x="610" y="512" fill="#A6987D" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">SIGNAL LANES</text>
+  <rect x="610" y="552" width="208" height="46" rx="16" fill="#171D28"/>
+  <rect x="610" y="618" width="208" height="46" rx="16" fill="#171D28"/>
+  <rect x="610" y="684" width="208" height="46" rx="16" fill="#171D28"/>
+  <text x="636" y="582" fill="#FFFFFF" font-size="22" font-family="Arial, Helvetica, sans-serif">Sensors to edge runtime</text>
+  <text x="636" y="648" fill="#FFFFFF" font-size="22" font-family="Arial, Helvetica, sans-serif">Edge to cloud analytics</text>
+  <text x="636" y="714" fill="#FFFFFF" font-size="22" font-family="Arial, Helvetica, sans-serif">Cloud to operator action</text>
+  <text x="610" y="748" fill="#AEB8C7" font-size="16" font-family="Arial, Helvetica, sans-serif">Plant-ready chain for machines, reports,</text>
+  <text x="610" y="770" fill="#AEB8C7" font-size="16" font-family="Arial, Helvetica, sans-serif">and operator intervention.</text>
 
-  <text x="1134" y="566" fill="#E0A526" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">DEPLOYMENT</text>
-  <text x="1134" y="620" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">On-premise</text>
-  <text x="1134" y="660" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Edge + cloud connected</text>
+  <rect x="878" y="462" width="194" height="306" rx="30" fill="url(#industryPanel)" stroke="#43321B"/>
+  <text x="910" y="512" fill="#A6987D" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">AI ASSISTANT</text>
+  <rect x="910" y="548" width="130" height="154" rx="20" fill="#171D28"/>
+  <text x="930" y="582" fill="#FFFFFF" font-size="18" font-family="Arial, Helvetica, sans-serif">Machine 03 stopped</text>
+  <text x="930" y="612" fill="#FFFFFF" font-size="18" font-family="Arial, Helvetica, sans-serif">because intake temp</text>
+  <text x="930" y="642" fill="#FFFFFF" font-size="18" font-family="Arial, Helvetica, sans-serif">crossed the safe band.</text>
+  <text x="930" y="680" fill="#F0B34A" font-size="18" font-family="Arial, Helvetica, sans-serif">Recommendation:</text>
+  <text x="930" y="708" fill="#AEB8C7" font-size="16" font-family="Arial, Helvetica, sans-serif">Inspect cooling system</text>
+  <text x="930" y="732" fill="#AEB8C7" font-size="16" font-family="Arial, Helvetica, sans-serif">and clean air filter.</text>
+
+  <rect x="1098" y="462" width="232" height="306" rx="30" fill="url(#industryPanel)" stroke="#43321B"/>
+  <text x="1130" y="512" fill="#A6987D" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">TOUCH PANEL</text>
+  <rect x="1134" y="548" width="160" height="154" rx="18" fill="#171D28"/>
+  <rect x="1160" y="582" width="108" height="16" rx="8" fill="#25303E"/>
+  <rect x="1160" y="620" width="44" height="44" rx="12" fill="#11161E" stroke="#304154"/>
+  <rect x="1222" y="620" width="44" height="44" rx="12" fill="#11161E" stroke="#304154"/>
+  <text x="1166" y="650" fill="#56D192" font-size="16" font-family="Arial, Helvetica, sans-serif">58.6 C</text>
+  <text x="1228" y="650" fill="#7BD0FF" font-size="16" font-family="Arial, Helvetica, sans-serif">1.9 mm/s</text>
+  <text x="1134" y="734" fill="#AEB8C7" font-size="16" font-family="Arial, Helvetica, sans-serif">Line status / vibration / pressure</text>
+  <text x="1134" y="756" fill="#AEB8C7" font-size="16" font-family="Arial, Helvetica, sans-serif">Speed / load / thermal state</text>
+
+  <rect x="72" y="726" width="1258" height="204" rx="34" fill="#11161E" stroke="#43321B"/>
+  <text x="108" y="772" fill="#A6987D" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">IMPACT + DEPLOYMENT</text>
+  <text x="108" y="826" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Reduce downtime / Predict maintenance / Track anomalies / Scale from one machine to the full plant</text>
+  <text x="108" y="874" fill="#D4DDEB" font-size="20" font-family="Arial, Helvetica, sans-serif">Protocols: PLC / SCADA / OPC UA / Modbus / MQTT / Database / Cloud</text>
+  <text x="108" y="908" fill="#D4DDEB" font-size="20" font-family="Arial, Helvetica, sans-serif">Deployment: Edge device on-site -> secure data stream -> operator dashboard -> AI recommendation loop</text>
 </svg>

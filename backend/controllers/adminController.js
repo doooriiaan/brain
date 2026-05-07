@@ -1,8 +1,11 @@
 import {
   assignAdminSmartCards,
   broadcastAdminNotification,
+  clearAdminHistory,
+  clearAdminNotifications,
   getAdminOverview,
   setAdminActivationStatus,
+  setAdminPaymentStatus,
   setAdminTicketStatus,
 } from "../services/adminService.js";
 import {
@@ -16,7 +19,7 @@ import {
 export const getAdminDashboard = controller((request, response) => {
   const paymentsLimit = readQueryNumber(request, "paymentsLimit", {
     min: 1,
-    max: 30,
+    max: 120,
   });
   const accountsLimit = readQueryNumber(request, "accountsLimit", {
     min: 1,
@@ -24,7 +27,7 @@ export const getAdminDashboard = controller((request, response) => {
   });
   const cardsLimit = readQueryNumber(request, "cardsLimit", {
     min: 1,
-    max: 80,
+    max: 4000,
   });
   const activationsLimit = readQueryNumber(request, "activationsLimit", {
     min: 1,
@@ -79,6 +82,24 @@ export const broadcastNotificationRequest = controller((request, response) => {
   });
 });
 
+export const clearNotificationsRequest = controller((_request, response) => {
+  const result = clearAdminNotifications();
+
+  response.json({
+    message: "Notifications cleared permanently.",
+    ...result,
+  });
+});
+
+export const clearHistoryRequest = controller((_request, response) => {
+  const result = clearAdminHistory();
+
+  response.json({
+    message: "Runtime history deleted permanently.",
+    ...result,
+  });
+});
+
 export const updateActivationStatusRequest = controller((request, response) => {
   const id = readParamText(request, "id", "Activation id");
   readBodyText(request, "status", "Activation status");
@@ -101,6 +122,19 @@ export const updateTicketStatusRequest = controller((request, response) => {
   response.json({
     message: "Ticket status updated successfully.",
     ticket,
+  });
+});
+
+export const updatePaymentStatusRequest = controller((request, response) => {
+  const id = readParamText(request, "id", "Payment id");
+  const status = readBodyText(request, "status", "Payment status").toLowerCase();
+  const payment = setAdminPaymentStatus(id, status, {
+    note: request.body?.note,
+  });
+
+  response.json({
+    message: `Payment ${status} successfully.`,
+    payment,
   });
 });
 

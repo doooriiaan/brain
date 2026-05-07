@@ -55,7 +55,7 @@ export const createPaymentRequest = controller((request, response) => {
   const payment = createPayment(request.body ?? {});
 
   response.status(201).json({
-    message: "Payment recorded successfully.",
+    message: "Payment request sent to admin approval.",
     payment,
   });
 });

@@ -1,42 +1,106 @@
 <svg width="1400" height="980" viewBox="0 0 1400 980" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1400" height="980" rx="40" fill="#F7FBFE"/>
-  <rect x="56" y="56" width="1288" height="264" rx="34" fill="url(#medBg)"/>
   <defs>
-    <linearGradient id="medBg" x1="56" y1="56" x2="1344" y2="320" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F5FCFF"/>
-      <stop offset="100%" stop-color="#E6F3FA"/>
+    <linearGradient id="healthBg" x1="60" y1="40" x2="1340" y2="940" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F8FDFF"/>
+      <stop offset="55%" stop-color="#EAF5FB"/>
+      <stop offset="100%" stop-color="#DCEFF9"/>
+    </linearGradient>
+    <linearGradient id="healthTeal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#74E5D8"/>
+      <stop offset="100%" stop-color="#60AFFF"/>
+    </linearGradient>
+    <linearGradient id="healthDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#172336"/>
+      <stop offset="100%" stop-color="#0D1624"/>
     </linearGradient>
   </defs>
-  <text x="88" y="128" fill="#1A2940" font-size="64" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn MED</text>
-  <text x="88" y="178" fill="#5AAFC8" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">Healthcare sector</text>
-  <text x="88" y="242" fill="#364B63" font-size="30" font-family="Arial, Helvetica, sans-serif">Patient monitoring, pharmacy assistance, front desk</text>
-  <text x="88" y="282" fill="#364B63" font-size="30" font-family="Arial, Helvetica, sans-serif">automation and staff access in one compliant ecosystem.</text>
 
-  <rect x="72" y="372" width="364" height="494" rx="34" fill="#FFFFFF" stroke="#D5E4EC"/>
-  <rect x="178" y="462" width="152" height="166" rx="34" fill="#F6FBFF" stroke="#B7D6E7"/>
-  <circle cx="254" cy="518" r="26" fill="#1A2738"/>
-  <rect x="206" y="562" width="96" height="84" rx="22" fill="#1E2B3C"/>
-  <text x="118" y="732" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">Patient monitor · Pharmacy assistant</text>
-  <text x="118" y="772" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">Med TV · Secure access card</text>
+  <rect width="1400" height="980" rx="40" fill="url(#healthBg)"/>
+  <circle cx="1248" cy="130" r="180" fill="#C8F2EE" opacity="0.65"/>
+  <circle cx="176" cy="872" r="140" fill="#D5ECF8" opacity="0.75"/>
+  <path d="M84 120H302" stroke="#A8D8EA" stroke-width="2"/>
+  <path d="M1116 842H1304" stroke="#B7DCEB" stroke-width="2"/>
 
-  <rect x="478" y="372" width="842" height="264" rx="34" fill="#0F172B"/>
-  <text x="526" y="428" fill="#FFFFFF" font-size="38" font-family="Arial, Helvetica, sans-serif" font-weight="700">AI Care Assistant</text>
-  <text x="526" y="486" fill="#D2DDF0" font-size="28" font-family="Arial, Helvetica, sans-serif">Video calls with doctors and caregivers</text>
-  <text x="526" y="532" fill="#D2DDF0" font-size="28" font-family="Arial, Helvetica, sans-serif">Real-time health monitoring and alerts</text>
-  <text x="526" y="578" fill="#D2DDF0" font-size="28" font-family="Arial, Helvetica, sans-serif">Medication reminders and patient support</text>
+  <rect x="68" y="58" width="286" height="42" rx="21" fill="#E8F7FB" stroke="#B7DCEB"/>
+  <text x="92" y="86" fill="#2F6080" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="2.6">HEALTHCARE / CARE / ACCESS / COMPLIANCE</text>
+  <text x="72" y="156" fill="#102038" font-size="72" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn MED</text>
+  <text x="72" y="208" fill="#4AAFC5" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">Healthcare sector board</text>
+  <text x="72" y="266" fill="#324A64" font-size="31" font-family="Arial, Helvetica, sans-serif">Patient guidance, appointment support, pharmacy flow, waiting-room</text>
+  <text x="72" y="306" fill="#324A64" font-size="31" font-family="Arial, Helvetica, sans-serif">education, and secure staff access built into one calm medical system.</text>
 
-  <rect x="478" y="672" width="264" height="194" rx="28" fill="#FFFFFF" stroke="#D5E4EC"/>
-  <text x="514" y="724" fill="#5AAFC8" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">SECURE &amp; COMPLIANT</text>
-  <text x="514" y="776" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">HIPAA-ready</text>
-  <text x="514" y="816" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">GDPR-conscious</text>
+  <rect x="72" y="360" width="604" height="264" rx="36" fill="#FFFFFF" stroke="#B7DCEB"/>
+  <text x="110" y="410" fill="#5F89A0" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">CARE DEVICES</text>
+  <rect x="112" y="452" width="144" height="116" rx="34" fill="#F7FDFF" stroke="#C1DDEA"/>
+  <rect x="300" y="452" width="144" height="116" rx="34" fill="#F7FDFF" stroke="#C1DDEA"/>
+  <rect x="488" y="474" width="120" height="72" rx="24" fill="#F7FDFF" stroke="#C1DDEA"/>
+  <rect x="520" y="458" width="96" height="104" rx="20" fill="#F8FCFE" opacity="0"/>
+  <rect x="520" y="458" width="96" height="104" rx="18" fill="#F7FDFF" opacity="0"/>
+  <circle cx="184" cy="510" r="8" fill="#74E5D8"/>
+  <circle cx="372" cy="510" r="8" fill="#74E5D8"/>
+  <circle cx="548" cy="510" r="7" fill="#60AFFF"/>
+  <rect x="530" y="456" width="94" height="112" rx="20" fill="#F9FDFF" opacity="0"/>
+  <rect x="542" y="454" width="100" height="66" rx="14" fill="#FFFFFF" stroke="#C1DDEA"/>
+  <text x="114" y="590" fill="#193148" font-size="22" font-family="Arial, Helvetica, sans-serif">MED Assistant</text>
+  <text x="302" y="590" fill="#193148" font-size="22" font-family="Arial, Helvetica, sans-serif">Pharmacy node</text>
+  <text x="490" y="590" fill="#193148" font-size="22" font-family="Arial, Helvetica, sans-serif">MED TV + card access</text>
 
-  <rect x="778" y="672" width="264" height="194" rx="28" fill="#FFFFFF" stroke="#D5E4EC"/>
-  <text x="814" y="724" fill="#5AAFC8" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">PERFECT FOR</text>
-  <text x="814" y="776" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">Clinics</text>
-  <text x="814" y="816" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">Pharmacies · Waiting rooms</text>
+  <rect x="706" y="110" width="624" height="278" rx="36" fill="#FFFFFF" stroke="#B7DCEB"/>
+  <text x="744" y="158" fill="#5F89A0" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">PATIENT FLOW</text>
+  <text x="744" y="204" fill="#102038" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">Guidance from check-in to follow-up</text>
+  <rect x="744" y="236" width="118" height="96" rx="22" fill="#ECFAFD"/>
+  <rect x="894" y="236" width="118" height="96" rx="22" fill="#ECFAFD"/>
+  <rect x="1044" y="236" width="118" height="96" rx="22" fill="#ECFAFD"/>
+  <rect x="1194" y="236" width="98" height="96" rx="22" fill="#ECFAFD"/>
+  <path d="M864 284H894" stroke="#7ACFE6" stroke-width="4"/>
+  <path d="M1014 284H1044" stroke="#7ACFE6" stroke-width="4"/>
+  <path d="M1164 284H1194" stroke="#7ACFE6" stroke-width="4"/>
+  <text x="772" y="276" fill="#1B405C" font-size="20" font-family="Arial, Helvetica, sans-serif">Check in</text>
+  <text x="922" y="276" fill="#1B405C" font-size="20" font-family="Arial, Helvetica, sans-serif">AI guidance</text>
+  <text x="1076" y="276" fill="#1B405C" font-size="20" font-family="Arial, Helvetica, sans-serif">Role routing</text>
+  <text x="1214" y="276" fill="#1B405C" font-size="20" font-family="Arial, Helvetica, sans-serif">Follow-up</text>
+  <text x="744" y="360" fill="#486A84" font-size="20" font-family="Arial, Helvetica, sans-serif">Appointments, reports, and care prompts</text>
+  <text x="744" y="388" fill="#486A84" font-size="20" font-family="Arial, Helvetica, sans-serif">stay aligned with secure access permissions.</text>
 
-  <rect x="1078" y="672" width="242" height="194" rx="28" fill="#FFFFFF" stroke="#D5E4EC"/>
-  <text x="1114" y="724" fill="#5AAFC8" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">ACTIVATION</text>
-  <text x="1114" y="776" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">Card + cloud</text>
-  <text x="1114" y="816" fill="#1B3347" font-size="28" font-family="Arial, Helvetica, sans-serif">Role-based access</text>
+  <rect x="72" y="654" width="604" height="256" rx="34" fill="url(#healthDark)" stroke="#1F334B"/>
+  <text x="110" y="704" fill="#A8C6E8" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">CARE DASHBOARD</text>
+  <rect x="110" y="736" width="138" height="68" rx="18" fill="#122033" stroke="#294768"/>
+  <rect x="266" y="736" width="138" height="68" rx="18" fill="#122033" stroke="#294768"/>
+  <rect x="422" y="736" width="138" height="68" rx="18" fill="#122033" stroke="#294768"/>
+  <text x="130" y="764" fill="#6DE3D7" font-size="14" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">PATIENTS</text>
+  <text x="130" y="790" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">124</text>
+  <text x="286" y="764" fill="#60AEFF" font-size="14" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">ALERTS</text>
+  <text x="286" y="790" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">08</text>
+  <text x="442" y="764" fill="#FFBE68" font-size="14" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">FOLLOW UPS</text>
+  <text x="442" y="790" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">12</text>
+  <rect x="110" y="826" width="450" height="44" rx="16" fill="#122033" stroke="#294768"/>
+  <path d="M136 856L174 842L212 848L246 832L278 838L320 820L358 828L394 812L432 818L468 804L510 812" stroke="url(#healthTeal)" stroke-width="4" stroke-linecap="round"/>
+  <text x="110" y="886" fill="#A8C6E8" font-size="18" font-family="Arial, Helvetica, sans-serif">Care visibility / room activity / live communication</text>
+  <text x="110" y="908" fill="#A8C6E8" font-size="18" font-family="Arial, Helvetica, sans-serif">Adherence trend / reports / staff actions</text>
+
+  <rect x="706" y="422" width="286" height="220" rx="30" fill="#FFFFFF" stroke="#B7DCEB"/>
+  <text x="742" y="468" fill="#5F89A0" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">STAFF ACCESS</text>
+  <text x="742" y="520" fill="#193148" font-size="26" font-family="Arial, Helvetica, sans-serif">Role-based login</text>
+  <text x="742" y="560" fill="#193148" font-size="26" font-family="Arial, Helvetica, sans-serif">Card activation</text>
+  <text x="742" y="600" fill="#193148" font-size="26" font-family="Arial, Helvetica, sans-serif">Protected records</text>
+  <text x="742" y="632" fill="#486A84" font-size="16" font-family="Arial, Helvetica, sans-serif">Clinics / pharmacies / waiting rooms / staff teams</text>
+
+  <rect x="1012" y="422" width="318" height="220" rx="30" fill="#FFFFFF" stroke="#B7DCEB"/>
+  <text x="1048" y="468" fill="#5F89A0" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">PHARMACY + FRONT DESK</text>
+  <text x="1048" y="520" fill="#193148" font-size="24" font-family="Arial, Helvetica, sans-serif">Medication prompts</text>
+  <text x="1048" y="558" fill="#193148" font-size="24" font-family="Arial, Helvetica, sans-serif">Inventory guidance</text>
+  <text x="1048" y="596" fill="#193148" font-size="24" font-family="Arial, Helvetica, sans-serif">Patient education display</text>
+  <text x="1048" y="634" fill="#486A84" font-size="16" font-family="Arial, Helvetica, sans-serif">Unified experience for staff and patient touchpoints</text>
+
+  <rect x="706" y="674" width="624" height="236" rx="34" fill="#FFFFFF" stroke="#B7DCEB"/>
+  <text x="744" y="720" fill="#5F89A0" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">SECURE MEDICAL STACK</text>
+  <circle cx="812" cy="800" r="12" fill="#74E5D8"/>
+  <circle cx="990" cy="800" r="12" fill="#60AFFF"/>
+  <circle cx="1176" cy="800" r="12" fill="#4FC9A9"/>
+  <path d="M824 800H978" stroke="#B7DCEB" stroke-width="3"/>
+  <path d="M1002 800H1164" stroke="#B7DCEB" stroke-width="3"/>
+  <text x="770" y="842" fill="#193148" font-size="24" font-family="Arial, Helvetica, sans-serif">Device layer</text>
+  <text x="950" y="842" fill="#193148" font-size="24" font-family="Arial, Helvetica, sans-serif">Secure cloud</text>
+  <text x="1130" y="842" fill="#193148" font-size="24" font-family="Arial, Helvetica, sans-serif">Care team access</text>
+  <text x="744" y="884" fill="#486A84" font-size="18" font-family="Arial, Helvetica, sans-serif">Clinics / pharmacies / waiting rooms / home care monitoring</text>
+  <text x="744" y="906" fill="#486A84" font-size="18" font-family="Arial, Helvetica, sans-serif">Multi-device permissions across the full care team</text>
 </svg>

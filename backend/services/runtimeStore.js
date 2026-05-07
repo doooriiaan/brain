@@ -6,6 +6,7 @@ import { createRuntimeSeed } from "../data/runtimeSeed.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storeFilePath = path.resolve(__dirname, "..", "data", "runtime-store.json");
+const SMART_CARDS_PER_PLAN = 500;
 
 let stateCache = null;
 
@@ -18,7 +19,16 @@ function normalizeCollection(value, fallback) {
 }
 
 function normalizeSectorLabel(label) {
-  return label === "Industry 4.0 AI" ? "Industry 4.0" : label;
+  const sectorLabelMap = {
+    Komercial: "Commercial AI",
+    Commercial: "Commercial AI",
+    Business: "Business AI",
+    Healthcare: "Healthcare AI",
+    "Industry 4.0": "Industry 4.0 AI",
+    "Industry 4.0 AI": "Industry 4.0 AI",
+  };
+
+  return sectorLabelMap[label] ?? label;
 }
 
 function normalizeAccount(account) {
@@ -43,6 +53,126 @@ function normalizeSmartCard(card) {
   };
 }
 
+function normalizePaymentStatus(status) {
+  if (status === "paid") {
+    return "approved";
+  }
+
+  if (status === "pending" || status === "approved" || status === "rejected") {
+    return status;
+  }
+
+  return "pending";
+}
+
+function normalizePaymentMethod(method) {
+  const normalizedMethod =
+    typeof method === "string" ? method.toLowerCase().trim() : "";
+
+  if (
+    normalizedMethod === "visa" ||
+    normalizedMethod === "mastercard" ||
+    normalizedMethod === "amex" ||
+    normalizedMethod === "paypal"
+  ) {
+    return normalizedMethod;
+  }
+
+  return "visa";
+}
+
+function normalizePayment(payment) {
+  if (!payment || typeof payment !== "object") {
+    return payment;
+  }
+
+  const paymentMethod = normalizePaymentMethod(
+    payment.paymentMethod ?? payment.cardBrand,
+  );
+  const status = normalizePaymentStatus(payment.status);
+
+  return {
+    ...payment,
+    paymentMethod,
+    cardBrand: paymentMethod,
+    status,
+    last4:
+      typeof payment.last4 === "string" && payment.last4.trim().length > 0
+        ? payment.last4
+        : paymentMethod === "paypal"
+          ? "PPAL"
+          : "0000",
+    linkedCardCode: payment.linkedCardCode ?? null,
+    approvalRequestedAt: payment.approvalRequestedAt ?? payment.createdAt ?? null,
+    approvedAt:
+      payment.approvedAt ?? (status === "approved" ? payment.createdAt ?? null : null),
+    rejectedAt: payment.rejectedAt ?? null,
+    approvalNote: payment.approvalNote ?? null,
+  };
+}
+
+function mergeSmartCardsWithSeed(cards, seedCards) {
+  const normalizedCards = normalizeCollection(cards, []).map(normalizeSmartCard);
+  const existingCodes = new Set(
+    normalizedCards.map((card) => card?.code).filter(Boolean),
+  );
+  const missingSeedCards = seedCards
+    .filter((card) => !existingCodes.has(card.code))
+    .map(normalizeSmartCard);
+
+  return normalizeSmartCardInventory([...normalizedCards, ...missingSeedCards]);
+}
+
+function sortInventoryCards(left, right) {
+  const statusRank = {
+    activated: 0,
+    assigned: 1,
+    available: 2,
+  };
+  const statusGap = statusRank[left.status] - statusRank[right.status];
+
+  if (statusGap !== 0) {
+    return statusGap;
+  }
+
+  const ownedLeft = left.ownerCompany ? 0 : 1;
+  const ownedRight = right.ownerCompany ? 0 : 1;
+  const ownershipGap = ownedLeft - ownedRight;
+
+  if (ownershipGap !== 0) {
+    return ownershipGap;
+  }
+
+  const updatedGap = right.updatedAt.localeCompare(left.updatedAt);
+
+  if (updatedGap !== 0) {
+    return updatedGap;
+  }
+
+  return left.code.localeCompare(right.code);
+}
+
+function normalizeSmartCardInventory(cards) {
+  const groupedCards = new Map();
+
+  for (const card of cards) {
+    const plan = card?.plan ?? "unknown";
+    const currentGroup = groupedCards.get(plan) ?? [];
+    currentGroup.push(card);
+    groupedCards.set(plan, currentGroup);
+  }
+
+  const normalizedInventory = [];
+
+  for (const cardsForPlan of groupedCards.values()) {
+    normalizedInventory.push(
+      ...cardsForPlan.sort(sortInventoryCards).slice(0, SMART_CARDS_PER_PLAN),
+    );
+  }
+
+  return normalizedInventory;
+}
+
 function normalizeState(value) {
   const seed = createRuntimeSeed();
   const input = value && typeof value === "object" ? value : {};
@@ -60,10 +190,8 @@ function normalizeState(value) {
     notifications: normalizeCollection(input.notifications, seed.notifications),
     uploads: normalizeCollection(input.uploads, seed.uploads),
     leads: normalizeCollection(input.leads, seed.leads),
-    payments: normalizeCollection(input.payments, seed.payments),
-    smartCards: normalizeCollection(input.smartCards, seed.smartCards).map(
-      normalizeSmartCard,
-    ),
+    payments: normalizeCollection(input.payments, seed.payments).map(normalizePayment),
+    smartCards: mergeSmartCardsWithSeed(input.smartCards, seed.smartCards),
     activations: normalizeCollection(input.activations, seed.activations),
     tickets: normalizeCollection(input.tickets, seed.tickets),
     scratchCardReveals: normalizeCollection(
@@ -116,7 +244,7 @@ export function saveRuntimeState() {
   ensureStoreDirectory();
   stateCache.meta = {
     ...(stateCache.meta ?? {}),
-    version: stateCache.meta?.version ?? 2,
+    version: stateCache.meta?.version ?? 3,
     updatedAt: new Date().toISOString(),
   };
   fs.writeFileSync(storeFilePath, JSON.stringify(stateCache, null, 2), "utf8");

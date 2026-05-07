@@ -162,7 +162,7 @@ export interface RuntimeMetric {
 
 export interface RuntimeEvent {
   id: string;
-  type: "notification" | "upload" | "lead" | "activation" | "ticket";
+  type: "notification" | "upload" | "lead" | "payment" | "activation" | "ticket";
   title: string;
   detail: string;
   status: "info" | "success" | "warning";
@@ -187,10 +187,21 @@ export interface PaymentRecord {
   planName: string;
   amount: number;
   currency: string;
-  cardBrand: "visa" | "mastercard" | "amex";
+  cardBrand: "visa" | "mastercard" | "amex" | "paypal";
+  paymentMethod: "visa" | "mastercard" | "amex" | "paypal";
   last4: string;
-  status: "paid";
+  status: "pending" | "approved" | "rejected";
+  approvalRequestedAt: string | null;
+  approvedAt: string | null;
+  rejectedAt: string | null;
+  approvalNote: string | null;
   createdAt: string;
+  linkedCardCode: string | null;
+  linkedCardStatus: "available" | "assigned" | "activated" | null;
+  linkedCardSector: string | null;
+  linkedCardSectorLabel: string | null;
+  linkedDeviceKey: string | null;
+  linkedCardUpdatedAt: string | null;
 }
 
 export interface SmartCardItem {

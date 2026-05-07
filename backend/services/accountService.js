@@ -2,6 +2,15 @@ import { getPlanBySlug, getSectorBySlug } from "./catalogService.js";
 import { getRuntimeState, updateRuntimeState } from "./runtimeStore.js";
 import { createId } from "./serviceHelpers.js";
 
+const planCredits = {
+  free: 25000,
+  starter: 500000,
+  professional: 500000,
+  business: 500000,
+  platinum: 500000,
+  "platinum-plus": 500000,
+};
+
 function findAccount(state, company) {
   return (
     state.accounts.find(
@@ -63,10 +72,11 @@ export function updateAccountPlan(company, plan) {
   return updateRuntimeState((state) => {
     const account = ensureAccountRecord(state, { company, plan });
     const planRecord = getPlanBySlug(plan);
+    const creditsToAdd = planCredits[plan] ?? 500000;
 
     account.plan = plan;
     account.planName = planRecord?.name ?? plan;
-    account.creditsRemaining += 500000;
+    account.creditsRemaining += creditsToAdd;
 
     return account;
   });

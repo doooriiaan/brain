@@ -1,6 +1,5 @@
 import { getAccounts } from "./accountService.js";
 import { getActivations } from "./activationService.js";
-import { getNotifications } from "./runtimeService.js";
 import { getPayments } from "./paymentService.js";
 import { getSmartCards } from "./smartCardService.js";
 import { getTickets } from "./ticketService.js";
@@ -35,7 +34,6 @@ export function getClientOverview(company) {
   const tickets = getTickets().filter(
     (ticket) => ticket.company === account.company,
   );
-  const notifications = getNotifications().slice(0, 8);
 
   return {
     account,
@@ -47,7 +45,7 @@ export function getClientOverview(company) {
     smartCards: smartCards.slice(0, 20),
     activations: activations.slice(0, 8),
     tickets: tickets.slice(0, 8),
-    notifications,
+    notifications: [],
     quickMetrics: [
       {
         key: "sales",

@@ -1,42 +1,87 @@
 <svg width="1400" height="980" viewBox="0 0 1400 980" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1400" height="980" rx="40" fill="#0A1124"/>
-  <text x="74" y="110" fill="#F8FAFC" font-size="66" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn AI Stick</text>
-  <text x="74" y="160" fill="#E2A53A" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">Commercial sector</text>
-  <text x="74" y="224" fill="#C8D3EE" font-size="30" font-family="Arial, Helvetica, sans-serif">Turns any TV into an AI-powered smart screen for</text>
-  <text x="74" y="264" fill="#C8D3EE" font-size="30" font-family="Arial, Helvetica, sans-serif">retail, kiosks, hospitality, and interactive displays.</text>
+  <defs>
+    <linearGradient id="commercialBg" x1="70" y1="48" x2="1328" y2="936" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#091225"/>
+      <stop offset="55%" stop-color="#050C17"/>
+      <stop offset="100%" stop-color="#03070E"/>
+    </linearGradient>
+    <linearGradient id="commercialPanel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111D34"/>
+      <stop offset="100%" stop-color="#0A1323"/>
+    </linearGradient>
+    <linearGradient id="commercialGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD77A"/>
+      <stop offset="100%" stop-color="#D89A2F"/>
+    </linearGradient>
+    <linearGradient id="commercialWave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4ACFFF"/>
+      <stop offset="100%" stop-color="#7B77FF"/>
+    </linearGradient>
+  </defs>
 
-  <rect x="72" y="332" width="348" height="456" rx="36" fill="#111826" stroke="#31415B"/>
-  <rect x="192" y="414" width="128" height="268" rx="30" fill="#161E2E" stroke="#495C7C"/>
-  <rect x="310" y="510" width="84" height="72" rx="12" fill="#161E2E" stroke="#495C7C"/>
-  <circle cx="256" cy="646" r="8" fill="#4FA7FF"/>
-  <text x="120" y="760" fill="#E2A53A" font-size="26" font-family="Arial, Helvetica, sans-serif" font-weight="700">Plug &amp; Play · Voice AI · Wi-Fi 6</text>
+  <rect width="1400" height="980" rx="40" fill="url(#commercialBg)"/>
+  <circle cx="1228" cy="138" r="166" fill="#2A1D0A" opacity="0.28"/>
+  <circle cx="170" cy="850" r="144" fill="#102038" opacity="0.4"/>
+  <path d="M84 122H316" stroke="#2B3955" stroke-width="2"/>
+  <path d="M1062 856H1314" stroke="#2B3955" stroke-width="2"/>
 
-  <rect x="470" y="96" width="860" height="354" rx="34" fill="#111826" stroke="#2F4063"/>
-  <rect x="534" y="152" width="494" height="236" rx="22" fill="#0F162C" stroke="#25344E"/>
-  <text x="586" y="234" fill="#FFFFFF" font-size="58" font-family="Arial, Helvetica, sans-serif" font-weight="800">Hello!</text>
-  <text x="586" y="296" fill="#FFFFFF" font-size="54" font-family="Arial, Helvetica, sans-serif" font-weight="800">How can I help your customer today?</text>
-  <circle cx="768" cy="344" r="48" fill="#142645" stroke="#436FA9"/>
-  <text x="1054" y="190" fill="#AAB5CE" font-size="24" font-family="Arial, Helvetica, sans-serif" letter-spacing="4">POPULAR APPS</text>
-  <rect x="1054" y="228" width="104" height="56" rx="18" fill="#161F34"/><text x="1080" y="264" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">News</text>
-  <rect x="1172" y="228" width="124" height="56" rx="18" fill="#161F34"/><text x="1194" y="264" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Weather</text>
-  <rect x="1054" y="306" width="104" height="56" rx="18" fill="#161F34"/><text x="1076" y="342" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Movies</text>
-  <rect x="1172" y="306" width="124" height="56" rx="18" fill="#161F34"/><text x="1198" y="342" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Offers</text>
+  <rect x="68" y="58" width="286" height="42" rx="21" fill="#0D172A" stroke="#3C4D6B"/>
+  <text x="92" y="86" fill="#E9D2A2" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="2.7">COMMERCIAL / TV AI / KIOSK / RETAIL / HOSPITALITY</text>
+  <text x="72" y="156" fill="#FFFFFF" font-size="72" font-family="Arial, Helvetica, sans-serif" font-weight="800">brAIn AI Stick</text>
+  <text x="72" y="208" fill="#F0B34A" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">Commercial sector board</text>
+  <text x="72" y="266" fill="#CBD8EE" font-size="31" font-family="Arial, Helvetica, sans-serif">Plug-and-play screen AI for retail counters, kiosks, hospitality,</text>
+  <text x="72" y="306" fill="#CBD8EE" font-size="31" font-family="Arial, Helvetica, sans-serif">menu displays, promo surfaces, and guided customer interaction.</text>
 
-  <rect x="470" y="490" width="278" height="304" rx="28" fill="#111826" stroke="#2F4063"/>
-  <text x="506" y="544" fill="#E2A53A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">ULTRA COMPACT</text>
-  <text x="506" y="592" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">90 mm x 30 mm</text>
-  <text x="506" y="634" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">12 mm thin body</text>
-  <text x="506" y="676" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">HDMI + USB power</text>
+  <rect x="72" y="356" width="458" height="382" rx="34" fill="url(#commercialPanel)" stroke="#30445F"/>
+  <text x="108" y="406" fill="#99ABC8" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">STICK DEVICE</text>
+  <rect x="180" y="476" width="150" height="226" rx="28" fill="#121A29" stroke="#536A8C"/>
+  <rect x="302" y="598" width="62" height="54" rx="12" fill="#121A29" stroke="#536A8C"/>
+  <circle cx="256" cy="654" r="7" fill="#56CFFF"/>
+  <text x="210" y="580" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">brAIn</text>
+  <text x="108" y="706" fill="#F0B34A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">Ultra compact / HDMI / USB power / Wi-Fi 6</text>
 
-  <rect x="776" y="490" width="278" height="304" rx="28" fill="#111826" stroke="#2F4063"/>
-  <text x="812" y="544" fill="#E2A53A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">FEATURES</text>
-  <text x="812" y="592" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Voice assistant</text>
-  <text x="812" y="634" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Promotions on screen</text>
-  <text x="812" y="676" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Smart TV experience</text>
+  <rect x="562" y="110" width="768" height="352" rx="34" fill="#0B1425" stroke="#30445F"/>
+  <text x="606" y="160" fill="#99ABC8" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">SCREEN RUNTIME</text>
+  <text x="606" y="206" fill="#FFFFFF" font-size="44" font-family="Arial, Helvetica, sans-serif" font-weight="700">Customer-facing AI surface</text>
+  <rect x="606" y="238" width="386" height="178" rx="24" fill="#0E1930" stroke="#243754"/>
+  <text x="648" y="298" fill="#FFFFFF" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700">Hello!</text>
+  <text x="648" y="344" fill="#FFFFFF" font-size="36" font-family="Arial, Helvetica, sans-serif" font-weight="700">How can I help your customer?</text>
+  <rect x="648" y="368" width="212" height="18" rx="9" fill="url(#commercialWave)"/>
+  <rect x="1024" y="238" width="100" height="54" rx="18" fill="#121E34"/>
+  <rect x="1140" y="238" width="136" height="54" rx="18" fill="#121E34"/>
+  <rect x="1024" y="310" width="100" height="54" rx="18" fill="#121E34"/>
+  <rect x="1140" y="310" width="136" height="54" rx="18" fill="#121E34"/>
+  <text x="1054" y="272" fill="#FFFFFF" font-size="20" font-family="Arial, Helvetica, sans-serif">News</text>
+  <text x="1176" y="272" fill="#FFFFFF" font-size="20" font-family="Arial, Helvetica, sans-serif">Weather</text>
+  <text x="1048" y="344" fill="#FFFFFF" font-size="20" font-family="Arial, Helvetica, sans-serif">Offers</text>
+  <text x="1172" y="344" fill="#FFFFFF" font-size="20" font-family="Arial, Helvetica, sans-serif">Directions</text>
+  <text x="606" y="434" fill="#AEBBD3" font-size="20" font-family="Arial, Helvetica, sans-serif">Voice prompts, promo cards, wayfinding, and guided self-service live in one display layer.</text>
 
-  <rect x="1082" y="490" width="248" height="304" rx="28" fill="#111826" stroke="#2F4063"/>
-  <text x="1118" y="544" fill="#E2A53A" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">SUITED FOR</text>
-  <text x="1118" y="592" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Retail stores</text>
-  <text x="1118" y="634" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Kiosks</text>
-  <text x="1118" y="676" fill="#FFFFFF" font-size="28" font-family="Arial, Helvetica, sans-serif">Distributors</text>
+  <rect x="72" y="770" width="376" height="160" rx="30" fill="#0B1425" stroke="#30445F"/>
+  <text x="106" y="816" fill="#99ABC8" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">INSTALL LOGIC</text>
+  <text x="106" y="864" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">1 / Plug into screen</text>
+  <text x="106" y="896" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">2 / Connect power + Wi-Fi</text>
+  <text x="106" y="928" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">3 / Launch branded experience</text>
+
+  <rect x="478" y="508" width="402" height="422" rx="30" fill="#0B1425" stroke="#30445F"/>
+  <text x="512" y="554" fill="#99ABC8" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">DISPLAY MODES</text>
+  <rect x="512" y="590" width="334" height="60" rx="18" fill="#121E34"/>
+  <rect x="512" y="668" width="334" height="60" rx="18" fill="#121E34"/>
+  <rect x="512" y="746" width="334" height="60" rx="18" fill="#121E34"/>
+  <rect x="512" y="824" width="334" height="60" rx="18" fill="#121E34"/>
+  <text x="540" y="628" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Voice assistant on screens</text>
+  <text x="540" y="706" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Promotions + product discovery</text>
+  <text x="540" y="784" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Customer self-service flows</text>
+  <text x="540" y="862" fill="#FFFFFF" font-size="24" font-family="Arial, Helvetica, sans-serif">Brand-ready on-screen experience</text>
+
+  <rect x="910" y="508" width="420" height="422" rx="30" fill="#0B1425" stroke="#30445F"/>
+  <text x="944" y="554" fill="#99ABC8" font-size="18" font-family="Arial, Helvetica, sans-serif" letter-spacing="3">COMMERCIAL FIT</text>
+  <text x="944" y="612" fill="#FFFFFF" font-size="26" font-family="Arial, Helvetica, sans-serif">Retail stores</text>
+  <text x="944" y="650" fill="#FFFFFF" font-size="26" font-family="Arial, Helvetica, sans-serif">Kiosks and counters</text>
+  <text x="944" y="688" fill="#FFFFFF" font-size="26" font-family="Arial, Helvetica, sans-serif">Hospitality menus</text>
+  <text x="944" y="726" fill="#FFFFFF" font-size="26" font-family="Arial, Helvetica, sans-serif">Distributor displays</text>
+  <text x="944" y="764" fill="#FFFFFF" font-size="26" font-family="Arial, Helvetica, sans-serif">Reception information screens</text>
+  <rect x="944" y="806" width="290" height="70" rx="22" fill="#121E34" stroke="#233755"/>
+  <text x="972" y="834" fill="#F0B34A" font-size="16" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">RUNTIME NOTE</text>
+  <text x="972" y="860" fill="#FFFFFF" font-size="20" font-family="Arial, Helvetica, sans-serif">Minutes to deploy, easy to explain, ready to brand.</text>
 </svg>
