@@ -5,7 +5,9 @@ import { createRuntimeSeed } from "../data/runtimeSeed.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const storeFilePath = path.resolve(__dirname, "..", "data", "runtime-store.json");
+const storeFilePath = process.env.VERCEL
+  ? path.join("/tmp", "brain-runtime-store.json")
+  : path.resolve(__dirname, "..", "data", "runtime-store.json");
 const SMART_CARDS_PER_PLAN = 500;
 
 let stateCache = null;
@@ -241,13 +243,18 @@ export function saveRuntimeState() {
     return null;
   }
 
-  ensureStoreDirectory();
-  stateCache.meta = {
-    ...(stateCache.meta ?? {}),
-    version: stateCache.meta?.version ?? 3,
-    updatedAt: new Date().toISOString(),
-  };
-  fs.writeFileSync(storeFilePath, JSON.stringify(stateCache, null, 2), "utf8");
+  try {
+    ensureStoreDirectory();
+    stateCache.meta = {
+      ...(stateCache.meta ?? {}),
+      version: stateCache.meta?.version ?? 3,
+      updatedAt: new Date().toISOString(),
+    };
+    fs.writeFileSync(storeFilePath, JSON.stringify(stateCache, null, 2), "utf8");
+  } catch (error) {
+    console.warn("Runtime state could not be persisted. Using in-memory state only.", error);
+  }
+
   return stateCache;
 }
 

@@ -78,11 +78,13 @@ export function storeRuntimeUploads(uploads) {
 }
 
 export function createUploadRecord(file) {
+  const uploadBasePath = process.env.VERCEL ? "/api/uploads" : "/uploads";
+
   return {
     id: createId(),
     fileName: file.originalname,
     sizeKb: Math.max(1, Math.round(file.size / 1024)),
     uploadedAt: new Date().toISOString(),
-    url: `/uploads/${file.filename}`,
+    url: `${uploadBasePath}/${file.filename}`,
   };
 }

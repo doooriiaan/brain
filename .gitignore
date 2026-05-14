@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+/public/
 dist-ssr
 *.local
 .env
@@ -27,3 +28,4 @@ backend/data/runtime-store.json
 *.njsproj
 *.sln
 *.sw?
+.vercel

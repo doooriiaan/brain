@@ -5,12 +5,13 @@ import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 
 const frontendRoot = fileURLToPath(new URL("./", import.meta.url));
+const buildOutputDirectory = process.env.VERCEL ? "../public" : "../dist";
 
 export default defineConfig({
   root: frontendRoot,
   plugins: [react(), tailwindcss()],
   build: {
-    outDir: path.resolve(frontendRoot, "../dist"),
+    outDir: path.resolve(frontendRoot, buildOutputDirectory),
     emptyOutDir: true,
   },
   server: {

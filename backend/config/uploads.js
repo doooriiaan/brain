@@ -6,7 +6,9 @@ import multer from "multer";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const uploadsDirectory = path.resolve(__dirname, "..", "uploads");
+export const uploadsDirectory = process.env.VERCEL
+  ? path.join("/tmp", "brain-uploads")
+  : path.resolve(__dirname, "..", "uploads");
 
 fs.mkdirSync(uploadsDirectory, { recursive: true });
 
