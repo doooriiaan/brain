@@ -64,13 +64,13 @@ export function DevicePreviewStudio({
       <div className="device-preview-copy">
         <span className="device-preview-pill">
           <Sparkles size={15} />
-          3D device page
+          Hero device stage
         </span>
         <h2>{device.name} preview studio</h2>
         <p>
-          A luxury 3D hardware stage for the {sector.name} rollout. The active
-          device, sector fit, and deployment posture stay live in one polished
-          surface before the user enters the live workspace flow.
+          A luxury 3D hardware stage for the {sector.name} offer. The active
+          device, sector fit, and rollout posture stay live in one polished
+          surface before the buyer moves into login or configuration.
         </p>
 
         <div className="device-preview-insight-grid">
@@ -121,7 +121,7 @@ export function DevicePreviewStudio({
 
         <div className="device-preview-actions">
           <button className="device-preview-button" onClick={onDeploy} type="button">
-            Deploy this device
+            Start with this device
             <ArrowUpRight size={16} />
           </button>
 

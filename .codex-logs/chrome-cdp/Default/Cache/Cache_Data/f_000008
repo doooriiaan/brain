@@ -1,0 +1,730 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/AuthPanel.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6da7cc98";
+import { CheckCircle2, Lock, LogOut, UserRound } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=a3ee757b";
+import { planOptions, sectorOptions } from "/src/data/runtimeOptions.ts";
+function getMessageToneClass(tone) {
+    if (tone === "success") {
+        return "message-success";
+    }
+    if (tone === "error") {
+        return "message-error";
+    }
+    return "message-info";
+}
+export function AuthPanel({ authMessage, authMode, authSession, authStatusText, authSubmitting, loginForm, onAuthModeChange, onLoginChange, onLoginSubmit, onRegisterChange, onRegisterSubmit, onRoleChange, onSignOut, registerForm, selectedCountry, selectedLanguage, vpnActive }) {
+    return /*#__PURE__*/ _jsxDEV("section", {
+        className: "auth-shell auth-shell-compact",
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "auth-header auth-header-compact",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("span", {
+                        className: "eyebrow eyebrow-tight",
+                        children: "Workspace access"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 103,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("h2", {
+                        className: "auth-title",
+                        children: "Login or create a client workspace"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 104,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("p", {
+                        className: "auth-copy",
+                        children: "Keep this step simple: choose login for an existing account or register a new client workspace with the right sector and plan."
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 105,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 102,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "auth-status-grid auth-status-grid-compact",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "auth-status-card",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Market"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 113,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: selectedCountry
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 114,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 112,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "auth-status-card",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Language"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 117,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: selectedLanguage
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 118,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 116,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "auth-status-card",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Route"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 121,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: vpnActive ? "Protected" : "Standard"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 122,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 120,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 111,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "auth-toggle",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("button", {
+                        className: authMode === "login" ? "auth-toggle-active" : "",
+                        onClick: ()=>onAuthModeChange("login"),
+                        type: "button",
+                        children: "Login"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 127,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("button", {
+                        className: authMode === "register" ? "auth-toggle-active" : "",
+                        onClick: ()=>onAuthModeChange("register"),
+                        type: "button",
+                        children: "Register"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 134,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 126,
+                columnNumber: 7
+            }, this),
+            authSession ? /*#__PURE__*/ _jsxDEV("div", {
+                className: "session-shell",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "session-topline",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(CheckCircle2, {
+                                size: 20
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 146,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Access granted"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 147,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 145,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("h3", {
+                        className: "session-title",
+                        children: authSession.user.company
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 149,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("p", {
+                        className: "session-copy",
+                        children: authStatusText
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 150,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "session-grid",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "session-item",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Name"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 154,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: authSession.user.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 155,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 153,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "session-item",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Role"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 158,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: authSession.user.role
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 159,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 157,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "session-item",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Email"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 162,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: authSession.user.email
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 163,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 161,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "session-item",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Token"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 166,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: [
+                                            authSession.token.slice(0, 16),
+                                            "..."
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 167,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 165,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 152,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("button", {
+                        className: "secondary-action",
+                        onClick: onSignOut,
+                        type: "button",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(LogOut, {
+                                size: 16
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 172,
+                                columnNumber: 13
+                            }, this),
+                            "Sign out"
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 171,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 144,
+                columnNumber: 9
+            }, this) : authMode === "login" ? /*#__PURE__*/ _jsxDEV("form", {
+                className: "auth-form",
+                onSubmit: (event)=>{
+                    event.preventDefault();
+                    void onLoginSubmit();
+                },
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "role-switch",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("button", {
+                                className: loginForm.role === "client" ? "role-switch-active" : "",
+                                onClick: ()=>onRoleChange("client"),
+                                type: "button",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(UserRound, {
+                                        size: 15
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 190,
+                                        columnNumber: 15
+                                    }, this),
+                                    "Client"
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 185,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("button", {
+                                className: loginForm.role === "admin" ? "role-switch-active" : "",
+                                onClick: ()=>onRoleChange("admin"),
+                                type: "button",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(Lock, {
+                                        size: 15
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 198,
+                                        columnNumber: 15
+                                    }, this),
+                                    "Admin"
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 193,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 184,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("label", {
+                        className: "field-shell",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Email"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 204,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("input", {
+                                className: "field-input",
+                                onChange: (event)=>onLoginChange((current)=>({
+                                            ...current,
+                                            email: event.target.value
+                                        })),
+                                placeholder: "name@company.com",
+                                type: "email",
+                                value: loginForm.email
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 205,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 203,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("label", {
+                        className: "field-shell",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Password"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 220,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("input", {
+                                className: "field-input",
+                                onChange: (event)=>onLoginChange((current)=>({
+                                            ...current,
+                                            password: event.target.value
+                                        })),
+                                placeholder: "Enter your password",
+                                type: "password",
+                                value: loginForm.password
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 221,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 219,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("button", {
+                        className: "primary-action",
+                        disabled: authSubmitting,
+                        type: "submit",
+                        children: authSubmitting ? "Signing in..." : "Open workspace"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 235,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 177,
+                columnNumber: 9
+            }, this) : /*#__PURE__*/ _jsxDEV("form", {
+                className: "auth-form",
+                onSubmit: (event)=>{
+                    event.preventDefault();
+                    void onRegisterSubmit();
+                },
+                children: [
+                    /*#__PURE__*/ _jsxDEV("label", {
+                        className: "field-shell",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Full name"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 248,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("input", {
+                                className: "field-input",
+                                onChange: (event)=>onRegisterChange((current)=>({
+                                            ...current,
+                                            name: event.target.value
+                                        })),
+                                placeholder: "Your full name",
+                                type: "text",
+                                value: registerForm.name
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 249,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 247,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "field-grid",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("label", {
+                                className: "field-shell",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Email"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 265,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("input", {
+                                        className: "field-input",
+                                        onChange: (event)=>onRegisterChange((current)=>({
+                                                    ...current,
+                                                    email: event.target.value
+                                                })),
+                                        placeholder: "name@company.com",
+                                        type: "email",
+                                        value: registerForm.email
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 266,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 264,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("label", {
+                                className: "field-shell",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Password"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 281,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("input", {
+                                        className: "field-input",
+                                        onChange: (event)=>onRegisterChange((current)=>({
+                                                    ...current,
+                                                    password: event.target.value
+                                                })),
+                                        placeholder: "At least 8 characters",
+                                        type: "password",
+                                        value: registerForm.password
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 282,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 280,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 263,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("label", {
+                        className: "field-shell",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Company"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 298,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("input", {
+                                className: "field-input",
+                                onChange: (event)=>onRegisterChange((current)=>({
+                                            ...current,
+                                            company: event.target.value
+                                        })),
+                                placeholder: "Business or organization name",
+                                type: "text",
+                                value: registerForm.company
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 299,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 297,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "field-grid",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("label", {
+                                className: "field-shell",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Sector"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 315,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("select", {
+                                        className: "field-input",
+                                        onChange: (event)=>onRegisterChange((current)=>({
+                                                    ...current,
+                                                    sector: event.target.value
+                                                })),
+                                        value: registerForm.sector,
+                                        children: sectorOptions.map((sector)=>/*#__PURE__*/ _jsxDEV("option", {
+                                                value: sector.value,
+                                                children: sector.label
+                                            }, sector.value, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                                lineNumber: 327,
+                                                columnNumber: 19
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 316,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 314,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("label", {
+                                className: "field-shell",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: "Plan"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 335,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("select", {
+                                        className: "field-input",
+                                        onChange: (event)=>onRegisterChange((current)=>({
+                                                    ...current,
+                                                    plan: event.target.value
+                                                })),
+                                        value: registerForm.plan,
+                                        children: planOptions.map((plan)=>/*#__PURE__*/ _jsxDEV("option", {
+                                                value: plan.value,
+                                                children: plan.label
+                                            }, plan.value, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                                lineNumber: 347,
+                                                columnNumber: 19
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                        lineNumber: 336,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                                lineNumber: 334,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 313,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("button", {
+                        className: "primary-action",
+                        disabled: authSubmitting,
+                        type: "submit",
+                        children: authSubmitting ? "Creating..." : "Create client workspace"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                        lineNumber: 355,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 240,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ _jsxDEV("p", {
+                className: `message-shell ${getMessageToneClass(authMessage?.tone)}`,
+                children: authMessage?.text || "Login stays separate for existing accounts, while new client workspaces can be created here."
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+                lineNumber: 361,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx",
+        lineNumber: 101,
+        columnNumber: 5
+    }, this);
+}
+_c = AuthPanel;
+var _c;
+$RefreshReg$(_c, "AuthPanel");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/AuthPanel.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkF1dGhQYW5lbC50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQ2hlY2tDaXJjbGUyLCBMb2NrLCBMb2dPdXQsIFVzZXJSb3VuZCB9IGZyb20gXCJsdWNpZGUtcmVhY3RcIjtcbmltcG9ydCB7IHBsYW5PcHRpb25zLCBzZWN0b3JPcHRpb25zIH0gZnJvbSBcIi4uL2RhdGEvcnVudGltZU9wdGlvbnNcIjtcblxudHlwZSBBdXRoUm9sZSA9IFwiYWRtaW5cIiB8IFwiY2xpZW50XCI7XG50eXBlIEF1dGhNb2RlID0gXCJsb2dpblwiIHwgXCJyZWdpc3RlclwiO1xuXG50eXBlIFVpTWVzc2FnZSA9IHtcbiAgdG9uZTogXCJzdWNjZXNzXCIgfCBcImVycm9yXCIgfCBcImluZm9cIjtcbiAgdGV4dDogc3RyaW5nO1xufSB8IG51bGw7XG5cbnR5cGUgTG9naW5Gb3JtU3RhdGUgPSB7XG4gIHJvbGU6IEF1dGhSb2xlO1xuICBlbWFpbDogc3RyaW5nO1xuICBwYXNzd29yZDogc3RyaW5nO1xufTtcblxudHlwZSBSZWdpc3RlckZvcm1TdGF0ZSA9IHtcbiAgbmFtZTogc3RyaW5nO1xuICBlbWFpbDogc3RyaW5nO1xuICBwYXNzd29yZDogc3RyaW5nO1xuICBjb21wYW55OiBzdHJpbmc7XG4gIHNlY3Rvcjogc3RyaW5nO1xuICBwbGFuOiBzdHJpbmc7XG59O1xuXG50eXBlIEF1dGhTZXNzaW9uID0ge1xuICB0b2tlbjogc3RyaW5nO1xuICBpc3N1ZWRBdDogc3RyaW5nO1xuICB1c2VyOiB7XG4gICAgaWQ6IHN0cmluZztcbiAgICByb2xlOiBBdXRoUm9sZTtcbiAgICBuYW1lOiBzdHJpbmc7XG4gICAgZW1haWw6IHN0cmluZztcbiAgICBjb21wYW55OiBzdHJpbmc7XG4gICAgc2VjdG9yOiBzdHJpbmcgfCBudWxsO1xuICAgIHBsYW46IHN0cmluZyB8IG51bGw7XG4gIH07XG59O1xuXG50eXBlIEF1dGhQYW5lbFByb3BzID0ge1xuICBhdXRoTWVzc2FnZTogVWlNZXNzYWdlO1xuICBhdXRoTW9kZTogQXV0aE1vZGU7XG4gIGF1dGhTZXNzaW9uOiBBdXRoU2Vzc2lvbiB8IG51bGw7XG4gIGF1dGhTdGF0dXNUZXh0OiBzdHJpbmc7XG4gIGF1dGhTdWJtaXR0aW5nOiBib29sZWFuO1xuICBsb2dpbkZvcm06IExvZ2luRm9ybVN0YXRlO1xuICBvbkF1dGhNb2RlQ2hhbmdlOiAobW9kZTogQXV0aE1vZGUpID0+IHZvaWQ7XG4gIG9uTG9naW5DaGFuZ2U6IChcbiAgICBuZXh0U3RhdGU6XG4gICAgICB8IExvZ2luRm9ybVN0YXRlXG4gICAgICB8ICgoY3VycmVudFN0YXRlOiBMb2dpbkZvcm1TdGF0ZSkgPT4gTG9naW5Gb3JtU3RhdGUpLFxuICApID0+IHZvaWQ7XG4gIG9uTG9naW5TdWJtaXQ6ICgpID0+IHZvaWQ7XG4gIG9uUmVnaXN0ZXJDaGFuZ2U6IChcbiAgICBuZXh0U3RhdGU6XG4gICAgICB8IFJlZ2lzdGVyRm9ybVN0YXRlXG4gICAgICB8ICgoY3VycmVudFN0YXRlOiBSZWdpc3RlckZvcm1TdGF0ZSkgPT4gUmVnaXN0ZXJGb3JtU3RhdGUpLFxuICApID0+IHZvaWQ7XG4gIG9uUmVnaXN0ZXJTdWJtaXQ6ICgpID0+IHZvaWQ7XG4gIG9uUm9sZUNoYW5nZTogKHJvbGU6IEF1dGhSb2xlKSA9PiB2b2lkO1xuICBvblNpZ25PdXQ6ICgpID0+IHZvaWQ7XG4gIHJlZ2lzdGVyRm9ybTogUmVnaXN0ZXJGb3JtU3RhdGU7XG4gIHNlbGVjdGVkQ291bnRyeTogc3RyaW5nO1xuICBzZWxlY3RlZExhbmd1YWdlOiBzdHJpbmc7XG4gIHZwbkFjdGl2ZTogYm9vbGVhbjtcbn07XG5cbmZ1bmN0aW9uIGdldE1lc3NhZ2VUb25lQ2xhc3ModG9uZT86IFwic3VjY2Vzc1wiIHwgXCJlcnJvclwiIHwgXCJpbmZvXCIpIHtcbiAgaWYgKHRvbmUgPT09IFwic3VjY2Vzc1wiKSB7XG4gICAgcmV0dXJuIFwibWVzc2FnZS1zdWNjZXNzXCI7XG4gIH1cblxuICBpZiAodG9uZSA9PT0gXCJlcnJvclwiKSB7XG4gICAgcmV0dXJuIFwibWVzc2FnZS1lcnJvclwiO1xuICB9XG5cbiAgcmV0dXJuIFwibWVzc2FnZS1pbmZvXCI7XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBBdXRoUGFuZWwoe1xuICBhdXRoTWVzc2FnZSxcbiAgYXV0aE1vZGUsXG4gIGF1dGhTZXNzaW9uLFxuICBhdXRoU3RhdHVzVGV4dCxcbiAgYXV0aFN1Ym1pdHRpbmcsXG4gIGxvZ2luRm9ybSxcbiAgb25BdXRoTW9kZUNoYW5nZSxcbiAgb25Mb2dpbkNoYW5nZSxcbiAgb25Mb2dpblN1Ym1pdCxcbiAgb25SZWdpc3RlckNoYW5nZSxcbiAgb25SZWdpc3RlclN1Ym1pdCxcbiAgb25Sb2xlQ2hhbmdlLFxuICBvblNpZ25PdXQsXG4gIHJlZ2lzdGVyRm9ybSxcbiAgc2VsZWN0ZWRDb3VudHJ5LFxuICBzZWxlY3RlZExhbmd1YWdlLFxuICB2cG5BY3RpdmUsXG59OiBBdXRoUGFuZWxQcm9wcykge1xuICByZXR1cm4gKFxuICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImF1dGgtc2hlbGwgYXV0aC1zaGVsbC1jb21wYWN0XCI+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtaGVhZGVyIGF1dGgtaGVhZGVyLWNvbXBhY3RcIj5cbiAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiZXllYnJvdyBleWVicm93LXRpZ2h0XCI+V29ya3NwYWNlIGFjY2Vzczwvc3Bhbj5cbiAgICAgICAgPGgyIGNsYXNzTmFtZT1cImF1dGgtdGl0bGVcIj5Mb2dpbiBvciBjcmVhdGUgYSBjbGllbnQgd29ya3NwYWNlPC9oMj5cbiAgICAgICAgPHAgY2xhc3NOYW1lPVwiYXV0aC1jb3B5XCI+XG4gICAgICAgICAgS2VlcCB0aGlzIHN0ZXAgc2ltcGxlOiBjaG9vc2UgbG9naW4gZm9yIGFuIGV4aXN0aW5nIGFjY291bnQgb3IgcmVnaXN0ZXJcbiAgICAgICAgICBhIG5ldyBjbGllbnQgd29ya3NwYWNlIHdpdGggdGhlIHJpZ2h0IHNlY3RvciBhbmQgcGxhbi5cbiAgICAgICAgPC9wPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYXV0aC1zdGF0dXMtZ3JpZCBhdXRoLXN0YXR1cy1ncmlkLWNvbXBhY3RcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLXN0YXR1cy1jYXJkXCI+XG4gICAgICAgICAgPHNwYW4+TWFya2V0PC9zcGFuPlxuICAgICAgICAgIDxzdHJvbmc+e3NlbGVjdGVkQ291bnRyeX08L3N0cm9uZz5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYXV0aC1zdGF0dXMtY2FyZFwiPlxuICAgICAgICAgIDxzcGFuPkxhbmd1YWdlPC9zcGFuPlxuICAgICAgICAgIDxzdHJvbmc+e3NlbGVjdGVkTGFuZ3VhZ2V9PC9zdHJvbmc+XG4gICAgICAgIDwvZGl2PlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtc3RhdHVzLWNhcmRcIj5cbiAgICAgICAgICA8c3Bhbj5Sb3V0ZTwvc3Bhbj5cbiAgICAgICAgICA8c3Ryb25nPnt2cG5BY3RpdmUgPyBcIlByb3RlY3RlZFwiIDogXCJTdGFuZGFyZFwifTwvc3Ryb25nPlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtdG9nZ2xlXCI+XG4gICAgICAgIDxidXR0b25cbiAgICAgICAgICBjbGFzc05hbWU9e2F1dGhNb2RlID09PSBcImxvZ2luXCIgPyBcImF1dGgtdG9nZ2xlLWFjdGl2ZVwiIDogXCJcIn1cbiAgICAgICAgICBvbkNsaWNrPXsoKSA9PiBvbkF1dGhNb2RlQ2hhbmdlKFwibG9naW5cIil9XG4gICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgID5cbiAgICAgICAgICBMb2dpblxuICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPGJ1dHRvblxuICAgICAgICAgIGNsYXNzTmFtZT17YXV0aE1vZGUgPT09IFwicmVnaXN0ZXJcIiA/IFwiYXV0aC10b2dnbGUtYWN0aXZlXCIgOiBcIlwifVxuICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG9uQXV0aE1vZGVDaGFuZ2UoXCJyZWdpc3RlclwiKX1cbiAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgPlxuICAgICAgICAgIFJlZ2lzdGVyXG4gICAgICAgIDwvYnV0dG9uPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIHthdXRoU2Vzc2lvbiA/IChcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzZXNzaW9uLXNoZWxsXCI+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzZXNzaW9uLXRvcGxpbmVcIj5cbiAgICAgICAgICAgIDxDaGVja0NpcmNsZTIgc2l6ZT17MjB9IC8+XG4gICAgICAgICAgICA8c3Bhbj5BY2Nlc3MgZ3JhbnRlZDwvc3Bhbj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwic2Vzc2lvbi10aXRsZVwiPnthdXRoU2Vzc2lvbi51c2VyLmNvbXBhbnl9PC9oMz5cbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJzZXNzaW9uLWNvcHlcIj57YXV0aFN0YXR1c1RleHR9PC9wPlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzZXNzaW9uLWdyaWRcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2Vzc2lvbi1pdGVtXCI+XG4gICAgICAgICAgICAgIDxzcGFuPk5hbWU8L3NwYW4+XG4gICAgICAgICAgICAgIDxzdHJvbmc+e2F1dGhTZXNzaW9uLnVzZXIubmFtZX08L3N0cm9uZz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzZXNzaW9uLWl0ZW1cIj5cbiAgICAgICAgICAgICAgPHNwYW4+Um9sZTwvc3Bhbj5cbiAgICAgICAgICAgICAgPHN0cm9uZz57YXV0aFNlc3Npb24udXNlci5yb2xlfTwvc3Ryb25nPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNlc3Npb24taXRlbVwiPlxuICAgICAgICAgICAgICA8c3Bhbj5FbWFpbDwvc3Bhbj5cbiAgICAgICAgICAgICAgPHN0cm9uZz57YXV0aFNlc3Npb24udXNlci5lbWFpbH08L3N0cm9uZz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzZXNzaW9uLWl0ZW1cIj5cbiAgICAgICAgICAgICAgPHNwYW4+VG9rZW48L3NwYW4+XG4gICAgICAgICAgICAgIDxzdHJvbmc+e2F1dGhTZXNzaW9uLnRva2VuLnNsaWNlKDAsIDE2KX0uLi48L3N0cm9uZz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJzZWNvbmRhcnktYWN0aW9uXCIgb25DbGljaz17b25TaWduT3V0fSB0eXBlPVwiYnV0dG9uXCI+XG4gICAgICAgICAgICA8TG9nT3V0IHNpemU9ezE2fSAvPlxuICAgICAgICAgICAgU2lnbiBvdXRcbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICApIDogYXV0aE1vZGUgPT09IFwibG9naW5cIiA/IChcbiAgICAgICAgPGZvcm1cbiAgICAgICAgICBjbGFzc05hbWU9XCJhdXRoLWZvcm1cIlxuICAgICAgICAgIG9uU3VibWl0PXsoZXZlbnQpID0+IHtcbiAgICAgICAgICAgIGV2ZW50LnByZXZlbnREZWZhdWx0KCk7XG4gICAgICAgICAgICB2b2lkIG9uTG9naW5TdWJtaXQoKTtcbiAgICAgICAgICB9fVxuICAgICAgICA+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb2xlLXN3aXRjaFwiPlxuICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICBjbGFzc05hbWU9e2xvZ2luRm9ybS5yb2xlID09PSBcImNsaWVudFwiID8gXCJyb2xlLXN3aXRjaC1hY3RpdmVcIiA6IFwiXCJ9XG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG9uUm9sZUNoYW5nZShcImNsaWVudFwiKX1cbiAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxVc2VyUm91bmQgc2l6ZT17MTV9IC8+XG4gICAgICAgICAgICAgIENsaWVudFxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17bG9naW5Gb3JtLnJvbGUgPT09IFwiYWRtaW5cIiA/IFwicm9sZS1zd2l0Y2gtYWN0aXZlXCIgOiBcIlwifVxuICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiBvblJvbGVDaGFuZ2UoXCJhZG1pblwiKX1cbiAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxMb2NrIHNpemU9ezE1fSAvPlxuICAgICAgICAgICAgICBBZG1pblxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiZmllbGQtc2hlbGxcIj5cbiAgICAgICAgICAgIDxzcGFuPkVtYWlsPC9zcGFuPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZpZWxkLWlucHV0XCJcbiAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT5cbiAgICAgICAgICAgICAgICBvbkxvZ2luQ2hhbmdlKChjdXJyZW50KSA9PiAoe1xuICAgICAgICAgICAgICAgICAgLi4uY3VycmVudCxcbiAgICAgICAgICAgICAgICAgIGVtYWlsOiBldmVudC50YXJnZXQudmFsdWUsXG4gICAgICAgICAgICAgICAgfSkpXG4gICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJuYW1lQGNvbXBhbnkuY29tXCJcbiAgICAgICAgICAgICAgdHlwZT1cImVtYWlsXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2xvZ2luRm9ybS5lbWFpbH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9sYWJlbD5cblxuICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9XCJmaWVsZC1zaGVsbFwiPlxuICAgICAgICAgICAgPHNwYW4+UGFzc3dvcmQ8L3NwYW4+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXRcIlxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PlxuICAgICAgICAgICAgICAgIG9uTG9naW5DaGFuZ2UoKGN1cnJlbnQpID0+ICh7XG4gICAgICAgICAgICAgICAgICAuLi5jdXJyZW50LFxuICAgICAgICAgICAgICAgICAgcGFzc3dvcmQ6IGV2ZW50LnRhcmdldC52YWx1ZSxcbiAgICAgICAgICAgICAgICB9KSlcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cIkVudGVyIHlvdXIgcGFzc3dvcmRcIlxuICAgICAgICAgICAgICB0eXBlPVwicGFzc3dvcmRcIlxuICAgICAgICAgICAgICB2YWx1ZT17bG9naW5Gb3JtLnBhc3N3b3JkfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L2xhYmVsPlxuXG4gICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJwcmltYXJ5LWFjdGlvblwiIGRpc2FibGVkPXthdXRoU3VibWl0dGluZ30gdHlwZT1cInN1Ym1pdFwiPlxuICAgICAgICAgICAge2F1dGhTdWJtaXR0aW5nID8gXCJTaWduaW5nIGluLi4uXCIgOiBcIk9wZW4gd29ya3NwYWNlXCJ9XG4gICAgICAgICAgPC9idXR0b24+XG4gICAgICAgIDwvZm9ybT5cbiAgICAgICkgOiAoXG4gICAgICAgIDxmb3JtXG4gICAgICAgICAgY2xhc3NOYW1lPVwiYXV0aC1mb3JtXCJcbiAgICAgICAgICBvblN1Ym1pdD17KGV2ZW50KSA9PiB7XG4gICAgICAgICAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpO1xuICAgICAgICAgICAgdm9pZCBvblJlZ2lzdGVyU3VibWl0KCk7XG4gICAgICAgICAgfX1cbiAgICAgICAgPlxuICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9XCJmaWVsZC1zaGVsbFwiPlxuICAgICAgICAgICAgPHNwYW4+RnVsbCBuYW1lPC9zcGFuPlxuICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZpZWxkLWlucHV0XCJcbiAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT5cbiAgICAgICAgICAgICAgICBvblJlZ2lzdGVyQ2hhbmdlKChjdXJyZW50KSA9PiAoe1xuICAgICAgICAgICAgICAgICAgLi4uY3VycmVudCxcbiAgICAgICAgICAgICAgICAgIG5hbWU6IGV2ZW50LnRhcmdldC52YWx1ZSxcbiAgICAgICAgICAgICAgICB9KSlcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cIllvdXIgZnVsbCBuYW1lXCJcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICB2YWx1ZT17cmVnaXN0ZXJGb3JtLm5hbWV9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvbGFiZWw+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZpZWxkLWdyaWRcIj5cbiAgICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9XCJmaWVsZC1zaGVsbFwiPlxuICAgICAgICAgICAgICA8c3Bhbj5FbWFpbDwvc3Bhbj5cbiAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXRcIlxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZXZlbnQpID0+XG4gICAgICAgICAgICAgICAgICBvblJlZ2lzdGVyQ2hhbmdlKChjdXJyZW50KSA9PiAoe1xuICAgICAgICAgICAgICAgICAgICAuLi5jdXJyZW50LFxuICAgICAgICAgICAgICAgICAgICBlbWFpbDogZXZlbnQudGFyZ2V0LnZhbHVlLFxuICAgICAgICAgICAgICAgICAgfSkpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwibmFtZUBjb21wYW55LmNvbVwiXG4gICAgICAgICAgICAgICAgdHlwZT1cImVtYWlsXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17cmVnaXN0ZXJGb3JtLmVtYWlsfVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgPC9sYWJlbD5cblxuICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImZpZWxkLXNoZWxsXCI+XG4gICAgICAgICAgICAgIDxzcGFuPlBhc3N3b3JkPC9zcGFuPlxuICAgICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJmaWVsZC1pbnB1dFwiXG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT5cbiAgICAgICAgICAgICAgICAgIG9uUmVnaXN0ZXJDaGFuZ2UoKGN1cnJlbnQpID0+ICh7XG4gICAgICAgICAgICAgICAgICAgIC4uLmN1cnJlbnQsXG4gICAgICAgICAgICAgICAgICAgIHBhc3N3b3JkOiBldmVudC50YXJnZXQudmFsdWUsXG4gICAgICAgICAgICAgICAgICB9KSlcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJBdCBsZWFzdCA4IGNoYXJhY3RlcnNcIlxuICAgICAgICAgICAgICAgIHR5cGU9XCJwYXNzd29yZFwiXG4gICAgICAgICAgICAgICAgdmFsdWU9e3JlZ2lzdGVyRm9ybS5wYXNzd29yZH1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiZmllbGQtc2hlbGxcIj5cbiAgICAgICAgICAgIDxzcGFuPkNvbXBhbnk8L3NwYW4+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXRcIlxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PlxuICAgICAgICAgICAgICAgIG9uUmVnaXN0ZXJDaGFuZ2UoKGN1cnJlbnQpID0+ICh7XG4gICAgICAgICAgICAgICAgICAuLi5jdXJyZW50LFxuICAgICAgICAgICAgICAgICAgY29tcGFueTogZXZlbnQudGFyZ2V0LnZhbHVlLFxuICAgICAgICAgICAgICAgIH0pKVxuICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiQnVzaW5lc3Mgb3Igb3JnYW5pemF0aW9uIG5hbWVcIlxuICAgICAgICAgICAgICB0eXBlPVwidGV4dFwiXG4gICAgICAgICAgICAgIHZhbHVlPXtyZWdpc3RlckZvcm0uY29tcGFueX1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9sYWJlbD5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmllbGQtZ3JpZFwiPlxuICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImZpZWxkLXNoZWxsXCI+XG4gICAgICAgICAgICAgIDxzcGFuPlNlY3Rvcjwvc3Bhbj5cbiAgICAgICAgICAgICAgPHNlbGVjdFxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZpZWxkLWlucHV0XCJcbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PlxuICAgICAgICAgICAgICAgICAgb25SZWdpc3RlckNoYW5nZSgoY3VycmVudCkgPT4gKHtcbiAgICAgICAgICAgICAgICAgICAgLi4uY3VycmVudCxcbiAgICAgICAgICAgICAgICAgICAgc2VjdG9yOiBldmVudC50YXJnZXQudmFsdWUsXG4gICAgICAgICAgICAgICAgICB9KSlcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgdmFsdWU9e3JlZ2lzdGVyRm9ybS5zZWN0b3J9XG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICB7c2VjdG9yT3B0aW9ucy5tYXAoKHNlY3RvcikgPT4gKFxuICAgICAgICAgICAgICAgICAgPG9wdGlvbiBrZXk9e3NlY3Rvci52YWx1ZX0gdmFsdWU9e3NlY3Rvci52YWx1ZX0+XG4gICAgICAgICAgICAgICAgICAgIHtzZWN0b3IubGFiZWx9XG4gICAgICAgICAgICAgICAgICA8L29wdGlvbj5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9zZWxlY3Q+XG4gICAgICAgICAgICA8L2xhYmVsPlxuXG4gICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiZmllbGQtc2hlbGxcIj5cbiAgICAgICAgICAgICAgPHNwYW4+UGxhbjwvc3Bhbj5cbiAgICAgICAgICAgICAgPHNlbGVjdFxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZpZWxkLWlucHV0XCJcbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PlxuICAgICAgICAgICAgICAgICAgb25SZWdpc3RlckNoYW5nZSgoY3VycmVudCkgPT4gKHtcbiAgICAgICAgICAgICAgICAgICAgLi4uY3VycmVudCxcbiAgICAgICAgICAgICAgICAgICAgcGxhbjogZXZlbnQudGFyZ2V0LnZhbHVlLFxuICAgICAgICAgICAgICAgICAgfSkpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHZhbHVlPXtyZWdpc3RlckZvcm0ucGxhbn1cbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIHtwbGFuT3B0aW9ucy5tYXAoKHBsYW4pID0+IChcbiAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtwbGFuLnZhbHVlfSB2YWx1ZT17cGxhbi52YWx1ZX0+XG4gICAgICAgICAgICAgICAgICAgIHtwbGFuLmxhYmVsfVxuICAgICAgICAgICAgICAgICAgPC9vcHRpb24+XG4gICAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICAgIDwvc2VsZWN0PlxuICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwicHJpbWFyeS1hY3Rpb25cIiBkaXNhYmxlZD17YXV0aFN1Ym1pdHRpbmd9IHR5cGU9XCJzdWJtaXRcIj5cbiAgICAgICAgICAgIHthdXRoU3VibWl0dGluZyA/IFwiQ3JlYXRpbmcuLi5cIiA6IFwiQ3JlYXRlIGNsaWVudCB3b3Jrc3BhY2VcIn1cbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPC9mb3JtPlxuICAgICAgKX1cblxuICAgICAgPHAgY2xhc3NOYW1lPXtgbWVzc2FnZS1zaGVsbCAke2dldE1lc3NhZ2VUb25lQ2xhc3MoYXV0aE1lc3NhZ2U/LnRvbmUpfWB9PlxuICAgICAgICB7YXV0aE1lc3NhZ2U/LnRleHQgfHxcbiAgICAgICAgICBcIkxvZ2luIHN0YXlzIHNlcGFyYXRlIGZvciBleGlzdGluZyBhY2NvdW50cywgd2hpbGUgbmV3IGNsaWVudCB3b3Jrc3BhY2VzIGNhbiBiZSBjcmVhdGVkIGhlcmUuXCJ9XG4gICAgICA8L3A+XG4gICAgPC9zZWN0aW9uPlxuICApO1xufVxuIl0sIm5hbWVzIjpbIkNoZWNrQ2lyY2xlMiIsIkxvY2siLCJMb2dPdXQiLCJVc2VyUm91bmQiLCJwbGFuT3B0aW9ucyIsInNlY3Rvck9wdGlvbnMiLCJnZXRNZXNzYWdlVG9uZUNsYXNzIiwidG9uZSIsIkF1dGhQYW5lbCIsImF1dGhNZXNzYWdlIiwiYXV0aE1vZGUiLCJhdXRoU2Vzc2lvbiIsImF1dGhTdGF0dXNUZXh0IiwiYXV0aFN1Ym1pdHRpbmciLCJsb2dpbkZvcm0iLCJvbkF1dGhNb2RlQ2hhbmdlIiwib25Mb2dpbkNoYW5nZSIsIm9uTG9naW5TdWJtaXQiLCJvblJlZ2lzdGVyQ2hhbmdlIiwib25SZWdpc3RlclN1Ym1pdCIsIm9uUm9sZUNoYW5nZSIsIm9uU2lnbk91dCIsInJlZ2lzdGVyRm9ybSIsInNlbGVjdGVkQ291bnRyeSIsInNlbGVjdGVkTGFuZ3VhZ2UiLCJ2cG5BY3RpdmUiLCJzZWN0aW9uIiwiY2xhc3NOYW1lIiwiZGl2Iiwic3BhbiIsImgyIiwicCIsInN0cm9uZyIsImJ1dHRvbiIsIm9uQ2xpY2siLCJ0eXBlIiwic2l6ZSIsImgzIiwidXNlciIsImNvbXBhbnkiLCJuYW1lIiwicm9sZSIsImVtYWlsIiwidG9rZW4iLCJzbGljZSIsImZvcm0iLCJvblN1Ym1pdCIsImV2ZW50IiwicHJldmVudERlZmF1bHQiLCJsYWJlbCIsImlucHV0Iiwib25DaGFuZ2UiLCJjdXJyZW50IiwidGFyZ2V0IiwidmFsdWUiLCJwbGFjZWhvbGRlciIsInBhc3N3b3JkIiwiZGlzYWJsZWQiLCJzZWxlY3QiLCJzZWN0b3IiLCJtYXAiLCJvcHRpb24iLCJwbGFuIiwidGV4dCJdLCJtYXBwaW5ncyI6IjtBQUFBLFNBQVNBLFlBQVksRUFBRUMsSUFBSSxFQUFFQyxNQUFNLEVBQUVDLFNBQVMsUUFBUSxlQUFlO0FBQ3JFLFNBQVNDLFdBQVcsRUFBRUMsYUFBYSxRQUFRLHlCQUF5QjtBQW1FcEUsU0FBU0Msb0JBQW9CQyxJQUFtQztJQUM5RCxJQUFJQSxTQUFTLFdBQVc7UUFDdEIsT0FBTztJQUNUO0lBRUEsSUFBSUEsU0FBUyxTQUFTO1FBQ3BCLE9BQU87SUFDVDtJQUVBLE9BQU87QUFDVDtBQUVBLE9BQU8sU0FBU0MsVUFBVSxFQUN4QkMsV0FBVyxFQUNYQyxRQUFRLEVBQ1JDLFdBQVcsRUFDWEMsY0FBYyxFQUNkQyxjQUFjLEVBQ2RDLFNBQVMsRUFDVEMsZ0JBQWdCLEVBQ2hCQyxhQUFhLEVBQ2JDLGFBQWEsRUFDYkMsZ0JBQWdCLEVBQ2hCQyxnQkFBZ0IsRUFDaEJDLFlBQVksRUFDWkMsU0FBUyxFQUNUQyxZQUFZLEVBQ1pDLGVBQWUsRUFDZkMsZ0JBQWdCLEVBQ2hCQyxTQUFTLEVBQ007SUFDZixxQkFDRSxRQUFDQztRQUFRQyxXQUFVOzswQkFDakIsUUFBQ0M7Z0JBQUlELFdBQVU7O2tDQUNiLFFBQUNFO3dCQUFLRixXQUFVO2tDQUF3Qjs7Ozs7O2tDQUN4QyxRQUFDRzt3QkFBR0gsV0FBVTtrQ0FBYTs7Ozs7O2tDQUMzQixRQUFDSTt3QkFB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

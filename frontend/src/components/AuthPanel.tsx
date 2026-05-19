@@ -1,6 +1,5 @@
-import { CheckCircle2, Lock, LogOut, Sparkles, UserRound } from "lucide-react";
+import { CheckCircle2, Lock, LogOut, UserRound } from "lucide-react";
 import { planOptions, sectorOptions } from "../data/runtimeOptions";
-import { PeekBuddy } from "./PeekBuddy";
 
 type AuthRole = "admin" | "client";
 type AuthMode = "login" | "register";
@@ -64,6 +63,7 @@ type AuthPanelProps = {
   registerForm: RegisterFormState;
   selectedCountry: string;
   selectedLanguage: string;
+  showHeader?: boolean;
   vpnActive: boolean;
 };
 
@@ -96,81 +96,23 @@ export function AuthPanel({
   registerForm,
   selectedCountry,
   selectedLanguage,
+  showHeader = true,
   vpnActive,
 }: AuthPanelProps) {
-  const sectorHighlights = [
-    { key: "commercial", label: "1. Commercial AI" },
-    { key: "business", label: "2. Business AI" },
-    { key: "healthcare", label: "3. Healthcare AI" },
-    { key: "industry", label: "4. Industry 4.0 AI" },
-  ];
-
-  const workflowTips =
-    authMode === "login"
-        ? [
-            "Client login opens payments, activations, and support in one page.",
-            "Admin login keeps notifications, SC cards, and rollout controls centralized.",
-          ]
-      : [
-          "Registration prepares the workspace with the right sector and plan from the start.",
-          "Commercial AI, Business AI, Healthcare AI, and Industry 4.0 AI stay aligned to the same admin-managed access flow.",
-        ];
-
   return (
-    <section className="auth-shell">
-      <div className="auth-header">
-        <span className="eyebrow eyebrow-tight">Workspace access</span>
-        <h2 className="auth-title">Login / Register</h2>
-        <p className="auth-copy">
-          Clean entry point for the device AI system. Admin access stays
-          protected, while client onboarding stays fast and structured.
-        </p>
-      </div>
-
-      <div className="auth-orbit-row">
-        <div className="auth-guide-card">
-          <span className="auth-guide-pill">
-            <Sparkles size={13} />
-            brAIn access guide
-          </span>
-          <p className="auth-guide-copy">
-            {authMode === "login"
-              ? "Use the same access layer for secure sign-in, linked payments, and SC card validation."
-              : "Create the client workspace once, then let the sector, plan, and card flow continue inside the same system."}
+    <section className="auth-shell auth-shell-compact">
+      {showHeader ? (
+        <div className="auth-header auth-header-compact">
+          <span className="eyebrow eyebrow-tight">Device access</span>
+          <h2 className="auth-title">Log in or start a device order</h2>
+          <p className="auth-copy">
+            Keep the buying flow clean: use login for an existing account, or create
+            a client workspace to configure sector, device, and rollout plan.
           </p>
-
-          <div className="auth-sector-pills">
-            {sectorHighlights.map((sector) => (
-              <span
-                className={`auth-sector-pill auth-sector-pill-${sector.key}`}
-                key={sector.key}
-              >
-                {sector.label}
-              </span>
-            ))}
-          </div>
         </div>
+      ) : null}
 
-        <div className="auth-pet-pop" aria-hidden="true">
-          <div className="auth-pet-avatar">
-            <PeekBuddy />
-          </div>
-          <div className="auth-pet-copy">
-            <strong>brAIn sugar glider</strong>
-            <p>Access is ready. Pick a sector and let Peti glide you into the workspace.</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="auth-advice-grid">
-        {workflowTips.map((tip) => (
-          <div className="auth-advice-card" key={tip}>
-            <p>{tip}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="auth-status-grid">
+      <div className="auth-status-grid auth-status-grid-compact">
         <div className="auth-status-card">
           <span>Market</span>
           <strong>{selectedCountry}</strong>
@@ -180,8 +122,8 @@ export function AuthPanel({
           <strong>{selectedLanguage}</strong>
         </div>
         <div className="auth-status-card">
-          <span>VPN</span>
-          <strong>{vpnActive ? "Private" : "Standby"}</strong>
+          <span>Route</span>
+          <strong>{vpnActive ? "Protected" : "Standard"}</strong>
         </div>
       </div>
 
@@ -191,14 +133,14 @@ export function AuthPanel({
           onClick={() => onAuthModeChange("login")}
           type="button"
         >
-          Login
+          Log in
         </button>
         <button
           className={authMode === "register" ? "auth-toggle-active" : ""}
           onClick={() => onAuthModeChange("register")}
           type="button"
         >
-          Register
+          Start order
         </button>
       </div>
 
@@ -295,7 +237,7 @@ export function AuthPanel({
           </label>
 
           <button className="primary-action" disabled={authSubmitting} type="submit">
-            {authSubmitting ? "Signing in..." : "Open workspace"}
+            {authSubmitting ? "Signing in..." : "Log in"}
           </button>
         </form>
       ) : (
@@ -415,14 +357,14 @@ export function AuthPanel({
           </div>
 
           <button className="primary-action" disabled={authSubmitting} type="submit">
-            {authSubmitting ? "Creating..." : "Create client workspace"}
+            {authSubmitting ? "Creating..." : "Create order workspace"}
           </button>
         </form>
       )}
 
       <p className={`message-shell ${getMessageToneClass(authMessage?.tone)}`}>
         {authMessage?.text ||
-          "Client accounts can be created here. Admin access stays controlled."}
+          "Existing accounts can log in here, while new buyers can create a workspace to continue the device order."}
       </p>
     </section>
   );

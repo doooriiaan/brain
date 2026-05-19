@@ -1,10 +1,10 @@
 export const fallbackContent = {
   source: "fallback",
   hero: {
-    eyebrow: "Commercial AI + Business AI + Healthcare AI + Industry 4.0 AI",
-    title: "Smarter business. Stronger results.",
+    eyebrow: "Device-first preweb",
+    title: "Show the device first. Let the platform close the sale.",
     subtitle:
-      "brAIn turns the concept into a full product ecosystem: sector-ready devices, smart-card activation, payments, live services, and a compact high-energy preweb that flows into the real system.",
+      "brAIn turns each vertical into a device-led sales story with sector-ready hardware, cleaner login flow, smart-card activation, payments, and live services behind it.",
     badges: [
       "Commercial AI",
       "Business AI",
@@ -17,12 +17,12 @@ export const fallbackContent = {
       { label: "SC cards live", value: "3,000 inventory" },
     ],
     primaryCta: {
-      label: "Open preweb",
-      href: "#preweb-home",
+      label: "See devices",
+      href: "#landing-devices",
     },
     secondaryCta: {
-      label: "Open system",
-      href: "#system-center",
+      label: "Log in",
+      href: "#auth-access",
     },
     deviceImage: "/brand/brain-hero.svg",
     plansImage: "/brand/brain-plans-showcase.svg",

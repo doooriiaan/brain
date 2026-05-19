@@ -1,0 +1,337 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/BrainScratchCard.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6da7cc98";
+import { motion } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/framer-motion.js?v=7da21c59";
+import { CheckCircle2, ShieldCheck, Sparkles, Ticket } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=a3ee757b";
+export function BrainScratchCard({ busy, code, mode = "reveal", planLabel, revealed, sectorLabel, onAction, pillLabelOverride, titleOverride, descriptionOverride, backLabelOverride, lockedLabelOverride, backCopyOverride, actionLabelOverride }) {
+    const isValidateMode = mode === "validate";
+    const pillLabel = pillLabelOverride ?? (isValidateMode ? "brAIn secure validate" : "brAIn secure reveal");
+    const title = titleOverride ?? (isValidateMode ? "Private AI Validation Card" : "Private AI Activation Card");
+    const description = descriptionOverride ?? (isValidateMode ? "One code. One validation. One secure cloud entry." : "One reveal. One activation. One secure cloud entry.");
+    const backLabel = backLabelOverride ?? (isValidateMode ? "Validation code" : "Reveal code");
+    const lockedLabel = lockedLabelOverride ?? (isValidateMode ? "CODE REQUIRED" : "REVEAL LOCKED");
+    const backCopy = backCopyOverride ?? (isValidateMode ? revealed ? "Validate this code in the workspace." : "Enter the code you received, then validate it." : revealed ? "Validate this code in the workspace." : "Use the button below to reveal your brAIn code.");
+    const actionLabel = actionLabelOverride ?? (isValidateMode ? busy ? "Validating..." : "Validate Card" : busy ? "Revealing..." : revealed ? "Reveal New Card" : "Reveal Card");
+    const ActionIcon = isValidateMode ? CheckCircle2 : Ticket;
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: "scratch-scene",
+        children: [
+            /*#__PURE__*/ _jsxDEV(motion.div, {
+                animate: {
+                    rotateY: revealed ? 180 : 0,
+                    rotateZ: revealed ? -2 : 2,
+                    y: [
+                        0,
+                        -8,
+                        0
+                    ]
+                },
+                className: "scratch-card-shell",
+                transition: {
+                    rotateY: {
+                        duration: 0.8,
+                        ease: [
+                            0.22,
+                            1,
+                            0.36,
+                            1
+                        ]
+                    },
+                    rotateZ: {
+                        duration: 0.8,
+                        ease: [
+                            0.22,
+                            1,
+                            0.36,
+                            1
+                        ]
+                    },
+                    y: {
+                        duration: 4.8,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }
+                },
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "scratch-card-face scratch-card-front",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-grid"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 95,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-brand",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        className: "scratch-card-pill",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                                size: 13
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                                lineNumber: 98,
+                                                columnNumber: 15
+                                            }, this),
+                                            pillLabel
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 97,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("h3", {
+                                        children: title
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 101,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        children: description
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 102,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 96,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-front-meta",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "Sector"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                                lineNumber: 107,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("strong", {
+                                                children: sectorLabel
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                                lineNumber: 108,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 106,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "Plan"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                                lineNumber: 111,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("strong", {
+                                                children: planLabel
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                                lineNumber: 112,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 110,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 105,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-chip",
+                                children: /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                                    size: 18
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                    lineNumber: 117,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 116,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                        lineNumber: 94,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "scratch-card-face scratch-card-back",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-band"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 122,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-reveal",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        className: "scratch-card-reveal-label",
+                                        children: backLabel
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 124,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: revealed ? code : lockedLabel
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 125,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        children: backCopy
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 126,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 123,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "scratch-card-qr",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 129,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 130,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 131,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 132,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 133,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 134,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 135,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 136,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                        lineNumber: 137,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                                lineNumber: 128,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                        lineNumber: 121,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                lineNumber: 81,
+                columnNumber: 7
+            }, this),
+            onAction ? /*#__PURE__*/ _jsxDEV("button", {
+                className: "scratch-reveal-button",
+                disabled: busy,
+                onClick: onAction,
+                type: "button",
+                children: [
+                    /*#__PURE__*/ _jsxDEV(ActionIcon, {
+                        size: 16
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                        lineNumber: 149,
+                        columnNumber: 11
+                    }, this),
+                    actionLabel
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+                lineNumber: 143,
+                columnNumber: 9
+            }, this) : null
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx",
+        lineNumber: 80,
+        columnNumber: 5
+    }, this);
+}
+_c = BrainScratchCard;
+var _c;
+$RefreshReg$(_c, "BrainScratchCard");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/BrainScratchCard.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkJyYWluU2NyYXRjaENhcmQudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IG1vdGlvbiB9IGZyb20gXCJmcmFtZXItbW90aW9uXCI7XG5pbXBvcnQgeyBDaGVja0NpcmNsZTIsIFNoaWVsZENoZWNrLCBTcGFya2xlcywgVGlja2V0IH0gZnJvbSBcImx1Y2lkZS1yZWFjdFwiO1xuXG50eXBlIEJyYWluU2NyYXRjaENhcmRNb2RlID0gXCJyZXZlYWxcIiB8IFwidmFsaWRhdGVcIjtcblxudHlwZSBCcmFpblNjcmF0Y2hDYXJkUHJvcHMgPSB7XG4gIGJ1c3k6IGJvb2xlYW47XG4gIGNvZGU6IHN0cmluZztcbiAgbW9kZT86IEJyYWluU2NyYXRjaENhcmRNb2RlO1xuICBwbGFuTGFiZWw6IHN0cmluZztcbiAgcmV2ZWFsZWQ6IGJvb2xlYW47XG4gIHNlY3RvckxhYmVsOiBzdHJpbmc7XG4gIG9uQWN0aW9uPzogKCkgPT4gdm9pZDtcbiAgcGlsbExhYmVsT3ZlcnJpZGU/OiBzdHJpbmc7XG4gIHRpdGxlT3ZlcnJpZGU/OiBzdHJpbmc7XG4gIGRlc2NyaXB0aW9uT3ZlcnJpZGU/OiBzdHJpbmc7XG4gIGJhY2tMYWJlbE92ZXJyaWRlPzogc3RyaW5nO1xuICBsb2NrZWRMYWJlbE92ZXJyaWRlPzogc3RyaW5nO1xuICBiYWNrQ29weU92ZXJyaWRlPzogc3RyaW5nO1xuICBhY3Rpb25MYWJlbE92ZXJyaWRlPzogc3RyaW5nO1xufTtcblxuZXhwb3J0IGZ1bmN0aW9uIEJyYWluU2NyYXRjaENhcmQoe1xuICBidXN5LFxuICBjb2RlLFxuICBtb2RlID0gXCJyZXZlYWxcIixcbiAgcGxhbkxhYmVsLFxuICByZXZlYWxlZCxcbiAgc2VjdG9yTGFiZWwsXG4gIG9uQWN0aW9uLFxuICBwaWxsTGFiZWxPdmVycmlkZSxcbiAgdGl0bGVPdmVycmlkZSxcbiAgZGVzY3JpcHRpb25PdmVycmlkZSxcbiAgYmFja0xhYmVsT3ZlcnJpZGUsXG4gIGxvY2tlZExhYmVsT3ZlcnJpZGUsXG4gIGJhY2tDb3B5T3ZlcnJpZGUsXG4gIGFjdGlvbkxhYmVsT3ZlcnJpZGUsXG59OiBCcmFpblNjcmF0Y2hDYXJkUHJvcHMpIHtcbiAgY29uc3QgaXNWYWxpZGF0ZU1vZGUgPSBtb2RlID09PSBcInZhbGlkYXRlXCI7XG4gIGNvbnN0IHBpbGxMYWJlbCA9XG4gICAgcGlsbExhYmVsT3ZlcnJpZGUgPz9cbiAgICAoaXNWYWxpZGF0ZU1vZGUgPyBcImJyQUluIHNlY3VyZSB2YWxpZGF0ZVwiIDogXCJickFJbiBzZWN1cmUgcmV2ZWFsXCIpO1xuICBjb25zdCB0aXRsZSA9XG4gICAgdGl0bGVPdmVycmlkZSA/P1xuICAgIChpc1ZhbGlkYXRlTW9kZVxuICAgID8gXCJQcml2YXRlIEFJIFZhbGlkYXRpb24gQ2FyZFwiXG4gICAgOiBcIlByaXZhdGUgQUkgQWN0aXZhdGlvbiBDYXJkXCIpO1xuICBjb25zdCBkZXNjcmlwdGlvbiA9XG4gICAgZGVzY3JpcHRpb25PdmVycmlkZSA/P1xuICAgIChpc1ZhbGlkYXRlTW9kZVxuICAgID8gXCJPbmUgY29kZS4gT25lIHZhbGlkYXRpb24uIE9uZSBzZWN1cmUgY2xvdWQgZW50cnkuXCJcbiAgICA6IFwiT25lIHJldmVhbC4gT25lIGFjdGl2YXRpb24uIE9uZSBzZWN1cmUgY2xvdWQgZW50cnkuXCIpO1xuICBjb25zdCBiYWNrTGFiZWwgPVxuICAgIGJhY2tMYWJlbE92ZXJyaWRlID8/IChpc1ZhbGlkYXRlTW9kZSA/IFwiVmFsaWRhdGlvbiBjb2RlXCIgOiBcIlJldmVhbCBjb2RlXCIpO1xuICBjb25zdCBsb2NrZWRMYWJlbCA9XG4gICAgbG9ja2VkTGFiZWxPdmVycmlkZSA/PyAoaXNWYWxpZGF0ZU1vZGUgPyBcIkNPREUgUkVRVUlSRURcIiA6IFwiUkVWRUFMIExPQ0tFRFwiKTtcbiAgY29uc3QgYmFja0NvcHkgPVxuICAgIGJhY2tDb3B5T3ZlcnJpZGUgPz9cbiAgICAoaXNWYWxpZGF0ZU1vZGVcbiAgICA/IHJldmVhbGVkXG4gICAgICA/IFwiVmFsaWRhdGUgdGhpcyBjb2RlIGluIHRoZSB3b3Jrc3BhY2UuXCJcbiAgICAgIDogXCJFbnRlciB0aGUgY29kZSB5b3UgcmVjZWl2ZWQsIHRoZW4gdmFsaWRhdGUgaXQuXCJcbiAgICA6IHJldmVhbGVkXG4gICAgICA/IFwiVmFsaWRhdGUgdGhpcyBjb2RlIGluIHRoZSB3b3Jrc3BhY2UuXCJcbiAgICAgIDogXCJVc2UgdGhlIGJ1dHRvbiBiZWxvdyB0byByZXZlYWwgeW91ciBickFJbiBjb2RlLlwiKTtcbiAgY29uc3QgYWN0aW9uTGFiZWwgPVxuICAgIGFjdGlvbkxhYmVsT3ZlcnJpZGUgPz9cbiAgICAoaXNWYWxpZGF0ZU1vZGVcbiAgICA/IGJ1c3lcbiAgICAgID8gXCJWYWxpZGF0aW5nLi4uXCJcbiAgICAgIDogXCJWYWxpZGF0ZSBDYXJkXCJcbiAgICA6IGJ1c3lcbiAgICAgID8gXCJSZXZlYWxpbmcuLi5cIlxuICAgICAgOiByZXZlYWxlZFxuICAgICAgICA/IFwiUmV2ZWFsIE5ldyBDYXJkXCJcbiAgICAgICAgOiBcIlJldmVhbCBDYXJkXCIpO1xuICBjb25zdCBBY3Rpb25JY29uID0gaXNWYWxpZGF0ZU1vZGUgPyBDaGVja0NpcmNsZTIgOiBUaWNrZXQ7XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cInNjcmF0Y2gtc2NlbmVcIj5cbiAgICAgIDxtb3Rpb24uZGl2XG4gICAgICAgIGFuaW1hdGU9e3tcbiAgICAgICAgICByb3RhdGVZOiByZXZlYWxlZCA/IDE4MCA6IDAsXG4gICAgICAgICAgcm90YXRlWjogcmV2ZWFsZWQgPyAtMiA6IDIsXG4gICAgICAgICAgeTogWzAsIC04LCAwXSxcbiAgICAgICAgfX1cbiAgICAgICAgY2xhc3NOYW1lPVwic2NyYXRjaC1jYXJkLXNoZWxsXCJcbiAgICAgICAgdHJhbnNpdGlvbj17e1xuICAgICAgICAgIHJvdGF0ZVk6IHsgZHVyYXRpb246IDAuOCwgZWFzZTogWzAuMjIsIDEsIDAuMzYsIDFdIH0sXG4gICAgICAgICAgcm90YXRlWjogeyBkdXJhdGlvbjogMC44LCBlYXNlOiBbMC4yMiwgMSwgMC4zNiwgMV0gfSxcbiAgICAgICAgICB5OiB7IGR1cmF0aW9uOiA0LjgsIHJlcGVhdDogSW5maW5pdHksIGVhc2U6IFwiZWFzZUluT3V0XCIgfSxcbiAgICAgICAgfX1cbiAgICAgID5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzY3JhdGNoLWNhcmQtZmFjZSBzY3JhdGNoLWNhcmQtZnJvbnRcIj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNjcmF0Y2gtY2FyZC1ncmlkXCIgLz5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNjcmF0Y2gtY2FyZC1icmFuZFwiPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwic2NyYXRjaC1jYXJkLXBpbGxcIj5cbiAgICAgICAgICAgICAgPFNwYXJrbGVzIHNpemU9ezEzfSAvPlxuICAgICAgICAgICAgICB7cGlsbExhYmVsfVxuICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgPGgzPnt0aXRsZX08L2gzPlxuICAgICAgICAgICAgPHA+e2Rlc2NyaXB0aW9ufTwvcD5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2NyYXRjaC1jYXJkLWZyb250LW1ldGFcIj5cbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgIDxzcGFuPlNlY3Rvcjwvc3Bhbj5cbiAgICAgICAgICAgICAgPHN0cm9uZz57c2VjdG9yTGFiZWx9PC9zdHJvbmc+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgIDxzcGFuPlBsYW48L3NwYW4+XG4gICAgICAgICAgICAgIDxzdHJvbmc+e3BsYW5MYWJlbH08L3N0cm9uZz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzY3JhdGNoLWNhcmQtY2hpcFwiPlxuICAgICAgICAgICAgPFNoaWVsZENoZWNrIHNpemU9ezE4fSAvPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNjcmF0Y2gtY2FyZC1mYWNlIHNjcmF0Y2gtY2FyZC1iYWNrXCI+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzY3JhdGNoLWNhcmQtYmFuZFwiIC8+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzY3JhdGNoLWNhcmQtcmV2ZWFsXCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJzY3JhdGNoLWNhcmQtcmV2ZWFsLWxhYmVsXCI+e2JhY2tMYWJlbH08L3NwYW4+XG4gICAgICAgICAgICA8c3Ryb25nPntyZXZlYWxlZCA/IGNvZGUgOiBsb2NrZWRMYWJlbH08L3N0cm9uZz5cbiAgICAgICAgICAgIDxwPntiYWNrQ29weX08L3A+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzY3JhdGNoLWNhcmQtcXJcIj5cbiAgICAgICAgICAgIDxzcGFuIC8+XG4gICAgICAgICAgICA8c3BhbiAvPlxuICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgIDxzcGFuIC8+XG4gICAgICAgICAgICA8c3BhbiAvPlxuICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgIDxzcGFuIC8+XG4gICAgICAgICAgICA8c3BhbiAvPlxuICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L21vdGlvbi5kaXY+XG5cbiAgICAgIHtvbkFjdGlvbiA/IChcbiAgICAgICAgPGJ1dHRvblxuICAgICAgICAgIGNsYXNzTmFtZT1cInNjcmF0Y2gtcmV2ZWFsLWJ1dHRvblwiXG4gICAgICAgICAgZGlzYWJsZWQ9e2J1c3l9XG4gICAgICAgICAgb25DbGljaz17b25BY3Rpb259XG4gICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgID5cbiAgICAgICAgICA8QWN0aW9uSWNvbiBzaXplPXsxNn0gLz5cbiAgICAgICAgICB7YWN0aW9uTGFiZWx9XG4gICAgICAgIDwvYnV0dG9uPlxuICAgICAgKSA6IG51bGx9XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwibmFtZXMiOlsibW90aW9uIiwiQ2hlY2tDaXJjbGUyIiwiU2hpZWxkQ2hlY2siLCJTcGFya2xlcyIsIlRpY2tldCIsIkJyYWluU2NyYXRjaENhcmQiLCJidXN5IiwiY29kZSIsIm1vZGUiLCJwbGFuTGFiZWwiLCJyZXZlYWxlZCIsInNlY3RvckxhYmVsIiwib25BY3Rpb24iLCJwaWxsTGFiZWxPdmVycmlkZSIsInRpdGxlT3ZlcnJpZGUiLCJkZXNjcmlwdGlvbk92ZXJyaWRlIiwiYmFja0xhYmVsT3ZlcnJpZGUiLCJsb2NrZWRMYWJlbE92ZXJyaWRlIiwiYmFja0NvcHlPdmVycmlkZSIsImFjdGlvbkxhYmVsT3ZlcnJpZGUiLCJpc1ZhbGlkYXRlTW9kZSIsInBpbGxMYWJlbCIsInRpdGxlIiwiZGVzY3JpcHRpb24iLCJiYWNrTGFiZWwiLCJsb2NrZWRMYWJlbCIsImJhY2tDb3B5IiwiYWN0aW9uTGFiZWwiLCJBY3Rpb25JY29uIiwiZGl2IiwiY2xhc3NOYW1lIiwiYW5pbWF0ZSIsInJvdGF0ZVkiLCJyb3RhdGVaIiwieSIsInRyYW5zaXRpb24iLCJkdXJhdGlvbiIsImVhc2UiLCJyZXBlYXQiLCJJbmZpbml0eSIsInNwYW4iLCJzaXplIiwiaDMiLCJwIiwic3Ryb25nIiwiYnV0dG9uIiwiZGlzYWJsZWQiLCJvbkNsaWNrIiwidHlwZSJdLCJtYXBwaW5ncyI6IjtBQUFBLFNBQVNBLE1BQU0sUUFBUSxnQkFBZ0I7QUFDdkMsU0FBU0MsWUFBWSxFQUFFQyxXQUFXLEVBQUVDLFFBQVEsRUFBRUMsTUFBTSxRQUFRLGVBQWU7QUFxQjNFLE9BQU8sU0FBU0MsaUJBQWlCLEVBQy9CQyxJQUFJLEVBQ0pDLElBQUksRUFDSkMsT0FBTyxRQUFRLEVBQ2ZDLFNBQVMsRUFDVEMsUUFBUSxFQUNSQyxX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

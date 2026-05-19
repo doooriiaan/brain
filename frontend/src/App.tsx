@@ -28,9 +28,7 @@ import { DevicePreviewStudio } from "./components/DevicePreviewStudio";
 import { EmptyCard } from "./components/EmptyCard";
 import { GoogleTranslateBridge } from "./components/GoogleTranslateBridge";
 import { LandingTopBar } from "./components/LandingTopBar";
-import { PeekBuddy } from "./components/PeekBuddy";
-import { SectorLiveBoard, SectorLiveMiniBoard } from "./components/SectorLiveBoard";
-import { SectorCinemaPage } from "./components/SectorCinemaPage";
+import { SectorLiveBoard } from "./components/SectorLiveBoard";
 import {
   countryOptions,
   getFallbackLanguageForCountry,
@@ -70,7 +68,7 @@ import type {
 
 type AuthRole = "admin" | "client";
 type AuthMode = "login" | "register";
-type LandingView = "overview" | "sectors" | "device" | "plans" | "access";
+type LandingView = "overview" | "access" | "sectors" | "devices" | "plans";
 
 type LoginFormState = {
   role: AuthRole;
@@ -201,27 +199,27 @@ const emptyClientOverview: ClientOverview = {
 const emptyLandingContent: LandingContent = {
   source: "fallback",
   hero: {
-    eyebrow: "AI deployment platform",
-    title: "Smarter business. Stronger results.",
+    eyebrow: "Device-first preweb",
+    title: "Show the device first. Let the platform close the sale.",
     subtitle:
-      "A dark, device-first access layer for brAIn hardware, cloud software, sector deployment, and workspace control.",
+      "Turn each vertical into a device-led story with a cleaner login path, stronger product proof, and a public page that feels made to sell hardware.",
     badges: [
-      "Commercial AI",
-      "Business AI",
-      "Healthcare AI",
-      "Industry 4.0 AI",
+      "Commercial",
+      "Business",
+      "Healthcare",
+      "Industry 4.0",
     ],
     metrics: [
-      { label: "Sectors ready", value: "4" },
-      { label: "Products", value: "4 devices" },
-      { label: "Cloud flow", value: "Live" },
+      { label: "Sector lines", value: "4" },
+      { label: "Plans", value: "5" },
+      { label: "Access status", value: "Live" },
     ],
     primaryCta: {
-      label: "Open sectors",
-      href: "#preweb-sectors",
+      label: "See devices",
+      href: "#landing-devices",
     },
     secondaryCta: {
-      label: "Open system",
+      label: "Log in",
       href: "#auth-access",
     },
     deviceImage: "/brand/brain-hero.svg",
@@ -301,42 +299,42 @@ const ticketStatusOrder: TicketItem["status"][] = [
 
 const landingSectionMap: Record<LandingView, string> = {
   overview: "landing-overview",
+  access: "landing-access-page",
   sectors: "preweb-sectors",
-  device: "landing-device-page",
+  devices: "landing-devices",
   plans: "landing-plans",
-  access: "auth-access",
 };
 
 const landingSidebarItems: LandingSidebarItem[] = [
   {
     key: "overview",
     label: "Overview",
-    detail: "Hero, runtime, and launch controls.",
+    detail: "Hero story that makes the device offer feel premium.",
     icon: Sparkles,
+  },
+  {
+    key: "access",
+    label: "Login",
+    detail: "Bring the buyer straight into the order or workspace flow.",
+    icon: ShieldCheck,
   },
   {
     key: "sectors",
     label: "Sectors",
-    detail: "Pick the live business deployment path.",
+    detail: "Choose the vertical that matches the buyer fastest.",
     icon: Layers3,
   },
   {
-    key: "device",
-    label: "Device page",
-    detail: "3D hardware stage with live device switching.",
+    key: "devices",
+    label: "Devices",
+    detail: "Show the hardware in a stronger, more convincing way.",
     icon: Cpu,
   },
   {
     key: "plans",
     label: "Plans",
-    detail: "Choose the package that matches the rollout.",
+    detail: "Let the buyer understand rollout size after the device wins.",
     icon: CreditCard,
-  },
-  {
-    key: "access",
-    label: "Access",
-    detail: "Jump straight into login or registration.",
-    icon: ShieldCheck,
   },
 ];
 
@@ -415,7 +413,7 @@ function statusBadgeClass(status: ServiceStatus["status"]) {
   }
 
   if (status === "ready") {
-    return "border-cyan-400/25 bg-cyan-400/12 text-cyan-200";
+    return "border-slate-300/20 bg-slate-400/10 text-slate-100";
   }
 
   return "border-amber-400/25 bg-amber-400/12 text-amber-200";
@@ -430,7 +428,7 @@ function eventBadgeClass(status: RuntimeEvent["status"]) {
     return "border-amber-400/25 bg-amber-400/12 text-amber-200";
   }
 
-  return "border-cyan-400/25 bg-cyan-400/12 text-cyan-200";
+  return "border-slate-300/20 bg-slate-400/10 text-slate-100";
 }
 
 function smartCardStatusClass(
@@ -444,7 +442,7 @@ function smartCardStatusClass(
     return "border-amber-400/25 bg-amber-400/12 text-amber-200";
   }
 
-  return "border-cyan-400/25 bg-cyan-400/12 text-cyan-200";
+  return "border-slate-300/20 bg-slate-400/10 text-slate-100";
 }
 
 function smartCardStatusCopy(
@@ -618,6 +616,7 @@ function App() {
   const selectedLanguageOption =
     languageOptions.find((language) => language.code === selectedLanguage) ??
     languageOptions[0];
+  const showLandingAccessPage = !authSession && landingView === "access";
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEYS.country, selectedCountry);
@@ -749,10 +748,10 @@ function App() {
       return "No active workspace session.";
     }
 
-    return `${authSession.user.name} is connected to the access layer.`;
+    return `${authSession.user.name} is connected to the workspace.`;
   }, [authSession]);
 
-  const currentUserLabel = authSession?.user.company || "Guest device route";
+  const currentUserLabel = authSession?.user.company || "Guest access route";
   const vpnActive = Boolean(vpnSession);
 
   const primaryMetrics = useMemo(() => {
@@ -814,6 +813,101 @@ function App() {
       },
     ];
   }, [activeSector, landingContent.plans]);
+
+  const heroBadges = useMemo(() => {
+    return landingContent.hero.badges.length > 0
+      ? landingContent.hero.badges.slice(0, 4)
+      : ["Commercial", "Business", "Healthcare", "Industry 4.0"];
+  }, [landingContent.hero.badges]);
+
+  const heroMetrics = useMemo(() => {
+    if (landingContent.hero.metrics.length > 0) {
+      return landingContent.hero.metrics.slice(0, 3);
+    }
+
+    return [
+      { label: "Sector lanes", value: String(landingContent.sectors.length || 4) },
+      { label: "Devices", value: String(landingContent.devices.length || 4) },
+      { label: "Plans", value: String(landingContent.plans.length || 5) },
+    ];
+  }, [landingContent.devices.length, landingContent.hero.metrics, landingContent.plans.length, landingContent.sectors.length]);
+
+  const featuredLandingPlan = useMemo(() => {
+    return (
+      landingContent.plans.find((plan) => plan.featured) ??
+      landingContent.plans.find((plan) => plan.slug === "professional") ??
+      landingContent.plans[0] ??
+      null
+    );
+  }, [landingContent.plans]);
+
+  const landingPlanCards = useMemo(() => {
+    const priorityPlans = [
+      landingContent.plans.find((plan) => plan.slug === "free"),
+      featuredLandingPlan,
+      landingContent.plans.find((plan) => plan.slug === "platinum"),
+    ].filter((plan): plan is Plan => Boolean(plan));
+
+    const uniquePlans = priorityPlans.filter(
+      (plan, index, items) => items.findIndex((item) => item.slug === plan.slug) === index,
+    );
+
+    for (const plan of landingContent.plans) {
+      if (!uniquePlans.some((item) => item.slug === plan.slug)) {
+        uniquePlans.push(plan);
+      }
+
+      if (uniquePlans.length === 3) {
+        break;
+      }
+    }
+
+    return uniquePlans;
+  }, [featuredLandingPlan, landingContent.plans]);
+
+  const devicePreviewOptions = useMemo(() => {
+    const ordered = activeSector
+      ? landingContent.devices.filter((device) => device.sectorSlug === activeSector.slug)
+      : [];
+    const remaining = landingContent.devices.filter(
+      (device) => !ordered.some((item) => item.deviceKey === device.deviceKey),
+    );
+
+    return [...ordered, ...remaining];
+  }, [activeSector, landingContent.devices]);
+
+  const salesHighlights = useMemo<
+    Array<{ detail: string; icon: LucideIcon; title: string }>
+  >(() => {
+    return [
+      {
+        title: activeDevice?.name ?? "Device-first offer",
+        detail:
+          activeDevice?.tagline ??
+          "Put the hardware in front so the offer feels real immediately.",
+        icon: Cpu,
+      },
+      {
+        title: activeSector?.name ?? "Sector fit",
+        detail:
+          activeSector?.audience ??
+          "Let the buyer see fast where the device fits best.",
+        icon: Layers3,
+      },
+      {
+        title: "Cloud and rollout",
+        detail: "Remote setup, live dashboard, and rollout support from one place.",
+        icon: Workflow,
+      },
+    ];
+  }, [activeDevice, activeSector]);
+
+  const partnerSignals = useMemo(() => {
+    return [
+      ...landingContent.integrations.protocols.slice(0, 3),
+      ...landingContent.integrations.cloudPartners.slice(0, 3),
+    ];
+  }, [landingContent.integrations.cloudPartners, landingContent.integrations.protocols]);
 
   const sectorSummaries = useMemo(() => {
     const accounts =
@@ -919,11 +1013,11 @@ function App() {
   const petAdviceCopy =
     selectedClientPlan?.slug === "free"
       ? activeScratchCode
-        ? `Peti already prepared ${activeScratchCode} for this workspace. Validate it directly from the card.`
-        : "Peti can generate the free SC code automatically here, so the client never needs to type it manually."
+        ? `${activeScratchCode} is already prepared for this workspace. Validate it directly from the card.`
+        : "The free access code can be generated automatically here, so the client does not need to enter it manually."
       : pendingPlanPayment
         ? "Your managed request is waiting for approval. Client view stays focused only on your own payment and access state."
-        : planScopedPayment?.status === "approved"
+      : planScopedPayment?.status === "approved"
           ? "This workspace already has approved access linked to it. Client view stays isolated from admin control boards."
           : "Managed plans stay in client view only as request status, payment state, and linked access.";
 
@@ -1467,29 +1561,46 @@ function App() {
     });
   }
 
-  function openLandingView(view: LandingView) {
-    setLandingView(view);
-    scrollToSection(landingSectionMap[view]);
+  function scheduleLandingScroll(sectionId: string) {
+    window.setTimeout(() => {
+      if (sectionId === "landing-access-page") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      scrollToSection(sectionId);
+    }, 40);
   }
 
-  function openDevicePage(deviceKey?: string) {
-    if (deviceKey) {
-      const nextDevice = landingContent.devices.find(
-        (device) => device.deviceKey === deviceKey,
-      );
-
-      if (nextDevice) {
-        setActiveSectorSlug(nextDevice.sectorSlug);
-      }
-    }
-
-    openLandingView("device");
+  function openLandingView(view: LandingView) {
+    setLandingView(view);
+    scheduleLandingScroll(landingSectionMap[view]);
   }
 
   function openSectorStory(sectorSlug: string) {
     setActiveSectorSlug(sectorSlug);
+    setRegisterForm((current) => ({
+      ...current,
+      sector: sectorSlug,
+    }));
     setLandingView("sectors");
-    scrollToSection("landing-sector-cinema");
+    scheduleLandingScroll("preweb-sectors");
+  }
+
+  function handleDeviceSelection(deviceKey: string) {
+    const device = landingContent.devices.find((item) => item.deviceKey === deviceKey);
+
+    if (!device) {
+      return;
+    }
+
+    setActiveSectorSlug(device.sectorSlug);
+    setRegisterForm((current) => ({
+      ...current,
+      sector: device.sectorSlug,
+    }));
+    setLandingView("devices");
+    scheduleLandingScroll("landing-devices");
   }
 
   function openRegisterForSector(sector: Sector, plan?: Plan) {
@@ -1501,23 +1612,7 @@ function App() {
       sector: sector.slug,
       plan: plan?.slug || current.plan,
     }));
-    scrollToSection("auth-access");
-  }
-
-  function openRegisterForPlan(plan: Plan, sectorSlug?: string) {
-    setLandingView("access");
-    setAuthMode("register");
-    setRegisterForm((current) => ({
-      ...current,
-      sector: sectorSlug || current.sector,
-      plan: plan.slug,
-    }));
-
-    if (sectorSlug) {
-      setActiveSectorSlug(sectorSlug);
-    }
-
-    scrollToSection("auth-access");
+    scheduleLandingScroll("landing-access-page");
   }
 
   async function handleBroadcastNotification() {
@@ -1904,9 +1999,19 @@ function App() {
 
         <div className="page-frame">
           <LandingTopBar
+            activeNavigationKey={!authSession ? landingView : undefined}
             countryOptions={countryOptions}
             currentUserLabel={currentUserLabel}
             languageOptions={languageOptions}
+            navigationItems={
+              !authSession
+                ? landingSidebarItems.map((item) => ({
+                    key: item.key,
+                    label: item.label,
+                  }))
+                : []
+            }
+            onNavigate={(key) => openLandingView(key as LandingView)}
             onCountryChange={handleCountryChange}
             onLanguageChange={handleLanguageChange}
             onToggleVpn={handleVpnToggle}
@@ -1921,213 +2026,164 @@ function App() {
           />
 
           {!authSession ? (
-            <main
-              className="landing-center-shell mt-4"
-              id="landing-center"
-            >
-              <aside className="landing-sidebar-rail">
-                <div className="landing-sidebar-shell landing-sidebar-frame">
-                  <span className="landing-sidebar-pill">
-                    <Cpu className="h-3.5 w-3.5" />
-                    Live device navigation
-                  </span>
-
-                  <h2 className="landing-sidebar-title">brAIn launch map</h2>
-                  <p className="landing-sidebar-copy">
-                    Manual sidebar controls wired straight to the real sections,
-                    with a dedicated device page and live device switching.
-                  </p>
-
-                  <div className="landing-sidebar-nav">
-                    {landingSidebarItems.map((item) => {
-                      const Icon = item.icon;
-                      const isActive = landingView === item.key;
-
-                      return (
-                        <button
-                          className={`landing-nav-button ${isActive ? "landing-nav-button-active" : ""}`}
-                          key={item.key}
-                          onClick={() => openLandingView(item.key)}
-                          type="button"
-                        >
-                          <span className="landing-nav-icon">
-                            <Icon className="h-4 w-4" />
-                          </span>
-                          <span className="landing-nav-copy">
-                            <strong>{item.label}</strong>
-                            <small>{item.detail}</small>
-                          </span>
-                          <ArrowRight className="landing-nav-arrow h-4 w-4" />
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="landing-sidebar-device-shell">
-                    <div className="landing-sidebar-device-head">
-                      <div>
-                        <p className="landing-sidebar-device-kicker">Sector preview</p>
-                        <h3>{activeSector?.name ?? "Loading sector"}</h3>
-                        <p className="mt-2 text-sm leading-6 text-slate-300">
-                          {activeDevice?.name ?? "Built-in AI device"} /{" "}
-                          {activeSector?.statValue ?? "Standby"}
-                        </p>
-                      </div>
-                      <span className="landing-sidebar-device-badge">
-                        {activeDevice?.category ?? "Preview"}
-                      </span>
-                    </div>
-
-                    {activeSector ? (
-                      <SectorLiveMiniBoard
-                        className="h-[12.75rem]"
-                        dense
-                        device={activeDevice}
-                        plans={landingContent.plans}
-                        sector={activeSector}
-                      />
-                    ) : null}
-
-                    <div className="rounded-[22px] border border-white/10 bg-black/20 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                        Preview note
-                      </p>
-                      <p className="mt-3 text-sm leading-7 text-slate-300">
-                        {activeDevice?.tagline ??
-                          activeSector?.summary ??
-                          "Select a sector to preview its built-in AI device story."}
-                      </p>
-                    </div>
-
-                    <div className="landing-device-shortcuts">
-                      {landingContent.sectors.map((sector) => (
-                        <button
-                          className={`landing-device-shortcut ${
-                            activeSector?.slug === sector.slug
-                              ? "landing-device-shortcut-active"
-                              : ""
-                          }`}
-                          key={sector.slug}
-                          onClick={() => openSectorStory(sector.slug)}
-                          type="button"
-                        >
-                          <span>{sector.name}</span>
-                          <small>{sector.statValue}</small>
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="grid gap-3">
-                      <button
-                        className="landing-sidebar-cta"
-                        onClick={() =>
-                          openSectorStory(
-                            activeSector?.slug ||
-                              landingContent.sectors[0]?.slug ||
-                              "business",
-                          )
-                        }
-                        type="button"
-                      >
-                        Open sector preview
-                      </button>
-                      <button
-                        className="device-preview-button-secondary"
-                        onClick={() => openDevicePage(activeDevice?.deviceKey)}
-                        type="button"
-                      >
-                        Open 3D device page
-                      </button>
-                    </div>
-
-                    <div className="mt-auto grid gap-3">
-                      <div className="rounded-[22px] border border-white/10 bg-black/20 p-4">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          Route profile
-                        </p>
-                        <div className="mt-3 space-y-3">
-                          {[
-                            ["Market", selectedCountryOption.label],
-                            ["Language", selectedLanguageOption.label],
-                            ["VPN", vpnActive ? vpnSession?.location || "Private route" : "Standby"],
-                          ].map(([label, value]) => (
-                            <div
-                              className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3"
-                              key={label}
-                            >
-                              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                {label}
-                              </span>
-                              <span className="text-sm font-semibold text-white">
-                                {value}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="rounded-[22px] border border-white/10 bg-black/20 p-4">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          Entry sequence
-                        </p>
-                        <h4 className="mt-2 text-xl font-black text-white">
-                          Live deployment flow
-                        </h4>
-                        <div className="mt-4 space-y-3">
-                          {[
-                            ["01", "Choose country profile"],
-                            ["02", "Sync language layer"],
-                            ["03", "Validate secure access"],
-                          ].map(([step, label]) => (
-                            <div
-                              className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3"
-                              key={step}
-                            >
-                              <span className="min-w-10 text-lg font-black text-cyan-300">
-                                {step}
-                              </span>
-                              <span className="text-sm font-semibold text-white">
-                                {label}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-
-              <div className="landing-center-content min-w-0 space-y-6">
-              <section className="hero-layout" id="auth-access">
+            <main className="landing-compact-main" id="landing-center">
+              {!showLandingAccessPage ? (
                 <motion.section
                   animate={{ opacity: 1, y: 0 }}
-                  className="hero-panel hero-panel-brand"
-                  initial={{ opacity: 0, y: 24 }}
-                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="landing-hero-shell executive-surface executive-surface-strong"
+                  id="landing-overview"
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
+                  <div className="landing-hero-grid landing-hero-grid-rich">
                   <BrandShowcase
                     currentCountry={selectedCountryOption.label}
                     currentLanguage={selectedLanguageOption.label}
+                    heroBadges={heroBadges}
+                    heroMetrics={heroMetrics}
+                    heroSubtitle={
+                      activeDevice
+                        ? `${activeDevice.tagline} Plug it in, greet customers, and control offers from the cloud.`
+                        : landingContent.hero.subtitle
+                    }
+                    heroTitle={
+                      activeDevice
+                        ? `${activeDevice.name} for screens that need to sell.`
+                        : landingContent.hero.title
+                    }
                     vpnActive={vpnActive}
                   />
-                </motion.section>
 
-                <motion.aside
+                  <div className="landing-hero-stack">
+                    <div className="landing-hero-actions-card">
+                      <span className="landing-inline-label">Hero device</span>
+                      <div className="landing-hero-preview-frame">
+                        <img
+                          alt={activeDevice?.name ?? "brAIn device"}
+                          src={activeDevice?.imageUrl ?? landingContent.hero.deviceImage}
+                        />
+                      </div>
+                      <h2 className="landing-side-title">
+                        {activeDevice?.name ?? "Start with the device"}
+                      </h2>
+                      <p className="landing-side-copy">
+                        {activeDevice?.tagline ??
+                          "Show the hardware first, then move the buyer into login."}
+                      </p>
+
+                      <div className="landing-hero-actions-row">
+                        <button
+                          className="executive-button-primary"
+                          onClick={() => openLandingView("devices")}
+                          type="button"
+                        >
+                          See the device
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
+                        <button
+                          className="executive-button-secondary"
+                          onClick={() => openLandingView("access")}
+                          type="button"
+                        >
+                          Open login
+                        </button>
+                      </div>
+
+                      <div className="landing-highlight-grid">
+                        {salesHighlights.map((item) => {
+                          const Icon = item.icon;
+
+                          return (
+                            <div className="landing-highlight-card" key={item.title}>
+                              <span className="landing-hero-proof-icon">
+                                <Icon size={16} />
+                              </span>
+                              <div>
+                                <strong>{item.title}</strong>
+                                <p>{item.detail}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <p className="landing-subtle-note">
+                        {contentLoading
+                          ? "Loading device and sector content..."
+                          : "Country, language, and route settings stay available from the header."}
+                      </p>
+                    </div>
+
+                    {partnerSignals.length > 0 ? (
+                      <div className="landing-proof-strip">
+                        {partnerSignals.map((signal) => (
+                          <span className="landing-proof-chip" key={signal}>
+                            {signal}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                  </div>
+                </motion.section>
+              ) : null}
+
+              {showLandingAccessPage ? (
+                <motion.section
                   animate={{ opacity: 1, y: 0 }}
-                  className="hero-panel hero-panel-auth"
-                  initial={{ opacity: 0, y: 32 }}
-                  transition={{
-                    delay: 0.1,
-                    duration: 0.55,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+                  className="landing-access-stage executive-surface"
+                  id="landing-access-page"
+                  initial={{ opacity: 0, y: 16 }}
+                  transition={{ delay: 0.06, duration: 0.46 }}
                 >
-                  <AuthPanel
-                    authMessage={authMessage}
-                    authMode={authMode}
-                    authSession={authSession}
-                    authStatusText={authStatusText}
+                  <div className="landing-access-page-top">
+                    <div>
+                      <span className="landing-inline-label">Login</span>
+                      <h2 className="landing-section-title">
+                        Log in or open a new buyer workspace
+                      </h2>
+                      <p className="landing-section-copy">
+                        Keep the preweb focused on the product. Use this page only
+                        when the buyer is ready to continue.
+                      </p>
+                    </div>
+
+                    <button
+                      className="landing-access-back"
+                      onClick={() => openLandingView("overview")}
+                      type="button"
+                    >
+                      Back to preweb
+                    </button>
+                  </div>
+
+                <div className="landing-access-panel-header">
+                  <div>
+                    <span className="landing-inline-label">Selected flow</span>
+                    <h2 className="landing-section-title">
+                      {activeDevice
+                        ? `Continue with ${activeDevice.name}`
+                        : "Continue to buyer access"}
+                    </h2>
+                    <p className="landing-section-copy">
+                      Sign in with an existing account or create a workspace for a
+                      new device order.
+                    </p>
+                  </div>
+
+                  {activeSector ? (
+                    <span className="landing-selected-pill">
+                      Active sector: {activeSector.name}
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="landing-access-layout">
+                      <AuthPanel
+                        authMessage={authMessage}
+                        authMode={authMode}
+                        authSession={authSession}
+                        authStatusText={authStatusText}
                     authSubmitting={authSubmitting}
                     loginForm={loginForm}
                     onAuthModeChange={setAuthMode}
@@ -2135,375 +2191,343 @@ function App() {
                     onLoginSubmit={handleLoginSubmit}
                     onRegisterChange={setRegisterForm}
                     onRegisterSubmit={handleRegisterSubmit}
-                    onRoleChange={(role) =>
-                      setLoginForm((current) => ({ ...current, role }))
-                    }
-                    onSignOut={handleSignOut}
-                    registerForm={registerForm}
-                    selectedCountry={selectedCountryOption.label}
-                    selectedLanguage={selectedLanguageOption.label}
-                    vpnActive={vpnActive}
-                  />
-                </motion.aside>
-              </section>
+                        onRoleChange={(role) =>
+                          setLoginForm((current) => ({ ...current, role }))
+                        }
+                        onSignOut={handleSignOut}
+                        registerForm={registerForm}
+                        selectedCountry={selectedCountryOption.label}
+                        selectedLanguage={selectedLanguageOption.label}
+                        showHeader={false}
+                        vpnActive={vpnActive}
+                      />
 
-              <motion.section
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.96),rgba(5,11,21,0.92))] p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:p-6"
-                id="landing-overview"
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ delay: 0.08, duration: 0.52 }}
-              >
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                  <div className="max-w-3xl">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-cyan-200">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      {landingContent.hero.eyebrow}
-                    </span>
-                    <h2 className="mt-5 text-3xl font-black tracking-tight text-white sm:text-5xl">
-                      {landingContent.hero.title}
-                    </h2>
-                    <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
-                      {landingContent.hero.subtitle}
-                    </p>
-                    {contentLoading ? (
-                      <p className="mt-3 text-sm font-semibold text-cyan-200">
-                        Loading sector boards and cloud runtime...
+                  <aside className="landing-access-aside">
+                    <div className="landing-access-aside-card">
+                      <span className="landing-inline-label">Selected device</span>
+                      <h3 className="landing-side-title">
+                        {activeDevice?.name ?? "Choose the device lane first"}
+                      </h3>
+                      <p className="landing-side-copy">
+                        {activeDevice?.tagline ??
+                          "Pick a sector and device so the login flow feels like the next natural buying step."}
                       </p>
-                    ) : null}
-                  </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <button
-                      className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
-                      onClick={() => openLandingView("sectors")}
-                      type="button"
-                    >
-                      Explore sectors
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                    <button
-                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-bold text-white transition hover:bg-white/[0.08]"
-                      onClick={() => openLandingView("access")}
-                      type="button"
-                    >
-                      Open access layer
-                    </button>
-                  </div>
-                </div>
-
-                <div className="mt-6 grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    {landingContent.hero.metrics.map((metric) => (
-                      <article
-                        className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5"
-                        key={metric.label}
-                      >
-                        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          {metric.label}
-                        </p>
-                        <h3 className="mt-3 text-3xl font-black text-white">
-                          {metric.value}
-                        </h3>
-                      </article>
-                    ))}
-                  </div>
-
-                  <div className="rounded-[28px] border border-cyan-400/15 bg-cyan-400/5 p-5">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/70">
-                          Live runtime
-                        </p>
-                        <h3 className="mt-2 text-2xl font-black text-white">
-                          Public system pulse
-                        </h3>
+                      <div className="landing-access-point-list">
+                        <div className="landing-access-point-item">
+                          <span>Sector</span>
+                          <strong>{activeSector?.name ?? "Not selected yet"}</strong>
+                        </div>
+                        <div className="landing-access-point-item">
+                          <span>Best fit</span>
+                          <strong>
+                            {activeDevice?.suitedFor[0] ??
+                              activeSector?.audience ??
+                              "Buyer fit"}
+                          </strong>
+                        </div>
+                        <div className="landing-access-point-item">
+                          <span>Plan lane</span>
+                          <strong>{featuredLandingPlan?.name ?? "Business"}</strong>
+                        </div>
                       </div>
-                      <button
-                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
-                        onClick={() => void refreshPublicRuntime()}
-                        type="button"
-                      >
-                        <RefreshCw className="h-3.5 w-3.5" />
-                        Refresh
-                      </button>
-                    </div>
 
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {operationsOverview.services.slice(0, 4).map((service) => (
-                        <div
-                          className="rounded-2xl border border-white/10 bg-black/20 p-4"
-                          key={service.key}
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="font-semibold text-white">{service.label}</p>
-                            <span
-                              className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${statusBadgeClass(service.status)}`}
-                            >
-                              {service.status}
+                      {activeDevice?.ports?.length ? (
+                        <div className="landing-proof-strip">
+                          {activeDevice.ports.slice(0, 4).map((port) => (
+                            <span className="landing-proof-chip" key={port}>
+                              {port}
                             </span>
-                          </div>
-                          <p className="mt-3 text-sm leading-6 text-slate-400">
-                            {service.detail}
-                          </p>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.section>
+                      ) : null}
 
-              <section
-                className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
-                id="preweb-sectors"
-              >
-                {landingContent.sectors.map((sector, index) => {
-                  const active = sector.slug === activeSector?.slug;
-
-                  return (
-                    <motion.button
-                      className="group rounded-[30px] border p-5 text-left shadow-[0_18px_55px_rgba(0,0,0,0.18)] transition"
-                      initial={{ opacity: 0, y: 18 }}
-                      key={sector.slug}
-                      onClick={() => openSectorStory(sector.slug)}
-                      style={{
-                        borderColor: active ? `${sector.accent}55` : `${sector.accent}24`,
-                        background: active
-                          ? `linear-gradient(180deg, ${sector.accent}22, rgba(7,17,31,0.92))`
-                          : `linear-gradient(180deg, ${sector.accent}12, rgba(7,12,22,0.9))`,
-                      }}
-                      transition={{ delay: index * 0.05, duration: 0.4 }}
-                      type="button"
-                      whileHover={{ y: -4 }}
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                            Sector {index + 1}
-                          </p>
-                          <h3 className="mt-2 text-2xl font-black text-white">
-                            {sector.name}
-                          </h3>
-                        </div>
-                        <span
-                          className="h-3 w-3 rounded-full shadow-[0_0_30px_currentColor]"
-                          style={{ backgroundColor: sector.accent, color: sector.accent }}
-                        />
-                      </div>
-                      <p className="mt-4 text-sm leading-7 text-slate-300">
-                        {sector.summary}
-                      </p>
-                      <div className="mt-5 flex items-center justify-between">
-                        <span
-                          className="text-sm font-semibold"
-                          style={{ color: sector.accent }}
+                      <div className="landing-access-strip-actions">
+                        <button
+                          className="executive-button-secondary"
+                          onClick={() => openLandingView("devices")}
+                          type="button"
                         >
-                          {sector.statValue}
-                        </span>
-                        <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 group-hover:text-white">
-                          Open AI device page
-                        </span>
+                          See the device again
+                        </button>
+                        <button
+                          className="executive-button-primary"
+                          onClick={() => openLandingView("overview")}
+                          type="button"
+                        >
+                          Back to landing
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
                       </div>
-                    </motion.button>
-                  );
-                })}
-              </section>
-
-              {activeSector ? (
-                <section className="space-y-6">
-                  <SectorCinemaPage
-                    activeDevice={activeDevice}
-                    activeSector={activeSector}
-                    onDeploy={openRegisterForSector}
-                    onOpenDevice={openDevicePage}
-                    onOpenSector={openSectorStory}
-                    plans={landingContent.plans}
-                    sectors={landingContent.sectors}
-                  />
-                  <DevicePreviewStudio
-                    device={activeDevice}
-                    onDeploy={() => openRegisterForSector(activeSector)}
-                    onSelectDevice={openDevicePage}
-                    plans={landingContent.plans}
-                    relatedDevices={landingContent.devices}
-                    sector={activeSector}
-                  />
-                </section>
+                    </div>
+                  </aside>
+                </div>
+                </motion.section>
               ) : null}
 
-              <section
-                className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_25px_70px_rgba(0,0,0,0.26)] sm:p-6"
-                id="landing-plans"
-              >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              {!showLandingAccessPage ? (
+                <motion.section
+                  animate={{ opacity: 1, y: 0 }}
+                  className="landing-section-shell executive-surface"
+                  id="preweb-sectors"
+                  initial={{ opacity: 0, y: 16 }}
+                  transition={{ delay: 0.1, duration: 0.46 }}
+                >
+                <div className="landing-section-heading">
                   <div>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-violet-200">
-                      <Layers3 className="h-3.5 w-3.5" />
-                      Annual subscription plans
-                    </span>
-                    <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                      Plans ready for admin-managed launch
+                    <span className="landing-inline-label">Sectors</span>
+                    <h2 className="landing-section-title">
+                      Choose the lane where the device sells best
                     </h2>
+                    <p className="landing-section-copy">
+                      One buyer, one use case, one device story. Keep it sharp.
+                    </p>
                   </div>
 
-                  <p className="max-w-xl text-sm leading-7 text-slate-400">
-                    Choose a sector, assign the plan, and move directly into login or registration.
-                  </p>
+                  {activeSector ? (
+                    <span className="landing-selected-pill">
+                      Selected: {activeSector.name}
+                    </span>
+                  ) : null}
                 </div>
 
-                <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-                  {landingContent.plans.map((plan) => (
+                {landingContent.sectors.length > 0 ? (
+                  <div className="landing-sector-grid">
+                    {landingContent.sectors.map((sector, index) => {
+                      const active = sector.slug === activeSector?.slug;
+                      const sectorDevice =
+                        landingContent.devices.find(
+                          (device) => device.sectorSlug === sector.slug,
+                        ) ?? null;
+
+                      return (
+                        <motion.button
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`landing-sector-card ${
+                            active ? "landing-sector-card-active" : ""
+                          }`}
+                          initial={{ opacity: 0, y: 16 }}
+                          key={sector.slug}
+                          onClick={() => openSectorStory(sector.slug)}
+                          style={{
+                            borderColor: active
+                              ? `${sector.accent}55`
+                              : "rgba(148, 163, 184, 0.14)",
+                            boxShadow: active
+                              ? `0 20px 48px ${sector.accent}14`
+                              : "0 16px 38px rgba(0, 0, 0, 0.16)",
+                          }}
+                          transition={{ delay: index * 0.04, duration: 0.36 }}
+                          type="button"
+                          whileHover={{ y: -3 }}
+                        >
+                          <div className="landing-sector-card-top">
+                            <div>
+                              <p className="landing-sector-label">Sector</p>
+                              <h3>{sector.name}</h3>
+                            </div>
+                            <span className="landing-sector-status">
+                              {active ? "Selected" : "Choose"}
+                            </span>
+                          </div>
+
+                          <p className="landing-sector-copy">{sector.summary}</p>
+
+                          <div className="landing-sector-feature-list">
+                            <span>{sectorDevice?.name ?? sector.statValue}</span>
+                            <span>{sector.audience}</span>
+                          </div>
+
+                          <div className="landing-sector-footer">
+                            <span style={{ color: sector.accent }}>
+                              {sectorDevice?.category ?? sector.statValue}
+                            </span>
+                            <span>{active ? "Open device stage" : "See device fit"}</span>
+                          </div>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="landing-empty-note">
+                    Sector options will appear here once public content is ready.
+                  </div>
+                )}
+                </motion.section>
+              ) : null}
+
+              {!showLandingAccessPage ? (
+                <motion.section
+                  animate={{ opacity: 1, y: 0 }}
+                  className="landing-section-shell executive-surface"
+                  id="landing-devices"
+                  initial={{ opacity: 0, y: 16 }}
+                  transition={{ delay: 0.14, duration: 0.46 }}
+                >
+                <div className="landing-section-heading">
+                  <div>
+                    <span className="landing-inline-label">Devices</span>
+                    <h2 className="landing-section-title">
+                      Put the hardware on stage
+                    </h2>
+                    <p className="landing-section-copy">
+                      This section should make the buyer picture the device in the
+                      real space, not read more filler text.
+                    </p>
+                  </div>
+
+                  {activeDevice ? (
+                    <span className="landing-selected-pill">
+                      Spotlight: {activeDevice.name}
+                    </span>
+                  ) : null}
+                </div>
+
+                {activeSector && activeDevice ? (
+                  <DevicePreviewStudio
+                    device={activeDevice}
+                    onDeploy={() =>
+                      openRegisterForSector(
+                        activeSector,
+                        featuredLandingPlan ?? undefined,
+                      )
+                    }
+                    onSelectDevice={handleDeviceSelection}
+                    plans={landingContent.plans}
+                    relatedDevices={devicePreviewOptions}
+                    sector={activeSector}
+                  />
+                ) : (
+                  <div className="landing-empty-note">
+                    Pick a sector to open the device stage.
+                  </div>
+                )}
+                </motion.section>
+              ) : null}
+
+              {!showLandingAccessPage ? (
+                <motion.section
+                  animate={{ opacity: 1, y: 0 }}
+                  className="landing-section-shell executive-surface"
+                  id="landing-plans"
+                  initial={{ opacity: 0, y: 16 }}
+                  transition={{ delay: 0.18, duration: 0.46 }}
+                >
+                <div className="landing-section-heading">
+                  <div>
+                    <span className="landing-inline-label">Plans</span>
+                    <h2 className="landing-section-title">
+                      Plans that follow the device
+                    </h2>
+                    <p className="landing-section-copy">
+                      Keep pricing clean. The buyer should already want the
+                      hardware before reading this.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="landing-plan-grid">
+                  {landingPlanCards.map((plan) => (
                     <article
-                      className={`rounded-[28px] border p-5 ${
-                        plan.featured
-                          ? "border-cyan-400/25 bg-[linear-gradient(180deg,rgba(34,211,238,0.14),rgba(7,17,31,0.96))]"
-                          : "border-white/10 bg-white/[0.04]"
+                      className={`landing-plan-card ${
+                        plan.featured ? "landing-plan-card-featured" : ""
                       }`}
                       key={plan.slug}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                            {plan.name}
-                          </p>
-                          <h3 className="mt-2 text-4xl font-black text-white">
-                            EUR {plan.annualPrice}
-                          </h3>
-                        </div>
-                        {plan.featured ? (
-                          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">
-                            Popular
-                          </span>
-                        ) : null}
+                      <div className="landing-plan-meta">
+                        <span className="landing-inline-label">
+                          {plan.featured ? "Best seller" : plan.name}
+                        </span>
+                        <span className="landing-selected-pill">
+                          {plan.deviceAllowance}
+                        </span>
                       </div>
-                      <p className="mt-3 text-sm leading-7 text-slate-300">
-                        {plan.summary}
+
+                      <h3>{plan.name}</h3>
+                      <p className="landing-sector-copy">{plan.summary}</p>
+
+                      <p className="landing-plan-price">
+                        EUR {plan.monthlyPrice}
+                        <small>/mo</small>
                       </p>
-                      <div className="mt-5 space-y-2">
-                        {plan.features.slice(0, 4).map((feature) => (
-                          <div
-                            className="rounded-2xl border border-white/8 bg-black/20 px-3 py-3 text-sm text-slate-300"
-                            key={feature}
-                          >
-                            {feature}
+                      <p className="landing-subtle-note">
+                        {plan.annualPrice > 0
+                          ? `EUR ${plan.annualPrice} yearly`
+                          : "Free validation lane"}
+                      </p>
+
+                      <div className="landing-plan-feature-list">
+                        {plan.features.slice(0, 3).map((feature) => (
+                          <div className="landing-plan-feature-item" key={feature}>
+                            <ShieldCheck className="h-4 w-4" />
+                            <span>{feature}</span>
                           </div>
                         ))}
                       </div>
+
                       <button
-                        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-amber-300/20 bg-[linear-gradient(135deg,rgba(214,154,47,0.94),rgba(255,215,122,0.96))] px-4 py-3 text-sm font-bold text-[#1b120d] shadow-[0_16px_34px_rgba(214,154,47,0.22)] transition hover:brightness-105"
-                        onClick={() =>
-                          openRegisterForPlan(plan, activeSector?.slug || "business")
-                        }
+                        className={`landing-plan-action ${
+                          plan.featured
+                            ? "executive-button-primary"
+                            : "executive-button-secondary"
+                        }`}
+                        onClick={() => {
+                          if (activeSector) {
+                            openRegisterForSector(activeSector, plan);
+                            return;
+                          }
+
+                          openLandingView("access");
+                        }}
                         type="button"
                       >
-                        Choose plan
+                        {plan.slug === "free"
+                          ? "Start free validation"
+                          : `Start with ${plan.name}`}
                       </button>
                     </article>
                   ))}
                 </div>
-              </section>
+                </motion.section>
+              ) : null}
 
-              <section className="grid gap-6 xl:grid-cols-[0.94fr_1.06fr]">
-                <article className="relative overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.24)] sm:p-6">
-                  <div className="pointer-events-none absolute -right-12 bottom-0 h-40 w-40 rounded-full bg-emerald-300/10 blur-3xl" />
-                  <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
-                    <Workflow className="h-3.5 w-3.5" />
-                    Support flow
-                  </span>
-                  <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                    Free validation first, managed plans after that
+              {!showLandingAccessPage ? (
+                <motion.section
+                  animate={{ opacity: 1, y: 0 }}
+                  className="landing-access-strip executive-surface"
+                  initial={{ opacity: 0, y: 16 }}
+                  transition={{ delay: 0.22, duration: 0.46 }}
+                >
+                <div>
+                  <span className="landing-inline-label">Next step</span>
+                  <h2 className="landing-section-title">
+                    When the device wins, open buyer access
                   </h2>
-                  <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
-                    The public entry stays simple now: pick a sector, validate the free
-                    lane instantly, or send a paid plan request for admin approval and
-                    SC card linking.
+                  <p className="landing-section-copy">
+                    Keep the last action simple: go to login or go back to the
+                    device stage.
                   </p>
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    {[
-                      [
-                        "Step 1",
-                        "Choose the sector",
-                        "Open Commercial AI, Business AI, Healthcare AI, or Industry 4.0 and match the device story first.",
-                      ],
-                      [
-                        "Step 2",
-                        "Use free validation",
-                        "Free access codes can be validated directly from the animated SC card without payment.",
-                      ],
-                      [
-                        "Step 3",
-                        "Request paid plan",
-                        "Starter, Professional, Business, Platinum, and Platinum+ go through contact-admin approval.",
-                      ],
-                      [
-                        "Step 4",
-                        "Admin links the card",
-                        "After approval, the admin board links the SC card and moves the workspace toward activation.",
-                      ],
-                    ].map(([step, title, detail]) => (
-                      <div
-                        className="rounded-[26px] border border-white/10 bg-white/[0.04] p-4"
-                        key={title}
-                      >
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          {step}
-                        </p>
-                        <h3 className="mt-2 text-lg font-bold text-white">{title}</h3>
-                        <p className="mt-2 text-sm leading-7 text-slate-300">{detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <button
-                      className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
-                      onClick={() => openLandingView("access")}
-                      type="button"
-                    >
-                      Open access layer
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                    <button
-                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-bold text-white transition hover:bg-white/[0.08]"
-                      onClick={() => openLandingView("plans")}
-                      type="button"
-                    >
-                      Review plans
-                    </button>
-                  </div>
-                </article>
-
-                <div className="space-y-6">
-                  <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(10,18,32,0.94),rgba(7,12,22,0.9))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Integrations
-                        </p>
-                        <h3 className="mt-2 text-2xl font-black text-white">
-                          Frontend + backend + hardware
-                        </h3>
-                      </div>
-                      <Globe2 className="h-6 w-6 text-cyan-200" />
-                    </div>
-                    <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                      {[
-                        ...landingContent.integrations.protocols,
-                        ...landingContent.integrations.platforms.slice(0, 3),
-                        ...landingContent.integrations.cloudPartners.slice(0, 3),
-                      ].map((item) => (
-                        <div
-                          className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-semibold text-slate-200"
-                          key={item}
-                        >
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-                  </article>
-
                 </div>
-              </section>
-              </div>
+
+                <div className="landing-access-strip-actions">
+                  <button
+                    className="executive-button-primary"
+                    onClick={() => openLandingView("access")}
+                    type="button"
+                  >
+                    Open login
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                  <button
+                    className="executive-button-secondary"
+                    onClick={() => openLandingView("devices")}
+                    type="button"
+                  >
+                    Back to the device
+                  </button>
+                </div>
+                </motion.section>
+              ) : null}
             </main>
           ) : (
             <main
@@ -2511,11 +2535,11 @@ function App() {
               id="system-center"
             >
               <aside className="dashboard-sidebar-rail">
-                <div className="dashboard-sidebar-shell flex flex-col gap-5 rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-                  <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-4">
+                <div className="dashboard-sidebar-shell workspace-sidebar-shell flex flex-col gap-5 rounded-[32px] p-5 backdrop-blur-xl">
+                  <div className="workspace-summary-card">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
+                        <span className="workspace-badge">
                           <ShieldCheck className="h-3.5 w-3.5" />
                           {authSession.user.role === "admin"
                             ? "Admin control center"
@@ -2529,9 +2553,9 @@ function App() {
                         </p>
                       </div>
 
-                      <div className="rounded-2xl border border-emerald-400/15 bg-emerald-400/10 px-3 py-2 text-right">
-                        <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-200">
-                          <span className="h-2 w-2 rounded-full bg-emerald-300" />
+                      <div className="workspace-route-card text-right">
+                        <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-100">
+                          <span className="h-2 w-2 rounded-full bg-[#d6b37a]" />
                           Live
                         </div>
                         <p className="mt-2 break-words text-sm font-semibold text-white">
@@ -2586,7 +2610,7 @@ function App() {
                           Workspace navigation
                         </h3>
                       </div>
-                      <Globe2 className="h-5 w-5 text-cyan-200" />
+                      <Globe2 className="workspace-icon h-5 w-5" />
                     </div>
 
                     <div className="mt-4 space-y-3">
@@ -2598,7 +2622,7 @@ function App() {
                           <button
                             className={`group flex w-full items-center gap-3 rounded-[24px] border px-4 py-3 text-left transition ${
                               isActive
-                                ? "border-cyan-400/25 bg-cyan-400/10 shadow-[0_16px_35px_rgba(34,211,238,0.12)]"
+                                ? "workspace-nav-button-active"
                                 : "border-white/10 bg-white/[0.04] hover:-translate-y-0.5 hover:bg-white/[0.07]"
                             }`}
                             key={item.target}
@@ -2608,7 +2632,7 @@ function App() {
                             <span
                               className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition ${
                                 isActive
-                                  ? "border-cyan-300/25 bg-cyan-400/12 text-cyan-100"
+                                  ? "workspace-nav-icon-active"
                                   : "border-white/10 bg-black/20 text-slate-300 group-hover:text-white"
                               }`}
                             >
@@ -2623,7 +2647,7 @@ function App() {
                                 <span
                                   className={`max-w-[8.5rem] truncate rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${
                                     isActive
-                                      ? "bg-cyan-300 text-slate-950"
+                                      ? "workspace-nav-meta-active"
                                       : "bg-white/[0.06] text-slate-300"
                                   }`}
                                 >
@@ -2638,8 +2662,8 @@ function App() {
                             <ArrowRight
                               className={`h-4 w-4 shrink-0 transition ${
                                 isActive
-                                  ? "translate-x-0 text-cyan-100"
-                                  : "text-slate-500 group-hover:translate-x-0.5 group-hover:text-cyan-200"
+                                  ? "workspace-nav-arrow-active translate-x-0"
+                                  : "text-slate-500 group-hover:translate-x-0.5 group-hover:text-slate-200"
                               }`}
                             />
                           </button>
@@ -2648,7 +2672,7 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="mt-auto rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,45,33,0.38),rgba(5,11,21,0.94))] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.22)]">
+                  <div className="workspace-help-card mt-auto rounded-[28px] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.22)]">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
@@ -2658,7 +2682,7 @@ function App() {
                           {dashboardHelpTitle}
                         </h3>
                       </div>
-                      <ServerCog className="h-5 w-5 text-cyan-200" />
+                      <ServerCog className="workspace-help-icon h-5 w-5" />
                     </div>
 
                     <p className="mt-3 text-sm leading-6 text-slate-300">
@@ -2676,7 +2700,7 @@ function App() {
                             onClick={() => scrollToSection(action.target)}
                             type="button"
                           >
-                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-cyan-100">
+                            <span className="workspace-help-icon-shell flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05]">
                               <Icon className="h-4 w-4" />
                             </span>
 
@@ -2685,10 +2709,10 @@ function App() {
                                 <strong className="min-w-0 pr-2 text-sm leading-5 text-white">
                                   {action.title}
                                 </strong>
-                                <span className="max-w-[7.5rem] truncate rounded-full bg-white/[0.06] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100">
-                                  {action.status}
+                                  <span className="workspace-help-status max-w-[7.5rem] truncate rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em]">
+                                    {action.status}
+                                  </span>
                                 </span>
-                              </span>
                               <span className="mt-1 block text-xs leading-5 text-slate-400">
                                 {action.detail}
                               </span>
@@ -2700,7 +2724,7 @@ function App() {
 
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       <button
-                        className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+                        className="executive-button-primary"
                         onClick={() => void loadSystemOverview()}
                         type="button"
                       >
@@ -2708,7 +2732,7 @@ function App() {
                         {systemLoading ? "Refreshing..." : "Refresh"}
                       </button>
                       <button
-                        className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-bold text-white transition hover:bg-white/[0.1]"
+                        className="executive-button-secondary"
                         onClick={handleSignOut}
                         type="button"
                       >
@@ -2723,14 +2747,14 @@ function App() {
               <div className="system-center-content min-w-0 space-y-6">
                 <motion.section
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:p-7"
+                  className="executive-surface p-6 sm:p-7"
                   id="system-overview"
                   initial={{ opacity: 0, y: 22 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                     <div className="max-w-3xl">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
+                      <span className="workspace-badge">
                         <Sparkles className="h-3.5 w-3.5" />
                         {authSession.user.role === "admin"
                           ? "Full system visibility"
@@ -2738,8 +2762,8 @@ function App() {
                       </span>
                       <h1 className="mt-5 text-4xl font-black tracking-tight text-white sm:text-5xl">
                         {authSession.user.role === "admin"
-                          ? "Dark control surface for brAIn operations."
-                          : "Hardware, cloud, validation, and client activity in one system."}
+                          ? "Operational control for accounts, services, and approvals."
+                          : "Client activity, payments, access, and support in one workspace."}
                       </h1>
                       <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
                         {authSession.user.role === "admin"
@@ -2750,7 +2774,7 @@ function App() {
 
                     <div className="flex flex-wrap gap-3">
                       <button
-                        className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+                        className="executive-button-primary"
                         onClick={() => void loadSystemOverview()}
                         type="button"
                       >
@@ -2758,7 +2782,7 @@ function App() {
                         {systemLoading ? "Refreshing..." : "Refresh system"}
                       </button>
                       <button
-                        className="inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-500/10 px-5 py-3 text-sm font-bold text-red-100 transition hover:bg-red-500/15"
+                        className="executive-button-secondary border-red-400/20 bg-red-500/10 text-red-100 hover:bg-red-500/15"
                         onClick={handleSignOut}
                         type="button"
                       >
@@ -2785,10 +2809,7 @@ function App() {
 
                 <section className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
                   {primaryMetrics.map((metric) => (
-                    <article
-                      className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(10,18,32,0.94),rgba(7,12,22,0.9))] p-5 shadow-[0_18px_60px_rgba(0,0,0,0.2)]"
-                      key={metric.key}
-                    >
+                    <article className="executive-metric-card" key={metric.key}>
                       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                         {metric.label}
                       </p>
@@ -3014,8 +3035,7 @@ function App() {
                         Sector architecture
                       </span>
                       <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                        1. Commercial AI, 2. Business AI, 3. Healthcare AI, 4.
-                        Industry 4.0 AI
+                        Commercial, Business, Healthcare, and Industry 4.0
                       </h2>
                     </div>
 
@@ -3980,13 +4000,11 @@ function App() {
                             <div className="overflow-hidden rounded-[24px] border border-cyan-400/15 bg-[linear-gradient(135deg,rgba(28,79,56,0.92),rgba(5,11,21,0.96))] p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
                               <div className="flex items-center gap-4">
                                 <div className="flex h-20 w-20 items-center justify-center rounded-[22px] border border-white/10 bg-black/20">
-                                  <div className="scale-[1.12]">
-                                    <PeekBuddy />
-                                  </div>
+                                  <ShieldCheck className="h-9 w-9 text-cyan-100" />
                                 </div>
                                 <div className="min-w-0">
                                   <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/70">
-                                    Peti sugar glider
+                                    Client guidance
                                   </p>
                                   <h3 className="mt-2 text-lg font-black text-white">
                                     Live popup support

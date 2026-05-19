@@ -1,0 +1,1050 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/SectorLiveBoard.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6da7cc98";
+import { Activity, Cpu, HardDrive, ShieldCheck, Sparkles, Wifi } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=a3ee757b";
+const sectorPlanMap = {
+    commercial: [
+        "starter",
+        "professional"
+    ],
+    business: [
+        "business",
+        "professional"
+    ],
+    healthcare: [
+        "professional",
+        "business"
+    ],
+    industry: [
+        "platinum",
+        "business"
+    ]
+};
+function hexToRgba(hex, alpha) {
+    const normalized = hex.replace("#", "");
+    if (normalized.length !== 6) {
+        return `rgba(120, 215, 171, ${alpha})`;
+    }
+    const red = Number.parseInt(normalized.slice(0, 2), 16);
+    const green = Number.parseInt(normalized.slice(2, 4), 16);
+    const blue = Number.parseInt(normalized.slice(4, 6), 16);
+    return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+function getRecommendedPlans(sector, plans) {
+    const preferred = sectorPlanMap[sector.slug] ?? [];
+    const ordered = preferred.map((slug)=>plans.find((plan)=>plan.slug === slug)).filter((plan)=>Boolean(plan));
+    return ordered.length > 0 ? ordered : plans.filter((plan)=>plan.featured).slice(0, 2);
+}
+function getShellStyle(accent) {
+    return {
+        borderColor: `${accent}3a`,
+        background: `radial-gradient(circle at top right, ${hexToRgba(accent, 0.2)}, transparent 28%), linear-gradient(180deg, rgba(10,20,18,0.98), rgba(3,8,7,0.96))`,
+        boxShadow: `0 20px 60px ${hexToRgba(accent, 0.14)}`
+    };
+}
+function getGlassStyle(accent) {
+    return {
+        borderColor: `${accent}2f`,
+        background: `linear-gradient(180deg, ${hexToRgba(accent, 0.14)}, rgba(255,255,255,0.03))`
+    };
+}
+function getMiniShellStyle(accent, mode) {
+    if (mode === "screen") {
+        return {
+            background: `radial-gradient(circle at top right, ${hexToRgba(accent, 0.16)}, transparent 32%), linear-gradient(180deg, rgba(7,16,27,0.98), rgba(3,8,16,0.96))`
+        };
+    }
+    return {
+        borderColor: `${accent}30`,
+        background: `radial-gradient(circle at top right, ${hexToRgba(accent, 0.18)}, transparent 34%), linear-gradient(180deg, rgba(8,18,16,0.98), rgba(3,8,7,0.96))`,
+        boxShadow: `0 18px 44px ${hexToRgba(accent, 0.12)}`
+    };
+}
+export function SectorLiveMiniBoard({ className = "", dense = false, device, mode = "card", plans = [], sector }) {
+    const recommendedPlans = getRecommendedPlans(sector, plans).slice(0, 2);
+    const metrics = device?.metrics.slice(0, dense ? 2 : 3) ?? [
+        {
+            label: "Mode",
+            value: sector.statValue
+        },
+        {
+            label: "Focus",
+            value: sector.capabilities[0] ?? "Live runtime"
+        }
+    ];
+    const bars = dense ? [
+        34,
+        58,
+        76,
+        52,
+        84
+    ] : [
+        42,
+        60,
+        78,
+        56,
+        86
+    ];
+    const portLabels = device?.ports.slice(0, dense ? 2 : 3) ?? [
+        "Cloud",
+        "Sync"
+    ];
+    const planLabels = recommendedPlans.length > 0 ? recommendedPlans.map((plan)=>plan.name) : sector.capabilities.slice(0, 2);
+    const shellClass = [
+        "relative overflow-hidden",
+        mode === "screen" ? "h-full rounded-[1.7rem] px-3 py-3" : "rounded-[24px] border p-4",
+        className
+    ].filter(Boolean).join(" ");
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: shellClass,
+        style: getMiniShellStyle(sector.accent, mode),
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "pointer-events-none absolute -right-8 top-0 h-24 w-24 rounded-full blur-3xl",
+                style: {
+                    background: hexToRgba(sector.accent, 0.18)
+                }
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                lineNumber: 133,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "relative flex h-full flex-col gap-3",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "flex items-start justify-between gap-3",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "min-w-0",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        className: "text-[10px] uppercase tracking-[0.24em] text-slate-500",
+                                        children: "Live runtime"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 141,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("h4", {
+                                        className: `mt-1 truncate font-black text-white ${dense ? "text-sm" : "text-base"}`,
+                                        children: device?.name ?? sector.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 144,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 140,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white",
+                                style: getGlassStyle(sector.accent),
+                                children: sector.statValue
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 153,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                        lineNumber: 139,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "grid flex-1 grid-cols-[1.08fr_0.92fr] gap-2.5",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "flex flex-col rounded-[18px] border border-white/10 bg-black/25 p-3",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex items-center justify-between gap-2 text-white",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "text-[10px] uppercase tracking-[0.18em] text-slate-500",
+                                                children: "Runtime pulse"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 164,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                                className: "h-3.5 w-3.5"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 167,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 163,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "mt-3 grid h-11 grid-cols-5 items-end gap-1.5",
+                                        children: bars.map((height, index)=>/*#__PURE__*/ _jsxDEV("div", {
+                                                className: "rounded-t-full",
+                                                style: {
+                                                    height: `${height}%`,
+                                                    background: `linear-gradient(180deg, ${hexToRgba(sector.accent, 0.95)}, ${hexToRgba(sector.accent, 0.26)})`
+                                                }
+                                            }, `${sector.slug}-mini-${index}`, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 172,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 170,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "mt-3 space-y-2",
+                                        children: metrics.map((metric)=>/*#__PURE__*/ _jsxDEV("div", {
+                                                className: "flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-1.5",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        className: "truncate pr-3 text-[10px] uppercase tracking-[0.14em] text-slate-400",
+                                                        children: metric.label
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 192,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        className: "truncate text-[11px] font-semibold text-white",
+                                                        children: metric.value
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 195,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, metric.label, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 188,
+                                                columnNumber: 17
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 186,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 162,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "grid gap-2",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-[18px] border border-white/10 bg-black/25 p-3",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "flex items-center gap-2 text-white",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV(Activity, {
+                                                        className: "h-3.5 w-3.5"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 206,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-[10px] uppercase tracking-[0.18em] text-slate-500",
+                                                        children: "Best fit"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 207,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 205,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "mt-2 text-xs font-semibold leading-5 text-white",
+                                                children: device?.suitedFor[0] ?? sector.audience
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 211,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 204,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-[18px] border border-white/10 bg-black/25 p-3",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "flex items-center gap-2 text-white",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV(Wifi, {
+                                                        className: "h-3.5 w-3.5"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 218,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-[10px] uppercase tracking-[0.18em] text-slate-500",
+                                                        children: "Plan lane"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 219,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 217,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "mt-2 flex flex-wrap gap-1.5",
+                                                children: planLabels.slice(0, 2).map((label)=>/*#__PURE__*/ _jsxDEV("span", {
+                                                        className: "rounded-full border border-white/10 bg-white/[0.05] px-2 py-1 text-[10px] font-semibold text-white",
+                                                        children: label
+                                                    }, label, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 225,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 223,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 216,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-[18px] border border-white/10 bg-black/25 p-3",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "flex items-center gap-2 text-white",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV(HardDrive, {
+                                                        className: "h-3.5 w-3.5"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 237,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-[10px] uppercase tracking-[0.18em] text-slate-500",
+                                                        children: "Ports"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 238,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 236,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "mt-2 flex flex-wrap gap-1.5",
+                                                children: portLabels.map((port)=>/*#__PURE__*/ _jsxDEV("span", {
+                                                        className: "rounded-full border border-white/10 bg-black/30 px-2 py-1 text-[10px] font-semibold text-slate-200",
+                                                        children: port
+                                                    }, port, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 244,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 242,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 235,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 203,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                        lineNumber: 161,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                lineNumber: 138,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+        lineNumber: 132,
+        columnNumber: 5
+    }, this);
+}
+_c = SectorLiveMiniBoard;
+export function SectorLiveBoard({ compact = false, device, plans, sector }) {
+    const recommendedPlans = getRecommendedPlans(sector, plans);
+    const metrics = device?.metrics.slice(0, 3) ?? [
+        {
+            label: "Mode",
+            value: sector.statValue
+        },
+        {
+            label: "Audience",
+            value: sector.audience
+        },
+        {
+            label: "Focus",
+            value: sector.capabilities[0] ?? "Live runtime"
+        }
+    ];
+    const bars = [
+        38,
+        54,
+        68,
+        82,
+        64,
+        74
+    ];
+    const shellClass = compact ? "relative overflow-hidden rounded-[28px] border p-4 sm:p-5" : "relative h-full overflow-hidden rounded-[30px] border p-5 sm:p-6";
+    const titleClass = compact ? "mt-2 text-2xl font-black text-white" : "mt-2 text-3xl font-black text-white";
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: shellClass,
+        style: getShellStyle(sector.accent),
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "pointer-events-none absolute -right-12 top-0 h-40 w-40 rounded-full blur-3xl",
+                style: {
+                    background: hexToRgba(sector.accent, 0.22)
+                }
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                lineNumber: 282,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "pointer-events-none absolute -left-12 bottom-0 h-36 w-36 rounded-full blur-3xl",
+                style: {
+                    background: hexToRgba(sector.accent, 0.16)
+                }
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                lineNumber: 286,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "relative flex h-full flex-col gap-4",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "flex flex-wrap items-start justify-between gap-3",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        className: "text-xs uppercase tracking-[0.22em] text-slate-500",
+                                        children: "Live sector board"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 294,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("h3", {
+                                        className: titleClass,
+                                        children: device?.name ?? sector.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 297,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        className: "mt-2 max-w-2xl text-sm leading-7 text-slate-300",
+                                        children: sector.title
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 298,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 293,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "flex flex-wrap gap-2",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        className: "rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white",
+                                        style: getGlassStyle(sector.accent),
+                                        children: sector.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 304,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        className: "rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-200",
+                                        children: sector.statValue
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 310,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 303,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                        lineNumber: 292,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "grid gap-4 xl:grid-cols-[0.92fr_1.08fr]",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                children: /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "rounded-[22px] border p-4",
+                                    style: getGlassStyle(sector.accent),
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "flex items-center justify-between gap-3",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV("p", {
+                                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                            children: "Device anchor"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 324,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ _jsxDEV("p", {
+                                                            className: "mt-2 text-lg font-black text-white",
+                                                            children: device?.name ?? "brAIn runtime"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 327,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                    lineNumber: 323,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    className: "rounded-2xl border border-white/10 bg-black/20 p-3 text-white",
+                                                    children: /*#__PURE__*/ _jsxDEV(Cpu, {
+                                                        className: "h-5 w-5"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 332,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                    lineNumber: 331,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                            lineNumber: 322,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "mt-4 rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(0,0,0,0.18))] p-4",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    className: "flex items-center justify-between gap-3",
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV("span", {
+                                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                            children: "Runtime chassis"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 338,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ _jsxDEV(HardDrive, {
+                                                            className: "h-4 w-4 text-slate-300"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 341,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                    lineNumber: 337,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    className: "mt-4 grid grid-cols-[1fr_auto] gap-4",
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV("div", {
+                                                            className: "space-y-3",
+                                                            children: [
+                                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                                    className: "h-3 rounded-full bg-white/[0.08]"
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                    lineNumber: 345,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                                    className: "h-3 w-4/5 rounded-full bg-white/[0.08]"
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                    lineNumber: 346,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                                    className: "h-3 w-3/5 rounded-full bg-white/[0.08]"
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                    lineNumber: 347,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 344,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ _jsxDEV("div", {
+                                                            className: "grid gap-2",
+                                                            children: [
+                                                                /*#__PURE__*/ _jsxDEV("span", {
+                                                                    className: "h-3 w-3 rounded-full",
+                                                                    style: {
+                                                                        background: sector.accent
+                                                                    }
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                    lineNumber: 350,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ _jsxDEV("span", {
+                                                                    className: "h-3 w-3 rounded-full bg-emerald-300"
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                    lineNumber: 354,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ _jsxDEV("span", {
+                                                                    className: "h-3 w-3 rounded-full bg-amber-300"
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                    lineNumber: 355,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 349,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                    lineNumber: 343,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                            lineNumber: 336,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "mt-4 grid gap-3 sm:grid-cols-2",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    className: "rounded-2xl border border-white/10 bg-black/20 p-3",
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV("p", {
+                                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                            children: "Best fit"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 362,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ _jsxDEV("p", {
+                                                            className: "mt-2 text-sm font-semibold leading-7 text-white",
+                                                            children: device?.suitedFor[0] ?? sector.audience
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 365,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                    lineNumber: 361,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    className: "rounded-2xl border border-white/10 bg-black/20 p-3",
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV("p", {
+                                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                            children: "Ports"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 370,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ _jsxDEV("p", {
+                                                            className: "mt-2 text-sm font-semibold leading-7 text-white",
+                                                            children: device?.ports.slice(0, 3).join(" / ") ?? "Cloud runtime"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                            lineNumber: 373,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                    lineNumber: 369,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                            lineNumber: 360,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                    lineNumber: 318,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 317,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "space-y-4",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-[24px] border p-4",
+                                        style: getGlassStyle(sector.accent),
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "flex items-center justify-between gap-3",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                                children: "Runtime pulse"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 388,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("h4", {
+                                                                className: "mt-2 text-xl font-black text-white",
+                                                                children: sector.summary
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 391,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 387,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                                        className: "h-5 w-5 text-white"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 395,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 386,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "mt-4 grid gap-3 md:grid-cols-3",
+                                                children: metrics.map((metric)=>/*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "rounded-2xl border border-white/10 bg-black/20 p-3",
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                className: "text-[11px] uppercase tracking-[0.18em] text-slate-500",
+                                                                children: metric.label
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 404,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                className: "mt-2 text-sm font-bold text-white",
+                                                                children: metric.value
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 407,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, metric.label, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 400,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 398,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "mt-4 grid h-24 grid-cols-6 items-end gap-2 rounded-2xl border border-white/10 bg-black/20 p-3",
+                                                children: bars.map((height, index)=>/*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "rounded-t-full",
+                                                        style: {
+                                                            height: `${height}%`,
+                                                            background: `linear-gradient(180deg, ${hexToRgba(sector.accent, 0.95)}, ${hexToRgba(sector.accent, 0.28)})`
+                                                        }
+                                                    }, `${sector.slug}-${index}`, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 414,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 412,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 382,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "grid gap-3 sm:grid-cols-2",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "rounded-[22px] border border-white/10 bg-black/20 p-4",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "flex items-center gap-2 text-white",
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV(Activity, {
+                                                                className: "h-4 w-4"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 432,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                className: "text-xs uppercase tracking-[0.18em] text-slate-400",
+                                                                children: "Recommended plans"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 433,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 431,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "mt-3 space-y-2",
+                                                        children: recommendedPlans.slice(0, 2).map((plan)=>/*#__PURE__*/ _jsxDEV("div", {
+                                                                className: "rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm font-semibold text-white",
+                                                                children: plan.name
+                                                            }, plan.slug, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 439,
+                                                                columnNumber: 21
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 437,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 430,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "rounded-[22px] border border-white/10 bg-black/20 p-4",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "flex items-center gap-2 text-white",
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV(Wifi, {
+                                                                className: "h-4 w-4"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 451,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                className: "text-xs uppercase tracking-[0.18em] text-slate-400",
+                                                                children: "Deployment fit"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                                lineNumber: 452,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 450,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-3 text-sm font-semibold leading-7 text-white",
+                                                        children: sector.audience
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                        lineNumber: 456,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                                lineNumber: 449,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                        lineNumber: 429,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 381,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                        lineNumber: 316,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "grid gap-3 md:grid-cols-2",
+                        children: sector.capabilities.slice(0, compact ? 3 : 4).map((capability)=>/*#__PURE__*/ _jsxDEV("div", {
+                                className: "rounded-[20px] border border-white/10 bg-black/20 px-4 py-3",
+                                children: /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "flex items-center gap-3",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                                            className: "h-4 w-4 text-white"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                            lineNumber: 471,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("p", {
+                                            className: "text-sm font-semibold text-white",
+                                            children: capability
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                            lineNumber: 472,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                    lineNumber: 470,
+                                    columnNumber: 15
+                                }, this)
+                            }, capability, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                                lineNumber: 466,
+                                columnNumber: 13
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                        lineNumber: 464,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+                lineNumber: 291,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx",
+        lineNumber: 281,
+        columnNumber: 5
+    }, this);
+}
+_c1 = SectorLiveBoard;
+var _c, _c1;
+$RefreshReg$(_c, "SectorLiveMiniBoard");
+$RefreshReg$(_c1, "SectorLiveBoard");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/SectorLiveBoard.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlNlY3RvckxpdmVCb2FyZC50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHR5cGUgeyBDU1NQcm9wZXJ0aWVzIH0gZnJvbSBcInJlYWN0XCI7XG5pbXBvcnQge1xuICBBY3Rpdml0eSxcbiAgQ3B1LFxuICBIYXJkRHJpdmUsXG4gIFNoaWVsZENoZWNrLFxuICBTcGFya2xlcyxcbiAgV2lmaSxcbn0gZnJvbSBcImx1Y2lkZS1yZWFjdFwiO1xuaW1wb3J0IHR5cGUgeyBEZXZpY2UsIFBsYW4sIFNlY3RvciB9IGZyb20gXCIuLi90eXBlc1wiO1xuXG50eXBlIFNlY3RvckxpdmVCb2FyZFByb3BzID0ge1xuICBjb21wYWN0PzogYm9vbGVhbjtcbiAgZGV2aWNlOiBEZXZpY2UgfCBudWxsO1xuICBwbGFuczogUGxhbltdO1xuICBzZWN0b3I6IFNlY3Rvcjtcbn07XG5cbnR5cGUgU2VjdG9yTGl2ZU1pbmlCb2FyZFByb3BzID0ge1xuICBjbGFzc05hbWU/OiBzdHJpbmc7XG4gIGRlbnNlPzogYm9vbGVhbjtcbiAgZGV2aWNlOiBEZXZpY2UgfCBudWxsO1xuICBtb2RlPzogXCJjYXJkXCIgfCBcInNjcmVlblwiO1xuICBwbGFucz86IFBsYW5bXTtcbiAgc2VjdG9yOiBTZWN0b3I7XG59O1xuXG5jb25zdCBzZWN0b3JQbGFuTWFwOiBSZWNvcmQ8c3RyaW5nLCBzdHJpbmdbXT4gPSB7XG4gIGNvbW1lcmNpYWw6IFtcInN0YXJ0ZXJcIiwgXCJwcm9mZXNzaW9uYWxcIl0sXG4gIGJ1c2luZXNzOiBbXCJidXNpbmVzc1wiLCBcInByb2Zlc3Npb25hbFwiXSxcbiAgaGVhbHRoY2FyZTogW1wicHJvZmVzc2lvbmFsXCIsIFwiYnVzaW5lc3NcIl0sXG4gIGluZHVzdHJ5OiBbXCJwbGF0aW51bVwiLCBcImJ1c2luZXNzXCJdLFxufTtcblxuZnVuY3Rpb24gaGV4VG9SZ2JhKGhleDogc3RyaW5nLCBhbHBoYTogbnVtYmVyKSB7XG4gIGNvbnN0IG5vcm1hbGl6ZWQgPSBoZXgucmVwbGFjZShcIiNcIiwgXCJcIik7XG5cbiAgaWYgKG5vcm1hbGl6ZWQubGVuZ3RoICE9PSA2KSB7XG4gICAgcmV0dXJuIGByZ2JhKDEyMCwgMjE1LCAxNzEsICR7YWxwaGF9KWA7XG4gIH1cblxuICBjb25zdCByZWQgPSBOdW1iZXIucGFyc2VJbnQobm9ybWFsaXplZC5zbGljZSgwLCAyKSwgMTYpO1xuICBjb25zdCBncmVlbiA9IE51bWJlci5wYXJzZUludChub3JtYWxpemVkLnNsaWNlKDIsIDQpLCAxNik7XG4gIGNvbnN0IGJsdWUgPSBOdW1iZXIucGFyc2VJbnQobm9ybWFsaXplZC5zbGljZSg0LCA2KSwgMTYpO1xuXG4gIHJldHVybiBgcmdiYSgke3JlZH0sICR7Z3JlZW59LCAke2JsdWV9LCAke2FscGhhfSlgO1xufVxuXG5mdW5jdGlvbiBnZXRSZWNvbW1lbmRlZFBsYW5zKHNlY3RvcjogU2VjdG9yLCBwbGFuczogUGxhbltdKSB7XG4gIGNvbnN0IHByZWZlcnJlZCA9IHNlY3RvclBsYW5NYXBbc2VjdG9yLnNsdWddID8/IFtdO1xuICBjb25zdCBvcmRlcmVkID0gcHJlZmVycmVkXG4gICAgLm1hcCgoc2x1ZykgPT4gcGxhbnMuZmluZCgocGxhbikgPT4gcGxhbi5zbHVnID09PSBzbHVnKSlcbiAgICAuZmlsdGVyKChwbGFuKTogcGxhbiBpcyBQbGFuID0+IEJvb2xlYW4ocGxhbikpO1xuXG4gIHJldHVybiBvcmRlcmVkLmxlbmd0aCA+IDAgPyBvcmRlcmVkIDogcGxhbnMuZmlsdGVyKChwbGFuKSA9PiBwbGFuLmZlYXR1cmVkKS5zbGljZSgwLCAyKTtcbn1cblxuZnVuY3Rpb24gZ2V0U2hlbGxTdHlsZShhY2NlbnQ6IHN0cmluZyk6IENTU1Byb3BlcnRpZXMge1xuICByZXR1cm4ge1xuICAgIGJvcmRlckNvbG9yOiBgJHthY2NlbnR9M2FgLFxuICAgIGJhY2tncm91bmQ6IGByYWRpYWwtZ3JhZGllbnQoY2lyY2xlIGF0IHRvcCByaWdodCwgJHtoZXhUb1JnYmEoXG4gICAgICBhY2NlbnQsXG4gICAgICAwLjIsXG4gICAgKX0sIHRyYW5zcGFyZW50IDI4JSksIGxpbmVhci1ncmFkaWVudCgxODBkZWcsIHJnYmEoMTAsMjAsMTgsMC45OCksIHJnYmEoMyw4LDcsMC45NikpYCxcbiAgICBib3hTaGFkb3c6IGAwIDIwcHggNjBweCAke2hleFRvUmdiYShhY2NlbnQsIDAuMTQpfWAsXG4gIH07XG59XG5cbmZ1bmN0aW9uIGdldEdsYXNzU3R5bGUoYWNjZW50OiBzdHJpbmcpOiBDU1NQcm9wZXJ0aWVzIHtcbiAgcmV0dXJuIHtcbiAgICBib3JkZXJDb2xvcjogYCR7YWNjZW50fTJmYCxcbiAgICBiYWNrZ3JvdW5kOiBgbGluZWFyLWdyYWRpZW50KDE4MGRlZywgJHtoZXhUb1JnYmEoXG4gICAgICBhY2NlbnQsXG4gICAgICAwLjE0LFxuICAgICl9LCByZ2JhKDI1NSwyNTUsMjU1LDAuMDMpKWAsXG4gIH07XG59XG5cbmZ1bmN0aW9uIGdldE1pbmlTaGVsbFN0eWxlKFxuICBhY2NlbnQ6IHN0cmluZyxcbiAgbW9kZTogU2VjdG9yTGl2ZU1pbmlCb2FyZFByb3BzW1wibW9kZVwiXSxcbik6IENTU1Byb3BlcnRpZXMge1xuICBpZiAobW9kZSA9PT0gXCJzY3JlZW5cIikge1xuICAgIHJldHVybiB7XG4gICAgICBiYWNrZ3JvdW5kOiBgcmFkaWFsLWdyYWRpZW50KGNpcmNsZSBhdCB0b3AgcmlnaHQsICR7aGV4VG9SZ2JhKFxuICAgICAgICBhY2NlbnQsXG4gICAgICAgIDAuMTYsXG4gICAgICApfSwgdHJhbnNwYXJlbnQgMzIlKSwgbGluZWFyLWdyYWRpZW50KDE4MGRlZywgcmdiYSg3LDE2LDI3LDAuOTgpLCByZ2JhKDMsOCwxNiwwLjk2KSlgLFxuICAgIH07XG4gIH1cblxuICByZXR1cm4ge1xuICAgIGJvcmRlckNvbG9yOiBgJHthY2NlbnR9MzBgLFxuICAgIGJhY2tncm91bmQ6IGByYWRpYWwtZ3JhZGllbnQoY2lyY2xlIGF0IHRvcCByaWdodCwgJHtoZXhUb1JnYmEoXG4gICAgICBhY2NlbnQsXG4gICAgICAwLjE4LFxuICAgICl9LCB0cmFuc3BhcmVudCAzNCUpLCBsaW5lYXItZ3JhZGllbnQoMTgwZGVnLCByZ2JhKDgsMTgsMTYsMC45OCksIHJnYmEoMyw4LDcsMC45NikpYCxcbiAgICBib3hTaGFkb3c6IGAwIDE4cHggNDRweCAke2hleFRvUmdiYShhY2NlbnQsIDAuMTIpfWAsXG4gIH07XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBTZWN0b3JMaXZlTWluaUJvYXJkKHtcbiAgY2xhc3NOYW1lID0gXCJcIixcbiAgZGVuc2UgPSBmYWxzZSxcbiAgZGV2aWNlLFxuICBtb2RlID0gXCJjYXJkXCIsXG4gIHBsYW5zID0gW10sXG4gIHNlY3Rvcixcbn06IFNlY3RvckxpdmVNaW5pQm9hcmRQcm9wcykge1xuICBjb25zdCByZWNvbW1lbmRlZFBsYW5zID0gZ2V0UmVjb21tZW5kZWRQbGFucyhzZWN0b3IsIHBsYW5zKS5zbGljZSgwLCAyKTtcbiAgY29uc3QgbWV0cmljcyA9IGRldmljZT8ubWV0cmljcy5zbGljZSgwLCBkZW5zZSA/IDIgOiAzKSA/PyBbXG4gICAgeyBsYWJlbDogXCJNb2RlXCIsIHZhbHVlOiBzZWN0b3Iuc3RhdFZhbHVlIH0sXG4gICAgeyBsYWJlbDogXCJGb2N1c1wiLCB2YWx1ZTogc2VjdG9yLmNhcGFiaWxpdGllc1swXSA/PyBcIkxpdmUgcnVudGltZVwiIH0sXG4gIF07XG4gIGNvbnN0IGJhcnMgPSBkZW5zZSA/IFszNCwgNTgsIDc2LCA1MiwgODRdIDogWzQyLCA2MCwgNzgsIDU2LCA4Nl07XG4gIGNvbnN0IHBvcnRMYWJlbHMgPSBkZXZpY2U/LnBvcnRzLnNsaWNlKDAsIGRlbnNlID8gMiA6IDMpID8/IFtcIkNsb3VkXCIsIFwiU3luY1wiXTtcbiAgY29uc3QgcGxhbkxhYmVscyA9XG4gICAgcmVjb21tZW5kZWRQbGFucy5sZW5ndGggPiAwXG4gICAgICA/IHJlY29tbWVuZGVkUGxhbnMubWFwKChwbGFuKSA9PiBwbGFuLm5hbWUpXG4gICAgICA6IHNlY3Rvci5jYXBhYmlsaXRpZXMuc2xpY2UoMCwgMik7XG4gIGNvbnN0IHNoZWxsQ2xhc3MgPSBbXG4gICAgXCJyZWxhdGl2ZSBvdmVyZmxvdy1oaWRkZW5cIixcbiAgICBtb2RlID09PSBcInNjcmVlblwiXG4gICAgICA/IFwiaC1mdWxsIHJvdW5kZWQtWzEuN3JlbV0gcHgtMyBweS0zXCJcbiAgICAgIDogXCJyb3VuZGVkLVsyNHB4XSBib3JkZXIgcC00XCIsXG4gICAgY2xhc3NOYW1lLFxuICBdXG4gICAgLmZpbHRlcihCb29sZWFuKVxuICAgIC5qb2luKFwiIFwiKTtcblxuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPXtzaGVsbENsYXNzfSBzdHlsZT17Z2V0TWluaVNoZWxsU3R5bGUoc2VjdG9yLmFjY2VudCwgbW9kZSl9PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9XCJwb2ludGVyLWV2ZW50cy1ub25lIGFic29sdXRlIC1yaWdodC04IHRvcC0wIGgtMjQgdy0yNCByb3VuZGVkLWZ1bGwgYmx1ci0zeGxcIlxuICAgICAgICBzdHlsZT17eyBiYWNrZ3JvdW5kOiBoZXhUb1JnYmEoc2VjdG9yLmFjY2VudCwgMC4xOCkgfX1cbiAgICAgIC8+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwicmVsYXRpdmUgZmxleCBoLWZ1bGwgZmxleC1jb2wgZ2FwLTNcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLXN0YXJ0IGp1c3RpZnktYmV0d2VlbiBnYXAtM1wiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWluLXctMFwiPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1bMTBweF0gdXBwZXJjYXNlIHRyYWNraW5nLVswLjI0ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgIExpdmUgcnVudGltZVxuICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgPGg0XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17YG10LTEgdHJ1bmNhdGUgZm9udC1ibGFjayB0ZXh0LXdoaXRlICR7XG4gICAgICAgICAgICAgICAgZGVuc2UgPyBcInRleHQtc21cIiA6IFwidGV4dC1iYXNlXCJcbiAgICAgICAgICAgICAgfWB9XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIHtkZXZpY2U/Lm5hbWUgPz8gc2VjdG9yLm5hbWV9XG4gICAgICAgICAgICA8L2g0PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPHNwYW5cbiAgICAgICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtZnVsbCBib3JkZXIgcHgtMi41IHB5LTEgdGV4dC1bOXB4XSBmb250LWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtd2hpdGVcIlxuICAgICAgICAgICAgc3R5bGU9e2dldEdsYXNzU3R5bGUoc2VjdG9yLmFjY2VudCl9XG4gICAgICAgICAgPlxuICAgICAgICAgICAge3NlY3Rvci5zdGF0VmFsdWV9XG4gICAgICAgICAgPC9zcGFuPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdyaWQgZmxleC0xIGdyaWQtY29scy1bMS4wOGZyXzAuOTJmcl0gZ2FwLTIuNVwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBmbGV4LWNvbCByb3VuZGVkLVsxOHB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzI1IHAtM1wiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWJldHdlZW4gZ2FwLTIgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LVsxMHB4XSB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMThlbV0gdGV4dC1zbGF0ZS01MDBcIj5cbiAgICAgICAgICAgICAgICBSdW50aW1lIHB1bHNlXG4gICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgPFNwYXJrbGVzIGNsYXNzTmFtZT1cImgtMy41IHctMy41XCIgLz5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTMgZ3JpZCBoLTExIGdyaWQtY29scy01IGl0ZW1zLWVuZCBnYXAtMS41XCI+XG4gICAgICAgICAgICAgIHtiYXJzLm1hcCgoaGVpZ2h0LCBpbmRleCkgPT4gKFxuICAgICAgICAgICAgICAgIDxkaXZcbiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtdC1mdWxsXCJcbiAgICAgICAgICAgICAgICAgIGtleT17YCR7c2VjdG9yLnNsdWd9LW1pbmktJHtpbmRleH1gfVxuICAgICAgICAgICAgICAgICAgc3R5bGU9e3tcbiAgICAgICAgICAgICAgICAgICAgaGVpZ2h0OiBgJHtoZWlnaHR9JWAsXG4gICAgICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6IGBsaW5lYXItZ3JhZGllbnQoMTgwZGVnLCAke2hleFRvUmdiYShcbiAgICAgICAgICAgICAgICAgICAgICBzZWN0b3IuYWNjZW50LFxuICAgICAgICAgICAgICAgICAgICAgIDAuOTUsXG4gICAgICAgICAgICAgICAgICAgICl9LCAke2hleFRvUmdiYShzZWN0b3IuYWNjZW50LCAwLjI2KX0pYCxcbiAgICAgICAgICAgICAgICAgIH19XG4gICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC0zIHNwYWNlLXktMlwiPlxuICAgICAgICAgICAgICB7bWV0cmljcy5tYXAoKG1ldHJpYykgPT4gKFxuICAgICAgICAgICAgICAgIDxkaXZcbiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiByb3VuZGVkLXhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctd2hpdGUvWzAuMDRdIHB4LTIuNSBweS0xLjVcIlxuICAgICAgICAgICAgICAgICAga2V5PXttZXRyaWMubGFiZWx9XG4gICAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidHJ1bmNhdGUgcHItMyB0ZXh0LVsxMHB4XSB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMTRlbV0gdGV4dC1zbGF0ZS00MDBcIj5cbiAgICAgICAgICAgICAgICAgICAge21ldHJpYy5sYWJlbH1cbiAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRydW5jYXRlIHRleHQtWzExcHhdIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgICB7bWV0cmljLnZhbHVlfVxuICAgICAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC0yXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtWzE4cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjUgcC0zXCI+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTIgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgIDxBY3Rpdml0eSBjbGFzc05hbWU9XCJoLTMuNSB3LTMuNVwiIC8+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1bMTBweF0gdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgICBCZXN0IGZpdFxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIm10LTIgdGV4dC14cyBmb250LXNlbWlib2xkIGxlYWRpbmctNSB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAge2RldmljZT8uc3VpdGVkRm9yWzBdID8/IHNlY3Rvci5hdWRpZW5jZX1cbiAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicm91bmRlZC1bMThweF0gYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yNSBwLTNcIj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAgPFdpZmkgY2xhc3NOYW1lPVwiaC0zLjUgdy0zLjVcIiAvPlxuICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtWzEwcHhdIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgUGxhbiBsYW5lXG4gICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC0yIGZsZXggZmxleC13cmFwIGdhcC0xLjVcIj5cbiAgICAgICAgICAgICAgICB7cGxhbkxhYmVscy5zbGljZSgwLCAyKS5tYXAoKGxhYmVsKSA9PiAoXG4gICAgICAgICAgICAgICAgICA8c3BhblxuICAgICAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJyb3VuZGVkLWZ1bGwgYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy13aGl0ZS9bMC4wNV0gcHgtMiBweS0xIHRleHQtWzEwcHhdIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiXG4gICAgICAgICAgICAgICAgICAgIGtleT17bGFiZWx9XG4gICAgICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgICAgIHtsYWJlbH1cbiAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLVsxOHB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzI1IHAtM1wiPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICA8SGFyZERyaXZlIGNsYXNzTmFtZT1cImgtMy41IHctMy41XCIgLz5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LVsxMHB4XSB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMThlbV0gdGV4dC1zbGF0ZS01MDBcIj5cbiAgICAgICAgICAgICAgICAgIFBvcnRzXG4gICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC0yIGZsZXggZmxleC13cmFwIGdhcC0xLjVcIj5cbiAgICAgICAgICAgICAgICB7cG9ydExhYmVscy5tYXAoKHBvcnQpID0+IChcbiAgICAgICAgICAgICAgICAgIDxzcGFuXG4gICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtZnVsbCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzMwIHB4LTIgcHktMSB0ZXh0LVsxMHB4XSBmb250LXNlbWlib2xkIHRleHQtc2xhdGUtMjAwXCJcbiAgICAgICAgICAgICAgICAgICAga2V5PXtwb3J0fVxuICAgICAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgICAgICB7cG9ydH1cbiAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKTtcbn1cblxuZXhwb3J0IGZ1bmN0aW9uIFNlY3RvckxpdmVCb2FyZCh7XG4gIGNvbXBhY3QgPSBmYWxzZSxcbiAgZGV2aWNlLFxuICBwbGFucyxcbiAgc2VjdG9yLFxufTogU2VjdG9yTGl2ZUJvYXJkUHJvcHMpIHtcbiAgY29uc3QgcmVjb21tZW5kZWRQbGFucyA9IGdldFJlY29tbWVuZGVkUGxhbnMoc2VjdG9yLCBwbGFucyk7XG4gIGNvbnN0IG1ldHJpY3MgPSBkZXZpY2U/Lm1ldHJpY3Muc2xpY2UoMCwgMykgPz8gW1xuICAgIHsgbGFiZWw6IFwiTW9kZVwiLCB2YWx1ZTogc2VjdG9yLnN0YXRWYWx1ZSB9LFxuICAgIHsgbGFiZWw6IFwiQXVkaWVuY2VcIiwgdmFsdWU6IHNlY3Rvci5hdWRpZW5jZSB9LFxuICAgIHsgbGFiZWw6IFwiRm9jdXNcIiwgdmFsdWU6IHNlY3Rvci5jYXBhYmlsaXRpZXNbMF0gPz8gXCJMaXZlIHJ1bnRpbWVcIiB9LFxuICBdO1xuICBjb25zdCBiYXJzID0gWzM4LCA1NCwgNjgsIDgyLCA2NCwgNzRdO1xuICBjb25zdCBzaGVsbENsYXNzID0gY29tcGFjdFxuICAgID8gXCJyZWxhdGl2ZSBvdmVyZmxvdy1oaWRkZW4gcm91bmRlZC1bMjhweF0gYm9yZGVyIHAtNCBzbTpwLTVcIlxuICAgIDogXCJyZWxhdGl2ZSBoLWZ1bGwgb3ZlcmZsb3ctaGlkZGVuIHJvdW5kZWQtWzMwcHhdIGJvcmRlciBwLTUgc206cC02XCI7XG4gIGNvbnN0IHRpdGxlQ2xhc3MgPSBjb21wYWN0XG4gICAgPyBcIm10LTIgdGV4dC0yeGwgZm9udC1ibGFjayB0ZXh0LXdoaXRlXCJcbiAgICA6IFwibXQtMiB0ZXh0LTN4bCBmb250LWJsYWNrIHRleHQtd2hpdGVcIjtcblxuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPXtzaGVsbENsYXNzfSBzdHlsZT17Z2V0U2hlbGxTdHlsZShzZWN0b3IuYWNjZW50KX0+XG4gICAgICA8ZGl2XG4gICAgICAgIGNsYXNzTmFtZT1cInBvaW50ZXItZXZlbnRzLW5vbmUgYWJzb2x1dGUgLXJpZ2h0LTEyIHRvcC0wIGgtNDAgdy00MCByb3VuZGVkLWZ1bGwgYmx1ci0zeGxcIlxuICAgICAgICBzdHlsZT17eyBiYWNrZ3JvdW5kOiBoZXhUb1JnYmEoc2VjdG9yLmFjY2VudCwgMC4yMikgfX1cbiAgICAgIC8+XG4gICAgICA8ZGl2XG4gICAgICAgIGNsYXNzTmFtZT1cInBvaW50ZXItZXZlbnRzLW5vbmUgYWJzb2x1dGUgLWxlZnQtMTIgYm90dG9tLTAgaC0zNiB3LTM2IHJvdW5kZWQtZnVsbCBibHVyLTN4bFwiXG4gICAgICAgIHN0eWxlPXt7IGJhY2tncm91bmQ6IGhleFRvUmdiYShzZWN0b3IuYWNjZW50LCAwLjE2KSB9fVxuICAgICAgLz5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJyZWxhdGl2ZSBmbGV4IGgtZnVsbCBmbGV4LWNvbCBnYXAtNFwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggZmxleC13cmFwIGl0ZW1zLXN0YXJ0IGp1c3RpZnktYmV0d2VlbiBnYXAtM1wiPlxuICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4yMmVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICBMaXZlIHNlY3RvciBib2FyZFxuICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT17dGl0bGVDbGFzc30+e2RldmljZT8ubmFtZSA/PyBzZWN0b3IubmFtZX08L2gzPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiBtYXgtdy0yeGwgdGV4dC1zbSBsZWFkaW5nLTcgdGV4dC1zbGF0ZS0zMDBcIj5cbiAgICAgICAgICAgICAge3NlY3Rvci50aXRsZX1cbiAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBmbGV4LXdyYXAgZ2FwLTJcIj5cbiAgICAgICAgICAgIDxzcGFuXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtZnVsbCBib3JkZXIgcHgtMyBweS0xIHRleHQtWzExcHhdIGZvbnQtYm9sZCB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMThlbV0gdGV4dC13aGl0ZVwiXG4gICAgICAgICAgICAgIHN0eWxlPXtnZXRHbGFzc1N0eWxlKHNlY3Rvci5hY2NlbnQpfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICB7c2VjdG9yLm5hbWV9XG4gICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJyb3VuZGVkLWZ1bGwgYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy13aGl0ZS9bMC4wNV0gcHgtMyBweS0xIHRleHQtWzExcHhdIGZvbnQtYm9sZCB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMThlbV0gdGV4dC1zbGF0ZS0yMDBcIj5cbiAgICAgICAgICAgICAge3NlY3Rvci5zdGF0VmFsdWV9XG4gICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBnYXAtNCB4bDpncmlkLWNvbHMtWzAuOTJmcl8xLjA4ZnJdXCI+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLVsyNHB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzIwIHAtNFwiPlxuICAgICAgICAgICAgPGRpdlxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJyb3VuZGVkLVsyMnB4XSBib3JkZXIgcC00XCJcbiAgICAgICAgICAgICAgc3R5bGU9e2dldEdsYXNzU3R5bGUoc2VjdG9yLmFjY2VudCl9XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGdhcC0zXCI+XG4gICAgICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgICAgIERldmljZSBhbmNob3JcbiAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIm10LTIgdGV4dC1sZyBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgICAge2RldmljZT8ubmFtZSA/PyBcImJyQUluIHJ1bnRpbWVcIn1cbiAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC0zIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgIDxDcHUgY2xhc3NOYW1lPVwiaC01IHctNVwiIC8+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXQtNCByb3VuZGVkLVsyMHB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLVtsaW5lYXItZ3JhZGllbnQoMTgwZGVnLHJnYmEoMjU1LDI1NSwyNTUsMC4wNCkscmdiYSgwLDAsMCwwLjE4KSldIHAtNFwiPlxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGdhcC0zXCI+XG4gICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgICBSdW50aW1lIGNoYXNzaXNcbiAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDxIYXJkRHJpdmUgY2xhc3NOYW1lPVwiaC00IHctNCB0ZXh0LXNsYXRlLTMwMFwiIC8+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC00IGdyaWQgZ3JpZC1jb2xzLVsxZnJfYXV0b10gZ2FwLTRcIj5cbiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic3BhY2UteS0zXCI+XG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaC0zIHJvdW5kZWQtZnVsbCBiZy13aGl0ZS9bMC4wOF1cIiAvPlxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImgtMyB3LTQvNSByb3VuZGVkLWZ1bGwgYmctd2hpdGUvWzAuMDhdXCIgLz5cbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJoLTMgdy0zLzUgcm91bmRlZC1mdWxsIGJnLXdoaXRlL1swLjA4XVwiIC8+XG4gICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBnYXAtMlwiPlxuICAgICAgICAgICAgICAgICAgICA8c3BhblxuICAgICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImgtMyB3LTMgcm91bmRlZC1mdWxsXCJcbiAgICAgICAgICAgICAgICAgICAgICBzdHlsZT17eyBiYWNrZ3JvdW5kOiBzZWN0b3IuYWNjZW50IH19XG4gICAgICAgICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImgtMyB3LTMgcm91bmRlZC1mdWxsIGJnLWVtZXJhbGQtMzAwXCIgLz5cbiAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiaC0zIHctMyByb3VuZGVkLWZ1bGwgYmctYW1iZXItMzAwXCIgLz5cbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTQgZ3JpZCBnYXAtMyBzbTpncmlkLWNvbHMtMlwiPlxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicm91bmRlZC0yeGwgYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yMCBwLTNcIj5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgICAgIEJlc3QgZml0XG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0yIHRleHQtc20gZm9udC1zZW1pYm9sZCBsZWFkaW5nLTcgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgICB7ZGV2aWNlPy5zdWl0ZWRGb3JbMF0gPz8gc2VjdG9yLmF1ZGllbmNlfVxuICAgICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicm91bmRlZC0yeGwgYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yMCBwLTNcIj5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgICAgIFBvcnRzXG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0yIHRleHQtc20gZm9udC1zZW1pYm9sZCBsZWFkaW5nLTcgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgICB7ZGV2aWNlPy5wb3J0cy5zbGljZSgwLCAzKS5qb2luKFwiIC8gXCIpID8/IFwiQ2xvdWQgcnVudGltZVwifVxuICAgICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzcGFjZS15LTRcIj5cbiAgICAgICAgICAgIDxkaXZcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwicm91bmRlZC1bMjRweF0gYm9yZGVyIHAtNFwiXG4gICAgICAgICAgICAgIHN0eWxlPXtnZXRHbGFzc1N0eWxlKHNlY3Rvci5hY2NlbnQpfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiBnYXAtM1wiPlxuICAgICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgICBSdW50aW1lIHB1bHNlXG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgICA8aDQgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LXhsIGZvbnQtYmxhY2sgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgICB7c2VjdG9yLnN1bW1hcnl9XG4gICAgICAgICAgICAgICAgICA8L2g0PlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIDxTcGFya2xlcyBjbGFzc05hbWU9XCJoLTUgdy01IHRleHQtd2hpdGVcIiAvPlxuICAgICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTQgZ3JpZCBnYXAtMyBtZDpncmlkLWNvbHMtM1wiPlxuICAgICAgICAgICAgICAgIHttZXRyaWNzLm1hcCgobWV0cmljKSA9PiAoXG4gICAgICAgICAgICAgICAgICA8ZGl2XG4gICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC0zXCJcbiAgICAgICAgICAgICAgICAgICAga2V5PXttZXRyaWMubGFiZWx9XG4gICAgICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtWzExcHhdIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgICAgIHttZXRyaWMubGFiZWx9XG4gICAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LXNtIGZvbnQtYm9sZCB0ZXh0LXdoaXRlXCI+e21ldHJpYy52YWx1ZX08L3A+XG4gICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC00IGdyaWQgaC0yNCBncmlkLWNvbHMtNiBpdGVtcy1lbmQgZ2FwLTIgcm91bmRlZC0yeGwgYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yMCBwLTNcIj5cbiAgICAgICAgICAgICAgICB7YmFycy5tYXAoKGhlaWdodCwgaW5kZXgpID0+IChcbiAgICAgICAgICAgICAgICAgIDxkaXZcbiAgICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwicm91bmRlZC10LWZ1bGxcIlxuICAgICAgICAgICAgICAgICAgICBrZXk9e2Ake3NlY3Rvci5zbHVnfS0ke2luZGV4fWB9XG4gICAgICAgICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgICAgICAgaGVpZ2h0OiBgJHtoZWlnaHR9JWAsXG4gICAgICAgICAgICAgICAgICAgICAgYmFja2dyb3VuZDogYGxpbmVhci1ncmFkaWVudCgxODBkZWcsICR7aGV4VG9SZ2JhKFxuICAgICAgICAgICAgICAgICAgICAgICAgc2VjdG9yLmFjY2VudCxcbiAgICAgICAgICAgICAgICAgICAgICAgIDAuOTUsXG4gICAgICAgICAgICAgICAgICAgICAgKX0sICR7aGV4VG9SZ2JhKHNlY3Rvci5hY2NlbnQsIDAuMjgpfSlgLFxuICAgICAgICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC0zIHNtOmdyaWQtY29scy0yXCI+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicm91bmRlZC1bMjJweF0gYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yMCBwLTRcIj5cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgIDxBY3Rpdml0eSBjbGFzc05hbWU9XCJoLTQgdy00XCIgLz5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNDAwXCI+XG4gICAgICAgICAgICAgICAgICAgIFJlY29tbWVuZGVkIHBsYW5zXG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC0zIHNwYWNlLXktMlwiPlxuICAgICAgICAgICAgICAgICAge3JlY29tbWVuZGVkUGxhbnMuc2xpY2UoMCwgMikubWFwKChwbGFuKSA9PiAoXG4gICAgICAgICAgICAgICAgICAgIDxkaXZcbiAgICAgICAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJyb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlL1swLjA0XSBweC0zIHB5LTIgdGV4dC1zbSBmb250LXNlbWlib2xkIHRleHQtd2hpdGVcIlxuICAgICAgICAgICAgICAgICAgICAgIGtleT17cGxhbi5zbHVnfVxuICAgICAgICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgICAgICAge3BsYW4ubmFtZX1cbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLVsyMnB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzIwIHAtNFwiPlxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTIgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgPFdpZmkgY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTQwMFwiPlxuICAgICAgICAgICAgICAgICAgICBEZXBsb3ltZW50IGZpdFxuICAgICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIm10LTMgdGV4dC1zbSBmb250LXNlbWlib2xkIGxlYWRpbmctNyB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAgICB7c2VjdG9yLmF1ZGllbmNlfVxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC0zIG1kOmdyaWQtY29scy0yXCI+XG4gICAgICAgICAge3NlY3Rvci5jYXBhYmlsaXRpZXMuc2xpY2UoMCwgY29tcGFjdCA/IDMgOiA0KS5tYXAoKGNhcGFiaWxpdHkpID0+IChcbiAgICAgICAgICAgIDxkaXZcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwicm91bmRlZC1bMjBweF0gYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yMCBweC00IHB5LTNcIlxuICAgICAgICAgICAgICBrZXk9e2NhcGFiaWxpdHl9XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTNcIj5cbiAgICAgICAgICAgICAgICA8U2hpZWxkQ2hlY2sgY2xhc3NOYW1lPVwiaC00IHctNCB0ZXh0LXdoaXRlXCIgLz5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiPntjYXBhYmlsaXR5fTwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICApKX1cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKTtcbn1cbiJdLCJuYW1lcyI6WyJBY3Rpdml0eSIsIkNwdSIsIkhhcmREcml2ZSIsIlNoaWVsZENoZWNrIiwiU3BhcmtsZXMiLCJXaWZpIiwic2VjdG9yUGxhbk1hcCIsImNvbW1lcmNpYWwiLCJidXNpbmVzcyIsImhlYWx0aGNhcmUiLCJpbmR1c3RyeSIsImhleFRvUmdiYSIsImhleCIsImFscGhhIiwibm9ybWFsaXplZCIsInJlcGxhY2UiLCJsZW5ndGgiLCJyZWQiLCJOdW1iZXIiLCJwYXJzZUludCIsInNsaWNlIiwiZ3JlZW4iLCJibHVlIiwiZ2V0UmVjb21tZW5kZWRQbGFucyIsInNlY3RvciIsInBsYW5zIiwicHJlZmVycmVkIiwic2x1ZyIsIm9yZGVyZWQiLCJtYXAiLCJmaW5kIiwicGxhbiIsImZpbHRlciIsIkJvb2xlYW4iLCJmZWF0dXJlZCIsImdldFNoZWxsU3R5bGUiLCJhY2NlbnQiLCJib3JkZXJDb2xvciIsImJhY2tncm91bmQiLCJib3hTaGFkb3ciLCJnZXRHbGFzc1N0eWxlIiwiZ2V0TWluaVNoZWxsU3R5bGUiLCJtb2RlIiwiU2VjdG9yTGl2ZU1pbmlCb2FyZCIsImNsYXNzTmFtZSIsImRlbnNlIiwiZGV2aWNlIiwicmVjb21tZW5kZWRQbGFucyIsIm1ldHJpY3MiLCJsYWJlbCIsInZhbHVlIiwic3RhdFZhbHVlIiwiY2FwYWJpbGl0aWVzIiwiYmFycyIsInBvcnRMYWJlbHMiLCJwb3J0cyIsInBsYW5MYWJlbHMiLCJuYW1lIiwic2hlbGxDbGFzcyIsImpvaW4iLCJkaXYiLCJzdHlsZSIsInAiLCJoNCIsInNwYW4iLCJoZWlnaHQiLCJpbmRleCIsIm1ldHJpYyIsInN1aXRlZEZvciIsImF1ZGllbmNlIiwicG9ydCIsIlNlY3RvckxpdmVCb2FyZCIsImNvbXBhY3QiLCJ0aXRsZUNsYXNzIiwiaDMiLCJ0aXRsZSIsInN1bW1hcnkiLCJjYXBhYmlsaXR5Il0sIm1hcHBpbmdzIjoiO0FBQ0EsU0FDRUEsUUFBUSxFQUNSQyxHQUFHLEVBQ0hDLFNBQVMsRUFDVEMsV0FBVyxFQUNYQyxRQUFRLEVBQ1JDLElBQUksUUFDQyxlQUFlO0FBbUJ0QixNQUFNQyxnQkFBMEM7SUFDOUNDLFlBQVk7UUFBQztRQUFXO0tBQWU7SUFDdkNDLFVBQVU7UUFBQztRQUFZO0tBQWU7SUFDdENDLFlBQVk7UUFBQztRQUFnQjtLQUFXO0lBQ3hDQyxVQUFVO1FBQUM7UUFBWTtLQUFXO0FBQ3BDO0FBRUEsU0FBU0MsVUFBVUMsR0FBVyxFQUFFQyxLQUFhO0lBQzNDLE1BQU1DLGFBQWFGLElBQUlHLE9BQU8sQ0FBQyxLQUFL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
