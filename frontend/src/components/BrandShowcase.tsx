@@ -1,4 +1,6 @@
+import { useState } from "react";
 import {
+  ArrowRight,
   Cpu,
   Languages,
   LockKeyhole,
@@ -32,61 +34,108 @@ const architectureCards = [
 ] as const;
 
 const liveSignals = [
-  { label: "Device mesh", value: "04 nodes" },
-  { label: "Runtime mode", value: "Cloud linked" },
-  { label: "Validation", value: "Client ready" },
+  { label: "Sectors", value: "04 live" },
+  { label: "Plans", value: "5 tiers" },
+  { label: "Access", value: "SC ready" },
 ] as const;
 
 const deploymentSteps = [
-  "Choose country profile",
-  "Sync language layer",
-  "Validate secure access",
+  "Pick sector",
+  "Choose plan",
+  "Open access",
 ] as const;
+
+const productTabs = [
+  {
+    key: "stick",
+    label: "AI Stick",
+    sector: "Commercial",
+    value: "Retail screens",
+    copy: "Plug-in AI for stores, kiosks, and hospitality displays.",
+    gradient: "from-amber-300/25 to-orange-500/10",
+  },
+  {
+    key: "hub",
+    label: "brAIn Hub",
+    sector: "Business",
+    value: "Automation desk",
+    copy: "A clean workspace for calls, tasks, dashboards, and sales flow.",
+    gradient: "from-cyan-300/25 to-blue-500/10",
+  },
+  {
+    key: "med",
+    label: "MED Assistant",
+    sector: "Healthcare",
+    value: "Clinic support",
+    copy: "Patient, pharmacy, appointment, and secure staff workflows.",
+    gradient: "from-emerald-300/25 to-teal-500/10",
+  },
+  {
+    key: "edge",
+    label: "Edge Box",
+    sector: "Industry 4.0",
+    value: "Machine signals",
+    copy: "Factory monitoring, predictive alerts, and live device telemetry.",
+    gradient: "from-violet-300/25 to-fuchsia-500/10",
+  },
+] as const;
+
+const proofItems = [
+  "Device + cloud control",
+  "Multi-language launch",
+  "VPN route toggle",
+  "Admin-managed plans",
+  "Smart card validation",
+] as const;
+
+type ProductTabKey = (typeof productTabs)[number]["key"];
 
 export function BrandShowcase({
   currentCountry,
   currentLanguage,
   vpnActive,
 }: BrandShowcaseProps) {
+  const [activeProductKey, setActiveProductKey] = useState<ProductTabKey>(
+    productTabs[0].key,
+  );
+  const activeProduct =
+    productTabs.find((product) => product.key === activeProductKey) ??
+    productTabs[0];
+
   return (
     <div className="showcase-stack">
       <div className="hero-copy-block">
         <span className="eyebrow">Device-first AI platform</span>
         <h1 className="hero-title">
-          Install <span className="notranslate">brAIn</span> on every device.
+          One structured launch page for every <span className="notranslate">brAIn</span> device.
         </h1>
         <p className="hero-text">
-          This system installs AI through one coordinated hardware and software
-          stack. Configure the market, switch the page language automatically,
-          secure the route with VPN, and open the workspace from one structured
-          access layer.
+          Pick a sector, preview the hardware, choose a plan, then open access.
+          Less text, clearer cards, and a live product selector inspired by
+          modern SaaS landing pages.
         </p>
 
         <div className="hero-chip-row">
-          <span className="hero-chip">
-            <Cpu size={15} />
-            Hardware ready
-          </span>
-          <span className="hero-chip">
-            <ServerCog size={15} />
-            Software orchestrated
-          </span>
-          <span className="hero-chip">
-            <Languages size={15} />
-            Auto translated
-          </span>
-          <span className="hero-chip">
-            <LockKeyhole size={15} />
-            VPN secure
-          </span>
+          {proofItems.map((item) => (
+            <span className="hero-chip" key={item}>
+              <ArrowRight size={14} />
+              {item}
+            </span>
+          ))}
         </div>
+      </div>
+
+      <div className="showcase-proof-strip">
+        {proofItems.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
       </div>
 
       <div className="showcase-frame">
         <div className="showcase-header">
           <div>
-            <span className="eyebrow eyebrow-tight">Current deployment profile</span>
-            <h2 className="showcase-title">Hardware + software in one entry flow</h2>
+            <span className="eyebrow eyebrow-tight">Interactive device selector</span>
+            <h2 className="showcase-title">Choose a product, then continue the flow</h2>
           </div>
           <div className="profile-pills">
             <span className="profile-pill">
@@ -106,13 +155,29 @@ export function BrandShowcase({
 
         <div className="showcase-media">
           <div className="showcase-live-board">
+            <div className="showcase-product-tabs">
+              {productTabs.map((product) => (
+                <button
+                  className={`showcase-product-tab ${
+                    activeProduct.key === product.key ? "showcase-product-tab-active" : ""
+                  }`}
+                  key={product.key}
+                  onClick={() => setActiveProductKey(product.key)}
+                  type="button"
+                >
+                  <span>{product.sector}</span>
+                  <strong>{product.label}</strong>
+                </button>
+              ))}
+            </div>
+
             <div className="showcase-stage-shell">
               <div className="showcase-stage-glow showcase-stage-glow-a" />
               <div className="showcase-stage-glow showcase-stage-glow-b" />
 
               <div className="showcase-device-shell">
                 <div className="showcase-device-topline">
-                  <span className="showcase-micro-pill">brAIn node</span>
+                  <span className="showcase-micro-pill">{activeProduct.sector}</span>
                   <span
                     className={`showcase-micro-pill ${vpnActive ? "showcase-micro-pill-active" : ""}`}
                   >
@@ -123,9 +188,15 @@ export function BrandShowcase({
                 <div className="showcase-device-core">
                   <div className="showcase-core-ring" />
                   <div className="showcase-core-ring showcase-core-ring-b" />
-                  <div className="showcase-core-chip">
+                  <div className={`showcase-core-chip bg-gradient-to-br ${activeProduct.gradient}`}>
                     <Cpu size={26} />
                   </div>
+                </div>
+
+                <div className="showcase-product-copy">
+                  <span>{activeProduct.value}</span>
+                  <h3>{activeProduct.label}</h3>
+                  <p>{activeProduct.copy}</p>
                 </div>
 
                 <div className="showcase-device-grid">
@@ -160,8 +231,8 @@ export function BrandShowcase({
               </article>
 
               <article className="showcase-runtime-card">
-                <p className="showcase-runtime-kicker">Entry sequence</p>
-                <h3>Live deployment flow</h3>
+                <p className="showcase-runtime-kicker">Flow</p>
+                <h3>From preview to access</h3>
                 <div className="showcase-step-stack">
                   {deploymentSteps.map((step, index) => (
                     <div className="showcase-step-row" key={step}>
