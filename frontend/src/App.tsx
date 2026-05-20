@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
@@ -21,12 +21,11 @@ import {
   Users,
   Workflow,
 } from "lucide-react";
-import { AuthPanel } from "./components/AuthPanel";
 import { BrainScratchCard } from "./components/BrainScratchCard";
-import { BrandShowcase } from "./components/BrandShowcase";
-import { DevicePreviewStudio } from "./components/DevicePreviewStudio";
 import { EmptyCard } from "./components/EmptyCard";
 import { GoogleTranslateBridge } from "./components/GoogleTranslateBridge";
+import { HelpCenterPage } from "./components/HelpCenterPage";
+import { PublicLandingExperience } from "./components/PublicLandingExperience";
 import { LandingTopBar } from "./components/LandingTopBar";
 import { SectorLiveBoard } from "./components/SectorLiveBoard";
 import {
@@ -91,7 +90,7 @@ type UiMessage = {
 };
 
 type LandingSidebarItem = {
-  key: LandingView;
+  key: string;
   label: string;
   detail: string;
   icon: LucideIcon;
@@ -199,31 +198,26 @@ const emptyClientOverview: ClientOverview = {
 const emptyLandingContent: LandingContent = {
   source: "fallback",
   hero: {
-    eyebrow: "Device-first preweb",
-    title: "Show the device first. Let the platform close the sale.",
+    eyebrow: "AI device preweb",
+    title: "AI devices for retail, business, healthcare, and industry.",
     subtitle:
-      "Turn each vertical into a device-led story with a cleaner login path, stronger product proof, and a public page that feels made to sell hardware.",
-    badges: [
-      "Commercial",
-      "Business",
-      "Healthcare",
-      "Industry 4.0",
-    ],
+      "Choose the device, match it to the sector, and move the buyer into access only when the offer is clear.",
+    badges: ["Retail", "Business", "Healthcare", "Industry"],
     metrics: [
-      { label: "Sector lines", value: "4" },
-      { label: "Plans", value: "5" },
-      { label: "Access status", value: "Live" },
+      { label: "Sectors", value: "4 ready" },
+      { label: "Devices", value: "4 models" },
+      { label: "Control", value: "Cloud managed" },
     ],
     primaryCta: {
       label: "See devices",
       href: "#landing-devices",
     },
     secondaryCta: {
-      label: "Log in",
+      label: "Buyer login",
       href: "#auth-access",
     },
     deviceImage: "/brand/brain-hero.svg",
-    plansImage: "/brand/plans-main.png",
+    plansImage: "/brand/brain-plans-showcase.svg",
   },
   sectors: [],
   devices: [],
@@ -258,6 +252,7 @@ const STORAGE_KEYS = {
   country: "brain-landing-country",
   language: "brain-landing-language",
   guestId: "brain-guest-user-id",
+  darkMode: "brain-dark-mode",
 } as const;
 
 const clientPaymentMethods: Array<{
@@ -307,34 +302,28 @@ const landingSectionMap: Record<LandingView, string> = {
 
 const landingSidebarItems: LandingSidebarItem[] = [
   {
-    key: "overview",
-    label: "Overview",
-    detail: "Hero story that makes the device offer feel premium.",
-    icon: Sparkles,
-  },
-  {
-    key: "access",
-    label: "Login",
-    detail: "Bring the buyer straight into the order or workspace flow.",
-    icon: ShieldCheck,
-  },
-  {
-    key: "sectors",
-    label: "Sectors",
-    detail: "Choose the vertical that matches the buyer fastest.",
-    icon: Layers3,
+    key: "plans",
+    label: "Pricing",
+    detail: "Open plans and guided help in a separate window.",
+    icon: CreditCard,
   },
   {
     key: "devices",
-    label: "Devices",
-    detail: "Show the hardware in a stronger, more convincing way.",
+    label: "Products",
+    detail: "Show the hardware in a live and credible way.",
     icon: Cpu,
   },
   {
-    key: "plans",
-    label: "Plans",
-    detail: "Let the buyer understand rollout size after the device wins.",
-    icon: CreditCard,
+    key: "sectors",
+    label: "Solutions",
+    detail: "Match each sector to a stronger device lane.",
+    icon: Layers3,
+  },
+  {
+    key: "help",
+    label: "Help",
+    detail: "Open live planning, rollout notes, and product guidance.",
+    icon: Sparkles,
   },
 ];
 
@@ -362,6 +351,39 @@ function readStoredLanguage(countryCode: string) {
     window.localStorage.getItem(STORAGE_KEYS.language) ||
     getFallbackLanguageForCountry(countryCode)
   );
+}
+
+function readStoredDarkMode() {
+  const stored = window.localStorage.getItem(STORAGE_KEYS.darkMode);
+  // Default to false (light mode is primary)
+  if (stored === null) {
+    return false;
+  }
+  return stored === "true";
+}
+
+function readInitialPublicPath() {
+  return window.location.pathname.toLowerCase() || "/";
+}
+
+function readInitialLandingView(): LandingView {
+  const rawValue = new URLSearchParams(window.location.search).get("view");
+
+  if (
+    rawValue === "overview" ||
+    rawValue === "access" ||
+    rawValue === "sectors" ||
+    rawValue === "devices" ||
+    rawValue === "plans"
+  ) {
+    return rawValue;
+  }
+
+  return "overview";
+}
+
+function readInitialSectorSlug() {
+  return new URLSearchParams(window.location.search).get("sector") || "";
 }
 
 function ensureGuestUserId() {
@@ -515,26 +537,42 @@ function resolveDeviceKeyForSector(sector?: string | null) {
   return "business-hub";
 }
 
-function getSectorBadgeStyle(accent?: string) {
-  if (!accent) {
+const LIGHT_MODE_ACCENT = "#d45a34";
+
+function getThemeAccent(accent?: string, lightMode = false) {
+  if (lightMode) {
+    return LIGHT_MODE_ACCENT;
+  }
+
+  return accent;
+}
+
+function getSectorBadgeStyle(accent?: string, lightMode = false) {
+  const themeAccent = getThemeAccent(accent, lightMode);
+
+  if (!themeAccent) {
     return undefined;
   }
 
   return {
-    borderColor: `${accent}55`,
-    backgroundColor: `${accent}18`,
-    color: "#fff7ed",
+    borderColor: `${themeAccent}55`,
+    backgroundColor: lightMode ? `${themeAccent}14` : `${themeAccent}18`,
+    color: lightMode ? "#111111" : "#ffe7dc",
   };
 }
 
-function getSectorPanelStyle(accent?: string) {
-  if (!accent) {
+function getSectorPanelStyle(accent?: string, lightMode = false) {
+  const themeAccent = getThemeAccent(accent, lightMode);
+
+  if (!themeAccent) {
     return undefined;
   }
 
   return {
-    borderColor: `${accent}44`,
-    background: `linear-gradient(135deg, ${accent}18, rgba(255,255,255,0.04))`,
+    borderColor: `${themeAccent}44`,
+    background: lightMode
+      ? `linear-gradient(135deg, ${themeAccent}12, rgba(255,255,255,0.98))`
+      : `linear-gradient(135deg, ${themeAccent}18, rgba(255,255,255,0.04))`,
   };
 }
 
@@ -554,7 +592,10 @@ function nextTicketStatus(
 
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
-  const [landingView, setLandingView] = useState<LandingView>("overview");
+  const [publicPath] = useState(() => readInitialPublicPath());
+  const [landingView, setLandingView] = useState<LandingView>(() =>
+    readInitialLandingView(),
+  );
   const [loginForm, setLoginForm] = useState<LoginFormState>(initialLoginForm);
   const [registerForm, setRegisterForm] =
     useState<RegisterFormState>(initialRegisterForm);
@@ -577,7 +618,9 @@ function App() {
   const [landingContent, setLandingContent] =
     useState<LandingContent>(emptyLandingContent);
   const [contentLoading, setContentLoading] = useState(false);
-  const [activeSectorSlug, setActiveSectorSlug] = useState("");
+  const [activeSectorSlug, setActiveSectorSlug] = useState(() =>
+    readInitialSectorSlug(),
+  );
   const [systemLoading, setSystemLoading] = useState(false);
   const [systemMessage, setSystemMessage] = useState<UiMessage | null>(null);
   const [operationsOverview, setOperationsOverview] =
@@ -609,6 +652,8 @@ function App() {
   const [paymentMessage, setPaymentMessage] = useState<UiMessage | null>(null);
   const [activeDashboardSection, setActiveDashboardSection] =
     useState("system-overview");
+  const [isDarkMode, setIsDarkMode] = useState(() => readStoredDarkMode());
+  const lastClientAccountKeyRef = useRef("");
 
   const selectedCountryOption =
     countryOptions.find((country) => country.code === selectedCountry) ??
@@ -616,6 +661,7 @@ function App() {
   const selectedLanguageOption =
     languageOptions.find((language) => language.code === selectedLanguage) ??
     languageOptions[0];
+  const isHelpCenterPage = !authSession && publicPath === "/help";
   const showLandingAccessPage = !authSession && landingView === "access";
 
   useEffect(() => {
@@ -625,6 +671,27 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEYS.language, selectedLanguage);
   }, [selectedLanguage]);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const themeClassNames = ["app-theme-landing", "app-theme-admin", "app-theme-client"];
+    const nextThemeClass = authSession
+      ? `app-theme-${authSession.user.role}`
+      : "app-theme-landing";
+
+    html.classList.toggle("app-light-mode", !isDarkMode);
+    body.classList.toggle("app-light-mode", !isDarkMode);
+    html.classList.remove(...themeClassNames);
+    body.classList.remove(...themeClassNames);
+    html.classList.add(nextThemeClass);
+    body.classList.add(nextThemeClass);
+
+    return () => {
+      html.classList.remove("app-light-mode", ...themeClassNames);
+      body.classList.remove("app-light-mode", ...themeClassNames);
+    };
+  }, [authSession, isDarkMode]);
 
   useEffect(() => {
     if (authSession) {
@@ -640,6 +707,7 @@ function App() {
     setScratchCodeInput("");
     setScratchMessage(null);
     setPaymentMessage(null);
+    lastClientAccountKeyRef.current = "";
   }, [authSession]);
 
   useEffect(() => {
@@ -662,6 +730,26 @@ function App() {
     selectedAdminCardPlan,
     selectedClientPlanSlug,
   ]);
+
+  useEffect(() => {
+    const accountCompany = clientOverview.account?.company;
+    const accountPlan = clientOverview.account?.plan;
+
+    if (!accountCompany || !accountPlan) {
+      return;
+    }
+
+    const nextAccountKey = `${accountCompany}:${accountPlan}`;
+
+    if (lastClientAccountKeyRef.current === nextAccountKey) {
+      return;
+    }
+
+    lastClientAccountKeyRef.current = nextAccountKey;
+    setSelectedClientPlanSlug(accountPlan);
+    setScratchMessage(null);
+    setPaymentMessage(null);
+  }, [clientOverview.account?.company, clientOverview.account?.plan]);
 
   useEffect(() => {
     const networkMode = vpnSession ? "private" : "country";
@@ -815,22 +903,30 @@ function App() {
   }, [activeSector, landingContent.plans]);
 
   const heroBadges = useMemo(() => {
+    if (landingContent.sectors.length > 0) {
+      return landingContent.sectors.slice(0, 4).map((sector) => sector.name);
+    }
+
     return landingContent.hero.badges.length > 0
       ? landingContent.hero.badges.slice(0, 4)
-      : ["Commercial", "Business", "Healthcare", "Industry 4.0"];
-  }, [landingContent.hero.badges]);
+      : ["Retail", "Business", "Healthcare", "Industry"];
+  }, [landingContent.hero.badges, landingContent.sectors]);
 
   const heroMetrics = useMemo(() => {
+    if (activeDevice?.metrics.length) {
+      return activeDevice.metrics.slice(0, 3);
+    }
+
     if (landingContent.hero.metrics.length > 0) {
       return landingContent.hero.metrics.slice(0, 3);
     }
 
     return [
-      { label: "Sector lanes", value: String(landingContent.sectors.length || 4) },
-      { label: "Devices", value: String(landingContent.devices.length || 4) },
-      { label: "Plans", value: String(landingContent.plans.length || 5) },
+      { label: "Sectors", value: `${landingContent.sectors.length || 4} ready` },
+      { label: "Devices", value: `${landingContent.devices.length || 4} models` },
+      { label: "Control", value: "Cloud managed" },
     ];
-  }, [landingContent.devices.length, landingContent.hero.metrics, landingContent.plans.length, landingContent.sectors.length]);
+  }, [activeDevice, landingContent.devices.length, landingContent.hero.metrics, landingContent.sectors.length]);
 
   const featuredLandingPlan = useMemo(() => {
     return (
@@ -842,61 +938,32 @@ function App() {
   }, [landingContent.plans]);
 
   const landingPlanCards = useMemo(() => {
-    const priorityPlans = [
-      landingContent.plans.find((plan) => plan.slug === "free"),
-      featuredLandingPlan,
-      landingContent.plans.find((plan) => plan.slug === "platinum"),
-    ].filter((plan): plan is Plan => Boolean(plan));
-
-    const uniquePlans = priorityPlans.filter(
-      (plan, index, items) => items.findIndex((item) => item.slug === plan.slug) === index,
-    );
-
-    for (const plan of landingContent.plans) {
-      if (!uniquePlans.some((item) => item.slug === plan.slug)) {
-        uniquePlans.push(plan);
-      }
-
-      if (uniquePlans.length === 3) {
-        break;
-      }
-    }
-
-    return uniquePlans;
-  }, [featuredLandingPlan, landingContent.plans]);
-
-  const devicePreviewOptions = useMemo(() => {
-    const ordered = activeSector
-      ? landingContent.devices.filter((device) => device.sectorSlug === activeSector.slug)
-      : [];
-    const remaining = landingContent.devices.filter(
-      (device) => !ordered.some((item) => item.deviceKey === device.deviceKey),
-    );
-
-    return [...ordered, ...remaining];
-  }, [activeSector, landingContent.devices]);
+    return landingContent.plans;
+  }, [landingContent.plans]);
 
   const salesHighlights = useMemo<
     Array<{ detail: string; icon: LucideIcon; title: string }>
   >(() => {
+    const installDetail = activeDevice?.ports?.length
+      ? activeDevice.ports.slice(0, 3).join(" / ")
+      : "HDMI / USB-C / Wi-Fi";
+
     return [
-      {
-        title: activeDevice?.name ?? "Device-first offer",
-        detail:
-          activeDevice?.tagline ??
-          "Put the hardware in front so the offer feels real immediately.",
-        icon: Cpu,
-      },
       {
         title: activeSector?.name ?? "Sector fit",
         detail:
           activeSector?.audience ??
-          "Let the buyer see fast where the device fits best.",
+          "Match the device to the buyer and the use case quickly.",
         icon: Layers3,
       },
       {
-        title: "Cloud and rollout",
-        detail: "Remote setup, live dashboard, and rollout support from one place.",
+        title: "Install",
+        detail: installDetail,
+        icon: Cpu,
+      },
+      {
+        title: "Operations",
+        detail: "Login flow, cloud control, and rollout support stay connected.",
         icon: Workflow,
       },
     ];
@@ -905,7 +972,7 @@ function App() {
   const partnerSignals = useMemo(() => {
     return [
       ...landingContent.integrations.protocols.slice(0, 3),
-      ...landingContent.integrations.cloudPartners.slice(0, 3),
+      ...landingContent.integrations.cloudPartners.slice(0, 2),
     ];
   }, [landingContent.integrations.cloudPartners, landingContent.integrations.protocols]);
 
@@ -968,41 +1035,77 @@ function App() {
     );
   }, [clientOverview.account?.plan, landingContent.plans, selectedClientPlanSlug]);
 
-  const planScopedPayment = useMemo(() => {
+  const clientPlanPayments = useMemo(() => {
     if (!selectedClientPlan) {
-      return clientOverview.payments[0] ?? null;
+      return [];
     }
 
-    return (
-      clientOverview.payments.find((payment) => payment.plan === selectedClientPlan.slug) ??
-      clientOverview.payments[0] ??
-      null
+    return clientOverview.payments.filter(
+      (payment) => payment.plan === selectedClientPlan.slug,
     );
   }, [clientOverview.payments, selectedClientPlan]);
+
+  const planScopedPayment = clientPlanPayments[0] ?? null;
 
   const pendingPlanPayment = useMemo(() => {
+    return clientPlanPayments.find((payment) => payment.status === "pending") ?? null;
+  }, [clientPlanPayments]);
+
+  const approvedPlanPayment = useMemo(() => {
+    return clientPlanPayments.find((payment) => payment.status === "approved") ?? null;
+  }, [clientPlanPayments]);
+
+  const latestRejectedPlanPayment =
+    planScopedPayment?.status === "rejected" ? planScopedPayment : null;
+
+  const clientCardsForSelectedPlan = useMemo(() => {
+    const statusRank: Record<SmartCardItem["status"], number> = {
+      activated: 0,
+      assigned: 1,
+      available: 2,
+    };
+
+    const sortedCards = [...clientOverview.smartCards].sort((left, right) => {
+      const statusGap = statusRank[left.status] - statusRank[right.status];
+
+      if (statusGap !== 0) {
+        return statusGap;
+      }
+
+      return right.updatedAt.localeCompare(left.updatedAt);
+    });
+
     if (!selectedClientPlan) {
-      return null;
+      return sortedCards;
     }
 
-    return (
-      clientOverview.payments.find(
-        (payment) =>
-          payment.plan === selectedClientPlan.slug && payment.status === "pending",
-      ) ??
-      null
-    );
-  }, [clientOverview.payments, selectedClientPlan]);
+    return sortedCards.filter((card) => card.plan === selectedClientPlan.slug);
+  }, [clientOverview.smartCards, selectedClientPlan]);
+
+  const selectedPlanSmartCard = clientCardsForSelectedPlan[0] ?? null;
+  const hasLinkedSelectedPlanAccess = Boolean(approvedPlanPayment || selectedPlanSmartCard);
+
+  const pendingClientPaymentsCount = useMemo(
+    () => clientOverview.payments.filter((payment) => payment.status === "pending").length,
+    [clientOverview.payments],
+  );
 
   const clientAccessCardStyle = useMemo(() => {
-    const accent = clientSector?.accent ?? activeSector?.accent ?? "#78d7ab";
+    const accent = getThemeAccent(
+      clientSector?.accent ?? activeSector?.accent ?? LIGHT_MODE_ACCENT,
+      !isDarkMode,
+    );
 
     return {
       borderColor: `${accent}36`,
-      background: `linear-gradient(180deg, ${accent}14 0%, rgba(5,11,21,0.94) 22%, rgba(4,10,8,0.96) 100%)`,
-      boxShadow: `0 22px 65px ${accent}20`,
+      background: !isDarkMode
+        ? `linear-gradient(180deg, ${accent}10 0%, rgba(255,255,255,0.98) 22%, rgba(255,255,255,0.96) 100%)`
+        : `linear-gradient(180deg, ${accent}14 0%, rgba(5,11,21,0.94) 22%, rgba(4,10,8,0.96) 100%)`,
+      boxShadow: !isDarkMode
+        ? "0 18px 44px rgba(0,0,0,0.08)"
+        : `0 22px 65px ${accent}20`,
     };
-  }, [activeSector?.accent, clientSector?.accent]);
+  }, [activeSector?.accent, clientSector?.accent, isDarkMode]);
 
   const activeScratchCode = (
     scratchCodeInput.trim() ||
@@ -1010,6 +1113,20 @@ function App() {
     ""
   ).toUpperCase();
   const freePlanCardRevealed = Boolean(activeScratchCode) || scratchBusy;
+  const clientAccessStateLabel =
+    selectedClientPlan?.slug === "free"
+      ? activeScratchCode
+        ? "Code ready"
+        : "Free lane"
+      : pendingPlanPayment
+        ? "Pending admin"
+        : hasLinkedSelectedPlanAccess
+          ? selectedPlanSmartCard?.status === "activated"
+            ? "Card active"
+            : "Access linked"
+          : latestRejectedPlanPayment
+            ? "Retry request"
+            : "Request needed";
   const petAdviceCopy =
     selectedClientPlan?.slug === "free"
       ? activeScratchCode
@@ -1017,8 +1134,10 @@ function App() {
         : "The free access code can be generated automatically here, so the client does not need to enter it manually."
       : pendingPlanPayment
         ? "Your managed request is waiting for approval. Client view stays focused only on your own payment and access state."
-      : planScopedPayment?.status === "approved"
-          ? "This workspace already has approved access linked to it. Client view stays isolated from admin control boards."
+      : hasLinkedSelectedPlanAccess
+        ? "This plan already has linked SC access for the current workspace, so client view stays focused on status and activation details."
+        : latestRejectedPlanPayment
+          ? "The latest managed request was rejected. Update the billing details and send it again from this workspace."
           : "Managed plans stay in client view only as request status, payment state, and linked access.";
 
   const adminCardsForSelectedPlan = useMemo(() => {
@@ -1114,52 +1233,48 @@ function App() {
         },
         {
           target: "system-operations",
-          label: "Operations",
-          detail: "Services, runtime flow, and broadcasts.",
+          label: "Ops board",
+          detail: "Services, runtime flow, and live events.",
           icon: Workflow,
           meta: `${operationsOverview.timeline.length} events`,
         },
         {
           target: "system-payments",
           label: "Payments",
-          detail: "Approve or reject managed plan requests.",
+          detail: "Review managed requests and unblock rollout.",
           icon: CreditCard,
           meta: `${pendingAdminPayments.length} pending`,
         },
         {
           target: "system-cards",
-          label: "SC cards",
+          label: "Card stock",
           detail: "Inventory, assignment, and activation state.",
           icon: ShieldCheck,
           meta: `${adminOverview.smartCards.length} cards`,
         },
         {
           target: "system-device-control",
-          label: "Devices",
+          label: "Rollout",
           detail: "Control hardware rollout per sector.",
           icon: Cpu,
           meta: `${sectorControlRows.length} sectors`,
         },
         {
           target: "system-sectors",
-          label: "Sectors",
+          label: "Sector lanes",
           detail: "See the full deployment stack by lane.",
           icon: Layers3,
           meta: `${landingContent.sectors.length} lanes`,
         },
         {
           target: "system-role",
-          label: "Support",
+          label: "Support desk",
           detail: "Broadcasts, uploads, and ticket follow-up.",
           icon: Ticket,
           meta: `${adminOverview.tickets.length} tickets`,
         },
       ];
     }
-
-    const pendingClientPayments = clientOverview.payments.filter(
-      (payment) => payment.status === "pending",
-    ).length;
 
     return [
       {
@@ -1171,15 +1286,15 @@ function App() {
       },
       {
         target: "client-plan-board",
-        label: "Plans",
-        detail: "Choose free or managed access.",
+        label: "Access plan",
+        detail: "Choose the plan and access path.",
         icon: Layers3,
         meta: selectedClientPlan?.name ?? "Choose plan",
       },
       {
         target: "client-validate",
         label: "Validation",
-        detail: "Generate or confirm your SC code.",
+        detail: "Generate or confirm the live access code.",
         icon: ShieldCheck,
         meta:
           activeScratchCode ||
@@ -1190,12 +1305,12 @@ function App() {
         label: "Billing",
         detail: "Track payment requests and linked access.",
         icon: CreditCard,
-        meta: `${pendingClientPayments} pending`,
+        meta: `${pendingClientPaymentsCount} pending`,
       },
       {
         target: "client-sectors",
-        label: "Sectors",
-        detail: "See your active deployment lane.",
+        label: "Deployment",
+        detail: "See your active device and sector lane.",
         icon: Cpu,
         meta: clientSector?.name ?? "Workspace lane",
       },
@@ -1212,17 +1327,38 @@ function App() {
     adminOverview.smartCards.length,
     adminOverview.tickets.length,
     authSession,
-    clientOverview.payments,
     clientOverview.tickets.length,
     clientSector?.name,
     landingContent.sectors.length,
     operationsOverview.timeline.length,
     pendingAdminPayments.length,
+    pendingClientPaymentsCount,
     primaryMetrics.length,
     sectorControlRows.length,
     selectedClientPlan?.name,
     selectedClientPlan?.slug,
   ]);
+
+  const activeDashboardItem = useMemo(() => {
+    return (
+      dashboardSidebarItems.find((item) => item.target === activeDashboardSection) ??
+      dashboardSidebarItems[0] ??
+      null
+    );
+  }, [activeDashboardSection, dashboardSidebarItems]);
+
+  const showAdminOperationsPanel = activeDashboardSection === "system-operations";
+  const showAdminRolloutPanel = activeDashboardSection === "system-device-control";
+  const showAdminPaymentsPanel = activeDashboardSection === "system-payments";
+  const showAdminCardsPanel = activeDashboardSection === "system-cards";
+  const showAdminSectorsPanel = activeDashboardSection === "system-sectors";
+  const showAdminSupportPanel = activeDashboardSection === "system-role";
+  const showClientAccessPanel =
+    activeDashboardSection === "client-plan-board" ||
+    activeDashboardSection === "client-validate";
+  const showClientBillingPanel = activeDashboardSection === "client-billing";
+  const showClientDeploymentPanel = activeDashboardSection === "client-sectors";
+  const showClientSupportPanel = activeDashboardSection === "system-role";
 
   const dashboardHelpActions = useMemo<DashboardHelpAction[]>(() => {
     if (!authSession) {
@@ -1263,25 +1399,36 @@ function App() {
       ];
     }
 
-    const pendingClientPayments = clientOverview.payments.filter(
-      (payment) => payment.status === "pending",
-    ).length;
-
     return [
       {
         target: "client-plan-board",
         title:
           selectedClientPlan?.slug === "free"
             ? "Open your access plan"
-            : `Continue ${selectedClientPlan?.name ?? "managed"} request`,
+            : hasLinkedSelectedPlanAccess
+              ? `${selectedClientPlan?.name ?? "Managed"} access linked`
+              : latestRejectedPlanPayment
+                ? `Retry ${selectedClientPlan?.name ?? "managed"} request`
+                : `Continue ${selectedClientPlan?.name ?? "managed"} request`,
         detail:
           selectedClientPlan?.slug === "free"
             ? "Free activation starts from the access card below."
             : pendingPlanPayment
               ? "Your managed request is waiting for admin approval."
-              : "Pick a plan and send it for admin review.",
+              : hasLinkedSelectedPlanAccess
+                ? "A linked SC card is already attached to this plan for the current workspace."
+                : latestRejectedPlanPayment
+                  ? "The latest request was rejected, so you can review details and send it again."
+                  : "Pick a plan and send it for admin review.",
         icon: Layers3,
-        status: selectedClientPlan?.slug === "free" ? "Instant path" : "Managed flow",
+        status:
+          selectedClientPlan?.slug === "free"
+            ? "Instant path"
+            : hasLinkedSelectedPlanAccess
+              ? "Access linked"
+              : latestRejectedPlanPayment
+                ? "Retry ready"
+                : "Managed flow",
       },
       {
         target: "client-validate",
@@ -1297,13 +1444,13 @@ function App() {
         target: "client-billing",
         title: "Review billing status",
         detail:
-          pendingClientPayments > 0
-            ? `${pendingClientPayments} payment request${
-                pendingClientPayments === 1 ? "" : "s"
+          pendingClientPaymentsCount > 0
+            ? `${pendingClientPaymentsCount} payment request${
+                pendingClientPaymentsCount === 1 ? "" : "s"
               } still waiting for admin action.`
             : "No billing requests are blocked right now.",
         icon: CreditCard,
-        status: pendingClientPayments > 0 ? "Pending review" : "Clear",
+        status: pendingClientPaymentsCount > 0 ? "Pending review" : "Clear",
       },
     ];
   }, [
@@ -1312,20 +1459,281 @@ function App() {
     adminOverview.smartCards.length,
     adminOverview.tickets.length,
     authSession,
-    clientOverview.payments,
     operationsOverview.notifications.length,
     pendingAdminPayments.length,
+    pendingClientPaymentsCount,
+    hasLinkedSelectedPlanAccess,
+    latestRejectedPlanPayment,
     pendingPlanPayment,
     selectedClientPlan?.name,
     selectedClientPlan?.slug,
   ]);
 
+  const workspaceSidebarStats = useMemo<Array<{ label: string; value: string }>>(() => {
+    if (!authSession) {
+      return [];
+    }
+
+    if (authSession.user.role === "admin") {
+      return [
+        {
+          label: "Pending approvals",
+          value: String(pendingAdminPayments.length),
+        },
+        {
+          label: "Cards available",
+          value: String(adminOverview.smartCardStats.available),
+        },
+        {
+          label: "Open tickets",
+          value: String(adminOverview.tickets.length),
+        },
+      ];
+    }
+
+    return [
+      {
+        label: "Active plan",
+        value: selectedClientPlan?.name ?? "Free",
+      },
+      {
+        label: "Access state",
+        value: clientAccessStateLabel,
+      },
+      {
+        label: "Open tickets",
+        value: String(clientOverview.tickets.length),
+      },
+    ];
+  }, [
+    adminOverview.smartCardStats.available,
+    adminOverview.tickets.length,
+    authSession,
+    clientAccessStateLabel,
+    clientOverview.tickets.length,
+    pendingAdminPayments.length,
+    selectedClientPlan?.name,
+  ]);
+
+  const workspacePriorityCards = useMemo<
+    Array<DashboardHelpAction & { label: string }>
+  >(() => {
+    if (!authSession) {
+      return [];
+    }
+
+    if (authSession.user.role === "admin") {
+      return [
+        {
+          target: "system-payments",
+          label: "Queue",
+          title:
+            pendingAdminPayments.length > 0
+              ? `${pendingAdminPayments.length} approvals waiting`
+              : "Payment queue is clear",
+          detail:
+            pendingAdminPayments.length > 0
+              ? "Review managed plan requests and unblock rollout."
+              : "No managed payment requests need review right now.",
+          icon: CreditCard,
+          status: pendingAdminPayments.length > 0 ? "Needs action" : "Clear",
+        },
+        {
+          target: "system-cards",
+          label: "Inventory",
+          title: `${adminOverview.smartCardStats.available} cards available`,
+          detail: "Check stock, assignment state, and activations across all sectors.",
+          icon: ShieldCheck,
+          status: "Live stock",
+        },
+        {
+          target: "system-device-control",
+          label: "Rollout",
+          title: `${sectorControlRows.length} sector lanes in control`,
+          detail: "Open the device board and manage active deployment lanes.",
+          icon: Cpu,
+          status: "Manage",
+        },
+      ];
+    }
+
+    return [
+      {
+        target: "client-plan-board",
+        label: "Plan",
+        title:
+          selectedClientPlan?.slug === "free"
+            ? "Free access lane ready"
+            : hasLinkedSelectedPlanAccess
+              ? `${selectedClientPlan?.name ?? "Managed"} access linked`
+              : latestRejectedPlanPayment
+                ? `${selectedClientPlan?.name ?? "Managed"} needs retry`
+                : `${selectedClientPlan?.name ?? "Managed"} plan selected`,
+        detail:
+          selectedClientPlan?.slug === "free"
+            ? "Generate access without payment and validate it in one place."
+            : pendingPlanPayment
+              ? "This managed request is waiting for admin approval."
+              : hasLinkedSelectedPlanAccess
+                ? "The selected plan already has a linked SC card in this workspace."
+                : latestRejectedPlanPayment
+                  ? "Review the rejected request and submit it again."
+                  : "Review the plan card and continue the managed request.",
+        icon: Layers3,
+        status:
+          selectedClientPlan?.slug === "free"
+            ? "Instant"
+            : hasLinkedSelectedPlanAccess
+              ? "Linked"
+              : latestRejectedPlanPayment
+                ? "Retry"
+                : "Managed",
+      },
+      {
+        target: "client-validate",
+        label: "Validation",
+        title: activeScratchCode ? `${activeScratchCode} is ready` : "Validation card waiting",
+        detail:
+          activeScratchCode
+            ? "Open the validation step and confirm access."
+            : "Generate or review the access card for this workspace.",
+        icon: ShieldCheck,
+        status: activeScratchCode ? "Ready" : "Waiting",
+      },
+      {
+        target: "client-billing",
+        label: "Billing",
+        title:
+          pendingClientPaymentsCount > 0
+            ? `${pendingClientPaymentsCount} payment request waiting`
+            : "Billing status is clear",
+        detail:
+          pendingClientPaymentsCount > 0
+            ? "Track request state and linked card access."
+            : "No billing queue is blocking this workspace.",
+        icon: CreditCard,
+        status: pendingClientPaymentsCount > 0 ? "Pending" : "Clear",
+      },
+    ];
+  }, [
+    activeScratchCode,
+    adminOverview.smartCardStats.available,
+    authSession,
+    hasLinkedSelectedPlanAccess,
+    latestRejectedPlanPayment,
+    pendingAdminPayments.length,
+    pendingClientPaymentsCount,
+    pendingPlanPayment,
+    sectorControlRows.length,
+    selectedClientPlan?.name,
+    selectedClientPlan?.slug,
+  ]);
+
   const dashboardHelpTitle =
-    authSession?.user.role === "admin" ? "Control help" : "Workspace help";
+    authSession?.user.role === "admin" ? "Attention queue" : "Next actions";
   const dashboardHelpCopy =
     authSession?.user.role === "admin"
-      ? "These shortcuts take you straight to the queues and boards that need attention."
-      : "These shortcuts lead directly to the next client action without opening admin-style panels.";
+      ? "These shortcuts take you straight to the boards that need review first."
+      : "These shortcuts lead directly to the next client action without opening extra panels.";
+  const workspaceProfileItems = authSession
+    ? [
+        {
+          label: "Role",
+          value: authSession.user.role === "admin" ? "Admin" : "Client",
+        },
+        {
+          label: "Connected",
+          value: formatSystemDate(authSession.issuedAt),
+        },
+        {
+          label: "Country",
+          value: selectedCountryOption.label,
+        },
+        {
+          label: "Language",
+          value: selectedLanguageOption.label,
+        },
+      ]
+    : [];
+  const workspaceOverviewCards = authSession
+    ? authSession.user.role === "admin"
+      ? [
+          {
+            label: "Approvals",
+            value:
+              pendingAdminPayments.length > 0
+                ? `${pendingAdminPayments.length} waiting`
+                : "Queue clear",
+            detail: "Managed requests ready for admin review and billing approval.",
+          },
+          {
+            label: "Card stock",
+            value: `${adminOverview.smartCardStats.available} ready`,
+            detail: "Available SC cards that can be assigned across the workspace.",
+          },
+          {
+            label: "Tickets",
+            value: `${adminOverview.tickets.length} open`,
+            detail: "Support and follow-up threads that still need visibility.",
+          },
+          {
+            label: "Deployment",
+            value: `${sectorControlRows.length} sectors`,
+            detail: "Sector lanes currently connected to the rollout control board.",
+          },
+        ]
+      : [
+          {
+            label: "Access",
+            value: clientAccessStateLabel,
+            detail:
+              selectedClientPlan?.slug === "free"
+                ? "Free validation can be generated instantly from this workspace."
+                : pendingPlanPayment
+                  ? "Managed request is waiting for admin approval."
+                  : hasLinkedSelectedPlanAccess
+                    ? "Linked SC access is already attached to the selected managed plan."
+                    : latestRejectedPlanPayment
+                      ? "The latest managed request was rejected and can be retried."
+                      : "Select a plan and continue through the managed access flow.",
+          },
+          {
+            label: "Plan",
+            value:
+              selectedClientPlan?.name ?? clientOverview.account?.planName ?? "Free",
+            detail: "Current commercial lane tied to this client workspace.",
+          },
+          {
+            label: "Billing",
+            value:
+              pendingClientPaymentsCount > 0
+                ? `${pendingClientPaymentsCount} pending`
+                : clientOverview.payments.length > 0
+                  ? `${clientOverview.payments.length} recorded`
+                  : "Clear",
+            detail: "Payment requests and linked access are tracked in one place.",
+          },
+          {
+            label: "Deployment",
+            value:
+              clientSector?.name ??
+              activeSector?.name ??
+              clientOverview.account?.sectorLabel ??
+              "Workspace lane",
+            detail: "Current sector lane and rollout context for this account.",
+          },
+        ]
+    : [];
+
+  const activePublicNavigationKey = isHelpCenterPage
+    ? "help"
+    : landingView === "devices"
+      ? "devices"
+      : landingView === "sectors"
+        ? "sectors"
+        : landingView === "plans"
+          ? "plans"
+          : undefined;
 
   async function refreshPublicRuntime() {
     try {
@@ -1553,6 +1961,15 @@ function App() {
   function scrollToSection(sectionId: string) {
     if (sectionId.startsWith("system-") || sectionId.startsWith("client-")) {
       setActiveDashboardSection(sectionId);
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          document.getElementById(sectionId)?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        });
+      });
+      return;
     }
 
     document.getElementById(sectionId)?.scrollIntoView({
@@ -1575,6 +1992,50 @@ function App() {
   function openLandingView(view: LandingView) {
     setLandingView(view);
     scheduleLandingScroll(landingSectionMap[view]);
+  }
+
+  function buildHelpWindowUrl() {
+    const params = new URLSearchParams();
+
+    if (activeSector?.slug) {
+      params.set("sector", activeSector.slug);
+    }
+
+    if (activeDevice?.deviceKey) {
+      params.set("device", activeDevice.deviceKey);
+    }
+
+    const query = params.toString();
+    return query ? `/help?${query}` : "/help";
+  }
+
+  function openHelpWindow() {
+    window.open(buildHelpWindowUrl(), "_blank", "noopener,noreferrer");
+  }
+
+  function handleLandingTopbarNavigation(key: string) {
+    if (key === "plans" || key === "help") {
+      openHelpWindow();
+      return;
+    }
+
+    if (
+      key === "overview" ||
+      key === "access" ||
+      key === "sectors" ||
+      key === "devices" ||
+      key === "plans"
+    ) {
+      openLandingView(key as LandingView);
+    }
+  }
+
+  function toggleDarkMode() {
+    setIsDarkMode((current) => {
+      const nextMode = !current;
+      window.localStorage.setItem(STORAGE_KEYS.darkMode, String(nextMode));
+      return nextMode;
+    });
   }
 
   function openSectorStory(sectorSlug: string) {
@@ -1696,6 +2157,35 @@ function App() {
       setSystemMessage({
         tone: "error",
         text: getRequestErrorMessage(error, "History cleanup failed."),
+      });
+    } finally {
+      setActionBusyKey("");
+    }
+  }
+
+  async function handleResetSmartCards() {
+    const actionKey = "reset-smart-cards";
+    setActionBusyKey(actionKey);
+
+    try {
+      const response = await axios.post("/api/admin/cards/reset");
+      const totalCards = Number(response.data?.totalCards ?? 0);
+      const planBoards = Array.isArray(response.data?.cardsPerPlan)
+        ? response.data.cardsPerPlan.length
+        : 0;
+
+      setSystemMessage({
+        tone: "success",
+        text:
+          totalCards > 0
+            ? `${totalCards} SC cards were reset. ${planBoards} plan board${planBoards === 1 ? "" : "s"} now hold 500 cards each.`
+            : "SC card inventory reset completed.",
+      });
+      await loadSystemOverview();
+    } catch (error) {
+      setSystemMessage({
+        tone: "error",
+        text: getRequestErrorMessage(error, "SC card reset failed."),
       });
     } finally {
       setActionBusyKey("");
@@ -1992,625 +2482,209 @@ function App() {
     <>
       <GoogleTranslateBridge languageCode={selectedLanguage} />
       <div
-        className={`landing-shell ${authSession ? `theme-${authSession.user.role}` : "theme-landing"}`}
+        className={`landing-shell ${!isDarkMode ? "light-mode" : ""} ${authSession ? `theme-${authSession.user.role}` : "theme-landing"}`}
       >
         <div className="landing-aura landing-aura-blue" />
         <div className="landing-aura landing-aura-gold" />
 
         <div className="page-frame">
-          <LandingTopBar
-            activeNavigationKey={!authSession ? landingView : undefined}
-            countryOptions={countryOptions}
-            currentUserLabel={currentUserLabel}
-            languageOptions={languageOptions}
-            navigationItems={
-              !authSession
-                ? landingSidebarItems.map((item) => ({
-                    key: item.key,
-                    label: item.label,
-                  }))
-                : []
-            }
-            onNavigate={(key) => openLandingView(key as LandingView)}
-            onCountryChange={handleCountryChange}
-            onLanguageChange={handleLanguageChange}
-            onToggleVpn={handleVpnToggle}
-            onVpnEndpointChange={setSelectedEndpointId}
-            selectedCountry={selectedCountry}
-            selectedEndpointId={selectedEndpointId}
-            selectedLanguage={selectedLanguage}
-            vpnActive={vpnActive}
-            vpnBusy={vpnSubmitting}
-            vpnEndpoints={vpnEndpoints}
-            vpnMessage={vpnMessage}
-          />
+          {!authSession && isHelpCenterPage ? (
+            <HelpCenterPage
+              device={activeDevice}
+              lightMode={!isDarkMode}
+              onOpenLogin={() => window.location.assign("/?view=access")}
+              onOpenProducts={() => window.location.assign("/?view=devices")}
+              plans={landingContent.plans}
+              sector={activeSector}
+            />
+          ) : (
+            <>
+              <LandingTopBar
+                activeNavigationKey={!authSession ? activePublicNavigationKey : undefined}
+                countryOptions={countryOptions}
+                currentUserLabel={currentUserLabel}
+                languageOptions={languageOptions}
+                navigationItems={
+                  !authSession
+                    ? landingSidebarItems.map((item) => ({
+                        key: item.key,
+                        label: item.label,
+                      }))
+                    : []
+                }
+                onNavigate={handleLandingTopbarNavigation}
+                onPrimaryAction={() => {
+                  if (activeSector) {
+                    openRegisterForSector(activeSector, featuredLandingPlan ?? undefined);
+                    return;
+                  }
 
-          {!authSession ? (
-            <main className="landing-compact-main" id="landing-center">
-              {!showLandingAccessPage ? (
-                <motion.section
-                  animate={{ opacity: 1, y: 0 }}
-                  className="landing-hero-shell executive-surface executive-surface-strong"
-                  id="landing-overview"
-                  initial={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className="landing-hero-grid landing-hero-grid-rich">
-                  <BrandShowcase
-                    currentCountry={selectedCountryOption.label}
-                    currentLanguage={selectedLanguageOption.label}
-                    heroBadges={heroBadges}
-                    heroMetrics={heroMetrics}
-                    heroSubtitle={
-                      activeDevice
-                        ? `${activeDevice.tagline} Plug it in, greet customers, and control offers from the cloud.`
-                        : landingContent.hero.subtitle
-                    }
-                    heroTitle={
-                      activeDevice
-                        ? `${activeDevice.name} for screens that need to sell.`
-                        : landingContent.hero.title
-                    }
-                    vpnActive={vpnActive}
-                  />
+                  openLandingView("devices");
+                }}
+                onSecondaryAction={() => {
+                  setAuthMode("login");
+                  openLandingView("access");
+                }}
+                onCountryChange={handleCountryChange}
+                onLanguageChange={handleLanguageChange}
+                onToggleVpn={handleVpnToggle}
+                onVpnEndpointChange={setSelectedEndpointId}
+                onToggleDarkMode={toggleDarkMode}
+                selectedCountry={selectedCountry}
+                selectedEndpointId={selectedEndpointId}
+                selectedLanguage={selectedLanguage}
+                isDarkMode={isDarkMode}
+                vpnActive={vpnActive}
+                vpnBusy={vpnSubmitting}
+                vpnEndpoints={vpnEndpoints}
+                vpnMessage={vpnMessage}
+              />
 
-                  <div className="landing-hero-stack">
-                    <div className="landing-hero-actions-card">
-                      <span className="landing-inline-label">Hero device</span>
-                      <div className="landing-hero-preview-frame">
-                        <img
-                          alt={activeDevice?.name ?? "brAIn device"}
-                          src={activeDevice?.imageUrl ?? landingContent.hero.deviceImage}
-                        />
-                      </div>
-                      <h2 className="landing-side-title">
-                        {activeDevice?.name ?? "Start with the device"}
-                      </h2>
-                      <p className="landing-side-copy">
-                        {activeDevice?.tagline ??
-                          "Show the hardware first, then move the buyer into login."}
-                      </p>
-
-                      <div className="landing-hero-actions-row">
-                        <button
-                          className="executive-button-primary"
-                          onClick={() => openLandingView("devices")}
-                          type="button"
-                        >
-                          See the device
-                          <ArrowRight className="h-4 w-4" />
-                        </button>
-                        <button
-                          className="executive-button-secondary"
-                          onClick={() => openLandingView("access")}
-                          type="button"
-                        >
-                          Open login
-                        </button>
-                      </div>
-
-                      <div className="landing-highlight-grid">
-                        {salesHighlights.map((item) => {
-                          const Icon = item.icon;
-
-                          return (
-                            <div className="landing-highlight-card" key={item.title}>
-                              <span className="landing-hero-proof-icon">
-                                <Icon size={16} />
-                              </span>
-                              <div>
-                                <strong>{item.title}</strong>
-                                <p>{item.detail}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <p className="landing-subtle-note">
-                        {contentLoading
-                          ? "Loading device and sector content..."
-                          : "Country, language, and route settings stay available from the header."}
-                      </p>
-                    </div>
-
-                    {partnerSignals.length > 0 ? (
-                      <div className="landing-proof-strip">
-                        {partnerSignals.map((signal) => (
-                          <span className="landing-proof-chip" key={signal}>
-                            {signal}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                  </div>
-                </motion.section>
-              ) : null}
-
-              {showLandingAccessPage ? (
-                <motion.section
-                  animate={{ opacity: 1, y: 0 }}
-                  className="landing-access-stage executive-surface"
-                  id="landing-access-page"
-                  initial={{ opacity: 0, y: 16 }}
-                  transition={{ delay: 0.06, duration: 0.46 }}
-                >
-                  <div className="landing-access-page-top">
-                    <div>
-                      <span className="landing-inline-label">Login</span>
-                      <h2 className="landing-section-title">
-                        Log in or open a new buyer workspace
-                      </h2>
-                      <p className="landing-section-copy">
-                        Keep the preweb focused on the product. Use this page only
-                        when the buyer is ready to continue.
-                      </p>
-                    </div>
-
-                    <button
-                      className="landing-access-back"
-                      onClick={() => openLandingView("overview")}
-                      type="button"
-                    >
-                      Back to preweb
-                    </button>
-                  </div>
-
-                <div className="landing-access-panel-header">
-                  <div>
-                    <span className="landing-inline-label">Selected flow</span>
-                    <h2 className="landing-section-title">
-                      {activeDevice
-                        ? `Continue with ${activeDevice.name}`
-                        : "Continue to buyer access"}
-                    </h2>
-                    <p className="landing-section-copy">
-                      Sign in with an existing account or create a workspace for a
-                      new device order.
-                    </p>
-                  </div>
-
-                  {activeSector ? (
-                    <span className="landing-selected-pill">
-                      Active sector: {activeSector.name}
-                    </span>
-                  ) : null}
-                </div>
-
-                <div className="landing-access-layout">
-                      <AuthPanel
-                        authMessage={authMessage}
-                        authMode={authMode}
-                        authSession={authSession}
-                        authStatusText={authStatusText}
-                    authSubmitting={authSubmitting}
-                    loginForm={loginForm}
-                    onAuthModeChange={setAuthMode}
-                    onLoginChange={setLoginForm}
-                    onLoginSubmit={handleLoginSubmit}
-                    onRegisterChange={setRegisterForm}
-                    onRegisterSubmit={handleRegisterSubmit}
-                        onRoleChange={(role) =>
-                          setLoginForm((current) => ({ ...current, role }))
-                        }
-                        onSignOut={handleSignOut}
-                        registerForm={registerForm}
-                        selectedCountry={selectedCountryOption.label}
-                        selectedLanguage={selectedLanguageOption.label}
-                        showHeader={false}
-                        vpnActive={vpnActive}
-                      />
-
-                  <aside className="landing-access-aside">
-                    <div className="landing-access-aside-card">
-                      <span className="landing-inline-label">Selected device</span>
-                      <h3 className="landing-side-title">
-                        {activeDevice?.name ?? "Choose the device lane first"}
-                      </h3>
-                      <p className="landing-side-copy">
-                        {activeDevice?.tagline ??
-                          "Pick a sector and device so the login flow feels like the next natural buying step."}
-                      </p>
-
-                      <div className="landing-access-point-list">
-                        <div className="landing-access-point-item">
-                          <span>Sector</span>
-                          <strong>{activeSector?.name ?? "Not selected yet"}</strong>
-                        </div>
-                        <div className="landing-access-point-item">
-                          <span>Best fit</span>
-                          <strong>
-                            {activeDevice?.suitedFor[0] ??
-                              activeSector?.audience ??
-                              "Buyer fit"}
-                          </strong>
-                        </div>
-                        <div className="landing-access-point-item">
-                          <span>Plan lane</span>
-                          <strong>{featuredLandingPlan?.name ?? "Business"}</strong>
-                        </div>
-                      </div>
-
-                      {activeDevice?.ports?.length ? (
-                        <div className="landing-proof-strip">
-                          {activeDevice.ports.slice(0, 4).map((port) => (
-                            <span className="landing-proof-chip" key={port}>
-                              {port}
-                            </span>
-                          ))}
-                        </div>
-                      ) : null}
-
-                      <div className="landing-access-strip-actions">
-                        <button
-                          className="executive-button-secondary"
-                          onClick={() => openLandingView("devices")}
-                          type="button"
-                        >
-                          See the device again
-                        </button>
-                        <button
-                          className="executive-button-primary"
-                          onClick={() => openLandingView("overview")}
-                          type="button"
-                        >
-                          Back to landing
-                          <ArrowRight className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </aside>
-                </div>
-                </motion.section>
-              ) : null}
-
-              {!showLandingAccessPage ? (
-                <motion.section
-                  animate={{ opacity: 1, y: 0 }}
-                  className="landing-section-shell executive-surface"
-                  id="preweb-sectors"
-                  initial={{ opacity: 0, y: 16 }}
-                  transition={{ delay: 0.1, duration: 0.46 }}
-                >
-                <div className="landing-section-heading">
-                  <div>
-                    <span className="landing-inline-label">Sectors</span>
-                    <h2 className="landing-section-title">
-                      Choose the lane where the device sells best
-                    </h2>
-                    <p className="landing-section-copy">
-                      One buyer, one use case, one device story. Keep it sharp.
-                    </p>
-                  </div>
-
-                  {activeSector ? (
-                    <span className="landing-selected-pill">
-                      Selected: {activeSector.name}
-                    </span>
-                  ) : null}
-                </div>
-
-                {landingContent.sectors.length > 0 ? (
-                  <div className="landing-sector-grid">
-                    {landingContent.sectors.map((sector, index) => {
-                      const active = sector.slug === activeSector?.slug;
-                      const sectorDevice =
-                        landingContent.devices.find(
-                          (device) => device.sectorSlug === sector.slug,
-                        ) ?? null;
-
-                      return (
-                        <motion.button
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`landing-sector-card ${
-                            active ? "landing-sector-card-active" : ""
-                          }`}
-                          initial={{ opacity: 0, y: 16 }}
-                          key={sector.slug}
-                          onClick={() => openSectorStory(sector.slug)}
-                          style={{
-                            borderColor: active
-                              ? `${sector.accent}55`
-                              : "rgba(148, 163, 184, 0.14)",
-                            boxShadow: active
-                              ? `0 20px 48px ${sector.accent}14`
-                              : "0 16px 38px rgba(0, 0, 0, 0.16)",
-                          }}
-                          transition={{ delay: index * 0.04, duration: 0.36 }}
-                          type="button"
-                          whileHover={{ y: -3 }}
-                        >
-                          <div className="landing-sector-card-top">
-                            <div>
-                              <p className="landing-sector-label">Sector</p>
-                              <h3>{sector.name}</h3>
-                            </div>
-                            <span className="landing-sector-status">
-                              {active ? "Selected" : "Choose"}
-                            </span>
-                          </div>
-
-                          <p className="landing-sector-copy">{sector.summary}</p>
-
-                          <div className="landing-sector-feature-list">
-                            <span>{sectorDevice?.name ?? sector.statValue}</span>
-                            <span>{sector.audience}</span>
-                          </div>
-
-                          <div className="landing-sector-footer">
-                            <span style={{ color: sector.accent }}>
-                              {sectorDevice?.category ?? sector.statValue}
-                            </span>
-                            <span>{active ? "Open device stage" : "See device fit"}</span>
-                          </div>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="landing-empty-note">
-                    Sector options will appear here once public content is ready.
-                  </div>
-                )}
-                </motion.section>
-              ) : null}
-
-              {!showLandingAccessPage ? (
-                <motion.section
-                  animate={{ opacity: 1, y: 0 }}
-                  className="landing-section-shell executive-surface"
-                  id="landing-devices"
-                  initial={{ opacity: 0, y: 16 }}
-                  transition={{ delay: 0.14, duration: 0.46 }}
-                >
-                <div className="landing-section-heading">
-                  <div>
-                    <span className="landing-inline-label">Devices</span>
-                    <h2 className="landing-section-title">
-                      Put the hardware on stage
-                    </h2>
-                    <p className="landing-section-copy">
-                      This section should make the buyer picture the device in the
-                      real space, not read more filler text.
-                    </p>
-                  </div>
-
-                  {activeDevice ? (
-                    <span className="landing-selected-pill">
-                      Spotlight: {activeDevice.name}
-                    </span>
-                  ) : null}
-                </div>
-
-                {activeSector && activeDevice ? (
-                  <DevicePreviewStudio
-                    device={activeDevice}
-                    onDeploy={() =>
-                      openRegisterForSector(
-                        activeSector,
-                        featuredLandingPlan ?? undefined,
-                      )
-                    }
-                    onSelectDevice={handleDeviceSelection}
-                    plans={landingContent.plans}
-                    relatedDevices={devicePreviewOptions}
-                    sector={activeSector}
-                  />
-                ) : (
-                  <div className="landing-empty-note">
-                    Pick a sector to open the device stage.
-                  </div>
-                )}
-                </motion.section>
-              ) : null}
-
-              {!showLandingAccessPage ? (
-                <motion.section
-                  animate={{ opacity: 1, y: 0 }}
-                  className="landing-section-shell executive-surface"
-                  id="landing-plans"
-                  initial={{ opacity: 0, y: 16 }}
-                  transition={{ delay: 0.18, duration: 0.46 }}
-                >
-                <div className="landing-section-heading">
-                  <div>
-                    <span className="landing-inline-label">Plans</span>
-                    <h2 className="landing-section-title">
-                      Plans that follow the device
-                    </h2>
-                    <p className="landing-section-copy">
-                      Keep pricing clean. The buyer should already want the
-                      hardware before reading this.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="landing-plan-grid">
-                  {landingPlanCards.map((plan) => (
-                    <article
-                      className={`landing-plan-card ${
-                        plan.featured ? "landing-plan-card-featured" : ""
-                      }`}
-                      key={plan.slug}
-                    >
-                      <div className="landing-plan-meta">
-                        <span className="landing-inline-label">
-                          {plan.featured ? "Best seller" : plan.name}
-                        </span>
-                        <span className="landing-selected-pill">
-                          {plan.deviceAllowance}
-                        </span>
-                      </div>
-
-                      <h3>{plan.name}</h3>
-                      <p className="landing-sector-copy">{plan.summary}</p>
-
-                      <p className="landing-plan-price">
-                        EUR {plan.monthlyPrice}
-                        <small>/mo</small>
-                      </p>
-                      <p className="landing-subtle-note">
-                        {plan.annualPrice > 0
-                          ? `EUR ${plan.annualPrice} yearly`
-                          : "Free validation lane"}
-                      </p>
-
-                      <div className="landing-plan-feature-list">
-                        {plan.features.slice(0, 3).map((feature) => (
-                          <div className="landing-plan-feature-item" key={feature}>
-                            <ShieldCheck className="h-4 w-4" />
-                            <span>{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <button
-                        className={`landing-plan-action ${
-                          plan.featured
-                            ? "executive-button-primary"
-                            : "executive-button-secondary"
-                        }`}
-                        onClick={() => {
-                          if (activeSector) {
-                            openRegisterForSector(activeSector, plan);
-                            return;
-                          }
-
-                          openLandingView("access");
-                        }}
-                        type="button"
-                      >
-                        {plan.slug === "free"
-                          ? "Start free validation"
-                          : `Start with ${plan.name}`}
-                      </button>
-                    </article>
-                  ))}
-                </div>
-                </motion.section>
-              ) : null}
-
-              {!showLandingAccessPage ? (
-                <motion.section
-                  animate={{ opacity: 1, y: 0 }}
-                  className="landing-access-strip executive-surface"
-                  initial={{ opacity: 0, y: 16 }}
-                  transition={{ delay: 0.22, duration: 0.46 }}
-                >
-                <div>
-                  <span className="landing-inline-label">Next step</span>
-                  <h2 className="landing-section-title">
-                    When the device wins, open buyer access
-                  </h2>
-                  <p className="landing-section-copy">
-                    Keep the last action simple: go to login or go back to the
-                    device stage.
-                  </p>
-                </div>
-
-                <div className="landing-access-strip-actions">
-                  <button
-                    className="executive-button-primary"
-                    onClick={() => openLandingView("access")}
-                    type="button"
-                  >
-                    Open login
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                  <button
-                    className="executive-button-secondary"
-                    onClick={() => openLandingView("devices")}
-                    type="button"
-                  >
-                    Back to the device
-                  </button>
-                </div>
-                </motion.section>
-              ) : null}
-            </main>
+              {!authSession ? (
+                <PublicLandingExperience
+                  activeDevice={activeDevice}
+                  activeSector={activeSector}
+                  authMessage={authMessage}
+                  authMode={authMode}
+                  authSession={authSession}
+                  authStatusText={authStatusText}
+                  authSubmitting={authSubmitting}
+                  contentLoading={contentLoading}
+                  featuredPlan={featuredLandingPlan}
+                  heroBadges={heroBadges}
+                  heroMetrics={heroMetrics}
+                  lightMode={!isDarkMode}
+                  landingContent={landingContent}
+                  landingPlanCards={landingPlanCards}
+                  loginForm={loginForm}
+                  onAuthModeChange={setAuthMode}
+                  onDeviceSelect={handleDeviceSelection}
+                  onLoginChange={setLoginForm}
+                  onLoginSubmit={handleLoginSubmit}
+                  onOpenAccess={() => {
+                    setAuthMode("login");
+                    openLandingView("access");
+                  }}
+                  onCloseAccess={() => openLandingView("overview")}
+                  onOpenHelp={openHelpWindow}
+                  onOpenOverview={() => openLandingView("overview")}
+                  onOpenProducts={() => openLandingView("devices")}
+                  onOpenRegisterForSector={openRegisterForSector}
+                  onRegisterChange={setRegisterForm}
+                  onRegisterSubmit={handleRegisterSubmit}
+                  onRoleChange={(role) =>
+                    setLoginForm((current) => ({ ...current, role }))
+                  }
+                  onSectorSelect={openSectorStory}
+                  onSignOut={handleSignOut}
+                  partnerSignals={partnerSignals}
+                  registerForm={registerForm}
+                  salesHighlights={salesHighlights}
+                  selectedCountryLabel={selectedCountryOption.label}
+                  selectedLanguageLabel={selectedLanguageOption.label}
+                  showAccessPage={showLandingAccessPage}
+                  vpnActive={vpnActive}
+                />
           ) : (
             <main
-              className="system-center-shell mt-6"
+              className="system-center-shell workspace-runtime-theme mt-6"
               id="system-center"
             >
               <aside className="dashboard-sidebar-rail">
                 <div className="dashboard-sidebar-shell workspace-sidebar-shell flex flex-col gap-5 rounded-[32px] p-5 backdrop-blur-xl">
                   <div className="workspace-summary-card">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <span className="workspace-badge">
-                          <ShieldCheck className="h-3.5 w-3.5" />
-                          {authSession.user.role === "admin"
-                            ? "Admin control center"
-                            : "Client live workspace"}
-                        </span>
-                        <h2 className="mt-4 break-words text-2xl font-black text-white">
-                          {authSession.user.company}
-                        </h2>
-                        <p className="mt-2 text-sm leading-7 text-slate-300">
-                          {authStatusText}
-                        </p>
-                      </div>
-
-                      <div className="workspace-route-card text-right">
-                        <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-100">
-                          <span className="h-2 w-2 rounded-full bg-[#d6b37a]" />
-                          Live
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <p className="workspace-summary-kicker">Workspace profile</p>
+                          <span className="mt-3 inline-flex workspace-badge">
+                            <ShieldCheck className="h-3.5 w-3.5" />
+                            {authSession.user.role === "admin"
+                              ? "Admin control center"
+                              : "Client workspace"}
+                          </span>
+                          <h2 className="mt-4 break-words text-2xl font-black text-white">
+                            {authSession.user.company}
+                          </h2>
+                          <p className="workspace-summary-copy">{authStatusText}</p>
                         </div>
-                        <p className="mt-2 break-words text-sm font-semibold text-white">
-                          {vpnActive ? vpnSession?.location : "Direct route"}
-                        </p>
-                      </div>
-                    </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          Role
-                        </p>
-                        <p className="mt-2 break-words text-sm font-bold capitalize text-white">
+                        <div className="workspace-route-card min-w-[10.5rem] sm:text-right">
+                          <p className="workspace-route-kicker">Route</p>
+                          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-100 sm:justify-end">
+                            <span className="h-2 w-2 rounded-full bg-[#d45a34]" />
+                            Live
+                          </div>
+                          <p className="break-words text-sm font-semibold text-white">
+                            {vpnActive ? vpnSession?.location : "Direct route"}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="workspace-summary-pill-row">
+                        <span className="workspace-summary-pill">
                           {authSession.user.role}
-                        </p>
+                        </span>
+                        <span className="workspace-summary-pill">
+                          {vpnActive ? "VPN route" : "Direct route"}
+                        </span>
+                        <span className="workspace-summary-pill">
+                          {selectedCountryOption.label} / {selectedLanguageOption.label}
+                        </span>
                       </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          Connected
-                        </p>
-                        <p className="mt-2 break-words text-xs font-bold leading-5 text-white">
-                          {formatSystemDate(authSession.issuedAt)}
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          Country
-                        </p>
-                        <p className="mt-2 break-words text-sm font-bold text-white">
-                          {selectedCountryOption.label}
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                          Language
-                        </p>
-                        <p className="mt-2 break-words text-sm font-bold text-white">
-                          {selectedLanguageOption.label}
-                        </p>
+
+                      <div className="workspace-detail-grid">
+                        {workspaceProfileItems.map((item) => (
+                          <div className="workspace-detail-item" key={item.label}>
+                            <span>{item.label}</span>
+                            <strong>{item.value}</strong>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
+
+                  {activeDashboardItem ? (
+                    <div className="workspace-focus-card">
+                      <div className="workspace-focus-head">
+                        <div>
+                          <p className="workspace-focus-kicker">Focus now</p>
+                          <h3 className="workspace-focus-title">{activeDashboardItem.label}</h3>
+                        </div>
+                        <span className="workspace-focus-meta">
+                          {activeDashboardItem.meta}
+                        </span>
+                      </div>
+
+                      <p className="workspace-focus-copy">{activeDashboardItem.detail}</p>
+
+                      <div className="workspace-stat-grid">
+                        {workspaceSidebarStats.map((item) => (
+                          <div className="workspace-stat-card" key={item.label}>
+                            <span>{item.label}</span>
+                            <strong>{item.value}</strong>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
 
                   <div className="rounded-[28px] border border-white/10 bg-black/20 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Sidebar
+                          Navigation
                         </p>
                         <h3 className="mt-2 text-lg font-black text-white">
-                          Workspace navigation
+                          Control map
                         </h3>
                       </div>
-                      <Globe2 className="workspace-icon h-5 w-5" />
+                      <div className="flex items-center gap-2">
+                        <span className="workspace-focus-meta">
+                          {dashboardSidebarItems.length} sections
+                        </span>
+                        <Globe2 className="workspace-icon h-5 w-5" />
+                      </div>
                     </div>
 
                     <div className="mt-4 space-y-3">
@@ -2676,7 +2750,7 @@ function App() {
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                          Help
+                          Actions
                         </p>
                         <h3 className="mt-2 text-lg font-black text-white">
                           {dashboardHelpTitle}
@@ -2762,13 +2836,13 @@ function App() {
                       </span>
                       <h1 className="mt-5 text-4xl font-black tracking-tight text-white sm:text-5xl">
                         {authSession.user.role === "admin"
-                          ? "Operational control for accounts, services, and approvals."
-                          : "Client activity, payments, access, and support in one workspace."}
+                          ? "Control approvals, rollout, cards, and support."
+                          : "Plan, validate, and track the whole client workspace."}
                       </h1>
                       <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
                         {authSession.user.role === "admin"
-                          ? "Manage notifications, accounts, payments, scratch-card activity, device rollout, tickets, and sector operations from one real dashboard."
-                          : "Track your account, payments, activations, support, and access-code validation without leaving the same cloud workspace."}
+                          ? "Manage the queues that matter first, then move into deeper operations without losing the high-level view."
+                          : "Keep access, billing, deployment, and support in one clean workflow without jumping between pages."}
                       </p>
                     </div>
 
@@ -2790,6 +2864,41 @@ function App() {
                         Sign out
                       </button>
                     </div>
+                  </div>
+
+                  <div className="workspace-overview-strip">
+                    {workspaceOverviewCards.map((card) => (
+                      <article className="workspace-overview-card" key={card.label}>
+                        <span className="workspace-overview-label">{card.label}</span>
+                        <strong className="workspace-overview-value">{card.value}</strong>
+                        <p className="workspace-overview-copy">{card.detail}</p>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="workspace-priority-grid">
+                    {workspacePriorityCards.map((card) => {
+                      const Icon = card.icon;
+
+                      return (
+                        <button
+                          className="workspace-priority-card"
+                          key={`${card.target}-${card.label}`}
+                          onClick={() => scrollToSection(card.target)}
+                          type="button"
+                        >
+                          <div className="workspace-priority-head">
+                            <span className="workspace-priority-label">{card.label}</span>
+                            <span className="workspace-priority-status">{card.status}</span>
+                          </div>
+                          <div className="workspace-priority-icon">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <strong className="workspace-priority-title">{card.title}</strong>
+                          <p className="workspace-priority-copy">{card.detail}</p>
+                        </button>
+                      );
+                    })}
                   </div>
                 </motion.section>
 
@@ -2823,10 +2932,63 @@ function App() {
                   ))}
                 </section>
 
+                {activeDashboardItem ? (
+                  <section className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.96),rgba(5,11,21,0.92))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.2)] sm:p-6">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                      <div className="max-w-2xl">
+                        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                          Active workspace section
+                        </p>
+                        <h2 className="mt-2 text-2xl font-black text-white">
+                          {activeDashboardItem.label}
+                        </h2>
+                        <p className="mt-3 text-sm leading-7 text-slate-300">
+                          {activeDashboardSection === "system-overview"
+                            ? "Use the switcher below to open one focused board at a time instead of scrolling through the whole workspace."
+                            : activeDashboardItem.detail}
+                        </p>
+                      </div>
+
+                      {activeDashboardSection !== "system-overview" ? (
+                        <button
+                          className="executive-button-secondary"
+                          onClick={() => scrollToSection("system-overview")}
+                          type="button"
+                        >
+                          Back to overview
+                        </button>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {dashboardSidebarItems.map((item) => {
+                        const active = activeDashboardSection === item.target;
+
+                        return (
+                          <button
+                            className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                              active
+                                ? "border-[rgba(212,90,52,0.28)] bg-[rgba(212,90,52,0.12)] text-[#ffe7dc]"
+                                : "border-white/10 bg-white/[0.04] text-slate-200 hover:bg-white/[0.08]"
+                            }`}
+                            key={item.target}
+                            onClick={() => scrollToSection(item.target)}
+                            type="button"
+                          >
+                            {item.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ) : null}
+
                 {authSession.user.role === "admin" ? (
                   <>
                     <section
-                      className="grid gap-6 2xl:grid-cols-[0.9fr_1.1fr]"
+                      className={`grid gap-6 2xl:grid-cols-[0.9fr_1.1fr] ${
+                        showAdminOperationsPanel ? "" : "hidden"
+                      }`}
                       id="system-operations"
                     >
                   <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
@@ -3025,7 +3187,9 @@ function App() {
                     </section>
 
                     <section
-                      className="rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:p-7"
+                      className={`rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:p-7 ${
+                        showAdminSectorsPanel ? "" : "hidden"
+                      }`}
                       id="system-sectors"
                     >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -3097,7 +3261,7 @@ function App() {
                             </h3>
                           </div>
                           <button
-                            className="inline-flex items-center gap-2 rounded-full border border-amber-300/20 bg-[linear-gradient(135deg,rgba(214,154,47,0.94),rgba(255,215,122,0.96))] px-4 py-2 text-sm font-bold text-[#1b120d] shadow-[0_14px_30px_rgba(214,154,47,0.2)] transition hover:brightness-105"
+                            className="inline-flex items-center gap-2 rounded-full border border-[rgba(212,90,52,0.24)] bg-[linear-gradient(135deg,rgba(212,90,52,0.96),rgba(201,138,60,0.96))] px-4 py-2 text-sm font-bold text-[#170f0a] shadow-[0_14px_30px_rgba(180,82,47,0.24)] transition hover:brightness-105"
                             onClick={() =>
                               openRegisterForSector(
                                 activeSector,
@@ -3116,6 +3280,7 @@ function App() {
                           <SectorLiveBoard
                             compact
                             device={activeDevice}
+                            lightMode={!isDarkMode}
                             plans={landingContent.plans}
                             sector={activeSector}
                           />
@@ -3164,9 +3329,27 @@ function App() {
                 ) : null}
 
                 {authSession.user.role === "admin" ? (
-                  <section className="space-y-6" id="system-role">
-                    <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                  <section
+                    className={`space-y-6 ${
+                      showAdminSupportPanel ||
+                      showAdminRolloutPanel ||
+                      showAdminPaymentsPanel ||
+                      showAdminCardsPanel
+                        ? ""
+                        : "hidden"
+                    }`}
+                    id="system-role"
+                  >
+                    <div
+                      className={`grid gap-6 xl:grid-cols-[0.95fr_1.05fr] ${
+                        showAdminSupportPanel || showAdminRolloutPanel ? "" : "hidden"
+                      }`}
+                    >
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showAdminSupportPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -3214,7 +3397,9 @@ function App() {
                       </article>
 
                       <article
-                        className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2"
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2 ${
+                          showAdminRolloutPanel ? "" : "hidden"
+                        }`}
                         id="system-device-control"
                       >
                         <div className="flex items-center justify-between">
@@ -3239,8 +3424,10 @@ function App() {
                               className="rounded-[26px] border p-4"
                               key={sector.slug}
                               style={{
-                                borderColor: `${sector.accent}35`,
-                                background: `linear-gradient(180deg, ${sector.accent}14, rgba(2,8,18,0.9))`,
+                                borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}35`,
+                                background: !isDarkMode
+                                  ? `linear-gradient(180deg, ${getThemeAccent(sector.accent, true)}10, rgba(255,255,255,0.98))`
+                                  : `linear-gradient(180deg, ${sector.accent}14, rgba(2,8,18,0.9))`,
                               }}
                             >
                               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -3252,9 +3439,11 @@ function App() {
                                     <span
                                       className="rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]"
                                       style={{
-                                        borderColor: `${sector.accent}45`,
-                                        background: `${sector.accent}18`,
-                                        color: "#f8fafc",
+                                        borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}45`,
+                                        background: !isDarkMode
+                                          ? `${getThemeAccent(sector.accent, true)}14`
+                                          : `${sector.accent}18`,
+                                        color: !isDarkMode ? "#111111" : "#fef1ea",
                                       }}
                                     >
                                       {sector.primaryDevice}
@@ -3310,7 +3499,11 @@ function App() {
                         </div>
                       </article>
 
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showAdminRolloutPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -3378,8 +3571,21 @@ function App() {
                       </article>
                     </div>
 
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                    <div
+                      className={`grid gap-6 xl:grid-cols-2 ${
+                        showAdminSupportPanel ||
+                        showAdminRolloutPanel ||
+                        showAdminPaymentsPanel ||
+                        showAdminCardsPanel
+                          ? ""
+                          : "hidden"
+                      }`}
+                    >
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showAdminRolloutPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -3439,7 +3645,9 @@ function App() {
                       </article>
 
                       <article
-                        className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6"
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showAdminPaymentsPanel ? "" : "hidden"
+                        }`}
                         id="system-payments"
                       >
                         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -3622,7 +3830,9 @@ function App() {
                       </article>
 
                       <article
-                        className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6"
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showAdminCardsPanel ? "" : "hidden"
+                        }`}
                         id="system-cards"
                       >
                         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -3639,6 +3849,16 @@ function App() {
                             </p>
                           </div>
                           <div className="flex flex-wrap gap-2">
+                            <button
+                              className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-cyan-100 transition hover:bg-cyan-400/15 disabled:cursor-not-allowed disabled:opacity-50"
+                              disabled={actionBusyKey === "reset-smart-cards"}
+                              onClick={() => void handleResetSmartCards()}
+                              type="button"
+                            >
+                              {actionBusyKey === "reset-smart-cards"
+                                ? "Resetting..."
+                                : "Reset 500/plan"}
+                            </button>
                             {[
                               ["updated", "Latest"],
                               ["code", "Code"],
@@ -3817,7 +4037,11 @@ function App() {
                         </div>
                       </article>
 
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showAdminCardsPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -3873,7 +4097,11 @@ function App() {
                         </div>
                       </article>
 
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2 ${
+                          showAdminSupportPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -3933,9 +4161,27 @@ function App() {
                     </div>
                   </section>
                 ) : (
-                  <section className="space-y-6" id="system-role">
-                    <div className="grid gap-6 xl:grid-cols-[0.84fr_1.16fr]">
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                  <section
+                    className={`space-y-6 ${
+                      showClientAccessPanel ||
+                      showClientBillingPanel ||
+                      showClientDeploymentPanel ||
+                      showClientSupportPanel
+                        ? ""
+                        : "hidden"
+                    }`}
+                    id="system-role"
+                  >
+                    <div
+                      className={`grid gap-6 xl:grid-cols-[0.84fr_1.16fr] ${
+                        showClientAccessPanel || showClientSupportPanel ? "" : "hidden"
+                      }`}
+                    >
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showClientAccessPanel || showClientSupportPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -3950,64 +4196,87 @@ function App() {
 
                         <div className="mt-5 grid gap-4">
                           <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                            <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                              Company
-                            </p>
-                            <h3 className="mt-2 text-2xl font-black text-white">
-                              {clientOverview.account?.company ?? authSession.user.company}
-                            </h3>
-                            <p className="mt-2 text-sm text-slate-400">
-                              {clientOverview.account?.planName ?? "No active plan"}
-                            </p>
+                            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                              <div>
+                                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                  Company
+                                </p>
+                                <h3 className="mt-2 text-2xl font-black text-white">
+                                  {clientOverview.account?.company ?? authSession.user.company}
+                                </h3>
+                                <p className="mt-2 text-sm text-slate-400">
+                                  {clientOverview.account?.planName ?? "No active plan"}
+                                </p>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                <span className="workspace-summary-pill">
+                                  {clientAccessStateLabel}
+                                </span>
+                                <span className="workspace-summary-pill">
+                                  {clientOverview.account?.sectorLabel ??
+                                    activeSector?.name ??
+                                    "brAIn workspace"}
+                                </span>
+                                <span className="workspace-summary-pill">
+                                  {clientOverview.payments.length} payments
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="grid gap-4 md:grid-cols-2">
-                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                Sales today
-                              </p>
-                              <h3 className="mt-2 text-3xl font-black text-white">
+                          <div className="workspace-overview-strip workspace-overview-strip-compact">
+                            <article className="workspace-overview-card">
+                              <span className="workspace-overview-label">Sales today</span>
+                              <strong className="workspace-overview-value">
                                 {formatSystemMoney(clientOverview.account?.salesToday ?? 0)}
-                              </h3>
-                            </div>
-                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                Calls handled
+                              </strong>
+                              <p className="workspace-overview-copy">
+                                Commercial activity captured in the current client window.
                               </p>
-                              <h3 className="mt-2 text-3xl font-black text-white">
-                                {clientOverview.account?.callsHandled ?? 0}
-                              </h3>
-                            </div>
-                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                Tasks automated
+                            </article>
+                            <article className="workspace-overview-card">
+                              <span className="workspace-overview-label">Calls handled</span>
+                              <strong className="workspace-overview-value">
+                                {String(clientOverview.account?.callsHandled ?? 0)}
+                              </strong>
+                              <p className="workspace-overview-copy">
+                                Voice and support interactions processed through brAIn.
                               </p>
-                              <h3 className="mt-2 text-3xl font-black text-white">
-                                {clientOverview.account?.tasksAutomated ?? 0}
-                              </h3>
-                            </div>
-                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                            </article>
+                            <article className="workspace-overview-card">
+                              <span className="workspace-overview-label">Tasks automated</span>
+                              <strong className="workspace-overview-value">
+                                {String(clientOverview.account?.tasksAutomated ?? 0)}
+                              </strong>
+                              <p className="workspace-overview-copy">
+                                Automated flows completed for this workspace account.
+                              </p>
+                            </article>
+                            <article className="workspace-overview-card">
+                              <span className="workspace-overview-label">
                                 Credits remaining
-                              </p>
-                              <h3 className="mt-2 text-3xl font-black text-white">
+                              </span>
+                              <strong className="workspace-overview-value">
                                 {clientOverview.account?.creditsRemaining?.toLocaleString(
                                   "en-GB",
                                 ) ?? 0}
-                              </h3>
-                            </div>
+                              </strong>
+                              <p className="workspace-overview-copy">
+                                Available usage capacity left in the current cycle.
+                              </p>
+                            </article>
                           </div>
                           <div className="grid gap-4">
-                            <div className="overflow-hidden rounded-[24px] border border-cyan-400/15 bg-[linear-gradient(135deg,rgba(28,79,56,0.92),rgba(5,11,21,0.96))] p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
+                            <div className="overflow-hidden rounded-[24px] border border-[rgba(212,90,52,0.18)] bg-[linear-gradient(135deg,rgba(84,49,32,0.96),rgba(8,14,22,0.97))] p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
                               <div className="flex items-center gap-4">
                                 <div className="flex h-20 w-20 items-center justify-center rounded-[22px] border border-white/10 bg-black/20">
-                                  <ShieldCheck className="h-9 w-9 text-cyan-100" />
+                                  <ShieldCheck className="h-9 w-9 text-[#ffe7dc]" />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/70">
-                                    Client guidance
+                                  <p className="text-xs uppercase tracking-[0.2em] text-[#f0cdb8]/70">
+                                    Workspace guidance
                                   </p>
                                   <h3 className="mt-2 text-lg font-black text-white">
-                                    Live popup support
+                                    Next workspace move
                                   </h3>
                                   <p className="mt-2 text-sm leading-7 text-slate-200">
                                     {petAdviceCopy}
@@ -4019,7 +4288,7 @@ function App() {
                                 onClick={() => scrollToSection("client-plan-board")}
                                 type="button"
                               >
-                                Open access card
+                                Review access path
                                 <ArrowRight className="h-4 w-4" />
                               </button>
                             </div>
@@ -4028,24 +4297,86 @@ function App() {
                       </article>
 
                       <article
-                        className="rounded-[34px] border p-5 sm:p-6"
+                        className={`rounded-[34px] border p-5 sm:p-6 ${
+                          showClientAccessPanel ? "" : "hidden"
+                        }`}
                         id="client-plan-board"
                         style={clientAccessCardStyle}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                              Plans + access
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                                Plans + access
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Free validate or contact admin
+                              Choose plan and access path
                             </h2>
+                            </div>
+                            <Ticket className="h-6 w-6 text-cyan-200" />
                           </div>
-                          <Ticket className="h-6 w-6 text-cyan-200" />
-                        </div>
 
-                        <div className="mt-5 grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-                          {landingContent.plans.map((plan) => {
+                          <div className="mt-5 grid gap-3 xl:grid-cols-[minmax(0,1fr)_15rem]">
+                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
+                              <div className="flex flex-wrap gap-2">
+                                <span className="workspace-summary-pill">
+                                  {selectedClientPlan?.name ??
+                                    clientOverview.account?.planName ??
+                                    "Free"}
+                                </span>
+                                <span className="workspace-summary-pill">
+                                  {selectedClientPlan?.slug === "free"
+                                    ? "Instant validation"
+                                    : "Managed approval"}
+                                </span>
+                                <span className="workspace-summary-pill">
+                                  {clientOverview.account?.company ?? authSession.user.company}
+                                </span>
+                              </div>
+                              <p className="mt-3 text-sm leading-7 text-slate-300">
+                                {selectedClientPlan?.slug === "free"
+                                  ? "Choose the lane, generate the SC code automatically, and validate it from the same workspace."
+                                  : pendingPlanPayment
+                                    ? "This request is already in admin review. Keep approval, payment, and linked access together below."
+                                    : hasLinkedSelectedPlanAccess
+                                      ? "This plan already has linked SC access. Use the cards below to follow its current activation state."
+                                      : latestRejectedPlanPayment
+                                        ? "The latest request for this plan was rejected. Review the billing details and send it again from here."
+                                        : "Pick a managed plan, send the request, and track approval without leaving this view."}
+                              </p>
+                            </div>
+                            <article className="workspace-overview-card">
+                              <span className="workspace-overview-label">Current step</span>
+                              <strong className="workspace-overview-value">
+                                {selectedClientPlan?.slug === "free"
+                                  ? activeScratchCode
+                                    ? "Validate code"
+                                    : "Generate code"
+                                  : pendingPlanPayment
+                                    ? "Await approval"
+                                    : hasLinkedSelectedPlanAccess
+                                      ? selectedPlanSmartCard?.status === "activated"
+                                        ? "Card active"
+                                        : "Use linked card"
+                                      : latestRejectedPlanPayment
+                                        ? "Retry request"
+                                        : "Send request"}
+                              </strong>
+                              <p className="workspace-overview-copy">
+                                {selectedClientPlan?.slug === "free"
+                                  ? "The animated card below creates the SC code and keeps validation in the same flow."
+                                  : pendingPlanPayment
+                                    ? "Admin has the request in queue, so the next visible update will be approval or rejection."
+                                    : hasLinkedSelectedPlanAccess
+                                      ? "The selected plan already has a linked SC card, so the next step is to track its live status."
+                                      : latestRejectedPlanPayment
+                                        ? "The previous request was rejected, so the next step is to review and resend it."
+                                        : "Once submitted, the request stays linked to billing and SC card assignment."}
+                              </p>
+                            </article>
+                          </div>
+
+                          <div className="mt-5 grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+                            {landingContent.plans.map((plan) => {
                             const selected = selectedClientPlan?.slug === plan.slug;
                             const isFreePlan = plan.slug === "free";
 
@@ -4058,7 +4389,11 @@ function App() {
                                 }`}
                                 key={plan.slug}
                                 onClick={() => handleClientPlanSelect(plan)}
-                                style={selected ? getSectorPanelStyle(clientSector?.accent) : undefined}
+                                style={
+                                  selected
+                                    ? getSectorPanelStyle(clientSector?.accent, !isDarkMode)
+                                    : undefined
+                                }
                                 type="button"
                               >
                                 <div className="flex items-start justify-between gap-3">
@@ -4139,20 +4474,30 @@ function App() {
                                   : activeScratchCode
                                     ? "Validate Card"
                                     : "Generate Card"
-                                : paymentBusy
-                                  ? "Sending request..."
-                                  : "Contact admin"
+                                : pendingPlanPayment
+                                  ? "Request pending"
+                                  : hasLinkedSelectedPlanAccess
+                                    ? selectedPlanSmartCard?.status === "activated"
+                                      ? "Card active"
+                                      : "Access linked"
+                                    : paymentBusy
+                                      ? "Sending request..."
+                                      : latestRejectedPlanPayment
+                                        ? "Send again"
+                                        : "Contact admin"
                             }
                             backCopyOverride={
                               selectedClientPlan?.slug === "free"
                                 ? freePlanCardRevealed
                                   ? "Generated automatically for this workspace. Validate it without manual typing."
                                   : "Generate a free SC code directly from this card. No manual input is required."
-                                : planScopedPayment?.status === "approved"
-                                  ? "Admin approved the plan. Linked access stays attached to this request."
-                                  : pendingPlanPayment
-                                    ? "Payment details were sent. Wait for admin approval before activation."
-                                    : "Paid plans stay managed. Send the request and let admin approve it."
+                                : pendingPlanPayment
+                                  ? "Payment details were sent. Wait for admin approval before activation."
+                                  : hasLinkedSelectedPlanAccess
+                                    ? "This plan already has linked SC access in the current workspace."
+                                    : latestRejectedPlanPayment
+                                      ? "The latest request was rejected. Review the details and send a fresh request."
+                                      : "Paid plans stay managed. Send the request and let admin approve it."
                             }
                             backLabelOverride={
                               selectedClientPlan?.slug === "free"
@@ -4165,16 +4510,20 @@ function App() {
                             code={
                               selectedClientPlan?.slug === "free"
                                 ? activeScratchCode || "AUTO-CODE"
-                                : planScopedPayment?.status === "approved"
-                                  ? planScopedPayment.linkedCardCode || "APPROVED"
+                                : hasLinkedSelectedPlanAccess
+                                  ? approvedPlanPayment?.linkedCardCode ||
+                                    selectedPlanSmartCard?.code ||
+                                    "APPROVED"
                                   : pendingPlanPayment
                                     ? "PENDING-ADMIN"
+                                    : latestRejectedPlanPayment
+                                      ? "RETRY-REQUEST"
                                     : "CONTACT-ADMIN"
                             }
                             descriptionOverride={
                               selectedClientPlan?.slug === "free"
-                                ? "One generated code. One validation. Zero manual typing."
-                                : "One request. One review. One managed cloud entry."
+                                ? "Generate one workspace code here, then validate it in the same step."
+                                : "Send one managed request here, then continue after approval."
                             }
                             lockedLabelOverride={
                               selectedClientPlan?.slug === "free"
@@ -4182,12 +4531,12 @@ function App() {
                                 : "ADMIN REVIEW"
                             }
                             mode={selectedClientPlan?.slug === "free" ? "validate" : "reveal"}
-                            onAction={() =>
-                              void (
-                                selectedClientPlan?.slug === "free"
-                                  ? handleScratchAccessCard()
-                                  : handleClientPlanRequest()
-                              )
+                            onAction={
+                              selectedClientPlan?.slug === "free"
+                                ? () => void handleScratchAccessCard()
+                                : !pendingPlanPayment && !hasLinkedSelectedPlanAccess
+                                  ? () => void handleClientPlanRequest()
+                                  : undefined
                             }
                             planLabel={
                               selectedClientPlan?.name ||
@@ -4196,23 +4545,26 @@ function App() {
                             }
                             pillLabelOverride={
                               selectedClientPlan?.slug === "free"
-                                ? "brAIn auto validation"
-                                : "brAIn payment approval"
+                                ? "brAIn workspace access"
+                                : "brAIn managed approval"
                             }
                             revealed={
                               selectedClientPlan?.slug === "free"
                                 ? freePlanCardRevealed
-                                : Boolean(planScopedPayment) || paymentBusy
+                                : Boolean(planScopedPayment) ||
+                                  Boolean(selectedPlanSmartCard) ||
+                                  paymentBusy
                             }
                             sectorLabel={
+                              selectedPlanSmartCard?.sectorLabel ||
                               scratchStatus.sector ||
                               clientOverview.account?.sectorLabel ||
                               "brAIn"
                             }
                             titleOverride={
                               selectedClientPlan?.slug === "free"
-                                ? "Private AI Auto-Validation Card"
-                                : "Private AI Payment Card"
+                                ? "Workspace Access Card"
+                                : "Managed Access Request"
                             }
                           />
                         </div>
@@ -4224,7 +4576,9 @@ function App() {
                           <p className="text-sm leading-7 text-slate-300">
                             {selectedClientPlan?.slug === "free"
                               ? "Free plan now generates the SC code automatically from this animated card. Reveal it here, then validate it without typing."
-                              : "This plan stays under admin control. Send the request and wait for approval before SC card linking or activation."}
+                              : hasLinkedSelectedPlanAccess
+                                ? "This managed plan already has linked SC access. Track the latest card status and billing state from the same workspace."
+                                : "This plan stays under admin control. Send the request and wait for approval before SC card linking or activation."}
                           </p>
                           {selectedClientPlan?.slug === "free" && scratchStatus.hasActiveReservation ? (
                             <p className="mt-3 text-sm text-cyan-200">
@@ -4236,6 +4590,14 @@ function App() {
                             <p className="mt-3 text-sm text-cyan-200">
                               Latest request / {paymentStatusCopy(planScopedPayment.status)} /{" "}
                               {paymentMethodLabel(planScopedPayment.paymentMethod)}
+                            </p>
+                          ) : null}
+                          {selectedClientPlan?.slug !== "free" &&
+                          !planScopedPayment &&
+                          selectedPlanSmartCard ? (
+                            <p className="mt-3 text-sm text-cyan-200">
+                              Linked SC card / {selectedPlanSmartCard.code} /{" "}
+                              {smartCardStatusCopy(selectedPlanSmartCard.status)}
                             </p>
                           ) : null}
                         </div>
@@ -4355,7 +4717,9 @@ function App() {
                         ) : null}
                       </article>
 
-                      {landingContent.sectors.length > 0 && activeSector ? (
+                      {landingContent.sectors.length > 0 &&
+                      activeSector &&
+                      showClientDeploymentPanel ? (
                         <article
                           className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2"
                           id="client-sectors"
@@ -4366,19 +4730,19 @@ function App() {
                                 Sector explorer
                               </p>
                               <h2 className="mt-2 text-2xl font-black text-white">
-                                All 4 sectors / animated stack
+                                Sector rollout board
                               </h2>
                               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-                                Pick a sector, let the board animate in, and keep the advice
-                                stack visible on the side for device fit, rollout cues, and
-                                brand-ready guidance.
+                                Compare each deployment lane, keep the active device in
+                                view, and use the board for rollout fit, setup notes, and
+                                sector-specific context.
                               </p>
                             </div>
 
                             <div className="flex flex-wrap gap-3">
                               <span
                                 className="rounded-full border px-4 py-2 text-sm font-semibold"
-                                style={getSectorBadgeStyle(activeSector.accent)}
+                                style={getSectorBadgeStyle(activeSector.accent, !isDarkMode)}
                               >
                                 Active sector: {activeSector.name}
                               </span>
@@ -4404,7 +4768,11 @@ function App() {
                                   initial={{ opacity: 0, y: 18 }}
                                   key={sector.slug}
                                   onClick={() => setActiveSectorSlug(sector.slug)}
-                                  style={selected ? getSectorPanelStyle(sector.accent) : undefined}
+                                  style={
+                                    selected
+                                      ? getSectorPanelStyle(sector.accent, !isDarkMode)
+                                      : undefined
+                                  }
                                   transition={{ delay: index * 0.05, duration: 0.35 }}
                                   type="button"
                                   whileHover={{ y: -4 }}
@@ -4452,6 +4820,7 @@ function App() {
                             >
                               <SectorLiveBoard
                                 device={activeDevice}
+                                lightMode={!isDarkMode}
                                 plans={landingContent.plans}
                                 sector={activeSector}
                               />
@@ -4466,7 +4835,7 @@ function App() {
                             >
                               <div
                                 className="rounded-[28px] border p-5"
-                                style={getSectorPanelStyle(activeSector.accent)}
+                                style={getSectorPanelStyle(activeSector.accent, !isDarkMode)}
                               >
                                 <p className="text-xs uppercase tracking-[0.18em] text-slate-300">
                                   Advice panel
@@ -4555,9 +4924,15 @@ function App() {
                       ) : null}
                     </div>
 
-                    <div className="grid gap-6 xl:grid-cols-2">
+                    <div
+                      className={`grid gap-6 xl:grid-cols-2 ${
+                        showClientBillingPanel || showClientSupportPanel ? "" : "hidden"
+                      }`}
+                    >
                       <article
-                        className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6"
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showClientBillingPanel ? "" : "hidden"
+                        }`}
                         id="client-billing"
                       >
                         <div className="flex items-center justify-between">
@@ -4644,7 +5019,11 @@ function App() {
                         </div>
                       </article>
 
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showClientBillingPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -4658,8 +5037,29 @@ function App() {
                         </div>
 
                         <div className="mt-5 space-y-3">
-                          {clientOverview.smartCards.length > 0 ? (
-                            clientOverview.smartCards.slice(0, 6).map((card) => (
+                          <div className="rounded-[24px] border border-cyan-400/15 bg-cyan-500/5 p-4">
+                            <div className="flex flex-wrap gap-2">
+                              <span className="workspace-summary-pill">
+                                {selectedClientPlan?.name ?? "Selected plan"}
+                              </span>
+                              <span className="workspace-summary-pill">
+                                {clientCardsForSelectedPlan.length} linked card
+                                {clientCardsForSelectedPlan.length === 1 ? "" : "s"}
+                              </span>
+                              <span className="workspace-summary-pill">
+                                {selectedPlanSmartCard
+                                  ? smartCardStatusCopy(selectedPlanSmartCard.status)
+                                  : "No linked card"}
+                              </span>
+                            </div>
+                            <p className="mt-3 text-sm leading-7 text-slate-300">
+                              Only SC cards linked to the selected plan are shown here, so the
+                              plan board and access kit stay in sync.
+                            </p>
+                          </div>
+
+                          {clientCardsForSelectedPlan.length > 0 ? (
+                            clientCardsForSelectedPlan.slice(0, 6).map((card) => (
                               <div
                                 className="rounded-[24px] border border-white/10 bg-black/20 p-4"
                                 key={card.id}
@@ -4691,16 +5091,23 @@ function App() {
                           ) : (
                             <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
                               <p className="text-sm leading-7 text-slate-300">
-                                No SC card is attached to this client yet. Once payment or
-                                assignment completes, the card will appear here and can be
-                                validated from the animated access block above.
+                                No SC card is linked to{" "}
+                                <strong className="text-white">
+                                  {selectedClientPlan?.name ?? "this plan"}
+                                </strong>{" "}
+                                yet. Once approval or assignment completes, the card will appear
+                                here and stay aligned with the selected plan above.
                               </p>
                             </div>
                           )}
                         </div>
                       </article>
 
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6">
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                          showClientBillingPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -4737,7 +5144,11 @@ function App() {
                         </div>
                       </article>
 
-                      <article className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2">
+                      <article
+                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2 ${
+                          showClientSupportPanel ? "" : "hidden"
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -4778,6 +5189,8 @@ function App() {
                 )}
               </div>
             </main>
+          )}
+            </>
           )}
         </div>
       </div>

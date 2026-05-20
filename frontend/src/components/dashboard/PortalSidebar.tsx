@@ -35,9 +35,9 @@ export function PortalSidebar({
 }: PortalSidebarProps) {
   return (
     <aside
-  className="glass-card compact-card dashboard-sidebar max-h-screen overflow-y-auto pr-1"
-  style={{ scrollbarWidth: "thin" }}
->
+      className="workspace-runtime-theme glass-card compact-card dashboard-sidebar max-h-screen overflow-y-auto pr-1"
+      style={{ scrollbarWidth: "thin" }}
+    >
       <p className="section-kicker">{sectionLabel}</p>
 
       <input

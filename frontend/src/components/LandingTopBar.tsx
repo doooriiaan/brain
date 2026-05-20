@@ -4,9 +4,11 @@ import {
   ChevronDown,
   Globe,
   Languages,
+  Moon,
   Settings2,
   Shield,
   ShieldCheck,
+  Sun,
   Wifi,
 } from "lucide-react";
 import type { CountryOption, LanguageOption } from "../data/runtimeOptions";
@@ -32,11 +34,15 @@ type LandingTopBarProps = {
   activeNavigationKey?: string;
   countryOptions: CountryOption[];
   currentUserLabel: string;
+  isDarkMode: boolean;
   languageOptions: LanguageOption[];
   navigationItems?: NavigationItem[];
   onNavigate?: (key: string) => void;
+  onPrimaryAction?: () => void;
+  onSecondaryAction?: () => void;
   onCountryChange: (countryCode: string) => void;
   onLanguageChange: (languageCode: string) => void;
+  onToggleDarkMode: () => void;
   onToggleVpn: () => void;
   onVpnEndpointChange: (endpointId: string) => void;
   selectedCountry: string;
@@ -60,15 +66,23 @@ function getMessageToneClass(tone?: "success" | "error" | "info") {
   return "status-text-muted";
 }
 
+function shouldShowChevron(key: string) {
+  return key === "devices" || key === "sectors" || key === "help";
+}
+
 export function LandingTopBar({
   activeNavigationKey,
   countryOptions,
   currentUserLabel,
+  isDarkMode,
   languageOptions,
   navigationItems = [],
   onNavigate,
+  onPrimaryAction,
+  onSecondaryAction,
   onCountryChange,
   onLanguageChange,
+  onToggleDarkMode,
   onToggleVpn,
   onVpnEndpointChange,
   selectedCountry,
@@ -83,53 +97,61 @@ export function LandingTopBar({
   const isGuestLanding = navigationItems.length > 0;
 
   return (
-    <header className="topbar-shell topbar-shell-lean">
-      <div className="topbar-main-row">
-        <div className="brand-lockup">
-          <img
-            alt="brAIn logo"
-            className="brand-mark notranslate"
-            src="/brand/brain-logo.svg"
-            translate="no"
-          />
-          <div className="brand-copy">
-            <span className="brand-pill">Device sales preweb</span>
-            <p className="brand-helper">
-              Sell the hardware first, then move buyers into login and rollout.
-            </p>
-          </div>
-        </div>
+    <header className="topbar-shell topbar-shell-lean brain-topbar-shell">
+      <div className="topbar-main-row brain-topbar-row">
+        <button
+          className="brain-topbar-brand"
+          onClick={() => onNavigate?.("overview")}
+          translate="no"
+          type="button"
+        >
+          <span className="brain-topbar-wordmark notranslate">brAIn</span>
+          <span className="brain-topbar-brand-copy">AI devices + managed rollout</span>
+        </button>
 
         {isGuestLanding ? (
-          <nav aria-label="Primary" className="topbar-nav">
+          <nav aria-label="Primary" className="topbar-nav brain-topbar-nav">
             {navigationItems.map((item) => (
               <button
-                className={`topbar-nav-button ${
-                  activeNavigationKey === item.key ? "topbar-nav-button-active" : ""
+                className={`topbar-nav-button brain-topbar-nav-button ${
+                  activeNavigationKey === item.key
+                    ? "topbar-nav-button-active brain-topbar-nav-button-active"
+                    : ""
                 }`}
                 key={item.key}
                 onClick={() => onNavigate?.(item.key)}
                 type="button"
               >
-                {item.label}
+                <span>{item.label}</span>
+                {shouldShowChevron(item.key) ? <ChevronDown size={14} /> : null}
               </button>
             ))}
           </nav>
         ) : null}
 
-        <div className="topbar-main-actions">
+        <div className="topbar-main-actions brain-topbar-actions">
           {!isGuestLanding ? (
-            <span className="topbar-account">{currentUserLabel}</span>
+            <span className="topbar-account brain-topbar-account">{currentUserLabel}</span>
           ) : null}
 
           <button
+            aria-label="Toggle dark mode"
+            className="topbar-utility-trigger brain-topbar-utility-trigger"
+            onClick={onToggleDarkMode}
+            title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            type="button"
+          >
+            {isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
+
+          <button
             aria-expanded={settingsOpen}
-            className="topbar-utility-trigger"
+            className="topbar-utility-trigger brain-topbar-utility-trigger"
             onClick={() => setSettingsOpen((current) => !current)}
             type="button"
           >
-            <Settings2 size={16} />
-            {isGuestLanding ? "Settings" : "Region & access"}
+            {isGuestLanding ? <Globe size={16} /> : <Settings2 size={16} />}
+            {isGuestLanding ? selectedLanguage.toUpperCase() : "Region"}
             <ChevronDown
               className={settingsOpen ? "topbar-chevron-open" : ""}
               size={15}
@@ -138,11 +160,21 @@ export function LandingTopBar({
 
           {isGuestLanding ? (
             <button
-              className="topbar-primary-cta"
-              onClick={() => onNavigate?.("access")}
+              className="topbar-secondary-cta brain-topbar-secondary-cta"
+              onClick={() => onSecondaryAction?.()}
               type="button"
             >
               Log in
+            </button>
+          ) : null}
+
+          {isGuestLanding ? (
+            <button
+              className="topbar-primary-cta brain-topbar-primary-cta"
+              onClick={() => onPrimaryAction?.()}
+              type="button"
+            >
+              Get brAIn
               <ArrowRight size={16} />
             </button>
           ) : null}
@@ -150,12 +182,12 @@ export function LandingTopBar({
       </div>
 
       <div
-        className={`topbar-utility-panel ${
+        className={`topbar-utility-panel brain-topbar-utility-panel ${
           settingsOpen ? "topbar-utility-panel-open" : ""
         }`}
       >
-        <div className="topbar-utility-grid">
-          <div className="topbar-control-card topbar-control-card-vpn">
+        <div className="topbar-utility-grid brain-topbar-utility-grid">
+          <div className="topbar-control-card topbar-control-card-vpn brain-topbar-control-card">
             <div className="topbar-control-header">
               <div className="control-heading">
                 {vpnActive ? <ShieldCheck size={16} /> : <Shield size={16} />}
@@ -198,12 +230,12 @@ export function LandingTopBar({
               </p>
             ) : (
               <p className="topbar-subtle-text">
-                Keep regional route controls here instead of the main landing header.
+                Keep region, language, and route controls tucked into one clean place.
               </p>
             )}
           </div>
 
-          <label className="topbar-control-card">
+          <label className="topbar-control-card brain-topbar-control-card">
             <span className="control-heading">
               <Globe size={16} />
               <span>Country</span>
@@ -221,7 +253,7 @@ export function LandingTopBar({
             </select>
           </label>
 
-          <label className="topbar-control-card">
+          <label className="topbar-control-card brain-topbar-control-card">
             <span className="control-heading">
               <Languages size={16} />
               <span>Language</span>

@@ -1,3 +1,4 @@
+import { createFreshSmartCardInventory } from "../data/runtimeSeed.js";
 import { broadcastSmartCardUpdate } from "./realtimeService.js";
 import { getPlanBySlug, getSectorBySlug } from "./catalogService.js";
 import { incrementAccountCards, updateAccountPlan } from "./accountService.js";
@@ -36,6 +37,42 @@ export function getSmartCardStats() {
     available: smartCards.filter((card) => card.status === "available").length,
     assigned: smartCards.filter((card) => card.status === "assigned").length,
     activated: smartCards.filter((card) => card.status === "activated").length,
+  };
+}
+
+export function resetSmartCardInventory() {
+  const nextSmartCards = createFreshSmartCardInventory();
+  const cardsPerPlan = Array.from(
+    nextSmartCards.reduce((planMap, card) => {
+      planMap.set(card.plan, (planMap.get(card.plan) ?? 0) + 1);
+      return planMap;
+    }, new Map()),
+    ([plan, count]) => ({ plan, count }),
+  );
+
+  updateRuntimeState((state) => {
+    state.smartCards = nextSmartCards;
+    state.accounts = state.accounts.map((account) => ({
+      ...account,
+      smartCards: 0,
+    }));
+    state.payments = state.payments.map((payment) => ({
+      ...payment,
+      linkedCardCode: null,
+    }));
+    state.scratchCardReservations = [];
+    state.scratchCardReveals = [];
+  });
+
+  createNotification(
+    "Smart card inventory reset",
+    `${cardsPerPlan.length} plan board(s) were reset to 500 available cards each.`,
+    "info",
+  );
+
+  return {
+    totalCards: nextSmartCards.length,
+    cardsPerPlan,
   };
 }
 

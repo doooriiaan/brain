@@ -54,7 +54,7 @@ export function SectorSidebar({
   return (
     <>
       <div className="sector-mobile-strip lg:hidden">
-        <div className="glass-card compact-card">
+        <div className="workspace-runtime-theme glass-card compact-card">
           <p className="section-kicker">{translate("Sector navigation")}</p>
           <div className="sector-mobile-grid mt-4">
             {tabs.map((tab) => renderSectorButton(tab, true))}
@@ -62,7 +62,7 @@ export function SectorSidebar({
         </div>
       </div>
 
-      <aside className="sector-side-rail hidden lg:flex">
+      <aside className="sector-side-rail hidden lg:flex workspace-runtime-theme">
         <div className="w-full space-y-4">
           {tabs.map((tab) => renderSectorButton(tab))}
           

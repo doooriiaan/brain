@@ -6,6 +6,7 @@ import { SectorLiveMiniBoard } from "./SectorLiveBoard";
 
 type DevicePreviewStudioProps = {
   device: Device | null;
+  lightMode?: boolean;
   onSelectDevice: (deviceKey: string) => void;
   sector: Sector | null;
   onDeploy: () => void;
@@ -13,11 +14,13 @@ type DevicePreviewStudioProps = {
   relatedDevices: Device[];
 };
 
+const LIGHT_MODE_ACCENT = "#d45a34";
+
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");
 
   if (normalized.length !== 6) {
-    return `rgba(120, 215, 171, ${alpha})`;
+    return `rgba(212, 90, 52, ${alpha})`;
   }
 
   const red = Number.parseInt(normalized.slice(0, 2), 16);
@@ -27,17 +30,37 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
-function buildSectorPreviewVars(accent: string): CSSProperties {
+function buildSectorPreviewVars(accent: string, lightMode = false): CSSProperties {
+  const themeAccent = lightMode ? LIGHT_MODE_ACCENT : accent;
+
+  if (lightMode) {
+    return {
+      "--accent": themeAccent,
+      "--accent-strong": "#111111",
+      "--accent-soft": hexToRgba(themeAccent, 0.12),
+      "--accent-secondary": themeAccent,
+      "--accent-secondary-soft": hexToRgba(themeAccent, 0.08),
+      "--aura-primary": hexToRgba(themeAccent, 0.16),
+      "--aura-secondary": hexToRgba(themeAccent, 0.1),
+      "--line": "rgba(0, 0, 0, 0.12)",
+      "--panel-line": hexToRgba(themeAccent, 0.26),
+      "--panel-top": "rgba(255, 255, 255, 0.99)",
+      "--panel-bottom": "rgba(255, 255, 255, 0.97)",
+      "--panel-alt-top": "rgba(255, 255, 255, 0.99)",
+      "--panel-alt-bottom": "rgba(255, 255, 255, 0.97)",
+    } as CSSProperties;
+  }
+
   return {
-    "--accent": accent,
+    "--accent": themeAccent,
     "--accent-strong": "#f4fff8",
-    "--accent-soft": hexToRgba(accent, 0.18),
-    "--accent-secondary": accent,
-    "--accent-secondary-soft": hexToRgba(accent, 0.12),
-    "--aura-primary": hexToRgba(accent, 0.28),
-    "--aura-secondary": hexToRgba(accent, 0.2),
-    "--line": hexToRgba(accent, 0.18),
-    "--panel-line": hexToRgba(accent, 0.24),
+    "--accent-soft": hexToRgba(themeAccent, 0.18),
+    "--accent-secondary": themeAccent,
+    "--accent-secondary-soft": hexToRgba(themeAccent, 0.12),
+    "--aura-primary": hexToRgba(themeAccent, 0.28),
+    "--aura-secondary": hexToRgba(themeAccent, 0.2),
+    "--line": hexToRgba(themeAccent, 0.18),
+    "--panel-line": hexToRgba(themeAccent, 0.24),
     "--panel-top": "rgba(8, 23, 17, 0.96)",
     "--panel-bottom": "rgba(4, 10, 8, 0.94)",
   } as CSSProperties;
@@ -45,6 +68,7 @@ function buildSectorPreviewVars(accent: string): CSSProperties {
 
 export function DevicePreviewStudio({
   device,
+  lightMode = false,
   onSelectDevice,
   sector,
   onDeploy,
@@ -59,7 +83,7 @@ export function DevicePreviewStudio({
     <section
       className="device-preview-shell"
       id="landing-device-page"
-      style={buildSectorPreviewVars(sector.accent)}
+      style={buildSectorPreviewVars(sector.accent, lightMode)}
     >
       <div className="device-preview-copy">
         <span className="device-preview-pill">
@@ -159,6 +183,7 @@ export function DevicePreviewStudio({
               className="h-full"
               dense
               device={device}
+              lightMode={lightMode}
               mode="screen"
               plans={plans}
               sector={sector}

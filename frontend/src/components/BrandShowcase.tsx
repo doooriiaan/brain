@@ -4,6 +4,7 @@ type BrandShowcaseProps = {
   currentCountry: string;
   currentLanguage: string;
   heroBadges: string[];
+  heroEyebrow: string;
   heroMetrics: Array<{
     label: string;
     value: string;
@@ -15,15 +16,15 @@ type BrandShowcaseProps = {
 
 const proofPoints = [
   {
-    label: "Show the device first so the offer feels real.",
+    label: "Device-first offer",
     icon: ShieldCheck,
   },
   {
-    label: "Match the hardware to the buyer in seconds.",
+    label: "Sector-ready setup",
     icon: ScanSearch,
   },
   {
-    label: "Keep demos clean with live region controls.",
+    label: "Cloud control included",
     icon: Languages,
   },
 ] as const;
@@ -32,6 +33,7 @@ export function BrandShowcase({
   currentCountry,
   currentLanguage,
   heroBadges,
+  heroEyebrow,
   heroMetrics,
   heroSubtitle,
   heroTitle,
@@ -39,15 +41,24 @@ export function BrandShowcase({
 }: BrandShowcaseProps) {
   return (
     <div className="landing-hero-copy">
-      <span className="eyebrow">Device-first preweb</span>
+      <span className="eyebrow">{heroEyebrow}</span>
       <h1 className="landing-hero-title">{heroTitle}</h1>
       <p className="landing-hero-text">{heroSubtitle}</p>
 
       <div className="landing-hero-badge-row">
-        {heroBadges.slice(0, 3).map((badge) => (
+        {heroBadges.slice(0, 4).map((badge) => (
           <span className="landing-hero-badge" key={badge}>
             {badge}
           </span>
+        ))}
+      </div>
+
+      <div className="landing-hero-metrics">
+        {heroMetrics.map((metric) => (
+          <div className="landing-hero-metric-card" key={metric.label}>
+            <span>{metric.label}</span>
+            <strong>{metric.value}</strong>
+          </div>
         ))}
       </div>
 
@@ -66,21 +77,10 @@ export function BrandShowcase({
         })}
       </div>
 
-      <div className="landing-hero-metrics">
-        {heroMetrics.map((metric) => (
-          <div className="landing-hero-metric-card" key={metric.label}>
-            <span>{metric.label}</span>
-            <strong>{metric.value}</strong>
-          </div>
-        ))}
-      </div>
-
-      <div className="landing-hero-context">
-        <span className="landing-context-pill">{currentCountry}</span>
-        <span className="landing-context-pill">{currentLanguage}</span>
-        <span className="landing-context-pill">
-          {vpnActive ? "Protected route" : "Standard route"}
-        </span>
+      <div className="landing-hero-context-note">
+        <span>{currentCountry}</span>
+        <span>{currentLanguage}</span>
+        <span>{vpnActive ? "Protected route" : "Standard route"}</span>
       </div>
     </div>
   );

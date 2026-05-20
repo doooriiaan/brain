@@ -13,6 +13,7 @@ import {
   assignSmartCards,
   getSmartCards,
   getSmartCardStats,
+  resetSmartCardInventory,
 } from "./smartCardService.js";
 import { getTickets, updateTicketStatus } from "./ticketService.js";
 
@@ -89,6 +90,10 @@ export function setAdminTicketStatus(id, status) {
 
 export function assignAdminSmartCards(payload) {
   return assignSmartCards(payload);
+}
+
+export function resetAdminSmartCards() {
+  return resetSmartCardInventory();
 }
 
 export function setAdminPaymentStatus(id, status, payload = {}) {

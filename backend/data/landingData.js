@@ -1,27 +1,22 @@
 export const fallbackContent = {
   source: "fallback",
   hero: {
-    eyebrow: "Device-first preweb",
-    title: "Show the device first. Let the platform close the sale.",
+    eyebrow: "AI device ecosystem",
+    title: "Sell the device first. Open pricing, help, and access only when the fit is clear.",
     subtitle:
-      "brAIn turns each vertical into a device-led sales story with sector-ready hardware, cleaner login flow, smart-card activation, payments, and live services behind it.",
-    badges: [
-      "Commercial AI",
-      "Business AI",
-      "Healthcare AI",
-      "Industry 4.0 AI",
-    ],
+      "brAIn connects physical AI devices, live sector flows, and cloud-managed rollout in one structured experience.",
+    badges: ["Commercial AI", "Business AI", "Healthcare AI", "Industry 4.0"],
     metrics: [
-      { label: "Sectors ready", value: "4 verticals" },
-      { label: "Devices in lineup", value: "4 products" },
-      { label: "SC cards live", value: "3,000 inventory" },
+      { label: "Lanes", value: "4 verticals" },
+      { label: "Devices", value: "4 live models" },
+      { label: "Control", value: "Managed cloud" },
     ],
     primaryCta: {
       label: "See devices",
       href: "#landing-devices",
     },
     secondaryCta: {
-      label: "Log in",
+      label: "Buyer login",
       href: "#auth-access",
     },
     deviceImage: "/brand/brain-hero.svg",
@@ -37,7 +32,7 @@ export const fallbackContent = {
       audience: "Retail stores, kiosks, hospitality, distributors",
       statLabel: "Fast rollout",
       statValue: "Plug & play",
-      accent: "#7fe2b5",
+      accent: "#d46342",
       deviceKey: "ai-stick",
       imageUrl: "/brand/commercial-stick-board.svg",
       capabilities: [
@@ -56,7 +51,7 @@ export const fallbackContent = {
       audience: "SMBs, agencies, service companies, front desks",
       statLabel: "Realtime actions",
       statValue: "Automation + voice",
-      accent: "#54c69a",
+      accent: "#6d95c9",
       deviceKey: "business-hub",
       imageUrl: "/brand/business-hub-board.svg",
       capabilities: [
@@ -75,7 +70,7 @@ export const fallbackContent = {
       audience: "Clinics, pharmacies, waiting rooms, medical teams",
       statLabel: "Compliance ready",
       statValue: "Secure workflow",
-      accent: "#9be46f",
+      accent: "#6ea67b",
       deviceKey: "med-assistant",
       imageUrl: "/brand/healthcare-med-board.svg",
       capabilities: [
@@ -94,7 +89,7 @@ export const fallbackContent = {
       audience: "Factories, production lines, SCADA teams, operations leads",
       statLabel: "Industrial fit",
       statValue: "PLC / SCADA ready",
-      accent: "#66c18d",
+      accent: "#c98a3c",
       deviceKey: "industry-edge",
       imageUrl: "/brand/industry-edge-board.svg",
       capabilities: [

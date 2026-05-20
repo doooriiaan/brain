@@ -4,6 +4,7 @@ import {
   clearAdminHistory,
   clearAdminNotifications,
   getAdminOverview,
+  resetAdminSmartCards,
   setAdminActivationStatus,
   setAdminPaymentStatus,
   setAdminTicketStatus,
@@ -148,5 +149,14 @@ export const assignCardsAdminRequest = controller((request, response) => {
   response.status(201).json({
     message: `${cards.length} smart card(s) assigned successfully.`,
     cards,
+  });
+});
+
+export const resetCardsAdminRequest = controller((_request, response) => {
+  const result = resetAdminSmartCards();
+
+  response.json({
+    message: "Smart card inventory reset successfully.",
+    ...result,
   });
 });

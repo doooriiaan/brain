@@ -5,6 +5,7 @@ import {
   clearHistoryRequest,
   clearNotificationsRequest,
   getAdminDashboard,
+  resetCardsAdminRequest,
   updateActivationStatusRequest,
   updatePaymentStatusRequest,
   updateTicketStatusRequest,
@@ -19,6 +20,7 @@ router.post("/notifications", broadcastNotificationRequest);
 router.delete("/notifications", clearNotificationsRequest);
 router.delete("/history", clearHistoryRequest);
 router.post("/cards/assign", assignCardsAdminRequest);
+router.post("/cards/reset", resetCardsAdminRequest);
 router.patch("/payments/:id", updatePaymentStatusRequest);
 router.patch("/activations/:id", updateActivationStatusRequest);
 router.patch("/tickets/:id", updateTicketStatusRequest);

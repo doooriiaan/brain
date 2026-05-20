@@ -24,6 +24,46 @@ function getDeviceKeyForSector(sector) {
   return "business-hub";
 }
 
+export function createFreshSmartCardInventory() {
+  const sectorMap = new Map(
+    fallbackContent.sectors.map((sector) => [sector.slug, sector]),
+  );
+  const planMap = new Map(
+    fallbackContent.plans.map((plan) => [plan.slug, plan]),
+  );
+  const planCycle = fallbackContent.plans.map((plan) => plan.slug);
+  const sectorCycle = ["commercial", "business", "healthcare", "industry"];
+  const smartCards = [];
+  let sequence = 1;
+
+  planCycle.forEach((plan, planIndex) => {
+    const planRecord = planMap.get(plan);
+
+    for (let index = 0; index < 500; index += 1) {
+      const sector = sectorCycle[(index + planIndex) % sectorCycle.length];
+      const sectorRecord = sectorMap.get(sector);
+
+      smartCards.push({
+        id: `card-${sequence}`,
+        code: `SC-${String(sequence).padStart(5, "0")}-${plan.slice(0, 3).toUpperCase()}-${sector.slice(0, 3).toUpperCase()}`,
+        sector,
+        sectorLabel: sectorRecord?.name ?? sector,
+        plan,
+        planName: planRecord?.name ?? plan,
+        status: "available",
+        ownerCompany: null,
+        deviceKey: null,
+        issuedAt: minutesAgo(sequence * 8),
+        updatedAt: minutesAgo(sequence * 4),
+      });
+
+      sequence += 1;
+    }
+  });
+
+  return smartCards;
+}
+
 export function createRuntimeSeed() {
   const sectorMap = new Map(
     fallbackContent.sectors.map((sector) => [sector.slug, sector]),
@@ -100,7 +140,7 @@ export function createRuntimeSeed() {
       planName: "Business",
       status: "active",
       devices: 14,
-      smartCards: 126,
+      smartCards: 0,
       monthlyUsage: 2420000,
       creditsRemaining: 1860000,
       salesToday: 12450,
@@ -118,7 +158,7 @@ export function createRuntimeSeed() {
       planName: "Professional",
       status: "active",
       devices: 9,
-      smartCards: 84,
+      smartCards: 0,
       monthlyUsage: 1180000,
       creditsRemaining: 920000,
       salesToday: 8250,
@@ -136,7 +176,7 @@ export function createRuntimeSeed() {
       planName: "Platinum",
       status: "active",
       devices: 22,
-      smartCards: 140,
+      smartCards: 0,
       monthlyUsage: 4820000,
       creditsRemaining: 4080000,
       salesToday: 19400,
@@ -154,7 +194,7 @@ export function createRuntimeSeed() {
       planName: "Business",
       status: "active",
       devices: 11,
-      smartCards: 92,
+      smartCards: 0,
       monthlyUsage: 3560000,
       creditsRemaining: 2750000,
       salesToday: 16340,
@@ -165,65 +205,7 @@ export function createRuntimeSeed() {
     },
   ];
 
-  const assignedPools = [
-    { company: "Nova Market", sector: "commercial", plan: "business", count: 126 },
-    { company: "Helios Clinic", sector: "healthcare", plan: "professional", count: 84 },
-    { company: "Astra Group", sector: "business", plan: "platinum", count: 140 },
-    { company: "Factory One", sector: "industry", plan: "business", count: 92 },
-  ];
-
-  const planCycle = fallbackContent.plans.map((plan) => plan.slug);
-  const sectorCycle = ["commercial", "business", "healthcare", "industry"];
-  const smartCards = [];
-  const planCounts = new Map(planCycle.map((plan) => [plan, 0]));
-  let sequence = 1;
-
-  assignedPools.forEach((pool) => {
-    const sectorRecord = sectorMap.get(pool.sector);
-    const planRecord = planMap.get(pool.plan);
-
-    for (let index = 0; index < pool.count; index += 1) {
-      smartCards.push({
-        id: `card-${sequence}`,
-        code: `SC-${String(sequence).padStart(4, "0")}-${pool.sector.slice(0, 3).toUpperCase()}`,
-        sector: pool.sector,
-        sectorLabel: sectorRecord?.name ?? pool.sector,
-        plan: pool.plan,
-        planName: planRecord?.name ?? pool.plan,
-        status: index % 3 === 0 ? "assigned" : "activated",
-        ownerCompany: pool.company,
-        deviceKey: getDeviceKeyForSector(pool.sector),
-        issuedAt: minutesAgo(sequence * 8),
-        updatedAt: minutesAgo(sequence * 4),
-      });
-      planCounts.set(pool.plan, (planCounts.get(pool.plan) ?? 0) + 1);
-      sequence += 1;
-    }
-  });
-
-  planCycle.forEach((plan, planIndex) => {
-    while ((planCounts.get(plan) ?? 0) < 500) {
-      const sector = sectorCycle[(sequence + planIndex) % sectorCycle.length];
-      const sectorRecord = sectorMap.get(sector);
-      const planRecord = planMap.get(plan);
-
-      smartCards.push({
-        id: `card-${sequence}`,
-        code: `SC-${String(sequence).padStart(5, "0")}-${plan.slice(0, 3).toUpperCase()}-${sector.slice(0, 3).toUpperCase()}`,
-        sector,
-        sectorLabel: sectorRecord?.name ?? sector,
-        plan,
-        planName: planRecord?.name ?? plan,
-        status: "available",
-        ownerCompany: null,
-        deviceKey: null,
-        issuedAt: minutesAgo(sequence * 8),
-        updatedAt: minutesAgo(sequence * 4),
-      });
-      planCounts.set(plan, (planCounts.get(plan) ?? 0) + 1);
-      sequence += 1;
-    }
-  });
+  const smartCards = createFreshSmartCardInventory();
 
   const paymentSeeds = [
     {
@@ -279,29 +261,10 @@ export function createRuntimeSeed() {
     },
   ];
 
-  const claimedCodes = new Set();
-  const payments = paymentSeeds.map((payment) => {
-    const linkedCard = smartCards.find((card) => {
-      if (claimedCodes.has(card.code)) {
-        return false;
-      }
-
-      return (
-        card.ownerCompany === payment.company &&
-        card.plan === payment.plan &&
-        card.status !== "available"
-      );
-    });
-
-    if (linkedCard) {
-      claimedCodes.add(linkedCard.code);
-    }
-
-    return {
-      ...payment,
-      linkedCardCode: linkedCard?.code ?? null,
-    };
-  });
+  const payments = paymentSeeds.map((payment) => ({
+    ...payment,
+    linkedCardCode: null,
+  }));
 
   const activations = [
     {
