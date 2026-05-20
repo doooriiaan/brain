@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
@@ -791,6 +791,28 @@ function App() {
       null
     );
   }, [activeSector, landingContent.devices]);
+
+
+  const featuredPlan = useMemo(() => {
+    return (
+      landingContent.plans.find((plan) => plan.featured) ??
+      landingContent.plans[1] ??
+      landingContent.plans[0] ??
+      null
+    );
+  }, [landingContent.plans]);
+
+  const visiblePlans = useMemo(() => {
+    if (!featuredPlan) {
+      return landingContent.plans.slice(0, 3);
+    }
+
+    const remainingPlans = landingContent.plans
+      .filter((plan) => plan.slug !== featuredPlan.slug)
+      .slice(0, 2);
+
+    return [featuredPlan, ...remainingPlans];
+  }, [featuredPlan, landingContent.plans]);
 
   const sectorRuntimeCards = useMemo(() => {
     if (!activeSector) {
@@ -2099,7 +2121,7 @@ function App() {
               </aside>
 
               <div className="landing-center-content min-w-0 space-y-6">
-              <section className="hero-layout" id="auth-access">
+              <section className="hero-layout redesigned-hero" id="auth-access">
                 <motion.section
                   animate={{ opacity: 1, y: 0 }}
                   className="hero-panel hero-panel-brand"
@@ -2149,33 +2171,24 @@ function App() {
 
               <motion.section
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.96),rgba(5,11,21,0.92))] p-5 shadow-[0_25px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:p-6"
+                className="landing-overview-panel"
                 id="landing-overview"
                 initial={{ opacity: 0, y: 20 }}
                 transition={{ delay: 0.08, duration: 0.52 }}
               >
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                  <div className="max-w-3xl">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-cyan-200">
+                <div className="landing-overview-hero">
+                  <div>
+                    <span className="landing-section-pill">
                       <Sparkles className="h-3.5 w-3.5" />
                       {landingContent.hero.eyebrow}
                     </span>
-                    <h2 className="mt-5 text-3xl font-black tracking-tight text-white sm:text-5xl">
-                      {landingContent.hero.title}
-                    </h2>
-                    <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
-                      {landingContent.hero.subtitle}
-                    </p>
-                    {contentLoading ? (
-                      <p className="mt-3 text-sm font-semibold text-cyan-200">
-                        Loading sector boards and cloud runtime...
-                      </p>
-                    ) : null}
+                    <h2>{landingContent.hero.title}</h2>
+                    <p>{landingContent.hero.subtitle}</p>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="landing-overview-actions">
                     <button
-                      className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+                      className="landing-primary-button"
                       onClick={() => openLandingView("sectors")}
                       type="button"
                     >
@@ -2183,7 +2196,7 @@ function App() {
                       <ArrowRight className="h-4 w-4" />
                     </button>
                     <button
-                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-bold text-white transition hover:bg-white/[0.08]"
+                      className="landing-secondary-button"
                       onClick={() => openLandingView("access")}
                       type="button"
                     >
@@ -2192,35 +2205,27 @@ function App() {
                   </div>
                 </div>
 
-                <div className="mt-6 grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
-                  <div className="grid gap-4 sm:grid-cols-3">
+                <div className="landing-overview-grid">
+                  <div className="landing-metric-grid">
                     {landingContent.hero.metrics.map((metric) => (
                       <article
-                        className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5"
+                        className="landing-metric-tile"
                         key={metric.label}
                       >
-                        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          {metric.label}
-                        </p>
-                        <h3 className="mt-3 text-3xl font-black text-white">
-                          {metric.value}
-                        </h3>
+                        <p>{metric.label}</p>
+                        <h3>{metric.value}</h3>
                       </article>
                     ))}
                   </div>
 
-                  <div className="rounded-[28px] border border-cyan-400/15 bg-cyan-400/5 p-5">
-                    <div className="flex items-center justify-between">
+                  <div className="landing-pulse-card">
+                    <div className="landing-pulse-head">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/70">
-                          Live runtime
-                        </p>
-                        <h3 className="mt-2 text-2xl font-black text-white">
-                          Public system pulse
-                        </h3>
+                        <p>Live runtime</p>
+                        <h3>Public system pulse</h3>
                       </div>
                       <button
-                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+                        className="landing-refresh-button"
                         onClick={() => void refreshPublicRuntime()}
                         type="button"
                       >
@@ -2229,23 +2234,27 @@ function App() {
                       </button>
                     </div>
 
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {contentLoading ? (
+                      <p className="landing-loading-copy">
+                        Loading sector boards and cloud runtime...
+                      </p>
+                    ) : null}
+
+                    <div className="landing-service-grid">
                       {operationsOverview.services.slice(0, 4).map((service) => (
                         <div
-                          className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                          className="landing-service-card"
                           key={service.key}
                         >
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="font-semibold text-white">{service.label}</p>
+                          <div>
+                            <p>{service.label}</p>
                             <span
-                              className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${statusBadgeClass(service.status)}`}
+                              className={`landing-service-status ${statusBadgeClass(service.status)}`}
                             >
                               {service.status}
                             </span>
                           </div>
-                          <p className="mt-3 text-sm leading-6 text-slate-400">
-                            {service.detail}
-                          </p>
+                          <small>{service.detail}</small>
                         </div>
                       ))}
                     </div>
@@ -2253,60 +2262,53 @@ function App() {
                 </div>
               </motion.section>
 
-              <section
-                className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
-                id="preweb-sectors"
-              >
+              <section className="landing-sector-section" id="preweb-sectors">
+                <div className="landing-section-head">
+                  <span className="landing-section-pill">
+                    <Cpu className="h-3.5 w-3.5" />
+                    Product sectors
+                  </span>
+                  <h2>Four entry points, one clean flow</h2>
+                  <p>
+                    Cards are shorter and clickable: pick the sector, preview the
+                    device, then continue to plan or access.
+                  </p>
+                </div>
+
+                <div className="landing-sector-grid">
                 {landingContent.sectors.map((sector, index) => {
                   const active = sector.slug === activeSector?.slug;
 
                   return (
                     <motion.button
-                      className="group rounded-[30px] border p-5 text-left shadow-[0_18px_55px_rgba(0,0,0,0.18)] transition"
+                      className={`landing-sector-card ${active ? "landing-sector-card-active" : ""}`}
                       initial={{ opacity: 0, y: 18 }}
                       key={sector.slug}
                       onClick={() => openSectorStory(sector.slug)}
                       style={{
                         borderColor: active ? `${sector.accent}55` : `${sector.accent}24`,
-                        background: active
-                          ? `linear-gradient(180deg, ${sector.accent}22, rgba(7,17,31,0.92))`
-                          : `linear-gradient(180deg, ${sector.accent}12, rgba(7,12,22,0.9))`,
-                      }}
+                        "--sector-accent": sector.accent,
+                      } as CSSProperties}
                       transition={{ delay: index * 0.05, duration: 0.4 }}
                       type="button"
                       whileHover={{ y: -4 }}
                     >
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="landing-sector-card-head">
                         <div>
-                          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                            Sector {index + 1}
-                          </p>
-                          <h3 className="mt-2 text-2xl font-black text-white">
-                            {sector.name}
-                          </h3>
+                          <p>Sector {index + 1}</p>
+                          <h3>{sector.name}</h3>
                         </div>
-                        <span
-                          className="h-3 w-3 rounded-full shadow-[0_0_30px_currentColor]"
-                          style={{ backgroundColor: sector.accent, color: sector.accent }}
-                        />
+                        <span />
                       </div>
-                      <p className="mt-4 text-sm leading-7 text-slate-300">
-                        {sector.summary}
-                      </p>
-                      <div className="mt-5 flex items-center justify-between">
-                        <span
-                          className="text-sm font-semibold"
-                          style={{ color: sector.accent }}
-                        >
-                          {sector.statValue}
-                        </span>
-                        <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 group-hover:text-white">
-                          Open AI device page
-                        </span>
+                      <p>{sector.summary}</p>
+                      <div className="landing-sector-card-foot">
+                        <strong>{sector.statValue}</strong>
+                        <span>Open preview</span>
                       </div>
                     </motion.button>
                   );
                 })}
+                </div>
               </section>
 
               {activeSector ? (
@@ -2332,65 +2334,49 @@ function App() {
               ) : null}
 
               <section
-                className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_25px_70px_rgba(0,0,0,0.26)] sm:p-6"
+                className="landing-plans-panel"
                 id="landing-plans"
               >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                <div className="landing-section-head landing-section-head-row">
                   <div>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-violet-200">
+                    <span className="landing-section-pill">
                       <Layers3 className="h-3.5 w-3.5" />
-                      Annual subscription plans
+                      Simple plan selector
                     </span>
-                    <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                      Plans ready for admin-managed launch
-                    </h2>
+                    <h2>Pick a plan without scrolling through noise</h2>
                   </div>
 
-                  <p className="max-w-xl text-sm leading-7 text-slate-400">
-                    Choose a sector, assign the plan, and move directly into login or registration.
+                  <p>
+                    Featured options are shown first. The full package list is still
+                    available through the same backend data.
                   </p>
                 </div>
 
-                <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-                  {landingContent.plans.map((plan) => (
+                <div className="landing-plan-grid">
+                  {visiblePlans.map((plan) => (
                     <article
-                      className={`rounded-[28px] border p-5 ${
-                        plan.featured
-                          ? "border-cyan-400/25 bg-[linear-gradient(180deg,rgba(34,211,238,0.14),rgba(7,17,31,0.96))]"
-                          : "border-white/10 bg-white/[0.04]"
-                      }`}
+                      className={`landing-plan-card ${plan.featured ? "landing-plan-card-featured" : ""}`}
                       key={plan.slug}
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="landing-plan-head">
                         <div>
-                          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                            {plan.name}
-                          </p>
-                          <h3 className="mt-2 text-4xl font-black text-white">
-                            EUR {plan.annualPrice}
-                          </h3>
+                          <p>{plan.name}</p>
+                          <h3>EUR {plan.annualPrice}</h3>
                         </div>
                         {plan.featured ? (
-                          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">
-                            Popular
-                          </span>
+                          <span>Popular</span>
                         ) : null}
                       </div>
-                      <p className="mt-3 text-sm leading-7 text-slate-300">
-                        {plan.summary}
-                      </p>
-                      <div className="mt-5 space-y-2">
-                        {plan.features.slice(0, 4).map((feature) => (
-                          <div
-                            className="rounded-2xl border border-white/8 bg-black/20 px-3 py-3 text-sm text-slate-300"
-                            key={feature}
-                          >
+                      <p className="landing-plan-summary">{plan.summary}</p>
+                      <div className="landing-plan-features">
+                        {plan.features.slice(0, 3).map((feature) => (
+                          <div key={feature}>
                             {feature}
                           </div>
                         ))}
                       </div>
                       <button
-                        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-amber-300/20 bg-[linear-gradient(135deg,rgba(214,154,47,0.94),rgba(255,215,122,0.96))] px-4 py-3 text-sm font-bold text-[#1b120d] shadow-[0_16px_34px_rgba(214,154,47,0.22)] transition hover:brightness-105"
+                        className="landing-primary-button landing-plan-button"
                         onClick={() =>
                           openRegisterForPlan(plan, activeSector?.slug || "business")
                         }
