@@ -1,37 +1,57 @@
 <svg width="980" height="280" viewBox="0 0 980 280" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="brainGold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFD77A"/>
-      <stop offset="100%" stop-color="#D89A2F"/>
+    <linearGradient id="brandCircuit" x1="82" y1="28" x2="178" y2="172" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24C7FF"/>
+      <stop offset="58%" stop-color="#4B6BFF"/>
+      <stop offset="100%" stop-color="#B941FF"/>
     </linearGradient>
-    <linearGradient id="brainLine" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFF1C8"/>
-      <stop offset="100%" stop-color="#D89A2F"/>
+    <linearGradient id="brandChip" x1="82" y1="82" x2="144" y2="144" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D1730"/>
+      <stop offset="100%" stop-color="#162752"/>
     </linearGradient>
+    <linearGradient id="brandA" x1="448" y1="42" x2="518" y2="212" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24C7FF"/>
+      <stop offset="58%" stop-color="#3D78FF"/>
+      <stop offset="100%" stop-color="#5A46FF"/>
+    </linearGradient>
+    <linearGradient id="brandI" x1="563" y1="42" x2="602" y2="212" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5F79FF"/>
+      <stop offset="54%" stop-color="#8759FF"/>
+      <stop offset="100%" stop-color="#C13CFF"/>
+    </linearGradient>
+    <filter id="softGlow" x="0" y="0" width="280" height="280" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="18"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_0_1" result="shape"/>
+    </filter>
   </defs>
 
-  <g transform="translate(26 24)">
-    <rect x="0" y="0" width="192" height="192" rx="48" fill="#0A1124" stroke="url(#brainGold)" stroke-width="6"/>
-    <path d="M54 108C54 82 74 62 100 62C113 62 124 67 132 76C138 66 149 60 162 60C184 60 202 78 202 100C202 109 199 118 194 125C199 132 202 141 202 150C202 172 184 190 162 190C149 190 138 184 132 174C124 183 113 188 100 188C74 188 54 168 54 142C54 132 57 123 62 116C57 112 54 110 54 108Z" transform="translate(-18 -12)" stroke="url(#brainLine)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M96 50V166" stroke="url(#brainLine)" stroke-width="5" stroke-linecap="round"/>
-    <path d="M73 73C82 76 87 82 89 92" stroke="url(#brainLine)" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M58 110C74 112 84 122 88 138" stroke="url(#brainLine)" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M72 156C80 150 87 144 90 133" stroke="url(#brainLine)" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M112 78H146" stroke="url(#brainGold)" stroke-width="5" stroke-linecap="round"/>
-    <path d="M112 110H154" stroke="url(#brainGold)" stroke-width="5" stroke-linecap="round"/>
-    <path d="M112 142H146" stroke="url(#brainGold)" stroke-width="5" stroke-linecap="round"/>
-    <path d="M146 78L164 64" stroke="url(#brainGold)" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M154 110L176 110" stroke="url(#brainGold)" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M146 142L166 158" stroke="url(#brainGold)" stroke-width="4.5" stroke-linecap="round"/>
-    <circle cx="164" cy="64" r="7" fill="#0A1124" stroke="url(#brainGold)" stroke-width="4"/>
-    <circle cx="176" cy="110" r="7" fill="#0A1124" stroke="url(#brainGold)" stroke-width="4"/>
-    <circle cx="166" cy="158" r="7" fill="#0A1124" stroke="url(#brainGold)" stroke-width="4"/>
+  <g filter="url(#softGlow)" transform="translate(24 20)">
+    <rect x="0" y="0" width="210" height="210" rx="54" fill="#FFFFFF" fill-opacity="0.02"/>
+    <path d="M96 24C79 24 65 33 57 47C40 49 27 63 27 81C27 91 31 100 39 108C34 116 32 124 32 133C32 161 55 184 82 184C111 184 131 164 131 134V57C131 38 116 24 96 24Z" fill="#0D1730"/>
+    <path d="M77 47C65 49 56 58 54 70" fill="none" stroke="#F8FBFF" stroke-width="6" stroke-linecap="round"/>
+    <path d="M50 104C63 104 73 93 73 80" fill="none" stroke="#F8FBFF" stroke-width="6" stroke-linecap="round"/>
+    <path d="M59 147C72 142 81 131 82 117" fill="none" stroke="#F8FBFF" stroke-width="6" stroke-linecap="round"/>
+    <path d="M112 28C144 28 171 51 171 83C184 91 191 106 191 123C191 160 161 190 125 190" fill="none" stroke="url(#brandCircuit)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M116 64H152L168 49" fill="none" stroke="url(#brandCircuit)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M116 94H169" fill="none" stroke="url(#brandCircuit)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M116 124H154L172 140" fill="none" stroke="url(#brandCircuit)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M116 154H144L158 168" fill="none" stroke="url(#brandCircuit)" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="168" cy="49" r="8" fill="#FFFFFF" stroke="url(#brandCircuit)" stroke-width="4"/>
+    <circle cx="169" cy="94" r="8" fill="#FFFFFF" stroke="url(#brandCircuit)" stroke-width="4"/>
+    <circle cx="172" cy="140" r="8" fill="#FFFFFF" stroke="url(#brandCircuit)" stroke-width="4"/>
+    <circle cx="158" cy="168" r="8" fill="#FFFFFF" stroke="url(#brandCircuit)" stroke-width="4"/>
+    <rect x="78" y="76" width="70" height="70" rx="18" fill="url(#brandChip)" stroke="url(#brandCircuit)" stroke-width="4"/>
+    <text x="113" y="120" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="30" font-weight="800" text-anchor="middle">AI</text>
   </g>
 
-  <g transform="translate(250 62)">
-    <text x="0" y="102" fill="#F8FAFC" font-size="124" font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-4">br</text>
-    <text x="164" y="102" fill="url(#brainGold)" font-size="124" font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-6">AI</text>
-    <text x="382" y="102" fill="#F8FAFC" font-size="124" font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-4">n</text>
-    <text x="4" y="164" fill="#C9D4EE" font-size="34" font-family="Arial, Helvetica, sans-serif" letter-spacing="8">YOUR BUSINESS BRAIN. POWERED BY AI.</text>
+  <g transform="translate(250 64)">
+    <text x="0" y="116" fill="#081331" font-size="156" font-family="Manrope, Arial, sans-serif" font-weight="800" letter-spacing="-7">br</text>
+    <text x="314" y="116" fill="#081331" font-size="156" font-family="Manrope, Arial, sans-serif" font-weight="800" letter-spacing="-7">n</text>
+    <path d="M182 116L231 0H278L331 116H285L274 89H236L226 116H182ZM247 57H263L255 34L247 57Z" fill="url(#brandA)"/>
+    <rect x="286" y="0" width="39" height="116" rx="4" fill="url(#brandI)"/>
+    <text x="4" y="182" fill="#12213F" font-size="37" font-family="Manrope, Arial, sans-serif" font-weight="700" letter-spacing="7">YOUR BUSINESS BRAIN.</text>
+    <text x="500" y="182" fill="url(#brandCircuit)" font-size="37" font-family="Manrope, Arial, sans-serif" font-weight="700" letter-spacing="7">POWERED BY AI.</text>
   </g>
 </svg>

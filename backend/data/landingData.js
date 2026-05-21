@@ -1,15 +1,15 @@
 export const fallbackContent = {
   source: "fallback",
   hero: {
-    eyebrow: "AI device ecosystem",
-    title: "Sell the device first. Open pricing, help, and access only when the fit is clear.",
+    eyebrow: "Managed AI devices",
+    title: "AI devices with clear sector fit.",
     subtitle:
-      "brAIn connects physical AI devices, live sector flows, and cloud-managed rollout in one structured experience.",
-    badges: ["Commercial AI", "Business AI", "Healthcare AI", "Industry 4.0"],
+      "brAIn presents the device first, then opens access only after the product and operating context are clear.",
+    badges: ["Commercial", "Business", "Healthcare", "Industry"],
     metrics: [
-      { label: "Lanes", value: "4 verticals" },
-      { label: "Devices", value: "4 live models" },
-      { label: "Control", value: "Managed cloud" },
+      { label: "Lanes", value: "4 sectors" },
+      { label: "Devices", value: "4 models" },
+      { label: "Control", value: "Managed rollout" },
     ],
     primaryCta: {
       label: "See devices",

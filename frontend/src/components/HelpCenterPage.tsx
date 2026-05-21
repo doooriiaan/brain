@@ -8,6 +8,7 @@ import {
   SlidersHorizontal,
   Workflow,
 } from "lucide-react";
+import { BrainBrand } from "./BrainBrand";
 import { SectionDropdown } from "./SectionDropdown";
 import { SectorLiveMiniBoard } from "./SectorLiveBoard";
 import type { Device, Plan, Sector } from "../types";
@@ -139,7 +140,7 @@ export function HelpCenterPage({
       icon: CreditCard,
       kicker: "Recommendation",
       title: recommendedPlan?.name ?? "Managed rollout",
-      value: annualEstimate === 0 ? "Free lane" : `EUR ${annualEstimate}/yr`,
+      value: annualEstimate === 0 ? "Free access" : `EUR ${annualEstimate}/yr`,
     },
     {
       copy: "Keep a guided product conversation open while comparing plans and rollout detail.",
@@ -175,7 +176,16 @@ export function HelpCenterPage({
   ];
 
   return (
-    <main className="help-center-shell brain-help-shell">
+    <main className={`help-center-shell brain-help-shell ${lightMode ? "light-mode" : ""}`}>
+      <div className="brain-page-brand-bar">
+        <a className="brain-page-brand-link" href="/">
+          <BrainBrand showTagline subtitle="Managed AI devices" />
+        </a>
+        <a className="executive-button-secondary" href="/">
+          Main page
+        </a>
+      </div>
+
       <section className="help-center-hero brain-help-hero executive-surface executive-surface-strong">
         <div className="help-center-hero-copy brain-help-hero-copy">
           <span className="landing-inline-label">Pricing + help</span>
@@ -221,7 +231,7 @@ export function HelpCenterPage({
             <div className="help-center-summary-item">
               <span>Estimated spend</span>
               <strong>
-                {annualEstimate === 0 ? "Free lane" : `EUR ${annualEstimate}/yr`}
+                {annualEstimate === 0 ? "Free access" : `EUR ${annualEstimate}/yr`}
               </strong>
             </div>
           </div>
@@ -368,59 +378,7 @@ export function HelpCenterPage({
           </section>
 
           <section className="help-center-section brain-help-section executive-surface">
-            <SectionDropdown
-              actions={<CreditCard className="help-center-heading-icon h-5 w-5" />}
-              bodyClassName="mt-5"
-              summary={
-                <div>
-                  <span className="landing-inline-label">Plans</span>
-                  <h2 className="landing-section-title">Every plan in one place</h2>
-                  <p className="landing-section-copy">
-                    Show the comparison only when the buyer wants more than the first scan.
-                  </p>
-                </div>
-              }
-              toggleLabel="plans"
-            >
-              <div className="help-center-plan-grid brain-help-plan-grid">
-              {plans.map((plan) => (
-                <article
-                  className={`help-center-plan-card ${
-                    plan.featured ? "help-center-plan-card-featured" : ""
-                  }`}
-                  key={plan.slug}
-                >
-                  <div className="help-center-plan-top">
-                    <div>
-                      <span className="help-center-kicker">
-                        {plan.slug === "free"
-                          ? "Free lane"
-                          : plan.featured
-                            ? "Recommended"
-                            : "Managed plan"}
-                      </span>
-                      <h3>{plan.name}</h3>
-                    </div>
-                    <span className="help-center-summary-pill">{plan.deviceAllowance}</span>
-                  </div>
-
-                  <p className="help-center-plan-summary">{plan.summary}</p>
-                  <p className="help-center-plan-price">
-                    {plan.monthlyPrice === 0 ? "Free" : `EUR ${plan.monthlyPrice}/mo`}
-                  </p>
-
-                  <div className="help-center-plan-features">
-                    {plan.features.slice(0, 4).map((feature) => (
-                      <div className="help-center-plan-feature" key={feature}>
-                        <ShieldCheck className="h-4 w-4" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              ))}
-              </div>
-            </SectionDropdown>
+            {/* Plans moved to preweb; keep help page focused on deeper pricing tools */}
           </section>
 
           <section className="help-center-section brain-help-section executive-surface">

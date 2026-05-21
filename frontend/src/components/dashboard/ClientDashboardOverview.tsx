@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import {
   Activity,
   ArrowUpRight,
-  Building2,
   CheckCircle2,
   CreditCard,
   ShieldCheck,
   Sparkles,
   Ticket,
+  UserRound,
   Wallet,
 } from "lucide-react";
 import type {
@@ -37,7 +37,7 @@ function DashboardStatCard({
     <motion.div
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 220, damping: 18 }}
-      className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl"
+      className="h-full rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl"
     >
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
@@ -70,7 +70,7 @@ function QuickActionCard({
 }) {
   return (
     <button
-      className="group rounded-[30px] border border-white/10 bg-white/[0.04] p-6 text-left transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]"
+      className="group h-full rounded-[30px] border border-white/10 bg-white/[0.04] p-6 text-left transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]"
       onClick={onClick}
       type="button"
     >
@@ -114,6 +114,7 @@ type ClientDashboardOverviewProps = {
   clients: ClientPickerItem[];
   company: string;
   notifications: NotificationItem[];
+  onOpenAccount: () => void;
   onOpenCards: () => void;
   onOpenPayments: () => void;
   onOpenSupport: () => void;
@@ -131,6 +132,7 @@ export function ClientDashboardOverview({
   clients,
   company,
   notifications,
+  onOpenAccount,
   onOpenCards,
   onOpenPayments,
   onOpenSupport,
@@ -213,6 +215,10 @@ export function ClientDashboardOverview({
                 {account?.status ?? "active"}
               </span>
 
+              <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-sm text-white">
+                {planName}
+              </span>
+
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-sm text-slate-300">
                 {usageState}
               </span>
@@ -225,7 +231,7 @@ export function ClientDashboardOverview({
                 type="button"
               >
                 <Ticket size={18} />
-                Open SC Reveal
+                Open SC Cards
               </button>
 
               <button
@@ -236,10 +242,19 @@ export function ClientDashboardOverview({
                 <ArrowUpRight size={18} />
                 Open Payments
               </button>
+
+              <button
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-3 font-semibold text-white transition hover:bg-white/[0.08]"
+                onClick={onOpenAccount}
+                type="button"
+              >
+                <UserRound size={18} />
+                Profile + password
+              </button>
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.72),rgba(15,23,42,0.92))] p-6">
+          <div className="h-full rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.72),rgba(15,23,42,0.92))] p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -344,10 +359,10 @@ export function ClientDashboardOverview({
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         <DashboardStatCard
           accentClass="bg-cyan-400/10"
-          hint="The commercial package currently active for this company."
-          icon={<Building2 className="h-6 w-6 text-cyan-200" />}
-          title="Company"
-          value={account?.company ?? company}
+          hint="The active commercial plan tied to this client workspace."
+          icon={<ShieldCheck className="h-6 w-6 text-cyan-200" />}
+          title="Plan"
+          value={planName}
         />
         <DashboardStatCard
           accentClass="bg-sky-400/10"

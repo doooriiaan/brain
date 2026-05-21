@@ -6,10 +6,12 @@ type BrainScratchCardMode = "reveal" | "validate";
 type BrainScratchCardProps = {
   busy: boolean;
   code: string;
+  compact?: boolean;
   mode?: BrainScratchCardMode;
   planLabel: string;
   revealed: boolean;
   sectorLabel: string;
+  tone?: "light" | "dark";
   onAction?: () => void;
   pillLabelOverride?: string;
   titleOverride?: string;
@@ -23,10 +25,12 @@ type BrainScratchCardProps = {
 export function BrainScratchCard({
   busy,
   code,
+  compact = false,
   mode = "reveal",
   planLabel,
   revealed,
   sectorLabel,
+  tone,
   onAction,
   pillLabelOverride,
   titleOverride,
@@ -75,6 +79,14 @@ export function BrainScratchCard({
         ? "Reveal New Card"
         : "Reveal Card");
   const ActionIcon = isValidateMode ? CheckCircle2 : Ticket;
+  const resolvedTone = tone ?? (isValidateMode ? "dark" : "light");
+  const shellToneClass = [
+    "scratch-card-shell",
+    resolvedTone === "dark" ? "scratch-card-shell-dark" : "scratch-card-shell-light",
+    compact ? "scratch-card-shell-compact" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className="scratch-scene">
@@ -84,7 +96,7 @@ export function BrainScratchCard({
           rotateZ: revealed ? -2 : 2,
           y: [0, -8, 0],
         }}
-        className="scratch-card-shell"
+        className={shellToneClass}
         transition={{
           rotateY: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
           rotateZ: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
@@ -92,7 +104,14 @@ export function BrainScratchCard({
         }}
       >
         <div className="scratch-card-face scratch-card-front">
+          <div className="scratch-card-aura scratch-card-aura-primary" />
+          <div className="scratch-card-aura scratch-card-aura-secondary" />
           <div className="scratch-card-grid" />
+          <div className="scratch-card-logo-watermark">
+            <img alt="" loading="eager" src="/brand/brain-logo.svg" />
+          </div>
+          <div className="scratch-card-stream scratch-card-stream-one" />
+          <div className="scratch-card-stream scratch-card-stream-two" />
           <div className="scratch-card-brand">
             <span className="scratch-card-pill">
               <Sparkles size={13} />
@@ -119,6 +138,8 @@ export function BrainScratchCard({
         </div>
 
         <div className="scratch-card-face scratch-card-back">
+          <div className="scratch-card-aura scratch-card-aura-primary" />
+          <div className="scratch-card-grid scratch-card-grid-soft" />
           <div className="scratch-card-band" />
           <div className="scratch-card-reveal">
             <span className="scratch-card-reveal-label">{backLabel}</span>

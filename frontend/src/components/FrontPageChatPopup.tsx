@@ -16,6 +16,7 @@ type MessageItem = {
 
 type FrontPageChatPopupProps = {
   device: Device | null;
+  embedded?: boolean;
   onNavigate: (target: "devices" | "access" | "help" | "sectors") => void;
   plans: Plan[];
   sector: Sector | null;
@@ -308,17 +309,19 @@ function createReply(
 
 export function FrontPageChatPopup({
   device,
+  embedded = false,
   onNavigate,
   plans,
   sector,
 }: FrontPageChatPopupProps) {
   const language = useMemo(() => getLanguage(), []);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(embedded);
   const [input, setInput] = useState("");
   const [nextAction, setNextAction] = useState<
     "devices" | "access" | "help" | "sectors" | null
   >(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const isOpen = embedded || open;
 
   const welcomeMessage = useMemo(() => {
     if (language === "sq") {
@@ -360,12 +363,12 @@ export function FrontPageChatPopup({
   }, [device, language, sector, welcomeMessage]);
 
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       return;
     }
 
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, open]);
+  }, [isOpen, messages]);
 
   function handleNavigate(target: "devices" | "access" | "help" | "sectors") {
     onNavigate(target);
@@ -402,10 +405,16 @@ export function FrontPageChatPopup({
   const teaser = language === "sq"
     ? "Pyet per produktin, planin ose login"
     : "Ask about product, plan, or login";
+  const shellClassName = embedded
+    ? "support-agent-shell support-agent-shell-embedded"
+    : "support-agent-shell";
+  const panelClassName = embedded
+    ? "support-agent-panel support-agent-panel-embedded"
+    : "support-agent-panel";
 
   return (
-    <div className="support-agent-shell">
-      {!open ? (
+    <div className={shellClassName}>
+      {!isOpen ? (
         <button
           className="support-agent-teaser"
           onClick={() => setOpen(true)}
@@ -420,7 +429,7 @@ export function FrontPageChatPopup({
           </span>
         </button>
       ) : (
-        <div className="support-agent-panel">
+        <div className={panelClassName}>
           <div className="support-agent-header">
             <div className="support-agent-header-copy">
               <span className="support-agent-header-avatar">
@@ -436,14 +445,16 @@ export function FrontPageChatPopup({
               </div>
             </div>
 
-            <button
-              aria-label="Close front page chat"
-              className="support-agent-close"
-              onClick={() => setOpen(false)}
-              type="button"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            {!embedded ? (
+              <button
+                aria-label="Close front page chat"
+                className="support-agent-close"
+                onClick={() => setOpen(false)}
+                type="button"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            ) : null}
           </div>
 
           <div className="support-agent-context">
@@ -501,13 +512,17 @@ export function FrontPageChatPopup({
                   ? language === "sq"
                     ? "Hap buyer login"
                     : "Open buyer login"
-                  : nextAction === "sectors"
+                : nextAction === "sectors"
                     ? language === "sq"
                       ? "Hap solutions"
                       : "Open solutions"
                     : language === "sq"
-                      ? "Hap pricing"
-                      : "Open pricing"}
+                      ? embedded
+                        ? "Hap help page"
+                        : "Hap pricing"
+                      : embedded
+                        ? "Open help page"
+                        : "Open pricing"}
             </button>
           ) : null}
 

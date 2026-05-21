@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Cpu, HardDrive, Sparkles, Wifi } from "lucide-react";
+import { Cpu, HardDrive, Sparkles, Wifi } from "lucide-react";
 import type { Device, Plan, Sector } from "../types";
 import { SectorLiveMiniBoard } from "./SectorLiveBoard";
 
@@ -9,7 +9,6 @@ type DevicePreviewStudioProps = {
   lightMode?: boolean;
   onSelectDevice: (deviceKey: string) => void;
   sector: Sector | null;
-  onDeploy: () => void;
   plans: Plan[];
   relatedDevices: Device[];
 };
@@ -71,7 +70,6 @@ export function DevicePreviewStudio({
   lightMode = false,
   onSelectDevice,
   sector,
-  onDeploy,
   plans,
   relatedDevices,
 }: DevicePreviewStudioProps) {
@@ -88,13 +86,13 @@ export function DevicePreviewStudio({
       <div className="device-preview-copy">
         <span className="device-preview-pill">
           <Sparkles size={15} />
-          Hero device stage
+          Device overview
         </span>
-        <h2>{device.name} preview studio</h2>
+        <h2>{device.name} device overview</h2>
         <p>
-          A luxury 3D hardware stage for the {sector.name} offer. The active
-          device, sector fit, and rollout posture stay live in one polished
-          surface before the buyer moves into login or configuration.
+          A focused hardware view for the {sector.name} lane. The active device,
+          sector fit, and rollout posture stay visible before the buyer moves
+          into login.
         </p>
 
         <div className="device-preview-insight-grid">
@@ -143,20 +141,6 @@ export function DevicePreviewStudio({
           ))}
         </div>
 
-        <div className="device-preview-actions">
-          <button className="device-preview-button" onClick={onDeploy} type="button">
-            Start with this device
-            <ArrowUpRight size={16} />
-          </button>
-
-          <button
-            className="device-preview-button-secondary"
-            onClick={() => onSelectDevice(device.deviceKey)}
-            type="button"
-          >
-            Keep this device live
-          </button>
-        </div>
       </div>
 
       <div className="device-preview-stage">

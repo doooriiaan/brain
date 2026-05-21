@@ -29,13 +29,6 @@ type SectorLiveMiniBoardProps = {
 
 const LIGHT_MODE_ACCENT = "#d45a34";
 
-const sectorPlanMap: Record<string, string[]> = {
-  commercial: ["starter", "professional"],
-  business: ["business", "professional"],
-  healthcare: ["professional", "business"],
-  industry: ["platinum", "business"],
-};
-
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");
 
@@ -52,15 +45,6 @@ function hexToRgba(hex: string, alpha: number) {
 
 function resolveBoardAccent(accent: string, lightMode = false) {
   return lightMode ? LIGHT_MODE_ACCENT : accent;
-}
-
-function getRecommendedPlans(sector: Sector, plans: Plan[]) {
-  const preferred = sectorPlanMap[sector.slug] ?? [];
-  const ordered = preferred
-    .map((slug) => plans.find((plan) => plan.slug === slug))
-    .filter((plan): plan is Plan => Boolean(plan));
-
-  return ordered.length > 0 ? ordered : plans.filter((plan) => plan.featured).slice(0, 2);
 }
 
 function getShellStyle(accent: string, lightMode = false): CSSProperties {
@@ -219,7 +203,6 @@ export function SectorLiveMiniBoard({
   const palette = getBoardPalette(accent, lightMode);
   const isScreenMode = mode === "screen";
   const isCompactScreen = dense && isScreenMode;
-  const recommendedPlans = getRecommendedPlans(sector, plans).slice(0, 2);
   const metrics = device?.metrics.slice(0, isCompactScreen ? 2 : dense ? 2 : 3) ?? [
     { label: "Mode", value: sector.statValue },
     { label: "Focus", value: sector.capabilities[0] ?? "Live runtime" },
@@ -229,11 +212,10 @@ export function SectorLiveMiniBoard({
     "Cloud",
     "Sync",
   ];
-  const planLabels =
-    recommendedPlans.length > 0
-      ? recommendedPlans.map((plan) => plan.name)
-      : sector.capabilities.slice(0, 2);
-  const visiblePlanLabels = isCompactScreen ? planLabels.slice(0, 1) : planLabels.slice(0, 2);
+  const capabilityLabels = sector.capabilities.slice(0, plans.length > 1 ? 2 : 1);
+  const visibleCapabilityLabels = isCompactScreen
+    ? capabilityLabels.slice(0, 1)
+    : capabilityLabels.slice(0, 2);
   const shellClass = [
     "sector-live-mini-board relative overflow-hidden",
     `sector-live-mini-board-${mode}`,
@@ -379,11 +361,11 @@ export function SectorLiveMiniBoard({
                   className="text-[10px] uppercase tracking-[0.18em]"
                   style={{ color: palette.label }}
                 >
-                  Plan lane
+                  Priority flows
                 </p>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {visiblePlanLabels.map((label) => (
+                {visibleCapabilityLabels.map((label) => (
                   <span
                     className={`min-w-0 rounded-full border px-2 py-1 font-semibold ${
                       isCompactScreen ? "max-w-full text-[9px]" : "text-[10px]"
@@ -441,7 +423,7 @@ export function SectorLiveBoard({
 }: SectorLiveBoardProps) {
   const accent = resolveBoardAccent(sector.accent, lightMode);
   const palette = getBoardPalette(accent, lightMode);
-  const recommendedPlans = getRecommendedPlans(sector, plans);
+  const capabilityCards = sector.capabilities.slice(0, plans.length > 1 ? 2 : 1);
   const metrics = device?.metrics.slice(0, 3) ?? [
     { label: "Mode", value: sector.statValue },
     { label: "Audience", value: sector.audience },
@@ -680,17 +662,17 @@ export function SectorLiveBoard({
                     className="text-xs uppercase tracking-[0.18em]"
                     style={{ color: palette.label }}
                   >
-                    Recommended plans
+                    Priority flows
                   </p>
                 </div>
                 <div className="mt-3 space-y-2">
-                  {recommendedPlans.slice(0, 2).map((plan) => (
+                  {capabilityCards.map((capability) => (
                     <div
                       className="rounded-2xl border px-3 py-2 text-sm font-semibold"
-                      key={plan.slug}
+                      key={capability}
                       style={getTagStyle(palette)}
                     >
-                      {plan.name}
+                      {capability}
                     </div>
                   ))}
                 </div>

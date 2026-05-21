@@ -33,6 +33,22 @@ export function getRequestErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+export async function updateAuthProfile(payload: {
+  name: string;
+  email: string;
+}) {
+  const response = await axios.patch("/api/auth/profile", payload);
+  return response.data;
+}
+
+export async function updateAuthPassword(payload: {
+  currentPassword: string;
+  nextPassword: string;
+}) {
+  const response = await axios.patch("/api/auth/password", payload);
+  return response.data;
+}
+
 export function syncRuntimeHeaders({
   language,
   country,

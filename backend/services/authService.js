@@ -29,6 +29,23 @@ function getSessions() {
   return getRuntimeState().sessions;
 }
 
+function findUserById(state, userId) {
+  return state.users.find((item) => item.id === userId) ?? null;
+}
+
+function syncSessionsForUser(state, user) {
+  const publicUser = buildPublicUser(user);
+
+  state.sessions = state.sessions.map((session) =>
+    session.user?.id === user.id
+      ? {
+          ...session,
+          user: publicUser,
+        }
+      : session,
+  );
+}
+
 function createSession(user) {
   return updateRuntimeState((state) => {
     const session = {
@@ -82,6 +99,101 @@ export function getSessionByToken(token) {
   }
 
   return session;
+}
+
+export function updateUserProfile(userId, payload) {
+  const normalizedUserId = sanitizeText(userId);
+  const nextName = sanitizeText(payload.name);
+  const nextEmail = sanitizeText(payload.email).toLowerCase();
+
+  if (!normalizedUserId) {
+    throw createHttpError("User session is required.", 401);
+  }
+
+  if (!nextName || !nextEmail) {
+    throw createHttpError("Name and email are required.");
+  }
+
+  if (!emailPattern.test(nextEmail)) {
+    throw createHttpError("Please enter a valid email address.", 400);
+  }
+
+  const updatedUser = updateRuntimeState((state) => {
+    const user = findUserById(state, normalizedUserId);
+
+    if (!user) {
+      throw createHttpError("User account could not be found.", 404);
+    }
+
+    const duplicateUser = state.users.find(
+      (item) => item.id !== user.id && item.email.toLowerCase() === nextEmail,
+    );
+
+    if (duplicateUser) {
+      throw createHttpError("Another account already uses that email address.", 409);
+    }
+
+    user.name = nextName;
+    user.email = nextEmail;
+    syncSessionsForUser(state, user);
+
+    return buildPublicUser(user);
+  });
+
+  createNotification(
+    "Profile updated",
+    `${updatedUser.name} updated the ${updatedUser.role} workspace profile.`,
+    "info",
+  );
+
+  return updatedUser;
+}
+
+export function changeUserPassword(userId, payload) {
+  const normalizedUserId = sanitizeText(userId);
+  const currentPassword = sanitizeText(payload.currentPassword);
+  const nextPassword = sanitizeText(payload.nextPassword);
+
+  if (!normalizedUserId) {
+    throw createHttpError("User session is required.", 401);
+  }
+
+  if (!currentPassword || !nextPassword) {
+    throw createHttpError("Current password and new password are required.");
+  }
+
+  if (nextPassword.length < 8) {
+    throw createHttpError("New password must be at least 8 characters long.", 400);
+  }
+
+  const updatedUser = updateRuntimeState((state) => {
+    const user = findUserById(state, normalizedUserId);
+
+    if (!user) {
+      throw createHttpError("User account could not be found.", 404);
+    }
+
+    if (user.password !== currentPassword) {
+      throw createHttpError("Current password is incorrect.", 401);
+    }
+
+    if (currentPassword === nextPassword) {
+      throw createHttpError("Choose a different password for the update.", 400);
+    }
+
+    user.password = nextPassword;
+    syncSessionsForUser(state, user);
+
+    return buildPublicUser(user);
+  });
+
+  createNotification(
+    "Password updated",
+    `${updatedUser.name} changed the ${updatedUser.role} workspace password.`,
+    "warning",
+  );
+
+  return updatedUser;
 }
 
 export function loginUser(payload) {

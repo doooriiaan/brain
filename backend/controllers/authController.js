@@ -1,8 +1,11 @@
 import {
+  changeUserPassword,
   getDemoCredentials,
   getAuthSnapshot,
+  getSessionByToken,
   loginUser,
   registerUser,
+  updateUserProfile,
 } from "../services/authService.js";
 import {
   controller,
@@ -73,5 +76,35 @@ export const registerRequest = controller((request, response) => {
   response.status(201).json({
     message: "Client workspace account created successfully.",
     session,
+  });
+});
+
+export const getCurrentSession = controller((request, response) => {
+  response.json({
+    session: request.authSession,
+  });
+});
+
+export const updateProfileRequest = controller((request, response) => {
+  const userId = request.authSession?.user?.id;
+  const token = request.authSession?.token;
+
+  updateUserProfile(userId, request.body ?? {});
+
+  response.json({
+    message: "Workspace profile updated successfully.",
+    session: getSessionByToken(token),
+  });
+});
+
+export const changePasswordRequest = controller((request, response) => {
+  const userId = request.authSession?.user?.id;
+  const token = request.authSession?.token;
+
+  changeUserPassword(userId, request.body ?? {});
+
+  response.json({
+    message: "Workspace password updated successfully.",
+    session: getSessionByToken(token),
   });
 });

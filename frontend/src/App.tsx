@@ -21,13 +21,17 @@ import {
   Users,
   Workflow,
 } from "lucide-react";
+import { BrainBrand } from "./components/BrainBrand";
 import { BrainScratchCard } from "./components/BrainScratchCard";
 import { EmptyCard } from "./components/EmptyCard";
 import { GoogleTranslateBridge } from "./components/GoogleTranslateBridge";
 import { HelpCenterPage } from "./components/HelpCenterPage";
 import { PublicLandingExperience } from "./components/PublicLandingExperience";
+import AboutPage from "./components/AboutPage";
 import { LandingTopBar } from "./components/LandingTopBar";
+import PortalAccountCenter from "./components/PortalAccountCenter";
 import { SectorLiveBoard } from "./components/SectorLiveBoard";
+import { ClientDashboardOverview } from "./components/dashboard/ClientDashboardOverview";
 import {
   countryOptions,
   getFallbackLanguageForCountry,
@@ -45,6 +49,8 @@ import {
   setAuthToken,
   syncRuntimeHeaders,
   terminateVpnConnection,
+  updateAuthPassword,
+  updateAuthProfile,
   validateScratchCard,
 } from "./services/api";
 import type {
@@ -67,7 +73,7 @@ import type {
 
 type AuthRole = "admin" | "client";
 type AuthMode = "login" | "register";
-type LandingView = "overview" | "access" | "sectors" | "devices" | "plans";
+type LandingView = "overview" | "access" | "sectors" | "devices";
 
 type LoginFormState = {
   role: AuthRole;
@@ -87,13 +93,6 @@ type RegisterFormState = {
 type UiMessage = {
   tone: "success" | "error" | "info";
   text: string;
-};
-
-type LandingSidebarItem = {
-  key: string;
-  label: string;
-  detail: string;
-  icon: LucideIcon;
 };
 
 type DashboardSidebarItem = {
@@ -252,7 +251,6 @@ const STORAGE_KEYS = {
   country: "brain-landing-country",
   language: "brain-landing-language",
   guestId: "brain-guest-user-id",
-  darkMode: "brain-dark-mode",
 } as const;
 
 const clientPaymentMethods: Array<{
@@ -297,35 +295,7 @@ const landingSectionMap: Record<LandingView, string> = {
   access: "landing-access-page",
   sectors: "preweb-sectors",
   devices: "landing-devices",
-  plans: "landing-plans",
 };
-
-const landingSidebarItems: LandingSidebarItem[] = [
-  {
-    key: "plans",
-    label: "Pricing",
-    detail: "Open plans and guided help in a separate window.",
-    icon: CreditCard,
-  },
-  {
-    key: "devices",
-    label: "Products",
-    detail: "Show the hardware in a live and credible way.",
-    icon: Cpu,
-  },
-  {
-    key: "sectors",
-    label: "Solutions",
-    detail: "Match each sector to a stronger device lane.",
-    icon: Layers3,
-  },
-  {
-    key: "help",
-    label: "Help",
-    detail: "Open live planning, rollout notes, and product guidance.",
-    icon: Sparkles,
-  },
-];
 
 function readStoredSession() {
   const stored = window.localStorage.getItem(STORAGE_KEYS.auth);
@@ -353,15 +323,6 @@ function readStoredLanguage(countryCode: string) {
   );
 }
 
-function readStoredDarkMode() {
-  const stored = window.localStorage.getItem(STORAGE_KEYS.darkMode);
-  // Default to false (light mode is primary)
-  if (stored === null) {
-    return false;
-  }
-  return stored === "true";
-}
-
 function readInitialPublicPath() {
   return window.location.pathname.toLowerCase() || "/";
 }
@@ -373,8 +334,7 @@ function readInitialLandingView(): LandingView {
     rawValue === "overview" ||
     rawValue === "access" ||
     rawValue === "sectors" ||
-    rawValue === "devices" ||
-    rawValue === "plans"
+    rawValue === "devices"
   ) {
     return rawValue;
   }
@@ -570,9 +530,7 @@ function getSectorPanelStyle(accent?: string, lightMode = false) {
 
   return {
     borderColor: `${themeAccent}44`,
-    background: lightMode
-      ? `linear-gradient(135deg, ${themeAccent}12, rgba(255,255,255,0.98))`
-      : `linear-gradient(135deg, ${themeAccent}18, rgba(255,255,255,0.04))`,
+    backgroundColor: lightMode ? `${themeAccent}10` : `${themeAccent}12`,
   };
 }
 
@@ -650,9 +608,14 @@ function App() {
   const [paymentExpiry, setPaymentExpiry] = useState("");
   const [paymentBusy, setPaymentBusy] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState<UiMessage | null>(null);
+  const [profileSaveBusy, setProfileSaveBusy] = useState(false);
+  const [profileMessage, setProfileMessage] = useState<UiMessage | null>(null);
+  const [passwordSaveBusy, setPasswordSaveBusy] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<UiMessage | null>(null);
   const [activeDashboardSection, setActiveDashboardSection] =
     useState("system-overview");
-  const [isDarkMode, setIsDarkMode] = useState(() => readStoredDarkMode());
+  // Force light mode only and remove dark mode from the public UI.
+  const isDarkMode = false;
   const lastClientAccountKeyRef = useRef("");
 
   const selectedCountryOption =
@@ -662,6 +625,7 @@ function App() {
     languageOptions.find((language) => language.code === selectedLanguage) ??
     languageOptions[0];
   const isHelpCenterPage = !authSession && publicPath === "/help";
+  const isAboutPage = !authSession && publicPath === "/about";
   const showLandingAccessPage = !authSession && landingView === "access";
 
   useEffect(() => {
@@ -707,6 +671,8 @@ function App() {
     setScratchCodeInput("");
     setScratchMessage(null);
     setPaymentMessage(null);
+    setProfileMessage(null);
+    setPasswordMessage(null);
     lastClientAccountKeyRef.current = "";
   }, [authSession]);
 
@@ -928,54 +894,6 @@ function App() {
     ];
   }, [activeDevice, landingContent.devices.length, landingContent.hero.metrics, landingContent.sectors.length]);
 
-  const featuredLandingPlan = useMemo(() => {
-    return (
-      landingContent.plans.find((plan) => plan.featured) ??
-      landingContent.plans.find((plan) => plan.slug === "professional") ??
-      landingContent.plans[0] ??
-      null
-    );
-  }, [landingContent.plans]);
-
-  const landingPlanCards = useMemo(() => {
-    return landingContent.plans;
-  }, [landingContent.plans]);
-
-  const salesHighlights = useMemo<
-    Array<{ detail: string; icon: LucideIcon; title: string }>
-  >(() => {
-    const installDetail = activeDevice?.ports?.length
-      ? activeDevice.ports.slice(0, 3).join(" / ")
-      : "HDMI / USB-C / Wi-Fi";
-
-    return [
-      {
-        title: activeSector?.name ?? "Sector fit",
-        detail:
-          activeSector?.audience ??
-          "Match the device to the buyer and the use case quickly.",
-        icon: Layers3,
-      },
-      {
-        title: "Install",
-        detail: installDetail,
-        icon: Cpu,
-      },
-      {
-        title: "Operations",
-        detail: "Login flow, cloud control, and rollout support stay connected.",
-        icon: Workflow,
-      },
-    ];
-  }, [activeDevice, activeSector]);
-
-  const partnerSignals = useMemo(() => {
-    return [
-      ...landingContent.integrations.protocols.slice(0, 3),
-      ...landingContent.integrations.cloudPartners.slice(0, 2),
-    ];
-  }, [landingContent.integrations.cloudPartners, landingContent.integrations.protocols]);
-
   const sectorSummaries = useMemo(() => {
     const accounts =
       authSession?.user.role === "admin"
@@ -1117,7 +1035,7 @@ function App() {
     selectedClientPlan?.slug === "free"
       ? activeScratchCode
         ? "Code ready"
-        : "Free lane"
+        : "Free access"
       : pendingPlanPayment
         ? "Pending admin"
         : hasLinkedSelectedPlanAccess
@@ -1130,15 +1048,15 @@ function App() {
   const petAdviceCopy =
     selectedClientPlan?.slug === "free"
       ? activeScratchCode
-        ? `${activeScratchCode} is already prepared for this workspace. Validate it directly from the card.`
-        : "The free access code can be generated automatically here, so the client does not need to enter it manually."
+        ? `${activeScratchCode} is ready for this workspace. Validate it directly from the card.`
+        : "Generate the free access code here and validate it from the same workspace."
       : pendingPlanPayment
-        ? "Your managed request is waiting for approval. Client view stays focused only on your own payment and access state."
+        ? "Your managed request is waiting for approval. This view stays focused on payment and access status."
       : hasLinkedSelectedPlanAccess
-        ? "This plan already has linked SC access for the current workspace, so client view stays focused on status and activation details."
+        ? "This plan already has linked SC access, so this view stays focused on status and activation."
         : latestRejectedPlanPayment
-          ? "The latest managed request was rejected. Update the billing details and send it again from this workspace."
-          : "Managed plans stay in client view only as request status, payment state, and linked access.";
+          ? "The latest managed request was rejected. Update the billing details and send it again."
+          : "This view keeps request status, payment state, and linked access in one place.";
 
   const adminCardsForSelectedPlan = useMemo(() => {
     const filteredCards = adminOverview.smartCards.filter(
@@ -1216,6 +1134,158 @@ function App() {
       };
     });
   }, [adminOverview.accounts, adminOverview.smartCards, landingContent.devices, landingContent.sectors]);
+  const adminRolloutTotals = useMemo(() => {
+    return sectorControlRows.reduce(
+      (totals, sector) => ({
+        accounts: totals.accounts + sector.accounts,
+        activatedCards: totals.activatedCards + sector.activatedCards,
+        assignedCards: totals.assignedCards + sector.assignedCards,
+        availableCards: totals.availableCards + sector.availableCards,
+        devices: totals.devices + sector.devices,
+      }),
+      {
+        accounts: 0,
+        activatedCards: 0,
+        assignedCards: 0,
+        availableCards: 0,
+        devices: 0,
+      },
+    );
+  }, [sectorControlRows]);
+  const adminRolloutRows = useMemo(() => {
+    return sectorControlRows
+      .map((sector) => {
+        const stageLabel =
+          sector.activatedCards > 0
+            ? "Live lane"
+            : sector.assignedCards > 0
+              ? "Queued lane"
+              : sector.availableCards > 0
+                ? "Ready inventory"
+                : "Monitor lane";
+
+        return {
+          ...sector,
+          stageLabel,
+        };
+      })
+      .sort((left, right) => {
+        if (right.activatedCards !== left.activatedCards) {
+          return right.activatedCards - left.activatedCards;
+        }
+
+        if (right.assignedCards !== left.assignedCards) {
+          return right.assignedCards - left.assignedCards;
+        }
+
+        if (right.accounts !== left.accounts) {
+          return right.accounts - left.accounts;
+        }
+
+        return left.name.localeCompare(right.name);
+      });
+  }, [sectorControlRows]);
+  const adminRolloutSummaryCards = useMemo(
+    () => [
+      {
+        detail: `${adminRolloutTotals.accounts} accounts in rollout scope`,
+        label: "Lanes",
+        value: String(sectorControlRows.length),
+      },
+      {
+        detail: `${adminRolloutTotals.availableCards} cards ready for assignment`,
+        label: "Inventory",
+        value: `${adminRolloutTotals.availableCards} ready`,
+      },
+      {
+        detail: `${adminRolloutTotals.assignedCards} cards already queued`,
+        label: "Assigned",
+        value: `${adminRolloutTotals.assignedCards} queued`,
+      },
+      {
+        detail: `${adminRolloutTotals.devices} device views across sectors`,
+        label: "Live cards",
+        value: `${adminRolloutTotals.activatedCards} active`,
+      },
+    ],
+    [adminRolloutTotals, sectorControlRows.length],
+  );
+  const adminOrganizationSummaryCards = useMemo(() => {
+    const totalDevices = adminOverview.accounts.reduce((sum, account) => sum + account.devices, 0);
+    const totalCards = adminOverview.accounts.reduce((sum, account) => sum + account.smartCards, 0);
+    const totalSales = adminOverview.accounts.reduce((sum, account) => sum + account.salesToday, 0);
+    const coverageGapAccounts = adminOverview.accounts.filter(
+      (account) => account.smartCards < account.devices,
+    ).length;
+
+    return [
+      {
+        detail: `${coverageGapAccounts} accounts still need more SC coverage`,
+        label: "Organizations",
+        value: String(adminOverview.accounts.length),
+      },
+      {
+        detail: `${totalCards} SC cards already linked across accounts`,
+        label: "Devices",
+        value: totalDevices.toLocaleString("en-GB"),
+      },
+      {
+        detail: `${totalDevices} active device endpoints in scope`,
+        label: "Linked cards",
+        value: totalCards.toLocaleString("en-GB"),
+      },
+      {
+        detail: `${approvedAdminPayments.length} approved payments already live`,
+        label: "Sales today",
+        value: formatSystemMoney(totalSales),
+      },
+    ];
+  }, [adminOverview.accounts, approvedAdminPayments.length]);
+  const adminOrganizationPriorityAccounts = useMemo(() => {
+    return adminOverview.accounts
+      .map((account) => ({
+        ...account,
+        coverageGap: Math.max(account.devices - account.smartCards, 0),
+      }))
+      .sort((left, right) => {
+        if (right.coverageGap !== left.coverageGap) {
+          return right.coverageGap - left.coverageGap;
+        }
+
+        if (right.salesToday !== left.salesToday) {
+          return right.salesToday - left.salesToday;
+        }
+
+        if (right.devices !== left.devices) {
+          return right.devices - left.devices;
+        }
+
+        return left.company.localeCompare(right.company);
+      })
+      .slice(0, 6);
+  }, [adminOverview.accounts]);
+  const adminOrganizationPlanMix = useMemo(() => {
+    return Object.entries(
+      adminOverview.accounts.reduce<Record<string, number>>((accumulator, account) => {
+        accumulator[account.planName] = (accumulator[account.planName] ?? 0) + 1;
+        return accumulator;
+      }, {}),
+    )
+      .map(([label, count]) => ({ count, label }))
+      .sort((left, right) => right.count - left.count)
+      .slice(0, 4);
+  }, [adminOverview.accounts]);
+  const adminOrganizationSectorMix = useMemo(() => {
+    return Object.entries(
+      adminOverview.accounts.reduce<Record<string, number>>((accumulator, account) => {
+        accumulator[account.sectorLabel] = (accumulator[account.sectorLabel] ?? 0) + 1;
+        return accumulator;
+      }, {}),
+    )
+      .map(([label, count]) => ({ count, label }))
+      .sort((left, right) => right.count - left.count)
+      .slice(0, 4);
+  }, [adminOverview.accounts]);
 
   const dashboardSidebarItems = useMemo<DashboardSidebarItem[]>(() => {
     if (!authSession) {
@@ -1227,14 +1297,21 @@ function App() {
         {
           target: "system-overview",
           label: "Overview",
-          detail: "Status, quick actions, and live totals.",
+          detail: "Current status, quick actions, and live totals.",
           icon: Sparkles,
           meta: `${primaryMetrics.length} live tiles`,
         },
         {
+          target: "system-account",
+          label: "Account",
+          detail: "Profile, security, and workspace identity.",
+          icon: Users,
+          meta: authSession.user.name,
+        },
+        {
           target: "system-operations",
-          label: "Ops board",
-          detail: "Services, runtime flow, and live events.",
+          label: "Operations",
+          detail: "Runtime services, activity, and updates.",
           icon: Workflow,
           meta: `${operationsOverview.timeline.length} events`,
         },
@@ -1247,29 +1324,29 @@ function App() {
         },
         {
           target: "system-cards",
-          label: "Card stock",
-          detail: "Inventory, assignment, and activation state.",
+          label: "SC cards",
+          detail: "Track inventory, assignment, and activation.",
           icon: ShieldCheck,
           meta: `${adminOverview.smartCards.length} cards`,
         },
         {
           target: "system-device-control",
           label: "Rollout",
-          detail: "Control hardware rollout per sector.",
+          detail: "Review device rollout by sector.",
           icon: Cpu,
           meta: `${sectorControlRows.length} sectors`,
         },
         {
           target: "system-sectors",
-          label: "Sector lanes",
-          detail: "See the full deployment stack by lane.",
+          label: "Sectors",
+          detail: "Compare sector fit and deployment context.",
           icon: Layers3,
           meta: `${landingContent.sectors.length} lanes`,
         },
         {
           target: "system-role",
-          label: "Support desk",
-          detail: "Broadcasts, uploads, and ticket follow-up.",
+          label: "Support",
+          detail: "Manage tickets, uploads, and updates.",
           icon: Ticket,
           meta: `${adminOverview.tickets.length} tickets`,
         },
@@ -1285,39 +1362,46 @@ function App() {
         meta: `${primaryMetrics.length} live tiles`,
       },
       {
+        target: "client-account",
+        label: "Account",
+        detail: "Profile, password, and plan controls.",
+        icon: Users,
+        meta: authSession.user.name,
+      },
+      {
         target: "client-plan-board",
-        label: "Access plan",
-        detail: "Choose the plan and access path.",
+        label: "Access",
+        detail: "Choose plan and continue the access flow.",
         icon: Layers3,
         meta: selectedClientPlan?.name ?? "Choose plan",
       },
       {
         target: "client-validate",
         label: "Validation",
-        detail: "Generate or confirm the live access code.",
+        detail: "Generate or validate the current SC code.",
         icon: ShieldCheck,
         meta:
           activeScratchCode ||
-          (selectedClientPlan?.slug === "free" ? "Free lane" : "Managed request"),
+          (selectedClientPlan?.slug === "free" ? "Free access" : "Managed request"),
       },
       {
         target: "client-billing",
         label: "Billing",
-        detail: "Track payment requests and linked access.",
+        detail: "Track requests, payments, and linked access.",
         icon: CreditCard,
         meta: `${pendingClientPaymentsCount} pending`,
       },
       {
         target: "client-sectors",
         label: "Deployment",
-        detail: "See your active device and sector lane.",
+        detail: "Review sector fit and device context.",
         icon: Cpu,
         meta: clientSector?.name ?? "Workspace lane",
       },
       {
         target: "system-role",
         label: "Support",
-        detail: "Account snapshot and ticket history.",
+        detail: "Account summary and ticket history.",
         icon: Ticket,
         meta: `${clientOverview.tickets.length} tickets`,
       },
@@ -1352,7 +1436,9 @@ function App() {
   const showAdminPaymentsPanel = activeDashboardSection === "system-payments";
   const showAdminCardsPanel = activeDashboardSection === "system-cards";
   const showAdminSectorsPanel = activeDashboardSection === "system-sectors";
+  const showAdminAccountPanel = activeDashboardSection === "system-account";
   const showAdminSupportPanel = activeDashboardSection === "system-role";
+  const showClientAccountPanel = activeDashboardSection === "client-account";
   const showClientAccessPanel =
     activeDashboardSection === "client-plan-board" ||
     activeDashboardSection === "client-validate";
@@ -1560,10 +1646,10 @@ function App() {
     return [
       {
         target: "client-plan-board",
-        label: "Plan",
+        label: "Access",
         title:
           selectedClientPlan?.slug === "free"
-            ? "Free access lane ready"
+            ? "Free access ready"
             : hasLinkedSelectedPlanAccess
               ? `${selectedClientPlan?.name ?? "Managed"} access linked`
               : latestRejectedPlanPayment
@@ -1630,28 +1716,28 @@ function App() {
   ]);
 
   const dashboardHelpTitle =
-    authSession?.user.role === "admin" ? "Attention queue" : "Next actions";
+    authSession?.user.role === "admin" ? "Priority actions" : "Next steps";
   const dashboardHelpCopy =
     authSession?.user.role === "admin"
-      ? "These shortcuts take you straight to the boards that need review first."
-      : "These shortcuts lead directly to the next client action without opening extra panels.";
+      ? "Use these shortcuts to open the boards that need review first."
+      : "Use these shortcuts to continue the current access flow without opening extra panels.";
   const workspaceProfileItems = authSession
     ? [
         {
-          label: "Role",
-          value: authSession.user.role === "admin" ? "Admin" : "Client",
+          label: "User",
+          value: authSession.user.name,
         },
         {
-          label: "Connected",
+          label: "Email",
+          value: authSession.user.email,
+        },
+        {
+          label: "Route",
+          value: vpnActive ? vpnSession?.location ?? "Protected route" : "Direct route",
+        },
+        {
+          label: "Session",
           value: formatSystemDate(authSession.issuedAt),
-        },
-        {
-          label: "Country",
-          value: selectedCountryOption.label,
-        },
-        {
-          label: "Language",
-          value: selectedLanguageOption.label,
         },
       ]
     : [];
@@ -1664,22 +1750,22 @@ function App() {
               pendingAdminPayments.length > 0
                 ? `${pendingAdminPayments.length} waiting`
                 : "Queue clear",
-            detail: "Managed requests ready for admin review and billing approval.",
+            detail: "Payment and access requests waiting for review.",
           },
           {
-            label: "Card stock",
+            label: "SC cards",
             value: `${adminOverview.smartCardStats.available} ready`,
-            detail: "Available SC cards that can be assigned across the workspace.",
+            detail: "SC cards currently available for assignment.",
           },
           {
             label: "Tickets",
             value: `${adminOverview.tickets.length} open`,
-            detail: "Support and follow-up threads that still need visibility.",
+            detail: "Support and follow-up items still open.",
           },
           {
             label: "Deployment",
             value: `${sectorControlRows.length} sectors`,
-            detail: "Sector lanes currently connected to the rollout control board.",
+            detail: "Sector lanes currently in rollout scope.",
           },
         ]
       : [
@@ -1688,11 +1774,11 @@ function App() {
             value: clientAccessStateLabel,
             detail:
               selectedClientPlan?.slug === "free"
-                ? "Free validation can be generated instantly from this workspace."
+                ? "Free access can be generated instantly from this workspace."
                 : pendingPlanPayment
                   ? "Managed request is waiting for admin approval."
-                  : hasLinkedSelectedPlanAccess
-                    ? "Linked SC access is already attached to the selected managed plan."
+                : hasLinkedSelectedPlanAccess
+                    ? "Linked SC access is already attached to the selected plan."
                     : latestRejectedPlanPayment
                       ? "The latest managed request was rejected and can be retried."
                       : "Select a plan and continue through the managed access flow.",
@@ -1701,7 +1787,7 @@ function App() {
             label: "Plan",
             value:
               selectedClientPlan?.name ?? clientOverview.account?.planName ?? "Free",
-            detail: "Current commercial lane tied to this client workspace.",
+            detail: "Selected commercial path for this workspace.",
           },
           {
             label: "Billing",
@@ -1711,7 +1797,7 @@ function App() {
                 : clientOverview.payments.length > 0
                   ? `${clientOverview.payments.length} recorded`
                   : "Clear",
-            detail: "Payment requests and linked access are tracked in one place.",
+            detail: "Requests and linked access status for this workspace.",
           },
           {
             label: "Deployment",
@@ -1720,20 +1806,49 @@ function App() {
               activeSector?.name ??
               clientOverview.account?.sectorLabel ??
               "Workspace lane",
-            detail: "Current sector lane and rollout context for this account.",
+            detail: "Current sector and device context for this account.",
           },
         ]
     : [];
-
-  const activePublicNavigationKey = isHelpCenterPage
-    ? "help"
-    : landingView === "devices"
-      ? "devices"
-      : landingView === "sectors"
-        ? "sectors"
-        : landingView === "plans"
-          ? "plans"
-          : undefined;
+  const workspaceSidebarSignalCopy = authSession
+    ? authSession.user.role === "admin"
+      ? "Keep the review queue, live card inventory, and rollout context visible while moving across the admin boards."
+      : "Keep access, billing, and deployment context visible while you continue through the workspace flow."
+    : "";
+  const workspaceSidebarSignalRows = authSession
+    ? authSession.user.role === "admin"
+      ? [
+          {
+            label: "Runtime events",
+            value: `${operationsOverview.timeline.length} tracked`,
+          },
+          {
+            label: "Cards live",
+            value: `${adminOverview.smartCardStats.activated} activated`,
+          },
+          {
+            label: "Session",
+            value: formatSystemDate(authSession.issuedAt),
+          },
+        ]
+      : [
+          {
+            label: "Support",
+            value: `${clientOverview.tickets.length} tickets`,
+          },
+          {
+            label: "SC card",
+            value:
+              selectedPlanSmartCard?.code ??
+              activeScratchCode ??
+              (selectedClientPlan?.slug === "free" ? "Generate card" : "Await request"),
+          },
+          {
+            label: "Route",
+            value: vpnActive ? vpnSession?.location ?? "Protected route" : "Direct route",
+          },
+        ]
+    : [];
 
   async function refreshPublicRuntime() {
     try {
@@ -1926,6 +2041,96 @@ function App() {
     void refreshPublicRuntime();
   }
 
+  async function handleProfileSave(payload: { name: string; email: string }) {
+    if (!authSession) {
+      return;
+    }
+
+    setProfileSaveBusy(true);
+    setProfileMessage(null);
+
+    try {
+      const response = await updateAuthProfile(payload);
+      const nextSession = response.session as AuthSession;
+
+      if (nextSession) {
+        setAuthSession(nextSession);
+        await loadSystemOverview(nextSession);
+      }
+
+      setProfileMessage({
+        tone: "success",
+        text:
+          typeof response.message === "string"
+            ? response.message
+            : "Workspace profile updated successfully.",
+      });
+    } catch (error) {
+      setProfileMessage({
+        tone: "error",
+        text: getRequestErrorMessage(error, "Profile update failed."),
+      });
+    } finally {
+      setProfileSaveBusy(false);
+    }
+  }
+
+  async function handlePasswordSave(payload: {
+    currentPassword: string;
+    nextPassword: string;
+    confirmPassword: string;
+  }) {
+    if (!authSession) {
+      return;
+    }
+
+    if (!payload.currentPassword || !payload.nextPassword || !payload.confirmPassword) {
+      setPasswordMessage({
+        tone: "error",
+        text: "Fill in the current password, new password, and confirmation.",
+      });
+      return;
+    }
+
+    if (payload.nextPassword !== payload.confirmPassword) {
+      setPasswordMessage({
+        tone: "error",
+        text: "New password and confirmation do not match.",
+      });
+      return;
+    }
+
+    setPasswordSaveBusy(true);
+    setPasswordMessage(null);
+
+    try {
+      const response = await updateAuthPassword({
+        currentPassword: payload.currentPassword,
+        nextPassword: payload.nextPassword,
+      });
+      const nextSession = response.session as AuthSession;
+
+      if (nextSession) {
+        setAuthSession(nextSession);
+      }
+
+      setPasswordMessage({
+        tone: "success",
+        text:
+          typeof response.message === "string"
+            ? response.message
+            : "Workspace password updated successfully.",
+      });
+    } catch (error) {
+      setPasswordMessage({
+        tone: "error",
+        text: getRequestErrorMessage(error, "Password update failed."),
+      });
+    } finally {
+      setPasswordSaveBusy(false);
+    }
+  }
+
   function handleLanguageChange(nextLanguage: string) {
     if (nextLanguage === selectedLanguage) {
       return;
@@ -1994,48 +2199,38 @@ function App() {
     scheduleLandingScroll(landingSectionMap[view]);
   }
 
-  function buildHelpWindowUrl() {
-    const params = new URLSearchParams();
-
-    if (activeSector?.slug) {
-      params.set("sector", activeSector.slug);
-    }
-
-    if (activeDevice?.deviceKey) {
-      params.set("device", activeDevice.deviceKey);
-    }
-
-    const query = params.toString();
-    return query ? `/help?${query}` : "/help";
+  function openAbout() {
+    window.location.assign("/about");
   }
 
-  function openHelpWindow() {
-    window.open(buildHelpWindowUrl(), "_blank", "noopener,noreferrer");
+  function openHelp() {
+    window.location.assign("/help");
   }
 
   function handleLandingTopbarNavigation(key: string) {
-    if (key === "plans" || key === "help") {
-      openHelpWindow();
+    if (key === "overview") {
+      openLandingView("overview");
       return;
     }
 
-    if (
-      key === "overview" ||
-      key === "access" ||
-      key === "sectors" ||
-      key === "devices" ||
-      key === "plans"
-    ) {
-      openLandingView(key as LandingView);
+    if (key === "access") {
+      setAuthMode("login");
+      openLandingView("access");
+      return;
     }
-  }
 
-  function toggleDarkMode() {
-    setIsDarkMode((current) => {
-      const nextMode = !current;
-      window.localStorage.setItem(STORAGE_KEYS.darkMode, String(nextMode));
-      return nextMode;
-    });
+    const landingTargets: Record<string, string> = {
+      devices: "landing-devices",
+      story: "landing-how-it-works",
+      plans: "landing-plans",
+      solutions: "preweb-sectors",
+    };
+
+    const targetSection = landingTargets[key];
+
+    if (targetSection) {
+      scheduleLandingScroll(targetSection);
+    }
   }
 
   function openSectorStory(sectorSlug: string) {
@@ -2046,22 +2241,6 @@ function App() {
     }));
     setLandingView("sectors");
     scheduleLandingScroll("preweb-sectors");
-  }
-
-  function handleDeviceSelection(deviceKey: string) {
-    const device = landingContent.devices.find((item) => item.deviceKey === deviceKey);
-
-    if (!device) {
-      return;
-    }
-
-    setActiveSectorSlug(device.sectorSlug);
-    setRegisterForm((current) => ({
-      ...current,
-      sector: device.sectorSlug,
-    }));
-    setLandingView("devices");
-    scheduleLandingScroll("landing-devices");
   }
 
   function openRegisterForSector(sector: Sector, plan?: Plan) {
@@ -2409,7 +2588,7 @@ function App() {
     if (selectedClientPlan.slug === "free") {
       setScratchMessage({
         tone: "info",
-        text: "Free validation runs from the access card below. Generate the code and validate it from there.",
+        text: "Free access runs from the card below. Generate the code and validate it from there.",
       });
       return;
     }
@@ -2487,7 +2666,7 @@ function App() {
         <div className="landing-aura landing-aura-blue" />
         <div className="landing-aura landing-aura-gold" />
 
-        <div className="page-frame">
+        <div className={`page-frame ${authSession ? "page-frame-workspace" : ""}`}>
           {!authSession && isHelpCenterPage ? (
             <HelpCenterPage
               device={activeDevice}
@@ -2497,30 +2676,31 @@ function App() {
               plans={landingContent.plans}
               sector={activeSector}
             />
+          ) : isAboutPage ? (
+            <AboutPage
+              landingContent={landingContent}
+              lightMode={!isDarkMode}
+              selectedLanguage={selectedLanguage}
+              onOpenLogin={() => {
+                setAuthMode("login");
+                openLandingView("access");
+              }}
+            />
           ) : (
             <>
               <LandingTopBar
-                activeNavigationKey={!authSession ? activePublicNavigationKey : undefined}
+                activeNavigationKey={landingView === "access" ? "access" : "overview"}
                 countryOptions={countryOptions}
                 currentUserLabel={currentUserLabel}
                 languageOptions={languageOptions}
-                navigationItems={
-                  !authSession
-                    ? landingSidebarItems.map((item) => ({
-                        key: item.key,
-                        label: item.label,
-                      }))
-                    : []
-                }
+                navigationItems={[
+                  { key: "overview", label: "Overview" },
+                  { key: "devices", label: "Preview" },
+                  { key: "plans", label: "Prices" },
+                ]}
                 onNavigate={handleLandingTopbarNavigation}
-                onPrimaryAction={() => {
-                  if (activeSector) {
-                    openRegisterForSector(activeSector, featuredLandingPlan ?? undefined);
-                    return;
-                  }
-
-                  openLandingView("devices");
-                }}
+                onAboutAction={openAbout}
+                onHelpAction={openHelp}
                 onSecondaryAction={() => {
                   setAuthMode("login");
                   openLandingView("access");
@@ -2529,11 +2709,10 @@ function App() {
                 onLanguageChange={handleLanguageChange}
                 onToggleVpn={handleVpnToggle}
                 onVpnEndpointChange={setSelectedEndpointId}
-                onToggleDarkMode={toggleDarkMode}
                 selectedCountry={selectedCountry}
                 selectedEndpointId={selectedEndpointId}
                 selectedLanguage={selectedLanguage}
-                isDarkMode={isDarkMode}
+                publicMode={!authSession}
                 vpnActive={vpnActive}
                 vpnBusy={vpnSubmitting}
                 vpnEndpoints={vpnEndpoints}
@@ -2541,6 +2720,7 @@ function App() {
               />
 
               {!authSession ? (
+                <>
                 <PublicLandingExperience
                   activeDevice={activeDevice}
                   activeSector={activeSector}
@@ -2550,26 +2730,18 @@ function App() {
                   authStatusText={authStatusText}
                   authSubmitting={authSubmitting}
                   contentLoading={contentLoading}
-                  featuredPlan={featuredLandingPlan}
                   heroBadges={heroBadges}
                   heroMetrics={heroMetrics}
-                  lightMode={!isDarkMode}
                   landingContent={landingContent}
-                  landingPlanCards={landingPlanCards}
                   loginForm={loginForm}
                   onAuthModeChange={setAuthMode}
-                  onDeviceSelect={handleDeviceSelection}
                   onLoginChange={setLoginForm}
                   onLoginSubmit={handleLoginSubmit}
+                  onCloseAccess={() => openLandingView("overview")}
                   onOpenAccess={() => {
                     setAuthMode("login");
                     openLandingView("access");
                   }}
-                  onCloseAccess={() => openLandingView("overview")}
-                  onOpenHelp={openHelpWindow}
-                  onOpenOverview={() => openLandingView("overview")}
-                  onOpenProducts={() => openLandingView("devices")}
-                  onOpenRegisterForSector={openRegisterForSector}
                   onRegisterChange={setRegisterForm}
                   onRegisterSubmit={handleRegisterSubmit}
                   onRoleChange={(role) =>
@@ -2577,14 +2749,13 @@ function App() {
                   }
                   onSectorSelect={openSectorStory}
                   onSignOut={handleSignOut}
-                  partnerSignals={partnerSignals}
                   registerForm={registerForm}
-                  salesHighlights={salesHighlights}
                   selectedCountryLabel={selectedCountryOption.label}
                   selectedLanguageLabel={selectedLanguageOption.label}
                   showAccessPage={showLandingAccessPage}
                   vpnActive={vpnActive}
                 />
+                </>
           ) : (
             <main
               className="system-center-shell workspace-runtime-theme mt-6"
@@ -2594,13 +2765,17 @@ function App() {
                 <div className="dashboard-sidebar-shell workspace-sidebar-shell flex flex-col gap-5 rounded-[32px] p-5 backdrop-blur-xl">
                   <div className="workspace-summary-card">
                     <div className="flex flex-col gap-4">
+                      <div className="workspace-brand-strip">
+                        <BrainBrand compact subtitle="Workspace portal" />
+                      </div>
+
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0">
-                          <p className="workspace-summary-kicker">Workspace profile</p>
+                          <p className="workspace-summary-kicker">Managed workspace</p>
                           <span className="mt-3 inline-flex workspace-badge">
                             <ShieldCheck className="h-3.5 w-3.5" />
                             {authSession.user.role === "admin"
-                              ? "Admin control center"
+                              ? "Admin workspace"
                               : "Client workspace"}
                           </span>
                           <h2 className="mt-4 break-words text-2xl font-black text-white">
@@ -2610,7 +2785,7 @@ function App() {
                         </div>
 
                         <div className="workspace-route-card min-w-[10.5rem] sm:text-right">
-                          <p className="workspace-route-kicker">Route</p>
+                          <p className="workspace-route-kicker">Current route</p>
                           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-100 sm:justify-end">
                             <span className="h-2 w-2 rounded-full bg-[#d45a34]" />
                             Live
@@ -2648,7 +2823,7 @@ function App() {
                     <div className="workspace-focus-card">
                       <div className="workspace-focus-head">
                         <div>
-                          <p className="workspace-focus-kicker">Focus now</p>
+                          <p className="workspace-focus-kicker">Current section</p>
                           <h3 className="workspace-focus-title">{activeDashboardItem.label}</h3>
                         </div>
                         <span className="workspace-focus-meta">
@@ -2669,14 +2844,14 @@ function App() {
                     </div>
                   ) : null}
 
-                  <div className="rounded-[28px] border border-white/10 bg-black/20 p-4">
+                  <div className="workspace-nav-card rounded-[28px] border border-white/10 bg-black/20 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Navigation
+                          Sections
                         </p>
                         <h3 className="mt-2 text-lg font-black text-white">
-                          Control map
+                          Workspace map
                         </h3>
                       </div>
                       <div className="flex items-center gap-2">
@@ -2746,11 +2921,11 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="workspace-help-card mt-auto rounded-[28px] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.22)]">
+                  <div className="workspace-help-card rounded-[28px] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.22)]">
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                          Actions
+                          Shortcuts
                         </p>
                         <h3 className="mt-2 text-lg font-black text-white">
                           {dashboardHelpTitle}
@@ -2815,13 +2990,132 @@ function App() {
                       </button>
                     </div>
                   </div>
+
+                  {authSession.user.role === "admin" && (
+                    <div className="workspace-focus-card">
+                      <div className="workspace-focus-head">
+                        <div>
+                          <p className="workspace-focus-kicker">Admin summary</p>
+                          <h3 className="workspace-focus-title">System overview</h3>
+                        </div>
+                        <span className="workspace-focus-meta">Live</span>
+                      </div>
+
+                      <p className="workspace-focus-copy">
+                        Key metrics and status indicators for admin operations, accounts, and card inventory.
+                      </p>
+
+                      <div className="workspace-stat-grid">
+                        <div className="workspace-stat-card">
+                          <span>Total accounts</span>
+                          <strong>{adminOverview.accounts.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Total payments</span>
+                          <strong>{adminOverview.payments.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Pending approvals</span>
+                          <strong>{pendingAdminPayments.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Cards live</span>
+                          <strong>{adminOverview.smartCardStats.activated}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Open tickets</span>
+                          <strong>{adminOverview.tickets.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Metrics</span>
+                          <strong>{adminOverview.adminMetrics.length}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {authSession.user.role === "admin" && (
+                    <div className="workspace-focus-card">
+                      <div className="workspace-focus-head">
+                        <div>
+                          <p className="workspace-focus-kicker">Payment queue</p>
+                          <h3 className="workspace-focus-title">Request status</h3>
+                        </div>
+                        <span className="workspace-focus-meta">Queue</span>
+                      </div>
+
+                      <p className="workspace-focus-copy">
+                        Payment request breakdown showing pending, approved, and rejected items in the workflow.
+                      </p>
+
+                      <div className="workspace-stat-grid">
+                        <div className="workspace-stat-card">
+                          <span>Pending requests</span>
+                          <strong>{pendingAdminPayments.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Approved</span>
+                          <strong>{approvedAdminPayments.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Rejected</span>
+                          <strong>{rejectedAdminPayments.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Smart cards</span>
+                          <strong>{adminOverview.smartCards.length}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Available cards</span>
+                          <strong>{adminOverview.smartCardStats.available}</strong>
+                        </div>
+                        <div className="workspace-stat-card">
+                          <span>Sectors</span>
+                          <strong>{sectorControlRows.length}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="workspace-signal-card">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="workspace-focus-kicker">Signal lane</p>
+                        <h3 className="workspace-focus-title">Workspace signals</h3>
+                      </div>
+                      <span className="workspace-focus-meta">
+                        {workspaceOverviewCards.length} items
+                      </span>
+                    </div>
+
+                    <p className="workspace-signal-copy">{workspaceSidebarSignalCopy}</p>
+
+                    <div className="workspace-signal-grid">
+                      {workspaceOverviewCards.map((card) => (
+                        <article className="workspace-signal-tile" key={card.label}>
+                          <span className="workspace-signal-label">{card.label}</span>
+                          <strong className="workspace-signal-value">{card.value}</strong>
+                          <p className="workspace-signal-detail">{card.detail}</p>
+                        </article>
+                      ))}
+                    </div>
+
+                    <div className="workspace-signal-list">
+                      {workspaceSidebarSignalRows.map((item) => (
+                        <div className="workspace-signal-row" key={item.label}>
+                          <span>{item.label}</span>
+                          <strong>{item.value}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </aside>
 
               <div className="system-center-content min-w-0 space-y-6">
                 <motion.section
                   animate={{ opacity: 1, y: 0 }}
-                  className="executive-surface p-6 sm:p-7"
+                  className="executive-surface workspace-overview-shell p-6 sm:p-7"
                   id="system-overview"
                   initial={{ opacity: 0, y: 22 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -2831,18 +3125,18 @@ function App() {
                       <span className="workspace-badge">
                         <Sparkles className="h-3.5 w-3.5" />
                         {authSession.user.role === "admin"
-                          ? "Full system visibility"
-                          : "Live workspace"}
+                          ? "Admin workspace"
+                          : "Current workspace"}
                       </span>
                       <h1 className="mt-5 text-4xl font-black tracking-tight text-white sm:text-5xl">
                         {authSession.user.role === "admin"
-                          ? "Control approvals, rollout, cards, and support."
-                          : "Plan, validate, and track the whole client workspace."}
+                          ? "Review payments, rollout, cards, and support."
+                          : "Manage access, billing, deployment, and support."}
                       </h1>
                       <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
                         {authSession.user.role === "admin"
-                          ? "Manage the queues that matter first, then move into deeper operations without losing the high-level view."
-                          : "Keep access, billing, deployment, and support in one clean workflow without jumping between pages."}
+                          ? "Keep the priority queues visible first, then move into operations without losing the main view."
+                          : "Keep access, billing, deployment, and support in one clear workspace without jumping between pages."}
                       </p>
                     </div>
 
@@ -2933,18 +3227,18 @@ function App() {
                 </section>
 
                 {activeDashboardItem ? (
-                  <section className="rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.96),rgba(5,11,21,0.92))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.2)] sm:p-6">
+                  <section className="workspace-section-shell rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.96),rgba(5,11,21,0.92))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.2)] sm:p-6">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                       <div className="max-w-2xl">
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Active workspace section
+                          Current workspace section
                         </p>
                         <h2 className="mt-2 text-2xl font-black text-white">
                           {activeDashboardItem.label}
                         </h2>
                         <p className="mt-3 text-sm leading-7 text-slate-300">
                           {activeDashboardSection === "system-overview"
-                            ? "Use the switcher below to open one focused board at a time instead of scrolling through the whole workspace."
+                            ? "Use the switcher below to open one focused board at a time and keep the workspace lighter to scan."
                             : activeDashboardItem.detail}
                         </p>
                       </div>
@@ -2983,8 +3277,69 @@ function App() {
                   </section>
                 ) : null}
 
+                {authSession.user.role === "client" ? (
+                  <section className={activeDashboardSection === "system-overview" ? "" : "hidden"}>
+                    <ClientDashboardOverview
+                      account={clientOverview.account}
+                      activations={clientOverview.activations}
+                      clients={clientOverview.clients}
+                      company={clientOverview.account?.company ?? authSession.user.company}
+                      notifications={clientOverview.notifications}
+                      onOpenCards={() => scrollToSection("client-validate")}
+                      onOpenPayments={() => scrollToSection("client-billing")}
+                      onOpenSupport={() => scrollToSection("system-role")}
+                      onSelectCompany={(company) => {
+                        void loadSystemOverview({
+                          ...authSession,
+                          user: {
+                            ...authSession.user,
+                            company,
+                          },
+                        });
+                      }}
+                      payments={clientOverview.payments}
+                      smartCards={clientOverview.smartCards}
+                      onOpenAccount={() => scrollToSection("client-account")}
+                      userEmail={authSession.user.email}
+                      userName={authSession.user.name}
+                      formatMoney={formatSystemMoney}
+                    />
+                  </section>
+                ) : null}
+
                 {authSession.user.role === "admin" ? (
                   <>
+                    <section
+                      className={showAdminAccountPanel ? "" : "hidden"}
+                      id="system-account"
+                    >
+                      <PortalAccountCenter
+                        availablePlans={landingContent.plans}
+                        company={authSession.user.company}
+                        linkedCardsCount={adminOverview.smartCards.length}
+                        onChangePassword={handlePasswordSave}
+                        onPrimaryAction={() => scrollToSection("system-payments")}
+                        onSaveProfile={handleProfileSave}
+                        onSecondaryAction={() => scrollToSection("system-device-control")}
+                        openTicketsCount={adminOverview.tickets.length}
+                        passwordBusy={passwordSaveBusy}
+                        passwordMessage={passwordMessage}
+                        pendingPaymentsCount={pendingAdminPayments.length}
+                        planName="Admin control workspace"
+                        primaryActionLabel="Open payment queue"
+                        role="admin"
+                        routeLabel={vpnActive ? vpnSession?.location ?? "Protected route" : "Direct route"}
+                        saveBusy={profileSaveBusy}
+                        saveMessage={profileMessage}
+                        secondaryActionLabel="Open rollout board"
+                        sectorLabel="All sectors"
+                        selectedPlanSlug={selectedClientPlan?.slug}
+                        sessionLabel={formatSystemDate(authSession.issuedAt)}
+                        userEmail={authSession.user.email}
+                        userName={authSession.user.name}
+                      />
+                    </section>
+
                     <section
                       className={`grid gap-6 2xl:grid-cols-[0.9fr_1.1fr] ${
                         showAdminOperationsPanel ? "" : "hidden"
@@ -2995,10 +3350,10 @@ function App() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Runtime modules
+                          Runtime
                         </p>
                         <h2 className="mt-2 text-2xl font-black text-white">
-                          Service health
+                          Service status
                         </h2>
                       </div>
                       <ServerCog className="h-6 w-6 text-cyan-200" />
@@ -3032,10 +3387,10 @@ function App() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Timeline
+                          Activity
                         </p>
                         <h2 className="mt-2 text-2xl font-black text-white">
-                          Live event stream
+                          Event log
                         </h2>
                       </div>
                       <div className="flex items-center gap-3">
@@ -3091,10 +3446,10 @@ function App() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Operations board
+                          Operations
                         </p>
                         <h2 className="mt-2 text-2xl font-black text-white">
-                          Core metrics
+                          Core status
                         </h2>
                       </div>
                       <Workflow className="h-6 w-6 text-cyan-200" />
@@ -3126,10 +3481,10 @@ function App() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                          Notifications
+                          Updates
                         </p>
                         <h2 className="mt-2 text-2xl font-black text-white">
-                          Broadcast feed
+                          Notification log
                         </h2>
                       </div>
                       <div className="flex items-center gap-3">
@@ -3196,10 +3551,10 @@ function App() {
                     <div>
                       <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
                         <Cpu className="h-3.5 w-3.5" />
-                        Sector architecture
+                        Sector view
                       </span>
                       <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                        Commercial, Business, Healthcare, and Industry 4.0
+                        Sector fit and rollout
                       </h2>
                     </div>
 
@@ -3208,7 +3563,7 @@ function App() {
                       onClick={() => activeSector && setActiveSectorSlug(activeSector.slug)}
                       type="button"
                     >
-                      Active sector: {activeSector?.name || "None"}
+                      Selected sector: {activeSector?.name || "None"}
                     </button>
                   </div>
 
@@ -3353,10 +3708,10 @@ function App() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                              Admin actions
+                              Updates
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Broadcast notification
+                              Publish workspace update
                             </h2>
                           </div>
                           <Bell className="h-6 w-6 text-cyan-200" />
@@ -3368,7 +3723,7 @@ function App() {
                             <input
                               className="field-input"
                               onChange={(event) => setBroadcastTitle(event.target.value)}
-                              placeholder="Deployment update"
+                              placeholder="Workspace update"
                               type="text"
                               value={broadcastTitle}
                             />
@@ -3379,7 +3734,7 @@ function App() {
                             <textarea
                               className="field-input min-h-32 resize-none"
                               onChange={(event) => setBroadcastBody(event.target.value)}
-                              placeholder="Write the live admin message here."
+                              placeholder="Write the workspace update here."
                               value={broadcastBody}
                             />
                           </label>
@@ -3391,7 +3746,7 @@ function App() {
                             type="button"
                           >
                             <Bell className="h-4 w-4" />
-                            {broadcastBusy ? "Sending..." : "Broadcast"}
+                            {broadcastBusy ? "Sending..." : "Send update"}
                           </button>
                         </div>
                       </article>
@@ -3405,7 +3760,7 @@ function App() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                              Device control
+                              Rollout
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
                               Sector device board
@@ -3418,99 +3773,152 @@ function App() {
                           <Cpu className="h-6 w-6 text-cyan-200" />
                         </div>
 
-                        <div className="mt-5 space-y-3">
-                          {sectorControlRows.map((sector) => (
-                            <div
-                              className="rounded-[26px] border p-4"
-                              key={sector.slug}
-                              style={{
-                                borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}35`,
-                                background: !isDarkMode
-                                  ? `linear-gradient(180deg, ${getThemeAccent(sector.accent, true)}10, rgba(255,255,255,0.98))`
-                                  : `linear-gradient(180deg, ${sector.accent}14, rgba(2,8,18,0.9))`,
-                              }}
-                            >
-                              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                                <div>
-                                  <div className="flex flex-wrap items-center gap-3">
-                                    <strong className="text-sm text-white">
-                                      {sector.name}
-                                    </strong>
-                                    <span
-                                      className="rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]"
-                                      style={{
-                                        borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}45`,
-                                        background: !isDarkMode
-                                          ? `${getThemeAccent(sector.accent, true)}14`
-                                          : `${sector.accent}18`,
-                                        color: !isDarkMode ? "#111111" : "#fef1ea",
-                                      }}
-                                    >
-                                      {sector.primaryDevice}
-                                    </span>
+                        <div className="admin-rollout-board mt-5">
+                          <div className="admin-rollout-summary-grid">
+                            {adminRolloutSummaryCards.map((card) => (
+                              <article
+                                className="admin-rollout-summary-card rounded-[22px] border border-white/10 bg-black/20 p-4"
+                                key={card.label}
+                              >
+                                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                  {card.label}
+                                </p>
+                                <strong className="mt-2 block text-2xl font-black text-white">
+                                  {card.value}
+                                </strong>
+                                <p className="mt-2 text-sm leading-6 text-slate-400">
+                                  {card.detail}
+                                </p>
+                              </article>
+                            ))}
+                          </div>
+
+                          <div className="admin-rollout-grid">
+                            {adminRolloutRows.map((sector) => (
+                              <article
+                                className="admin-rollout-card rounded-[26px] border p-4"
+                                key={sector.slug}
+                                style={{
+                                  borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}35`,
+                                  background: !isDarkMode
+                                    ? `linear-gradient(180deg, ${getThemeAccent(sector.accent, true)}10, rgba(255,255,255,0.98))`
+                                    : `linear-gradient(180deg, ${sector.accent}14, rgba(2,8,18,0.9))`,
+                                }}
+                              >
+                                <div className="admin-rollout-card-head">
+                                  <div className="min-w-0">
+                                    <div className="flex flex-wrap items-center gap-3">
+                                      <strong className="text-base font-black text-white">
+                                        {sector.name}
+                                      </strong>
+                                      <span
+                                        className="rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]"
+                                        style={{
+                                          borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}45`,
+                                          background: !isDarkMode
+                                            ? `${getThemeAccent(sector.accent, true)}14`
+                                            : `${sector.accent}18`,
+                                          color: !isDarkMode ? "#111111" : "#fef1ea",
+                                        }}
+                                      >
+                                        {sector.stageLabel}
+                                      </span>
+                                    </div>
+                                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                                      {sector.audience}
+                                    </p>
                                   </div>
-                                  <p className="mt-2 text-sm leading-6 text-slate-300">
-                                    {sector.accounts} accounts / {sector.devices} device views /
-                                    {sector.activatedCards} live cards
-                                  </p>
+
+                                  <button
+                                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.1]"
+                                    onClick={() => {
+                                      setActiveSectorSlug(sector.slug);
+                                      scrollToSection("system-sectors");
+                                    }}
+                                    type="button"
+                                  >
+                                    Manage sector
+                                    <ArrowRight className="h-4 w-4" />
+                                  </button>
                                 </div>
 
-                                <button
-                                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.1]"
-                                  onClick={() => {
-                                    setActiveSectorSlug(sector.slug);
-                                    scrollToSection("system-sectors");
-                                  }}
-                                  type="button"
-                                >
-                                  Manage sector
-                                  <ArrowRight className="h-4 w-4" />
-                                </button>
-                              </div>
+                                <div className="admin-rollout-chip-row">
+                                  <span
+                                    className="rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]"
+                                    style={{
+                                      borderColor: `${getThemeAccent(sector.accent, !isDarkMode)}45`,
+                                      background: !isDarkMode
+                                        ? `${getThemeAccent(sector.accent, true)}14`
+                                        : `${sector.accent}18`,
+                                      color: !isDarkMode ? "#111111" : "#fef1ea",
+                                    }}
+                                  >
+                                    {sector.primaryDevice}
+                                  </span>
+                                  <span className="admin-rollout-chip">{sector.title}</span>
+                                  <span className="admin-rollout-chip">{sector.statValue}</span>
+                                </div>
 
-                              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                                <div className="rounded-[20px] border border-white/10 bg-black/20 p-3">
-                                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                    Available
-                                  </p>
-                                  <strong className="mt-2 block text-xl font-black text-white">
-                                    {sector.availableCards}
-                                  </strong>
+                                <div className="admin-rollout-metrics">
+                                  <div className="admin-rollout-metric rounded-[20px] border border-white/10 bg-black/20 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                      Accounts
+                                    </p>
+                                    <strong className="mt-2 block text-xl font-black text-white">
+                                      {sector.accounts}
+                                    </strong>
+                                  </div>
+                                  <div className="admin-rollout-metric rounded-[20px] border border-white/10 bg-black/20 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                      Device views
+                                    </p>
+                                    <strong className="mt-2 block text-xl font-black text-white">
+                                      {sector.devices}
+                                    </strong>
+                                  </div>
+                                  <div className="admin-rollout-metric rounded-[20px] border border-white/10 bg-black/20 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                      Available
+                                    </p>
+                                    <strong className="mt-2 block text-xl font-black text-white">
+                                      {sector.availableCards}
+                                    </strong>
+                                  </div>
+                                  <div className="admin-rollout-metric rounded-[20px] border border-white/10 bg-black/20 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                      Assigned
+                                    </p>
+                                    <strong className="mt-2 block text-xl font-black text-white">
+                                      {sector.assignedCards}
+                                    </strong>
+                                  </div>
+                                  <div className="admin-rollout-metric rounded-[20px] border border-white/10 bg-black/20 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                      Activated
+                                    </p>
+                                    <strong className="mt-2 block text-xl font-black text-white">
+                                      {sector.activatedCards}
+                                    </strong>
+                                  </div>
                                 </div>
-                                <div className="rounded-[20px] border border-white/10 bg-black/20 p-3">
-                                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                    Assigned
-                                  </p>
-                                  <strong className="mt-2 block text-xl font-black text-white">
-                                    {sector.assignedCards}
-                                  </strong>
-                                </div>
-                                <div className="rounded-[20px] border border-white/10 bg-black/20 p-3">
-                                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                    Activated
-                                  </p>
-                                  <strong className="mt-2 block text-xl font-black text-white">
-                                    {sector.activatedCards}
-                                  </strong>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                              </article>
+                            ))}
+                          </div>
                         </div>
                       </article>
 
                       <article
                         className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
-                          showAdminRolloutPanel ? "" : "hidden"
+                          showAdminRolloutPanel ? "xl:col-span-2" : "hidden"
                         }`}
                       >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                              Control stats
+                              Rollout totals
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Cards, reveals, and account load
+                              Cards, reveals, and account scope
                             </h2>
                           </div>
                           <Ticket className="h-6 w-6 text-cyan-200" />
@@ -3519,7 +3927,7 @@ function App() {
                         <div className="mt-5 grid gap-4 md:grid-cols-2">
                           <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
                             <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                              Smart cards
+                              SC cards
                             </p>
                             <h3 className="mt-2 text-3xl font-black text-white">
                               {adminOverview.smartCardStats.total}
@@ -3583,7 +3991,7 @@ function App() {
                     >
                       <article
                         className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
-                          showAdminRolloutPanel ? "" : "hidden"
+                          showAdminRolloutPanel ? "xl:col-span-2" : "hidden"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -3594,59 +4002,132 @@ function App() {
                             <h2 className="mt-2 text-2xl font-black text-white">
                               Client organizations
                             </h2>
+                            <p className="mt-2 text-sm leading-6 text-slate-400">
+                              A compact admin view of the organizations that need rollout
+                              attention first, instead of a long full list.
+                            </p>
                           </div>
                           <Users className="h-6 w-6 text-cyan-200" />
                         </div>
 
-                        <div className="mt-5 space-y-3">
-                          {adminOverview.accounts.map((account) => {
-                            const actionKey = `assign-card-${account.id}`;
+                        <div className="admin-rollout-summary-grid mt-5">
+                          {adminOrganizationSummaryCards.map((card) => (
+                            <article
+                              className="admin-rollout-summary-card rounded-[22px] border border-white/10 bg-black/20 p-4"
+                              key={card.label}
+                            >
+                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                {card.label}
+                              </p>
+                              <strong className="mt-2 block text-2xl font-black text-white">
+                                {card.value}
+                              </strong>
+                              <p className="mt-2 text-sm leading-6 text-slate-400">
+                                {card.detail}
+                              </p>
+                            </article>
+                          ))}
+                        </div>
 
-                            return (
-                              <div
-                                className="rounded-[24px] border border-white/10 bg-black/20 p-4"
-                                key={account.id}
-                              >
-                                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                                  <div>
-                                    <strong className="text-sm text-white">
-                                      {account.company}
-                                    </strong>
-                                    <p className="mt-2 text-sm leading-6 text-slate-400">
-                                      {account.planName} / {account.sectorLabel} /{" "}
-                                      {account.devices} devices / {account.smartCards} cards
-                                    </p>
-                                    <p className="mt-2 text-xs leading-6 text-slate-500">
-                                      Quick admin action: assign one more SC card mapped to
-                                      the same sector and plan.
-                                    </p>
-                                  </div>
-
-                                  <div className="flex flex-col items-start gap-3 lg:items-end">
-                                    <span className="text-sm font-bold text-cyan-200">
-                                      {formatSystemMoney(account.salesToday)}
-                                    </span>
-                                    <button
-                                      className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
-                                      disabled={actionBusyKey === actionKey}
-                                      onClick={() => void handleAssignCardToAccount(account)}
-                                      type="button"
-                                    >
-                                      {actionBusyKey === actionKey
-                                        ? "Assigning"
-                                        : "Assign SC card"}
-                                    </button>
-                                  </div>
-                                </div>
+                        <div className="mt-5 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                          <div className="executive-status-panel">
+                            <div className="flex items-center justify-between gap-3">
+                              <div>
+                                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                  Priority accounts
+                                </p>
+                                <h3 className="mt-2 text-xl font-black text-white">
+                                  Rollout actions first
+                                </h3>
                               </div>
-                            );
-                          })}
+                              <span className="workspace-focus-meta">
+                                {adminOrganizationPriorityAccounts.length} shown
+                              </span>
+                            </div>
+
+                            <div className="mt-4 grid gap-3">
+                              {adminOrganizationPriorityAccounts.map((account) => {
+                                const actionKey = `assign-card-${account.id}`;
+
+                                return (
+                                  <div className="executive-status-item" key={account.id}>
+                                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                      <div className="min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                          <strong className="text-sm text-white">
+                                            {account.company}
+                                          </strong>
+                                          <span className="workspace-help-status rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em]">
+                                            {account.coverageGap > 0
+                                              ? `${account.coverageGap} cards needed`
+                                              : "Covered"}
+                                          </span>
+                                        </div>
+                                        <p className="mt-2 text-sm leading-6 text-slate-400">
+                                          {account.planName} / {account.sectorLabel}
+                                        </p>
+                                        <p className="mt-2 text-xs leading-6 text-slate-500">
+                                          {account.devices} devices / {account.smartCards} linked
+                                          cards / {formatSystemMoney(account.salesToday)} today
+                                        </p>
+                                      </div>
+
+                                      <button
+                                        className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
+                                        disabled={actionBusyKey === actionKey}
+                                        onClick={() => void handleAssignCardToAccount(account)}
+                                        type="button"
+                                      >
+                                        {actionBusyKey === actionKey ? "Assigning" : "Assign SC card"}
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          <div className="grid gap-4">
+                            <div className="executive-status-panel">
+                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                Plan mix
+                              </p>
+                              <div className="mt-4 grid gap-3">
+                                {adminOrganizationPlanMix.map((item) => (
+                                  <div
+                                    className="executive-status-item flex items-center justify-between gap-3"
+                                    key={item.label}
+                                  >
+                                    <span className="text-sm text-slate-300">{item.label}</span>
+                                    <strong className="text-sm text-white">{item.count}</strong>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="executive-status-panel">
+                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                Sector mix
+                              </p>
+                              <div className="mt-4 grid gap-3">
+                                {adminOrganizationSectorMix.map((item) => (
+                                  <div
+                                    className="executive-status-item flex items-center justify-between gap-3"
+                                    key={item.label}
+                                  >
+                                    <span className="text-sm text-slate-300">{item.label}</span>
+                                    <strong className="text-sm text-white">{item.count}</strong>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </article>
 
                       <article
                         className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
-                          showAdminPaymentsPanel ? "" : "hidden"
+                          showAdminPaymentsPanel ? "xl:col-span-2" : "hidden"
                         }`}
                         id="system-payments"
                       >
@@ -3841,11 +4322,11 @@ function App() {
                               SC cards
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Activation board
+                              SC card inventory
                             </h2>
                             <p className="mt-2 text-sm leading-6 text-slate-400">
-                              Each plan keeps a 500-card board with admin sorting and direct
-                              activation control.
+                              Review plan-linked SC cards with sorting and direct activation
+                              control.
                             </p>
                           </div>
                           <div className="flex flex-wrap gap-2">
@@ -3967,7 +4448,7 @@ function App() {
                                   (plan) => plan.slug === selectedAdminCardPlan,
                                 )?.name ?? "Selected"}
                               </strong>{" "}
-                              board.
+                              inventory.
                             </p>
                             <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
                               500 cards per plan
@@ -4048,7 +4529,7 @@ function App() {
                               Activations
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Device rollout queue
+                              Activation history
                             </h2>
                           </div>
                           <Activity className="h-6 w-6 text-cyan-200" />
@@ -4108,7 +4589,7 @@ function App() {
                               Tickets
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Support escalation flow
+                              Support workflow
                             </h2>
                           </div>
                           <Ticket className="h-6 w-6 text-cyan-200" />
@@ -4163,6 +4644,7 @@ function App() {
                 ) : (
                   <section
                     className={`space-y-6 ${
+                      showClientAccountPanel ||
                       showClientAccessPanel ||
                       showClientBillingPanel ||
                       showClientDeploymentPanel ||
@@ -4172,13 +4654,53 @@ function App() {
                     }`}
                     id="system-role"
                   >
+                    <section
+                      className={showClientAccountPanel ? "" : "hidden"}
+                      id="client-account"
+                    >
+                      <PortalAccountCenter
+                        availablePlans={landingContent.plans}
+                        company={clientOverview.account?.company ?? authSession.user.company}
+                        linkedCardsCount={clientOverview.smartCards.length}
+                        onChangePassword={handlePasswordSave}
+                        onPickPlan={(planSlug) => setSelectedClientPlanSlug(planSlug)}
+                        onPrimaryAction={() => scrollToSection("client-plan-board")}
+                        onSaveProfile={handleProfileSave}
+                        onSecondaryAction={() => scrollToSection("client-billing")}
+                        openTicketsCount={clientOverview.tickets.length}
+                        passwordBusy={passwordSaveBusy}
+                        passwordMessage={passwordMessage}
+                        pendingPaymentsCount={pendingClientPaymentsCount}
+                        planName={
+                          selectedClientPlan?.name ??
+                          clientOverview.account?.planName ??
+                          "Free"
+                        }
+                        primaryActionLabel="Open access board"
+                        role="client"
+                        routeLabel={vpnActive ? vpnSession?.location ?? "Protected route" : "Direct route"}
+                        saveBusy={profileSaveBusy}
+                        saveMessage={profileMessage}
+                        secondaryActionLabel="Open billing"
+                        sectorLabel={
+                          clientOverview.account?.sectorLabel ??
+                          activeSector?.name ??
+                          "Workspace lane"
+                        }
+                        selectedPlanSlug={selectedClientPlan?.slug}
+                        sessionLabel={formatSystemDate(authSession.issuedAt)}
+                        userEmail={authSession.user.email}
+                        userName={authSession.user.name}
+                      />
+                    </section>
+
                     <div
-                      className={`grid gap-6 xl:grid-cols-[0.84fr_1.16fr] ${
+                      className={`workspace-client-grid grid gap-6 xl:grid-cols-[0.8fr_1.2fr] ${
                         showClientAccessPanel || showClientSupportPanel ? "" : "hidden"
                       }`}
                     >
                       <article
-                        className={`rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 ${
+                        className={`workspace-client-sidebar-card rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-5 shadow-[0_22px_65px_rgba(0,0,0,0.22)] sm:p-6 xl:col-span-2 ${
                           showClientAccessPanel || showClientSupportPanel ? "" : "hidden"
                         }`}
                       >
@@ -4188,7 +4710,7 @@ function App() {
                               Account
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Workspace snapshot
+                              Workspace summary
                             </h2>
                           </div>
                           <HardDrive className="h-6 w-6 text-cyan-200" />
@@ -4273,10 +4795,10 @@ function App() {
                                 </div>
                                 <div className="min-w-0">
                                   <p className="text-xs uppercase tracking-[0.2em] text-[#f0cdb8]/70">
-                                    Workspace guidance
+                                    Recommended action
                                   </p>
                                   <h3 className="mt-2 text-lg font-black text-white">
-                                    Next workspace move
+                                    Next step
                                   </h3>
                                   <p className="mt-2 text-sm leading-7 text-slate-200">
                                     {petAdviceCopy}
@@ -4288,7 +4810,7 @@ function App() {
                                 onClick={() => scrollToSection("client-plan-board")}
                                 type="button"
                               >
-                                Review access path
+                                Open access board
                                 <ArrowRight className="h-4 w-4" />
                               </button>
                             </div>
@@ -4297,424 +4819,481 @@ function App() {
                       </article>
 
                       <article
-                        className={`rounded-[34px] border p-5 sm:p-6 ${
+                        className={`client-access-board workspace-client-main-card rounded-[34px] border p-5 sm:p-6 xl:col-span-2 ${
                           showClientAccessPanel ? "" : "hidden"
                         }`}
                         id="client-plan-board"
                         style={clientAccessCardStyle}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                                Plans + access
+                      >
+                        <div className="client-access-board-head">
+                          <div>
+                            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                              Access
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Choose plan and access path
+                              Choose plan and continue access
                             </h2>
-                            </div>
+                            <p className="client-access-board-copy">
+                              Keep the selected lane, SC card flow, and approval state grouped in
+                              one cleaner workspace block.
+                            </p>
+                          </div>
+                          <div className="client-access-board-icon">
                             <Ticket className="h-6 w-6 text-cyan-200" />
                           </div>
-
-                          <div className="mt-5 grid gap-3 xl:grid-cols-[minmax(0,1fr)_15rem]">
-                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                              <div className="flex flex-wrap gap-2">
-                                <span className="workspace-summary-pill">
-                                  {selectedClientPlan?.name ??
-                                    clientOverview.account?.planName ??
-                                    "Free"}
-                                </span>
-                                <span className="workspace-summary-pill">
-                                  {selectedClientPlan?.slug === "free"
-                                    ? "Instant validation"
-                                    : "Managed approval"}
-                                </span>
-                                <span className="workspace-summary-pill">
-                                  {clientOverview.account?.company ?? authSession.user.company}
-                                </span>
-                              </div>
-                              <p className="mt-3 text-sm leading-7 text-slate-300">
-                                {selectedClientPlan?.slug === "free"
-                                  ? "Choose the lane, generate the SC code automatically, and validate it from the same workspace."
-                                  : pendingPlanPayment
-                                    ? "This request is already in admin review. Keep approval, payment, and linked access together below."
-                                    : hasLinkedSelectedPlanAccess
-                                      ? "This plan already has linked SC access. Use the cards below to follow its current activation state."
-                                      : latestRejectedPlanPayment
-                                        ? "The latest request for this plan was rejected. Review the billing details and send it again from here."
-                                        : "Pick a managed plan, send the request, and track approval without leaving this view."}
-                              </p>
-                            </div>
-                            <article className="workspace-overview-card">
-                              <span className="workspace-overview-label">Current step</span>
-                              <strong className="workspace-overview-value">
-                                {selectedClientPlan?.slug === "free"
-                                  ? activeScratchCode
-                                    ? "Validate code"
-                                    : "Generate code"
-                                  : pendingPlanPayment
-                                    ? "Await approval"
-                                    : hasLinkedSelectedPlanAccess
-                                      ? selectedPlanSmartCard?.status === "activated"
-                                        ? "Card active"
-                                        : "Use linked card"
-                                      : latestRejectedPlanPayment
-                                        ? "Retry request"
-                                        : "Send request"}
-                              </strong>
-                              <p className="workspace-overview-copy">
-                                {selectedClientPlan?.slug === "free"
-                                  ? "The animated card below creates the SC code and keeps validation in the same flow."
-                                  : pendingPlanPayment
-                                    ? "Admin has the request in queue, so the next visible update will be approval or rejection."
-                                    : hasLinkedSelectedPlanAccess
-                                      ? "The selected plan already has a linked SC card, so the next step is to track its live status."
-                                      : latestRejectedPlanPayment
-                                        ? "The previous request was rejected, so the next step is to review and resend it."
-                                        : "Once submitted, the request stays linked to billing and SC card assignment."}
-                              </p>
-                            </article>
-                          </div>
-
-                          <div className="mt-5 grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-                            {landingContent.plans.map((plan) => {
-                            const selected = selectedClientPlan?.slug === plan.slug;
-                            const isFreePlan = plan.slug === "free";
-
-                            return (
-                              <button
-                                className={`group flex min-h-[18rem] flex-col rounded-[26px] border p-5 text-left transition ${
-                                  selected
-                                    ? "bg-black/30"
-                                    : "border-white/10 bg-black/20 hover:-translate-y-1 hover:bg-white/[0.05]"
-                                }`}
-                                key={plan.slug}
-                                onClick={() => handleClientPlanSelect(plan)}
-                                style={
-                                  selected
-                                    ? getSectorPanelStyle(clientSector?.accent, !isDarkMode)
-                                    : undefined
-                                }
-                                type="button"
-                              >
-                                <div className="flex items-start justify-between gap-3">
-                                  <div>
-                                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                      {isFreePlan
-                                        ? "Free lane"
-                                        : plan.featured
-                                          ? "Recommended managed plan"
-                                          : "Managed plan"}
-                                    </p>
-                                    <h3 className="mt-2 text-xl font-black text-white">
-                                      {plan.name}
-                                    </h3>
-                                  </div>
-                                  <span
-                                    className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] ${
-                                      isFreePlan
-                                        ? "border border-emerald-400/25 bg-emerald-400/12 text-emerald-200"
-                                        : "border border-amber-400/25 bg-amber-400/12 text-amber-100"
-                                    }`}
-                                  >
-                                    {isFreePlan ? "Auto code" : "Admin flow"}
-                                  </span>
-                                </div>
-
-                                <p className="mt-4 flex-1 text-sm leading-7 text-slate-300">
-                                  {plan.summary}
-                                </p>
-
-                                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                                  <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                                    <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                                      Support
-                                    </p>
-                                    <p className="mt-2 text-sm font-semibold text-white">
-                                      {plan.supportLabel}
-                                    </p>
-                                  </div>
-                                  <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                                    <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                                      Automation
-                                    </p>
-                                    <p className="mt-2 text-sm font-semibold text-white">
-                                      {plan.automationLabel}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                <div className="mt-4 flex items-end justify-between gap-3">
-                                  <div>
-                                    <p className="text-sm font-semibold text-cyan-200">
-                                      {isFreePlan
-                                        ? "No payment required"
-                                        : `${formatSystemMoney(plan.annualPrice)} / admin approval`}
-                                    </p>
-                                    <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-500">
-                                      {selected ? "Selected now" : "Open plan card"}
-                                    </p>
-                                  </div>
-                                  <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-200">
-                                    {plan.deviceAllowance}
-                                  </span>
-                                </div>
-                              </button>
-                            );
-                          })}
                         </div>
 
-                        <div className="mt-5">
-                          <BrainScratchCard
-                            actionLabelOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? scratchBusy
-                                  ? activeScratchCode
-                                    ? "Validating..."
-                                    : "Generating..."
-                                  : activeScratchCode
-                                    ? "Validate Card"
-                                    : "Generate Card"
+                        <div className="client-access-summary-row">
+                          <div className="client-access-summary-card">
+                            <div className="flex flex-wrap gap-2">
+                              <span className="workspace-summary-pill">
+                                {selectedClientPlan?.name ??
+                                  clientOverview.account?.planName ??
+                                  "Free"}
+                              </span>
+                              <span className="workspace-summary-pill">
+                                {selectedClientPlan?.slug === "free"
+                                  ? "Instant validation"
+                                  : "Managed approval"}
+                              </span>
+                              <span className="workspace-summary-pill">
+                                {clientOverview.account?.company ?? authSession.user.company}
+                              </span>
+                            </div>
+                            <p className="mt-3 text-sm leading-7 text-slate-300">
+                              {selectedClientPlan?.slug === "free"
+                                ? "Choose the lane, generate the SC code, and validate it from the same workspace."
                                 : pendingPlanPayment
-                                  ? "Request pending"
+                                  ? "This request is already in admin review. Keep approval, payment, and linked access together below."
+                                  : hasLinkedSelectedPlanAccess
+                                    ? "This plan already has linked SC access. Use the cards below to follow its current status."
+                                    : latestRejectedPlanPayment
+                                      ? "The latest request for this plan was rejected. Review the billing details and send it again from here."
+                                      : "Pick a managed plan, send the request, and track approval without leaving this view."}
+                            </p>
+                          </div>
+                          <article className="workspace-overview-card client-access-step-card">
+                            <span className="workspace-overview-label">Current step</span>
+                            <strong className="workspace-overview-value">
+                              {selectedClientPlan?.slug === "free"
+                                ? activeScratchCode
+                                  ? "Validate code"
+                                  : "Generate code"
+                                : pendingPlanPayment
+                                  ? "Await approval"
                                   : hasLinkedSelectedPlanAccess
                                     ? selectedPlanSmartCard?.status === "activated"
                                       ? "Card active"
-                                      : "Access linked"
-                                    : paymentBusy
-                                      ? "Sending request..."
-                                      : latestRejectedPlanPayment
-                                        ? "Send again"
-                                        : "Contact admin"
-                            }
-                            backCopyOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? freePlanCardRevealed
-                                  ? "Generated automatically for this workspace. Validate it without manual typing."
-                                  : "Generate a free SC code directly from this card. No manual input is required."
+                                      : "Use linked card"
+                                    : latestRejectedPlanPayment
+                                      ? "Retry request"
+                                      : "Send request"}
+                            </strong>
+                            <p className="workspace-overview-copy">
+                              {selectedClientPlan?.slug === "free"
+                                ? "The animated card below creates the SC code and keeps validation in the same flow."
                                 : pendingPlanPayment
-                                  ? "Payment details were sent. Wait for admin approval before activation."
+                                  ? "Admin has the request in queue, so the next visible update will be approval or rejection."
                                   : hasLinkedSelectedPlanAccess
-                                    ? "This plan already has linked SC access in the current workspace."
+                                    ? "The selected plan already has a linked SC card, so the next step is to track its live status."
                                     : latestRejectedPlanPayment
-                                      ? "The latest request was rejected. Review the details and send a fresh request."
-                                      : "Paid plans stay managed. Send the request and let admin approve it."
-                            }
-                            backLabelOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? "Generated code"
-                                : "Approval state"
-                            }
-                            busy={
-                              selectedClientPlan?.slug === "free" ? scratchBusy : paymentBusy
-                            }
-                            code={
-                              selectedClientPlan?.slug === "free"
-                                ? activeScratchCode || "AUTO-CODE"
-                                : hasLinkedSelectedPlanAccess
-                                  ? approvedPlanPayment?.linkedCardCode ||
-                                    selectedPlanSmartCard?.code ||
-                                    "APPROVED"
-                                  : pendingPlanPayment
-                                    ? "PENDING-ADMIN"
-                                    : latestRejectedPlanPayment
-                                      ? "RETRY-REQUEST"
-                                    : "CONTACT-ADMIN"
-                            }
-                            descriptionOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? "Generate one workspace code here, then validate it in the same step."
-                                : "Send one managed request here, then continue after approval."
-                            }
-                            lockedLabelOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? "AUTO READY"
-                                : "ADMIN REVIEW"
-                            }
-                            mode={selectedClientPlan?.slug === "free" ? "validate" : "reveal"}
-                            onAction={
-                              selectedClientPlan?.slug === "free"
-                                ? () => void handleScratchAccessCard()
-                                : !pendingPlanPayment && !hasLinkedSelectedPlanAccess
-                                  ? () => void handleClientPlanRequest()
-                                  : undefined
-                            }
-                            planLabel={
-                              selectedClientPlan?.name ||
-                              clientOverview.account?.planName ||
-                              "Free"
-                            }
-                            pillLabelOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? "brAIn workspace access"
-                                : "brAIn managed approval"
-                            }
-                            revealed={
-                              selectedClientPlan?.slug === "free"
-                                ? freePlanCardRevealed
-                                : Boolean(planScopedPayment) ||
-                                  Boolean(selectedPlanSmartCard) ||
-                                  paymentBusy
-                            }
-                            sectorLabel={
-                              selectedPlanSmartCard?.sectorLabel ||
-                              scratchStatus.sector ||
-                              clientOverview.account?.sectorLabel ||
-                              "brAIn"
-                            }
-                            titleOverride={
-                              selectedClientPlan?.slug === "free"
-                                ? "Workspace Access Card"
-                                : "Managed Access Request"
-                            }
-                          />
+                                      ? "The previous request was rejected, so the next step is to review and resend it."
+                                      : "Once submitted, the request stays linked to billing and SC card assignment."}
+                            </p>
+                          </article>
                         </div>
 
-                        <div
-                          className="mt-5 rounded-[24px] border border-white/10 bg-black/20 p-4"
-                          id="client-validate"
-                        >
-                          <p className="text-sm leading-7 text-slate-300">
-                            {selectedClientPlan?.slug === "free"
-                              ? "Free plan now generates the SC code automatically from this animated card. Reveal it here, then validate it without typing."
-                              : hasLinkedSelectedPlanAccess
-                                ? "This managed plan already has linked SC access. Track the latest card status and billing state from the same workspace."
-                                : "This plan stays under admin control. Send the request and wait for approval before SC card linking or activation."}
-                          </p>
-                          {selectedClientPlan?.slug === "free" && scratchStatus.hasActiveReservation ? (
-                            <p className="mt-3 text-sm text-cyan-200">
-                              Active reservation / {activeScratchCode || "SC code ready"} /
-                              {" "}Sector {scratchStatus.sector} / Plan {scratchStatus.plan}
-                            </p>
-                          ) : null}
-                          {selectedClientPlan?.slug !== "free" && planScopedPayment ? (
-                            <p className="mt-3 text-sm text-cyan-200">
-                              Latest request / {paymentStatusCopy(planScopedPayment.status)} /{" "}
-                              {paymentMethodLabel(planScopedPayment.paymentMethod)}
-                            </p>
-                          ) : null}
-                          {selectedClientPlan?.slug !== "free" &&
-                          !planScopedPayment &&
-                          selectedPlanSmartCard ? (
-                            <p className="mt-3 text-sm text-cyan-200">
-                              Linked SC card / {selectedPlanSmartCard.code} /{" "}
-                              {smartCardStatusCopy(selectedPlanSmartCard.status)}
-                            </p>
-                          ) : null}
-                        </div>
-
-                        {selectedClientPlan?.slug === "free" ? (
-                          <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_15rem]">
-                            <div className="rounded-[24px] border border-cyan-400/15 bg-cyan-500/5 p-4">
-                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                Generated SC code
-                              </p>
-                              <p className="mt-3 text-2xl font-black tracking-[0.24em] text-white">
-                                {activeScratchCode || "AUTO-CODE"}
-                              </p>
-                              <p className="mt-3 text-sm leading-7 text-slate-300">
-                                {activeScratchCode
-                                  ? "This code was prepared automatically for the current client session."
-                                  : "The system will reveal a free SC code automatically after you press Generate Card."}
-                              </p>
+                        <div className="client-access-board-body">
+                          <section className="client-access-plan-column">
+                            <div className="client-access-section-head">
+                              <div>
+                                <p className="client-access-section-kicker">Plan lane</p>
+                                <h3 className="client-access-section-title">
+                                  Select the access path
+                                </h3>
+                              </div>
+                              <span className="workspace-summary-pill">
+                                {landingContent.plans.length} plans
+                              </span>
                             </div>
 
-                            <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
-                              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                Session status
-                              </p>
-                              <p className="mt-3 text-sm font-semibold text-white">
-                                {scratchStatus.hasActiveReservation
-                                  ? "Ready for validation"
-                                  : "Waiting for generated card"}
-                              </p>
-                              <p className="mt-3 text-sm leading-7 text-slate-300">
-                                {formatScratchExpiry(scratchStatus.expiresIn)}
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="mt-5 space-y-4">
-                            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                              {clientPaymentMethods.map((method) => {
-                                const active = selectedPaymentMethod === method.value;
+                            <div className="client-plan-grid client-plan-grid-compact mt-4">
+                              {landingContent.plans.map((plan) => {
+                                const selected = selectedClientPlan?.slug === plan.slug;
+                                const isFreePlan = plan.slug === "free";
 
                                 return (
                                   <button
-                                    className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
-                                      active
-                                        ? "border-amber-300/30 bg-amber-300/10 text-amber-100"
-                                        : "border-white/10 bg-black/20 text-slate-200 hover:bg-white/[0.05]"
+                                    className={`client-plan-card ${
+                                      selected ? "client-plan-card-selected" : ""
                                     }`}
-                                    key={method.value}
-                                    onClick={() => setSelectedPaymentMethod(method.value)}
+                                    key={plan.slug}
+                                    onClick={() => handleClientPlanSelect(plan)}
+                                    style={
+                                      selected
+                                        ? getSectorPanelStyle(clientSector?.accent, !isDarkMode)
+                                        : undefined
+                                    }
                                     type="button"
                                   >
-                                    {method.label}
+                                    <div className="client-plan-card-head">
+                                      <div>
+                                        <p className="client-plan-card-kicker">
+                                          {isFreePlan
+                                            ? "Free access"
+                                            : plan.featured
+                                              ? "Recommended managed plan"
+                                              : "Managed plan"}
+                                        </p>
+                                        <h3 className="client-plan-card-title">{plan.name}</h3>
+                                      </div>
+                                      <span
+                                        className={`client-plan-card-badge ${
+                                          isFreePlan
+                                            ? "client-plan-card-badge-free"
+                                            : "client-plan-card-badge-managed"
+                                        }`}
+                                      >
+                                        {isFreePlan ? "Auto code" : "Admin flow"}
+                                      </span>
+                                    </div>
+
+                                    <p className="client-plan-card-summary">{plan.summary}</p>
+
+                                    <div className="client-plan-card-pills">
+                                      <span>{plan.supportLabel}</span>
+                                      <span>
+                                        {isFreePlan ? "Instant validation" : "Admin approval"}
+                                      </span>
+                                    </div>
+
+                                    <div className="client-plan-card-footer">
+                                      <div className="client-plan-card-price">
+                                        <strong>
+                                          {isFreePlan
+                                            ? "No payment required"
+                                            : `${formatSystemMoney(plan.annualPrice)} / admin approval`}
+                                        </strong>
+                                        <span>{selected ? "Selected now" : "Choose plan"}</span>
+                                      </div>
+                                      <span className="client-plan-card-device">
+                                        {plan.deviceAllowance}
+                                      </span>
+                                    </div>
                                   </button>
                                 );
                               })}
                             </div>
-                            <label className="field-shell">
-                              <span>Contact name</span>
-                              <input
-                                className="field-input"
-                                onChange={(event) => setPaymentCardholder(event.target.value)}
-                                placeholder="Admin contact for approval"
-                                type="text"
-                                value={paymentCardholder}
-                              />
-                            </label>
-                            {selectedPaymentMethod === "paypal" ? (
-                              <div className="rounded-2xl border border-cyan-400/15 bg-cyan-500/5 px-4 py-3 text-sm text-slate-300">
-                                PayPal requests go straight to admin review and return as pending
-                                until approval.
+                          </section>
+
+                          <section className="client-access-workspace-column">
+                            <article className="client-access-preview-card">
+                              <div className="client-access-section-head client-access-section-head-tight">
+                                <div>
+                                  <p className="client-access-section-kicker">SC card preview</p>
+                                  <h3 className="client-access-section-title">
+                                    {selectedClientPlan?.slug === "free"
+                                      ? "Workspace access card"
+                                      : "Managed access request"}
+                                  </h3>
+                                </div>
+                                <span className="workspace-summary-pill">
+                                  {selectedClientPlan?.slug === "free"
+                                    ? activeScratchCode
+                                      ? "Code ready"
+                                      : "Auto code"
+                                    : pendingPlanPayment
+                                      ? "Pending admin"
+                                      : hasLinkedSelectedPlanAccess
+                                        ? "Linked access"
+                                        : "Await request"}
+                                </span>
+                              </div>
+
+                              <div className="client-access-scratch-wrap">
+                                <BrainScratchCard
+                                  actionLabelOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? scratchBusy
+                                        ? activeScratchCode
+                                          ? "Validating..."
+                                          : "Generating..."
+                                        : activeScratchCode
+                                          ? "Validate Card"
+                                          : "Generate Card"
+                                      : pendingPlanPayment
+                                        ? "Request pending"
+                                        : hasLinkedSelectedPlanAccess
+                                          ? selectedPlanSmartCard?.status === "activated"
+                                            ? "Card active"
+                                            : "Access linked"
+                                          : paymentBusy
+                                            ? "Sending request..."
+                                            : latestRejectedPlanPayment
+                                              ? "Send again"
+                                              : "Contact admin"
+                                  }
+                                  backCopyOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? freePlanCardRevealed
+                                        ? "Generated automatically for this workspace. Validate it without manual typing."
+                                        : "Generate a free SC code directly from this card. No manual input is required."
+                                      : pendingPlanPayment
+                                        ? "Payment details were sent. Wait for admin approval before activation."
+                                        : hasLinkedSelectedPlanAccess
+                                          ? "This plan already has linked SC access in the current workspace."
+                                          : latestRejectedPlanPayment
+                                            ? "The latest request was rejected. Review the details and send a fresh request."
+                                            : "Paid plans stay managed. Send the request and let admin approve it."
+                                  }
+                                  backLabelOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? "Generated code"
+                                      : "Approval state"
+                                  }
+                                  busy={
+                                    selectedClientPlan?.slug === "free" ? scratchBusy : paymentBusy
+                                  }
+                                  code={
+                                    selectedClientPlan?.slug === "free"
+                                      ? activeScratchCode || "AUTO-CODE"
+                                      : hasLinkedSelectedPlanAccess
+                                        ? approvedPlanPayment?.linkedCardCode ||
+                                          selectedPlanSmartCard?.code ||
+                                          "APPROVED"
+                                        : pendingPlanPayment
+                                          ? "PENDING-ADMIN"
+                                          : latestRejectedPlanPayment
+                                            ? "RETRY-REQUEST"
+                                            : "CONTACT-ADMIN"
+                                  }
+                                  compact
+                                  descriptionOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? "Generate one workspace code here, then validate it in the same step."
+                                      : "Send one managed request here, then continue after approval."
+                                  }
+                                  lockedLabelOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? "AUTO READY"
+                                      : "ADMIN REVIEW"
+                                  }
+                                  mode={selectedClientPlan?.slug === "free" ? "validate" : "reveal"}
+                                  onAction={
+                                    selectedClientPlan?.slug === "free"
+                                      ? () => void handleScratchAccessCard()
+                                      : !pendingPlanPayment && !hasLinkedSelectedPlanAccess
+                                        ? () => void handleClientPlanRequest()
+                                        : undefined
+                                  }
+                                  planLabel={
+                                    selectedClientPlan?.name ||
+                                    clientOverview.account?.planName ||
+                                    "Free"
+                                  }
+                                  pillLabelOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? "brAIn workspace access"
+                                      : "brAIn managed approval"
+                                  }
+                                  revealed={
+                                    selectedClientPlan?.slug === "free"
+                                      ? freePlanCardRevealed
+                                      : Boolean(planScopedPayment) ||
+                                        Boolean(selectedPlanSmartCard) ||
+                                        paymentBusy
+                                  }
+                                  sectorLabel={
+                                    selectedPlanSmartCard?.sectorLabel ||
+                                    scratchStatus.sector ||
+                                    clientOverview.account?.sectorLabel ||
+                                    "brAIn"
+                                  }
+                                  titleOverride={
+                                    selectedClientPlan?.slug === "free"
+                                      ? "Workspace Access Card"
+                                      : "Managed Access Request"
+                                  }
+                                  tone="light"
+                                />
+                              </div>
+                            </article>
+
+                            <div
+                              className={`client-plan-note client-access-note ${
+                                selectedClientPlan?.slug === "free"
+                                  ? "client-plan-note-free"
+                                  : "client-plan-note-managed"
+                              }`}
+                              id="client-validate"
+                            >
+                              <p
+                                className={`client-plan-note-copy ${
+                                  selectedClientPlan?.slug === "free"
+                                    ? "client-plan-note-copy-dark"
+                                    : "client-plan-note-copy-light"
+                                }`}
+                              >
+                                {selectedClientPlan?.slug === "free"
+                                  ? "Free plan now generates the SC code automatically from this animated card. Reveal it here, then validate it without typing."
+                                  : hasLinkedSelectedPlanAccess
+                                    ? "This managed plan already has linked SC access. Track the latest card status and billing state from the same workspace."
+                                    : "This plan stays under admin control. Send the request and wait for approval before SC card linking or activation."}
+                              </p>
+                              {selectedClientPlan?.slug === "free" && scratchStatus.hasActiveReservation ? (
+                                <p className="client-plan-note-meta client-plan-note-meta-dark mt-3">
+                                  Active reservation / {activeScratchCode || "SC code ready"} /
+                                  {" "}Sector {scratchStatus.sector} / Plan {scratchStatus.plan}
+                                </p>
+                              ) : null}
+                              {selectedClientPlan?.slug !== "free" && planScopedPayment ? (
+                                <p className="client-plan-note-meta client-plan-note-meta-light mt-3">
+                                  Latest request / {paymentStatusCopy(planScopedPayment.status)} /{" "}
+                                  {paymentMethodLabel(planScopedPayment.paymentMethod)}
+                                </p>
+                              ) : null}
+                              {selectedClientPlan?.slug !== "free" &&
+                              !planScopedPayment &&
+                              selectedPlanSmartCard ? (
+                                <p className="client-plan-note-meta client-plan-note-meta-light mt-3">
+                                  Linked SC card / {selectedPlanSmartCard.code} /{" "}
+                                  {smartCardStatusCopy(selectedPlanSmartCard.status)}
+                                </p>
+                              ) : null}
+                            </div>
+
+                            {selectedClientPlan?.slug === "free" ? (
+                              <div className="client-access-meta-grid">
+                                <div className="client-access-mini-card client-access-mini-card-highlight">
+                                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                    Generated SC code
+                                  </p>
+                                  <p className="mt-3 text-2xl font-black tracking-[0.24em] text-white">
+                                    {activeScratchCode || "AUTO-CODE"}
+                                  </p>
+                                  <p className="mt-3 text-sm leading-7 text-slate-300">
+                                    {activeScratchCode
+                                      ? "This code was prepared automatically for the current client session."
+                                      : "The system will reveal a free SC code automatically after you press Generate Card."}
+                                  </p>
+                                </div>
+
+                                <div className="client-access-mini-card">
+                                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                    Session status
+                                  </p>
+                                  <p className="mt-3 text-sm font-semibold text-white">
+                                    {scratchStatus.hasActiveReservation
+                                      ? "Ready for validation"
+                                      : "Waiting for generated card"}
+                                  </p>
+                                  <p className="mt-3 text-sm leading-7 text-slate-300">
+                                    {formatScratchExpiry(scratchStatus.expiresIn)}
+                                  </p>
+                                </div>
                               </div>
                             ) : (
-                              <div className="grid gap-4 sm:grid-cols-[1fr_12rem]">
-                                <label className="field-shell">
-                                  <span>Card number</span>
-                                  <input
-                                    className="field-input"
-                                    onChange={(event) => setPaymentCardNumber(event.target.value)}
-                                    placeholder="4111 1111 1111 1111"
-                                    type="text"
-                                    value={paymentCardNumber}
-                                  />
-                                </label>
-                                <label className="field-shell">
-                                  <span>Expiry</span>
-                                  <input
-                                    className="field-input"
-                                    onChange={(event) => setPaymentExpiry(event.target.value)}
-                                    placeholder="MM/YY"
-                                    type="text"
-                                    value={paymentExpiry}
-                                  />
-                                </label>
+                              <div className="client-access-payment-card">
+                                <div className="client-access-section-head client-access-section-head-tight">
+                                  <div>
+                                    <p className="client-access-section-kicker">
+                                      Payment + approval
+                                    </p>
+                                    <h3 className="client-access-section-title">
+                                      Send the managed request
+                                    </h3>
+                                  </div>
+                                  <span className="workspace-summary-pill">
+                                    {paymentMethodLabel(selectedPaymentMethod)}
+                                  </span>
+                                </div>
+                                <div className="mt-4 space-y-4">
+                                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                    {clientPaymentMethods.map((method) => {
+                                      const active = selectedPaymentMethod === method.value;
+
+                                      return (
+                                        <button
+                                          className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
+                                            active
+                                              ? "border-amber-300/30 bg-amber-300/10 text-amber-100"
+                                              : "border-white/10 bg-black/20 text-slate-200 hover:bg-white/[0.05]"
+                                          }`}
+                                          key={method.value}
+                                          onClick={() => setSelectedPaymentMethod(method.value)}
+                                          type="button"
+                                        >
+                                          {method.label}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                  <label className="field-shell">
+                                    <span>Contact name</span>
+                                    <input
+                                      className="field-input"
+                                      onChange={(event) => setPaymentCardholder(event.target.value)}
+                                      placeholder="Admin contact for approval"
+                                      type="text"
+                                      value={paymentCardholder}
+                                    />
+                                  </label>
+                                  {selectedPaymentMethod === "paypal" ? (
+                                    <div className="rounded-2xl border border-cyan-400/15 bg-cyan-500/5 px-4 py-3 text-sm text-slate-300">
+                                      PayPal requests go straight to admin review and return as
+                                      pending until approval.
+                                    </div>
+                                  ) : (
+                                    <div className="grid gap-4 sm:grid-cols-[1fr_12rem]">
+                                      <label className="field-shell">
+                                        <span>Card number</span>
+                                        <input
+                                          className="field-input"
+                                          onChange={(event) => setPaymentCardNumber(event.target.value)}
+                                          placeholder="4111 1111 1111 1111"
+                                          type="text"
+                                          value={paymentCardNumber}
+                                        />
+                                      </label>
+                                      <label className="field-shell">
+                                        <span>Expiry</span>
+                                        <input
+                                          className="field-input"
+                                          onChange={(event) => setPaymentExpiry(event.target.value)}
+                                          placeholder="MM/YY"
+                                          type="text"
+                                          value={paymentExpiry}
+                                        />
+                                      </label>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             )}
-                          </div>
-                        )}
 
-                        {(selectedClientPlan?.slug === "free" ? scratchMessage : paymentMessage) ? (
-                          <p
-                            className={`mt-5 rounded-2xl px-4 py-3 text-sm ${
-                              (selectedClientPlan?.slug === "free"
-                                ? scratchMessage?.tone
-                                : paymentMessage?.tone) === "error"
-                                ? "bg-red-500/10 text-red-200"
-                                : (selectedClientPlan?.slug === "free"
-                                      ? scratchMessage?.tone
-                                      : paymentMessage?.tone) === "success"
-                                  ? "bg-emerald-500/10 text-emerald-200"
-                                  : "bg-cyan-500/10 text-cyan-200"
-                            }`}
-                          >
-                            {selectedClientPlan?.slug === "free"
-                              ? scratchMessage?.text
-                              : paymentMessage?.text}
-                          </p>
-                        ) : null}
+                            {(selectedClientPlan?.slug === "free"
+                              ? scratchMessage
+                              : paymentMessage) ? (
+                              <p
+                                className={`client-access-feedback rounded-2xl px-4 py-3 text-sm ${
+                                  (selectedClientPlan?.slug === "free"
+                                    ? scratchMessage?.tone
+                                    : paymentMessage?.tone) === "error"
+                                    ? "bg-red-500/10 text-red-200"
+                                    : (selectedClientPlan?.slug === "free"
+                                          ? scratchMessage?.tone
+                                          : paymentMessage?.tone) === "success"
+                                      ? "bg-emerald-500/10 text-emerald-200"
+                                      : "bg-cyan-500/10 text-cyan-200"
+                                }`}
+                              >
+                                {selectedClientPlan?.slug === "free"
+                                  ? scratchMessage?.text
+                                  : paymentMessage?.text}
+                              </p>
+                            ) : null}
+                          </section>
+                        </div>
                       </article>
 
                       {landingContent.sectors.length > 0 &&
@@ -4727,15 +5306,14 @@ function App() {
                           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                             <div>
                               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                                Sector explorer
+                                Sector
                               </p>
                               <h2 className="mt-2 text-2xl font-black text-white">
-                                Sector rollout board
+                                Sector fit and rollout
                               </h2>
                               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
                                 Compare each deployment lane, keep the active device in
-                                view, and use the board for rollout fit, setup notes, and
-                                sector-specific context.
+                                view, and review rollout fit with sector-specific context.
                               </p>
                             </div>
 
@@ -4744,7 +5322,7 @@ function App() {
                                 className="rounded-full border px-4 py-2 text-sm font-semibold"
                                 style={getSectorBadgeStyle(activeSector.accent, !isDarkMode)}
                               >
-                                Active sector: {activeSector.name}
+                                Selected sector: {activeSector.name}
                               </span>
                               <span className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm font-semibold text-slate-200">
                                 {clientOverview.account?.planName ?? "Client plan"}
@@ -4838,7 +5416,7 @@ function App() {
                                 style={getSectorPanelStyle(activeSector.accent, !isDarkMode)}
                               >
                                 <p className="text-xs uppercase tracking-[0.18em] text-slate-300">
-                                  Advice panel
+                                  Selected lane
                                 </p>
                                 <h3 className="mt-3 text-2xl font-black text-white">
                                   {activeSector.title}
@@ -4859,7 +5437,7 @@ function App() {
                                 </div>
                                 <div className="rounded-[24px] border border-white/10 bg-black/20 p-4">
                                   <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                                    Device anchor
+                                    Device
                                   </p>
                                   <p className="mt-3 text-sm font-semibold leading-7 text-white">
                                     {activeDevice?.name ?? "brAIn device"}
@@ -4941,7 +5519,7 @@ function App() {
                               Billing
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Payment requests and linked access
+                              Billing and linked access
                             </h2>
                           </div>
                           <CreditCard className="h-6 w-6 text-cyan-200" />
@@ -4950,8 +5528,8 @@ function App() {
                         <div className="mt-5 space-y-3">
                           <div className="rounded-[24px] border border-cyan-400/15 bg-cyan-500/5 p-4">
                             <p className="text-sm leading-7 text-slate-300">
-                              Free validation runs here instantly. Paid plans stay pending until
-                              admin approves the request and links the SC card.
+                              Free access runs here immediately. Managed plans stay pending
+                              until admin approval and SC card linking are complete.
                             </p>
                           </div>
 
@@ -5030,7 +5608,7 @@ function App() {
                               SC cards
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Access kit status
+                              Linked SC cards
                             </h2>
                           </div>
                           <ShieldCheck className="h-6 w-6 text-cyan-200" />
@@ -5114,7 +5692,7 @@ function App() {
                               Activations
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Device rollout
+                              Activation history
                             </h2>
                           </div>
                           <Activity className="h-6 w-6 text-cyan-200" />
@@ -5155,7 +5733,7 @@ function App() {
                               Support
                             </p>
                             <h2 className="mt-2 text-2xl font-black text-white">
-                              Tickets
+                              Ticket history
                             </h2>
                           </div>
                           <Ticket className="h-6 w-6 text-cyan-200" />
