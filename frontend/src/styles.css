@@ -2699,6 +2699,11 @@ body {
   }
 }
 
+/* Hide sectors mobile strip - keep only navbar */
+.sector-mobile-strip {
+  display: none !important;
+}
+
 @media (min-width: 620px) {
   .topbar-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -13153,18 +13158,18 @@ body.app-light-mode.app-theme-client {
 }
 
 .light-mode.theme-landing .brain-annual-plan-card {
-  min-height: auto !important;
-  border-color: transparent !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0.25rem 0 !important;
-  box-shadow: none !important;
+  min-height: 30rem !important;
+  border-color: rgba(35, 104, 255, 0.15) !important;
+  border-radius: 1.2rem !important;
+  background: #ffffff !important;
+  padding: 1.1rem !important;
+  box-shadow: 0 14px 34px rgba(8, 26, 58, 0.08) !important;
 }
 
 .light-mode.theme-landing .brain-annual-plan-card-popular {
-  border-color: transparent !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  border-color: rgba(35, 104, 255, 0.3) !important;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(35, 104, 255, 0.05) 100%) !important;
+  box-shadow: 0 20px 48px rgba(35, 104, 255, 0.16) !important;
 }
 
 .light-mode.theme-landing .brain-plan-orb,
@@ -13179,18 +13184,18 @@ body.app-light-mode.app-theme-client {
 }
 
 .light-mode.theme-landing .brain-token-limit-board {
-  border-color: transparent !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding-inline: 0 !important;
+  border-color: var(--brand-line) !important;
+  border-radius: 1.2rem !important;
+  background: linear-gradient(180deg, rgba(35, 104, 255, 0.04), #ffffff) !important;
+  padding: 1rem !important;
   box-shadow: none !important;
 }
 
 .light-mode.theme-landing .brain-token-limit-card {
-  border-color: transparent !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding-inline: 0 !important;
+  border-color: var(--brand-line) !important;
+  border-radius: 0.95rem !important;
+  background: #ffffff !important;
+  padding: 0.8rem !important;
   box-shadow: none !important;
 }
 
