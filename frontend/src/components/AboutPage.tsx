@@ -64,10 +64,6 @@ export function AboutPage({
             </a>
           </div>
         </div>
-
-        <div className="brain-about-logo-cinema" aria-hidden="true">
-          <img src="/brand/brain-logo-final.jpeg" alt="" />
-        </div>
       </section>
 
       <section className="brain-about-pillar-grid" aria-label="Platform pillars">
