@@ -1,0 +1,439 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/HelpCenterPage.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=03b53ff9";
+import { ArrowRight, Bot, ChevronDown, CreditCard, Cpu, HelpCircle, KeyRound } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=03b53ff9";
+import { BrainBrand } from "/src/components/BrainBrand.tsx";
+const quickHelp = [
+    {
+        icon: Cpu,
+        title: "Device",
+        copy: "Hardware plus software device, chosen by sector."
+    },
+    {
+        icon: CreditCard,
+        title: "Plans",
+        copy: "Annual plans show devices, support, and token limits."
+    },
+    {
+        icon: KeyRound,
+        title: "Login",
+        copy: "Buyer access opens after the product lane is clear."
+    },
+    {
+        icon: Bot,
+        title: "AI chat",
+        copy: "Use the popup on the main page for quick answers."
+    }
+];
+const quickQuestions = [
+    {
+        answer: "Start with Starter for a small rollout, Professional when you need more automation, and Business or Platinum when multiple devices, workflows, or integrations are active.",
+        question: "Which plan should I choose first?"
+    },
+    {
+        answer: "The device is the on-site hardware. The software layer adds AI chat, voice support, cloud dashboards, tokens, activation, and admin approval.",
+        question: "What does hardware plus software mean?"
+    },
+    {
+        answer: "Use buyer login after the sector, device, and plan are clear. Free access can validate instantly, while managed plans wait for admin approval and SC card linking.",
+        question: "When do I use buyer login?"
+    }
+];
+const tokenFallbackBySlug = {
+    starter: "600,000 tokens / year",
+    professional: "2,400,000 tokens / year",
+    business: "6,000,000 tokens / year",
+    platinum: "18,000,000 tokens / year",
+    "platinum-plus": "18,000,000 tokens included + usage packs"
+};
+function getTokenLabel(plan) {
+    return plan.features.find((feature)=>/token/i.test(feature)) ?? tokenFallbackBySlug[plan.slug] ?? "Token usage by plan";
+}
+export function HelpCenterPage({ device, lightMode, onOpenLogin, onOpenProducts, plans, sector }) {
+    const publicPlans = plans.filter((plan)=>plan.slug !== "free").slice(0, 5);
+    return /*#__PURE__*/ _jsxDEV("main", {
+        className: `help-center-shell brain-help-shell brain-help-clean ${lightMode ? "light-mode" : ""}`,
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "brain-page-brand-bar",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("a", {
+                        className: "brain-page-brand-link",
+                        href: "/",
+                        children: /*#__PURE__*/ _jsxDEV(BrainBrand, {
+                            showTagline: true,
+                            subtitle: "Managed AI devices"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                            lineNumber: 85,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 84,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("a", {
+                        className: "executive-button-secondary",
+                        href: "/",
+                        children: "Main page"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 87,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                lineNumber: 83,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-help-hero-clean",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "Help"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 94,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h1", {
+                                className: "brain-help-title",
+                                children: "Quick answers, no overloaded page."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 95,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "brain-help-copy",
+                                children: "Pick a sector on the top navigation, review plans and tokens, then open buyer login."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 96,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-help-actions",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "executive-button-primary",
+                                        onClick: onOpenLogin,
+                                        type: "button",
+                                        children: [
+                                            "Open buyer login",
+                                            /*#__PURE__*/ _jsxDEV(ArrowRight, {
+                                                className: "h-4 w-4"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                                lineNumber: 103,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 101,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "executive-button-secondary",
+                                        onClick: onOpenProducts,
+                                        type: "button",
+                                        children: "Main page sectors"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 105,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 100,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 93,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("article", {
+                        className: "brain-help-context-clean",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(HelpCircle, {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 112,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: "Current lane"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 113,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: sector?.name ?? "Choose a sector"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 114,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: device?.name ?? "Open a sector window from the top navigation."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 115,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 111,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                lineNumber: 92,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-help-quick-grid",
+                "aria-label": "Quick help topics",
+                children: quickHelp.map((item)=>{
+                    const Icon = item.icon;
+                    return /*#__PURE__*/ _jsxDEV("article", {
+                        className: "brain-help-quick-card",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(Icon, {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 125,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: item.title
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 126,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: item.copy
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 127,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, item.title, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 124,
+                        columnNumber: 13
+                    }, this);
+                })
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                lineNumber: 119,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-help-faq-clean",
+                "aria-label": "Quick questions",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-plans-heading-clean",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "Quick questions"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 135,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h2", {
+                                className: "landing-section-title",
+                                children: "Most asked before login"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 136,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "landing-section-copy",
+                                children: "Three short answers for plan choice, device setup, and buyer access."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 137,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 134,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-help-faq-stack",
+                        children: quickQuestions.map((item, index)=>/*#__PURE__*/ _jsxDEV("details", {
+                                className: "brain-help-faq-item",
+                                open: index === 0,
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("summary", {
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: item.question
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                                lineNumber: 146,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV(ChevronDown, {
+                                                className: "h-4 w-4"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                                lineNumber: 147,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 145,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        children: item.answer
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 149,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, item.question, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 144,
+                                columnNumber: 13
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 142,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                lineNumber: 133,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-help-token-section",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-plans-heading-clean",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "Token limits"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 157,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h2", {
+                                className: "landing-section-title",
+                                children: "Usage by annual plan"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 158,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 156,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-token-limit-grid",
+                        children: publicPlans.map((plan)=>/*#__PURE__*/ _jsxDEV("article", {
+                                className: "brain-token-limit-card",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: plan.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 164,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: getTokenLabel(plan)
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 165,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        children: plan.deviceAllowance
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                        lineNumber: 166,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, plan.slug, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                                lineNumber: 163,
+                                columnNumber: 13
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                        lineNumber: 161,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+                lineNumber: 155,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx",
+        lineNumber: 82,
+        columnNumber: 5
+    }, this);
+}
+_c = HelpCenterPage;
+var _c;
+$RefreshReg$(_c, "HelpCenterPage");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/HelpCenterPage.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkhlbHBDZW50ZXJQYWdlLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBBcnJvd1JpZ2h0LCBCb3QsIENoZXZyb25Eb3duLCBDcmVkaXRDYXJkLCBDcHUsIEhlbHBDaXJjbGUsIEtleVJvdW5kIH0gZnJvbSBcImx1Y2lkZS1yZWFjdFwiO1xuaW1wb3J0IHsgQnJhaW5CcmFuZCB9IGZyb20gXCIuL0JyYWluQnJhbmRcIjtcbmltcG9ydCB0eXBlIHsgRGV2aWNlLCBQbGFuLCBTZWN0b3IgfSBmcm9tIFwiLi4vdHlwZXNcIjtcblxudHlwZSBIZWxwQ2VudGVyUGFnZVByb3BzID0ge1xuICBkZXZpY2U6IERldmljZSB8IG51bGw7XG4gIGxpZ2h0TW9kZTogYm9vbGVhbjtcbiAgb25PcGVuTG9naW46ICgpID0+IHZvaWQ7XG4gIG9uT3BlblByb2R1Y3RzOiAoKSA9PiB2b2lkO1xuICBwbGFuczogUGxhbltdO1xuICBzZWN0b3I6IFNlY3RvciB8IG51bGw7XG59O1xuXG5jb25zdCBxdWlja0hlbHAgPSBbXG4gIHtcbiAgICBpY29uOiBDcHUsXG4gICAgdGl0bGU6IFwiRGV2aWNlXCIsXG4gICAgY29weTogXCJIYXJkd2FyZSBwbHVzIHNvZnR3YXJlIGRldmljZSwgY2hvc2VuIGJ5IHNlY3Rvci5cIixcbiAgfSxcbiAge1xuICAgIGljb246IENyZWRpdENhcmQsXG4gICAgdGl0bGU6IFwiUGxhbnNcIixcbiAgICBjb3B5OiBcIkFubnVhbCBwbGFucyBzaG93IGRldmljZXMsIHN1cHBvcnQsIGFuZCB0b2tlbiBsaW1pdHMuXCIsXG4gIH0sXG4gIHtcbiAgICBpY29uOiBLZXlSb3VuZCxcbiAgICB0aXRsZTogXCJMb2dpblwiLFxuICAgIGNvcHk6IFwiQnV5ZXIgYWNjZXNzIG9wZW5zIGFmdGVyIHRoZSBwcm9kdWN0IGxhbmUgaXMgY2xlYXIuXCIsXG4gIH0sXG4gIHtcbiAgICBpY29uOiBCb3QsXG4gICAgdGl0bGU6IFwiQUkgY2hhdFwiLFxuICAgIGNvcHk6IFwiVXNlIHRoZSBwb3B1cCBvbiB0aGUgbWFpbiBwYWdlIGZvciBxdWljayBhbnN3ZXJzLlwiLFxuICB9LFxuXTtcblxuY29uc3QgcXVpY2tRdWVzdGlvbnMgPSBbXG4gIHtcbiAgICBhbnN3ZXI6XG4gICAgICBcIlN0YXJ0IHdpdGggU3RhcnRlciBmb3IgYSBzbWFsbCByb2xsb3V0LCBQcm9mZXNzaW9uYWwgd2hlbiB5b3UgbmVlZCBtb3JlIGF1dG9tYXRpb24sIGFuZCBCdXNpbmVzcyBvciBQbGF0aW51bSB3aGVuIG11bHRpcGxlIGRldmljZXMsIHdvcmtmbG93cywgb3IgaW50ZWdyYXRpb25zIGFyZSBhY3RpdmUuXCIsXG4gICAgcXVlc3Rpb246IFwiV2hpY2ggcGxhbiBzaG91bGQgSSBjaG9vc2UgZmlyc3Q/XCIsXG4gIH0sXG4gIHtcbiAgICBhbnN3ZXI6XG4gICAgICBcIlRoZSBkZXZpY2UgaXMgdGhlIG9uLXNpdGUgaGFyZHdhcmUuIFRoZSBzb2Z0d2FyZSBsYXllciBhZGRzIEFJIGNoYXQsIHZvaWNlIHN1cHBvcnQsIGNsb3VkIGRhc2hib2FyZHMsIHRva2VucywgYWN0aXZhdGlvbiwgYW5kIGFkbWluIGFwcHJvdmFsLlwiLFxuICAgIHF1ZXN0aW9uOiBcIldoYXQgZG9lcyBoYXJkd2FyZSBwbHVzIHNvZnR3YXJlIG1lYW4/XCIsXG4gIH0sXG4gIHtcbiAgICBhbnN3ZXI6XG4gICAgICBcIlVzZSBidXllciBsb2dpbiBhZnRlciB0aGUgc2VjdG9yLCBkZXZpY2UsIGFuZCBwbGFuIGFyZSBjbGVhci4gRnJlZSBhY2Nlc3MgY2FuIHZhbGlkYXRlIGluc3RhbnRseSwgd2hpbGUgbWFuYWdlZCBwbGFucyB3YWl0IGZvciBhZG1pbiBhcHByb3ZhbCBhbmQgU0MgY2FyZCBsaW5raW5nLlwiLFxuICAgIHF1ZXN0aW9uOiBcIldoZW4gZG8gSSB1c2UgYnV5ZXIgbG9naW4/XCIsXG4gIH0sXG5dO1xuXG5jb25zdCB0b2tlbkZhbGxiYWNrQnlTbHVnOiBSZWNvcmQ8c3RyaW5nLCBzdHJpbmc+ID0ge1xuICBzdGFydGVyOiBcIjYwMCwwMDAgdG9rZW5zIC8geWVhclwiLFxuICBwcm9mZXNzaW9uYWw6IFwiMiw0MDAsMDAwIHRva2VucyAvIHllYXJcIixcbiAgYnVzaW5lc3M6IFwiNiwwMDAsMDAwIHRva2VucyAvIHllYXJcIixcbiAgcGxhdGludW06IFwiMTgsMDAwLDAwMCB0b2tlbnMgLyB5ZWFyXCIsXG4gIFwicGxhdGludW0tcGx1c1wiOiBcIjE4LDAwMCwwMDAgdG9rZW5zIGluY2x1ZGVkICsgdXNhZ2UgcGFja3NcIixcbn07XG5cbmZ1bmN0aW9uIGdldFRva2VuTGFiZWwocGxhbjogUGxhbikge1xuICByZXR1cm4gKFxuICAgIHBsYW4uZmVhdHVyZXMuZmluZCgoZmVhdHVyZSkgPT4gL3Rva2VuL2kudGVzdChmZWF0dXJlKSkgPz9cbiAgICB0b2tlbkZhbGxiYWNrQnlTbHVnW3BsYW4uc2x1Z10gPz9cbiAgICBcIlRva2VuIHVzYWdlIGJ5IHBsYW5cIlxuICApO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gSGVscENlbnRlclBhZ2Uoe1xuICBkZXZpY2UsXG4gIGxpZ2h0TW9kZSxcbiAgb25PcGVuTG9naW4sXG4gIG9uT3BlblByb2R1Y3RzLFxuICBwbGFucyxcbiAgc2VjdG9yLFxufTogSGVscENlbnRlclBhZ2VQcm9wcykge1xuICBjb25zdCBwdWJsaWNQbGFucyA9IHBsYW5zLmZpbHRlcigocGxhbikgPT4gcGxhbi5zbHVnICE9PSBcImZyZWVcIikuc2xpY2UoMCwgNSk7XG5cbiAgcmV0dXJuIChcbiAgICA8bWFpbiBjbGFzc05hbWU9e2BoZWxwLWNlbnRlci1zaGVsbCBicmFpbi1oZWxwLXNoZWxsIGJyYWluLWhlbHAtY2xlYW4gJHtsaWdodE1vZGUgPyBcImxpZ2h0LW1vZGVcIiA6IFwiXCJ9YH0+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXBhZ2UtYnJhbmQtYmFyXCI+XG4gICAgICAgIDxhIGNsYXNzTmFtZT1cImJyYWluLXBhZ2UtYnJhbmQtbGlua1wiIGhyZWY9XCIvXCI+XG4gICAgICAgICAgPEJyYWluQnJhbmQgc2hvd1RhZ2xpbmUgc3VidGl0bGU9XCJNYW5hZ2VkIEFJIGRldmljZXNcIiAvPlxuICAgICAgICA8L2E+XG4gICAgICAgIDxhIGNsYXNzTmFtZT1cImV4ZWN1dGl2ZS1idXR0b24tc2Vjb25kYXJ5XCIgaHJlZj1cIi9cIj5cbiAgICAgICAgICBNYWluIHBhZ2VcbiAgICAgICAgPC9hPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImJyYWluLWhlbHAtaGVyby1jbGVhblwiPlxuICAgICAgICA8ZGl2PlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImxhbmRpbmctaW5saW5lLWxhYmVsXCI+SGVscDwvc3Bhbj5cbiAgICAgICAgICA8aDEgY2xhc3NOYW1lPVwiYnJhaW4taGVscC10aXRsZVwiPlF1aWNrIGFuc3dlcnMsIG5vIG92ZXJsb2FkZWQgcGFnZS48L2gxPlxuICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImJyYWluLWhlbHAtY29weVwiPlxuICAgICAgICAgICAgUGljayBhIHNlY3RvciBvbiB0aGUgdG9wIG5hdmlnYXRpb24sIHJldmlldyBwbGFucyBhbmQgdG9rZW5zLCB0aGVuIG9wZW4gYnV5ZXIgbG9naW4uXG4gICAgICAgICAgPC9wPlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1oZWxwLWFjdGlvbnNcIj5cbiAgICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiZXhlY3V0aXZlLWJ1dHRvbi1wcmltYXJ5XCIgb25DbGljaz17b25PcGVuTG9naW59IHR5cGU9XCJidXR0b25cIj5cbiAgICAgICAgICAgICAgT3BlbiBidXllciBsb2dpblxuICAgICAgICAgICAgICA8QXJyb3dSaWdodCBjbGFzc05hbWU9XCJoLTQgdy00XCIgLz5cbiAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJleGVjdXRpdmUtYnV0dG9uLXNlY29uZGFyeVwiIG9uQ2xpY2s9e29uT3BlblByb2R1Y3RzfSB0eXBlPVwiYnV0dG9uXCI+XG4gICAgICAgICAgICAgIE1haW4gcGFnZSBzZWN0b3JzXG4gICAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGFydGljbGUgY2xhc3NOYW1lPVwiYnJhaW4taGVscC1jb250ZXh0LWNsZWFuXCI+XG4gICAgICAgICAgPEhlbHBDaXJjbGUgY2xhc3NOYW1lPVwiaC01IHctNVwiIC8+XG4gICAgICAgICAgPHNwYW4+Q3VycmVudCBsYW5lPC9zcGFuPlxuICAgICAgICAgIDxzdHJvbmc+e3NlY3Rvcj8ubmFtZSA/PyBcIkNob29zZSBhIHNlY3RvclwifTwvc3Ryb25nPlxuICAgICAgICAgIDxwPntkZXZpY2U/Lm5hbWUgPz8gXCJPcGVuIGEgc2VjdG9yIHdpbmRvdyBmcm9tIHRoZSB0b3AgbmF2aWdhdGlvbi5cIn08L3A+XG4gICAgICAgIDwvYXJ0aWNsZT5cbiAgICAgIDwvc2VjdGlvbj5cblxuICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiYnJhaW4taGVscC1xdWljay1ncmlkXCIgYXJpYS1sYWJlbD1cIlF1aWNrIGhlbHAgdG9waWNzXCI+XG4gICAgICAgIHtxdWlja0hlbHAubWFwKChpdGVtKSA9PiB7XG4gICAgICAgICAgY29uc3QgSWNvbiA9IGl0ZW0uaWNvbjtcblxuICAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgICA8YXJ0aWNsZSBjbGFzc05hbWU9XCJicmFpbi1oZWxwLXF1aWNrLWNhcmRcIiBrZXk9e2l0ZW0udGl0bGV9PlxuICAgICAgICAgICAgICA8SWNvbiBjbGFzc05hbWU9XCJoLTUgdy01XCIgLz5cbiAgICAgICAgICAgICAgPHN0cm9uZz57aXRlbS50aXRsZX08L3N0cm9uZz5cbiAgICAgICAgICAgICAgPHA+e2l0ZW0uY29weX08L3A+XG4gICAgICAgICAgICA8L2FydGljbGU+XG4gICAgICAgICAgKTtcbiAgICAgICAgfSl9XG4gICAgICA8L3NlY3Rpb24+XG5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImJyYWluLWhlbHAtZmFxLWNsZWFuXCIgYXJpYS1sYWJlbD1cIlF1aWNrIHF1ZXN0aW9uc1wiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXBsYW5zLWhlYWRpbmctY2xlYW5cIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJsYW5kaW5nLWlubGluZS1sYWJlbFwiPlF1aWNrIHF1ZXN0aW9uczwvc3Bhbj5cbiAgICAgICAgICA8aDIgY2xhc3NOYW1lPVwibGFuZGluZy1zZWN0aW9uLXRpdGxlXCI+TW9zdCBhc2tlZCBiZWZvcmUgbG9naW48L2gyPlxuICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImxhbmRpbmctc2VjdGlvbi1jb3B5XCI+XG4gICAgICAgICAgICBUaHJlZSBzaG9ydCBhbnN3ZXJzIGZvciBwbGFuIGNob2ljZSwgZGV2aWNlIHNldHVwLCBhbmQgYnV5ZXIgYWNjZXNzLlxuICAgICAgICAgIDwvcD5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1oZWxwLWZhcS1zdGFja1wiPlxuICAgICAgICAgIHtxdWlja1F1ZXN0aW9ucy5tYXAoKGl0ZW0sIGluZGV4KSA9PiAoXG4gICAgICAgICAgICA8ZGV0YWlscyBjbGFzc05hbWU9XCJicmFpbi1oZWxwLWZhcS1pdGVtXCIga2V5PXtpdGVtLnF1ZXN0aW9ufSBvcGVuPXtpbmRleCA9PT0gMH0+XG4gICAgICAgICAgICAgIDxzdW1tYXJ5PlxuICAgICAgICAgICAgICAgIDxzcGFuPntpdGVtLnF1ZXN0aW9ufTwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8Q2hldnJvbkRvd24gY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICAgIDwvc3VtbWFyeT5cbiAgICAgICAgICAgICAgPHA+e2l0ZW0uYW5zd2VyfTwvcD5cbiAgICAgICAgICAgIDwvZGV0YWlscz5cbiAgICAgICAgICApKX1cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L3NlY3Rpb24+XG5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImJyYWluLWhlbHAtdG9rZW4tc2VjdGlvblwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXBsYW5zLWhlYWRpbmctY2xlYW5cIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJsYW5kaW5nLWlubGluZS1sYWJlbFwiPlRva2VuIGxpbWl0czwvc3Bhbj5cbiAgICAgICAgICA8aDIgY2xhc3NOYW1lPVwibGFuZGluZy1zZWN0aW9uLXRpdGxlXCI+VXNhZ2UgYnkgYW5udWFsIHBsYW48L2gyPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXRva2VuLWxpbWl0LWdyaWRcIj5cbiAgICAgICAgICB7cHVibGljUGxhbnMubWFwKChwbGFuKSA9PiAoXG4gICAgICAgICAgICA8YXJ0aWNsZSBjbGFzc05hbWU9XCJicmFpbi10b2tlbi1saW1pdC1jYXJkXCIga2V5PXtwbGFuLnNsdWd9PlxuICAgICAgICAgICAgICA8c3Bhbj57cGxhbi5uYW1lfTwvc3Bhbj5cbiAgICAgICAgICAgICAgPHN0cm9uZz57Z2V0VG9rZW5MYWJlbChwbGFuKX08L3N0cm9uZz5cbiAgICAgICAgICAgICAgPHA+e3BsYW4uZGV2aWNlQWxsb3dhbmNlfTwvcD5cbiAgICAgICAgICAgIDwvYXJ0aWNsZT5cbiAgICAgICAgICApKX1cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L3NlY3Rpb24+XG4gICAgPC9tYWluPlxuICApO1xufVxuIl0sIm5hbWVzIjpbIkFycm93UmlnaHQiLCJCb3QiLCJDaGV2cm9uRG93biIsIkNyZWRpdENhcmQiLCJDcHUiLCJIZWxwQ2lyY2xlIiwiS2V5Um91bmQiLCJCcmFpbkJyYW5kIiwicXVpY2tIZWxwIiwiaWNvbiIsInRpdGxlIiwiY29weSIsInF1aWNrUXVlc3Rpb25zIiwiYW5zd2VyIiwicXVlc3Rpb24iLCJ0b2tlbkZhbGxiYWNrQnlTbHVnIiwic3RhcnRlciIsInByb2Zlc3Npb25hbCIsImJ1c2luZXNzIiwicGxhdGludW0iLCJnZXRUb2tlbkxhYmVsIiwicGxhbiIsImZlYXR1cmVzIiwiZmluZCIsImZlYXR1cmUiLCJ0ZXN0Iiwic2x1ZyIsIkhlbHBDZW50ZXJQYWdlIiwiZGV2aWNlIiwibGlnaHRNb2RlIiwib25PcGVuTG9naW4iLCJvbk9wZW5Qcm9kdWN0cyIsInBsYW5zIiwic2VjdG9yIiwicHVibGljUGxhbnMiLCJmaWx0ZXIiLCJzbGljZSIsIm1haW4iLCJjbGFzc05hbWUiLCJkaXYiLCJhIiwiaHJlZiIsInNob3dUYWdsaW5lIiwic3VidGl0bGUiLCJzZWN0aW9uIiwic3BhbiIsImgxIiwicCIsImJ1dHRvbiIsIm9uQ2xpY2siLCJ0eXBlIiwiYXJ0aWNsZSIsInN0cm9uZyIsIm5hbWUiLCJhcmlhLWxhYmVsIiwibWFwIiwiaXRlbSIsIkljb24iLCJoMiIsImluZGV4IiwiZGV0YWlscyIsIm9wZW4iLCJzdW1tYXJ5IiwiZGV2aWNlQWxsb3dhbmNlIl0sIm1hcHBpbmdzIjoiO0FBQUEsU0FBU0EsVUFBVSxFQUFFQyxHQUFHLEVBQUVDLFdBQVcsRUFBRUMsVUFBVSxFQUFFQyxHQUFHLEVBQUVDLFVBQVUsRUFBRUMsUUFBUSxRQUFRLGVBQWU7QUFDbkcsU0FBU0MsVUFBVSxRQUFRLGVBQWU7QUFZMUMsTUFBTUMsWUFBWTtJQUNoQjtRQUNFQyxNQUFNTDtRQUNOTSxPQUFPO1FBQ1BDLE1BQU07SUFDUjtJQUNBO1FBQ0VGLE1BQU1OO1FBQ05PLE9BQU87UUFDUEMsTUFBTTtJQUNSO0lBQ0E7UUFDRUYsTUFBTUg7UUFDTkksT0FBTztRQUNQQyxNQUFNO0lBQ1I7SUFDQTtRQUNFRixNQUFNUjtRQUNOUyxPQUFPO1FBQ1BDLE1BQU07SUFDUjtDQUNEO0FBRUQsTUFBTUMsaUJBQWlCO0lBQ3JCO1FBQ0VDLFFBQ0U7UUFDRkMsVUFBVTtJQUNaO0lBQ0E7UUFDRUQsUUFDRTtRQUNGQyxVQUFVO0lBQ1o7SUFDQTtRQUNFRCxRQUNF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

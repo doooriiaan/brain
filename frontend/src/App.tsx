@@ -5,6 +5,7 @@ import {
   Activity,
   ArrowRight,
   Bell,
+  CheckCircle2,
   Cpu,
   CreditCard,
   Globe2,
@@ -28,6 +29,7 @@ import { GoogleTranslateBridge } from "./components/GoogleTranslateBridge";
 import { HelpCenterPage } from "./components/HelpCenterPage";
 import { PublicLandingExperience } from "./components/PublicLandingExperience";
 import AboutPage from "./components/AboutPage";
+import DevicesPage from "./components/DevicesPage";
 import { LandingTopBar } from "./components/LandingTopBar";
 import PortalAccountCenter from "./components/PortalAccountCenter";
 import { SectorLiveBoard } from "./components/SectorLiveBoard";
@@ -263,6 +265,35 @@ const clientPaymentMethods: Array<{
   { label: "PayPal", value: "paypal" },
 ];
 
+const workspacePlanOrder = ["free", "starter", "professional", "business", "platinum", "platinum-plus"];
+
+const workspacePlanToneBySlug: Record<string, string> = {
+  business: "business",
+  free: "free",
+  platinum: "platinum",
+  "platinum-plus": "platinum-plus",
+  professional: "professional",
+  starter: "starter",
+};
+
+const workspacePlanAudienceBySlug: Record<string, string> = {
+  business: "For scaling operations.",
+  free: "Instant SC validation for one workspace check.",
+  platinum: "Maximum power. No limits.",
+  "platinum-plus": "For agencies and enterprises.",
+  professional: "For growing companies.",
+  starter: "Ideal for small businesses starting with AI.",
+};
+
+const workspaceTokenFallbackBySlug: Record<string, string> = {
+  business: "6,000,000 tokens / year",
+  free: "1 secure validation",
+  platinum: "18,000,000 tokens / year",
+  "platinum-plus": "18,000,000 tokens included + usage packs",
+  professional: "2,400,000 tokens / year",
+  starter: "600,000 tokens / year",
+};
+
 const initialLoginForm: LoginFormState = {
   role: "client",
   email: "",
@@ -293,8 +324,8 @@ const ticketStatusOrder: TicketItem["status"][] = [
 const landingSectionMap: Record<LandingView, string> = {
   overview: "landing-overview",
   access: "landing-access-page",
-  sectors: "preweb-sectors",
-  devices: "landing-devices",
+  sectors: "landing-overview",
+  devices: "landing-device-page",
 };
 
 function readStoredSession() {
@@ -328,6 +359,12 @@ function readInitialPublicPath() {
 }
 
 function readInitialLandingView(): LandingView {
+  const path = window.location.pathname.toLowerCase();
+
+  if (path === "/devices") {
+    return "devices";
+  }
+
   const rawValue = new URLSearchParams(window.location.search).get("view");
 
   if (
@@ -344,6 +381,51 @@ function readInitialLandingView(): LandingView {
 
 function readInitialSectorSlug() {
   return new URLSearchParams(window.location.search).get("sector") || "";
+}
+
+type LandingAddressOptions = {
+  replace?: boolean;
+  sectionId?: string;
+  sectorSlug?: string;
+};
+
+function writeLandingAddress(
+  view: LandingView,
+  { replace = false, sectionId, sectorSlug }: LandingAddressOptions = {},
+) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const url = new URL(window.location.href);
+
+  if (view === "devices") {
+    url.pathname = "/devices";
+    url.searchParams.delete("view");
+  } else {
+    url.pathname = "/";
+
+    if (view === "overview") {
+      url.searchParams.delete("view");
+    } else {
+      url.searchParams.set("view", view);
+    }
+  }
+
+  if (sectorSlug) {
+    url.searchParams.set("sector", sectorSlug);
+  } else if (view !== "sectors") {
+    url.searchParams.delete("sector");
+  }
+
+  url.hash = sectionId ? sectionId : "";
+
+  const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+  const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+  if (nextUrl !== currentUrl) {
+    window.history[replace ? "replaceState" : "pushState"]({}, "", nextUrl);
+  }
 }
 
 function ensureGuestUserId() {
@@ -378,6 +460,54 @@ function formatSystemDate(value?: string | null) {
 
 function formatSystemMoney(value: number) {
   return `EUR ${Number(value || 0).toLocaleString("en-GB")}`;
+}
+
+function getOrderedWorkspacePlans(plans: Plan[]) {
+  const orderedPlans = workspacePlanOrder
+    .map((slug) => plans.find((plan) => plan.slug === slug))
+    .filter((plan): plan is Plan => Boolean(plan));
+  const remainingPlans = plans.filter(
+    (plan) => !workspacePlanOrder.includes(plan.slug),
+  );
+
+  return [...orderedPlans, ...remainingPlans];
+}
+
+function getWorkspacePlanPriceLabel(plan: Plan) {
+  if (plan.annualPrice <= 0) {
+    return "Free";
+  }
+
+  return formatSystemMoney(plan.annualPrice);
+}
+
+function getWorkspacePlanMonthlyLabel(plan: Plan) {
+  if (plan.annualPrice <= 0) {
+    return "No monthly payment";
+  }
+
+  return `EUR ${Math.floor(plan.annualPrice / 12)}/month`;
+}
+
+function getWorkspacePlanTokenLabel(plan: Plan) {
+  return (
+    plan.features.find((feature) => /token/i.test(feature)) ??
+    workspaceTokenFallbackBySlug[plan.slug] ??
+    "Token usage by plan"
+  );
+}
+
+function getWorkspacePlanFeatures(plan: Plan) {
+  return Array.from(
+    new Set(
+      [
+        getWorkspacePlanTokenLabel(plan),
+        plan.automationLabel,
+        plan.deviceAllowance,
+        plan.supportLabel,
+      ].filter(Boolean),
+    ),
+  ).slice(0, 4);
 }
 
 function formatScratchExpiry(expiresIn?: number) {
@@ -497,7 +627,7 @@ function resolveDeviceKeyForSector(sector?: string | null) {
   return "business-hub";
 }
 
-const LIGHT_MODE_ACCENT = "#d45a34";
+const LIGHT_MODE_ACCENT = "#2368ff";
 
 function getThemeAccent(accent?: string, lightMode = false) {
   if (lightMode) {
@@ -550,7 +680,7 @@ function nextTicketStatus(
 
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
-  const [publicPath] = useState(() => readInitialPublicPath());
+  const [publicPath, setPublicPath] = useState(() => readInitialPublicPath());
   const [landingView, setLandingView] = useState<LandingView>(() =>
     readInitialLandingView(),
   );
@@ -576,9 +706,10 @@ function App() {
   const [landingContent, setLandingContent] =
     useState<LandingContent>(emptyLandingContent);
   const [contentLoading, setContentLoading] = useState(false);
-  const [activeSectorSlug, setActiveSectorSlug] = useState(() =>
-    readInitialSectorSlug(),
+  const [activeSectorSlug, setActiveSectorSlug] = useState(
+    () => readInitialSectorSlug() || "healthcare",
   );
+  const [sectorWindowOpen, setSectorWindowOpen] = useState(false);
   const [systemLoading, setSystemLoading] = useState(false);
   const [systemMessage, setSystemMessage] = useState<UiMessage | null>(null);
   const [operationsOverview, setOperationsOverview] =
@@ -626,6 +757,7 @@ function App() {
     languageOptions[0];
   const isHelpCenterPage = !authSession && publicPath === "/help";
   const isAboutPage = !authSession && publicPath === "/about";
+  const isDevicesPage = !authSession && publicPath === "/devices";
   const showLandingAccessPage = !authSession && landingView === "access";
 
   useEffect(() => {
@@ -635,6 +767,27 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEYS.language, selectedLanguage);
   }, [selectedLanguage]);
+
+  useEffect(() => {
+    function handleBrowserNavigation() {
+      const nextView = readInitialLandingView();
+      const nextSectorSlug = readInitialSectorSlug();
+
+      setPublicPath(readInitialPublicPath());
+      setLandingView(nextView);
+      setSectorWindowOpen(nextView === "sectors" && Boolean(nextSectorSlug));
+
+      if (nextSectorSlug) {
+        setActiveSectorSlug(nextSectorSlug);
+      }
+    }
+
+    window.addEventListener("popstate", handleBrowserNavigation);
+
+    return () => {
+      window.removeEventListener("popstate", handleBrowserNavigation);
+    };
+  }, []);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -952,6 +1105,16 @@ function App() {
       null
     );
   }, [clientOverview.account?.plan, landingContent.plans, selectedClientPlanSlug]);
+  const workspacePlanOptions = useMemo(
+    () => getOrderedWorkspacePlans(landingContent.plans),
+    [landingContent.plans],
+  );
+  const workspacePopularPlan =
+    workspacePlanOptions.find((plan) => plan.slug === "platinum") ??
+    workspacePlanOptions.find((plan) => plan.featured) ??
+    workspacePlanOptions.find((plan) => plan.slug !== "free") ??
+    workspacePlanOptions[0] ??
+    null;
 
   const clientPlanPayments = useMemo(() => {
     if (!selectedClientPlan) {
@@ -2195,7 +2358,15 @@ function App() {
   }
 
   function openLandingView(view: LandingView) {
+    if (view === "devices") {
+      window.location.assign("/devices");
+      return;
+    }
+
+    setSectorWindowOpen(false);
     setLandingView(view);
+    writeLandingAddress(view);
+
     scheduleLandingScroll(landingSectionMap[view]);
   }
 
@@ -2208,6 +2379,12 @@ function App() {
   }
 
   function handleLandingTopbarNavigation(key: string) {
+    if (key.startsWith("sector:")) {
+      const sectorSlug = key.replace("sector:", "");
+      openSectorStory(sectorSlug);
+      return;
+    }
+
     if (key === "overview") {
       openLandingView("overview");
       return;
@@ -2219,16 +2396,21 @@ function App() {
       return;
     }
 
+    if (key === "devices") {
+      window.location.assign("/devices");
+      return;
+    }
+
     const landingTargets: Record<string, string> = {
-      devices: "landing-devices",
-      story: "landing-how-it-works",
       plans: "landing-plans",
-      solutions: "preweb-sectors",
     };
 
     const targetSection = landingTargets[key];
 
     if (targetSection) {
+      setLandingView("overview");
+      setSectorWindowOpen(false);
+      writeLandingAddress("overview", { sectionId: targetSection });
       scheduleLandingScroll(targetSection);
     }
   }
@@ -2240,12 +2422,15 @@ function App() {
       sector: sectorSlug,
     }));
     setLandingView("sectors");
-    scheduleLandingScroll("preweb-sectors");
+    setSectorWindowOpen(true);
+    writeLandingAddress("sectors", { sectorSlug });
   }
 
   function openRegisterForSector(sector: Sector, plan?: Plan) {
     setActiveSectorSlug(sector.slug);
     setLandingView("access");
+    setSectorWindowOpen(false);
+    writeLandingAddress("access");
     setAuthMode("register");
     setRegisterForm((current) => ({
       ...current,
@@ -2667,12 +2852,20 @@ function App() {
         <div className="landing-aura landing-aura-gold" />
 
         <div className={`page-frame ${authSession ? "page-frame-workspace" : ""}`}>
-          {!authSession && isHelpCenterPage ? (
+          {!authSession && isDevicesPage ? (
+            <DevicesPage
+              activeDevice={activeDevice}
+              activeSector={activeSector}
+              landingContent={landingContent}
+              lightMode={!isDarkMode}
+              onOpenLogin={() => window.location.assign("/?view=access")}
+            />
+          ) : !authSession && isHelpCenterPage ? (
             <HelpCenterPage
               device={activeDevice}
               lightMode={!isDarkMode}
               onOpenLogin={() => window.location.assign("/?view=access")}
-              onOpenProducts={() => window.location.assign("/?view=devices")}
+              onOpenProducts={() => window.location.assign("/devices")}
               plans={landingContent.plans}
               sector={activeSector}
             />
@@ -2681,22 +2874,29 @@ function App() {
               landingContent={landingContent}
               lightMode={!isDarkMode}
               selectedLanguage={selectedLanguage}
-              onOpenLogin={() => {
-                setAuthMode("login");
-                openLandingView("access");
-              }}
+              onOpenLogin={() => window.location.assign("/?view=access")}
             />
           ) : (
             <>
               <LandingTopBar
-                activeNavigationKey={landingView === "access" ? "access" : "overview"}
+                activeNavigationKey={
+                  sectorWindowOpen && activeSector
+                    ? `sector:${activeSector.slug}`
+                    : landingView === "access"
+                      ? "access"
+                      : "overview"
+                }
                 countryOptions={countryOptions}
                 currentUserLabel={currentUserLabel}
                 languageOptions={languageOptions}
                 navigationItems={[
-                  { key: "overview", label: "Overview" },
-                  { key: "devices", label: "Preview" },
-                  { key: "plans", label: "Prices" },
+                  { key: "overview", label: "Home" },
+                  ...landingContent.sectors.slice(0, 4).map((sector) => ({
+                    key: `sector:${sector.slug}`,
+                    label: sector.name,
+                  })),
+                  { key: "devices", label: "Devices" },
+                  { key: "plans", label: "Plans" },
                 ]}
                 onNavigate={handleLandingTopbarNavigation}
                 onAboutAction={openAbout}
@@ -2738,6 +2938,7 @@ function App() {
                   onLoginChange={setLoginForm}
                   onLoginSubmit={handleLoginSubmit}
                   onCloseAccess={() => openLandingView("overview")}
+                  onCloseSectorWindow={() => setSectorWindowOpen(false)}
                   onOpenAccess={() => {
                     setAuthMode("login");
                     openLandingView("access");
@@ -2747,12 +2948,12 @@ function App() {
                   onRoleChange={(role) =>
                     setLoginForm((current) => ({ ...current, role }))
                   }
-                  onSectorSelect={openSectorStory}
                   onSignOut={handleSignOut}
                   registerForm={registerForm}
                   selectedCountryLabel={selectedCountryOption.label}
                   selectedLanguageLabel={selectedLanguageOption.label}
                   showAccessPage={showLandingAccessPage}
+                  showSectorWindow={sectorWindowOpen}
                   vpnActive={vpnActive}
                 />
                 </>
@@ -4366,7 +4567,7 @@ function App() {
                         </div>
 
                         <div className="mt-5 flex flex-wrap gap-2">
-                          {landingContent.plans.map((plan) => {
+                          {workspacePlanOptions.map((plan) => {
                             const active = selectedAdminCardPlan === plan.slug;
                             const count = adminOverview.smartCards.filter(
                               (card) => card.plan === plan.slug,
@@ -4913,18 +5114,21 @@ function App() {
                                 </h3>
                               </div>
                               <span className="workspace-summary-pill">
-                                {landingContent.plans.length} plans
+                                {workspacePlanOptions.length} plans
                               </span>
                             </div>
 
                             <div className="client-plan-grid client-plan-grid-compact mt-4">
-                              {landingContent.plans.map((plan) => {
+                              {workspacePlanOptions.map((plan) => {
                                 const selected = selectedClientPlan?.slug === plan.slug;
                                 const isFreePlan = plan.slug === "free";
+                                const isPopular = workspacePopularPlan?.slug === plan.slug;
 
                                 return (
                                   <button
-                                    className={`client-plan-card ${
+                                    className={`client-plan-card client-plan-card-${
+                                      workspacePlanToneBySlug[plan.slug] ?? "default"
+                                    } ${isPopular ? "client-plan-card-popular" : ""} ${
                                       selected ? "client-plan-card-selected" : ""
                                     }`}
                                     key={plan.slug}
@@ -4936,7 +5140,15 @@ function App() {
                                     }
                                     type="button"
                                   >
-                                    <div className="client-plan-card-head">
+                                     {isPopular ? (
+                                       <span className="client-plan-popular-badge">
+                                         Most popular
+                                       </span>
+                                     ) : null}
+                                     <span className="client-plan-orb" aria-hidden="true">
+                                       <Sparkles className="h-6 w-6" />
+                                     </span>
+                                     <div className="client-plan-card-head">
                                       <div>
                                         <p className="client-plan-card-kicker">
                                           {isFreePlan
@@ -4951,33 +5163,39 @@ function App() {
                                         className={`client-plan-card-badge ${
                                           isFreePlan
                                             ? "client-plan-card-badge-free"
-                                            : "client-plan-card-badge-managed"
+                                          : "client-plan-card-badge-managed"
                                         }`}
                                       >
-                                        {isFreePlan ? "Auto code" : "Admin flow"}
+                                        {selected ? "Selected" : isFreePlan ? "Auto code" : "Admin flow"}
                                       </span>
                                     </div>
 
                                     <p className="client-plan-card-summary">{plan.summary}</p>
 
-                                    <div className="client-plan-card-pills">
-                                      <span>{plan.supportLabel}</span>
+                                    <div className="client-plan-card-price client-plan-card-price-large">
+                                      <strong>{getWorkspacePlanPriceLabel(plan)}</strong>
                                       <span>
-                                        {isFreePlan ? "Instant validation" : "Admin approval"}
+                                        {isFreePlan
+                                          ? "Instant validation"
+                                          : `${getWorkspacePlanMonthlyLabel(plan)} / annual`}
                                       </span>
                                     </div>
 
+                                    <div className="client-plan-card-features">
+                                      {getWorkspacePlanFeatures(plan).map((feature) => (
+                                        <p key={feature}>
+                                          <CheckCircle2 className="h-4 w-4" />
+                                          <span>{feature}</span>
+                                        </p>
+                                      ))}
+                                    </div>
+
                                     <div className="client-plan-card-footer">
-                                      <div className="client-plan-card-price">
-                                        <strong>
-                                          {isFreePlan
-                                            ? "No payment required"
-                                            : `${formatSystemMoney(plan.annualPrice)} / admin approval`}
-                                        </strong>
-                                        <span>{selected ? "Selected now" : "Choose plan"}</span>
-                                      </div>
+                                      <strong className="client-plan-card-audience">
+                                        {workspacePlanAudienceBySlug[plan.slug] ?? plan.summary}
+                                      </strong>
                                       <span className="client-plan-card-device">
-                                        {plan.deviceAllowance}
+                                        {selected ? "Selected now" : "Choose plan"}
                                       </span>
                                     </div>
                                   </button>
@@ -4990,11 +5208,11 @@ function App() {
                             <article className="client-access-preview-card">
                               <div className="client-access-section-head client-access-section-head-tight">
                                 <div>
-                                  <p className="client-access-section-kicker">SC card preview</p>
-                                  <h3 className="client-access-section-title">
-                                    {selectedClientPlan?.slug === "free"
-                                      ? "Workspace access card"
-                                      : "Managed access request"}
+                                 <p className="client-access-section-kicker">SC card</p>
+                                 <h3 className="client-access-section-title">
+                                   {selectedClientPlan?.slug === "free"
+                                       ? "SC card for selected plan"
+                                       : "Managed SC card request"}
                                   </h3>
                                 </div>
                                 <span className="workspace-summary-pill">
@@ -5109,11 +5327,11 @@ function App() {
                                     clientOverview.account?.sectorLabel ||
                                     "brAIn"
                                   }
-                                  titleOverride={
-                                    selectedClientPlan?.slug === "free"
-                                      ? "Workspace Access Card"
-                                      : "Managed Access Request"
-                                  }
+                                   titleOverride={
+                                     selectedClientPlan?.slug === "free"
+                                       ? "SC Workspace Card"
+                                       : "Managed SC Card"
+                                   }
                                   tone="light"
                                 />
                               </div>

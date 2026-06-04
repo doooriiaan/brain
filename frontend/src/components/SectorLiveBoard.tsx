@@ -27,7 +27,7 @@ type SectorLiveMiniBoardProps = {
   sector: Sector;
 };
 
-const LIGHT_MODE_ACCENT = "#d45a34";
+const LIGHT_MODE_ACCENT = "#2368ff";
 
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");

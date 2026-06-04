@@ -1,0 +1,440 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/LandingTopBar.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"]; const _Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"];const useState = __vite__cjsImport1_react["useState"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=df5910ba";
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react.js?v=74dc72f6";
+import { ChevronDown, Globe, Languages, Settings2, Shield, ShieldCheck, Wifi } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=0a1c872a";
+import { BrainBrand } from "/src/components/BrainBrand.tsx";
+function getMessageToneClass(tone) {
+    if (tone === "success") {
+        return "status-text-success";
+    }
+    if (tone === "error") {
+        return "status-text-error";
+    }
+    return "status-text-muted";
+}
+export function LandingTopBar({ activeNavigationKey, countryOptions, currentUserLabel, languageOptions, navigationItems = [], onNavigate, onAboutAction, onHelpAction, onSecondaryAction, onCountryChange, onLanguageChange, onToggleVpn, onVpnEndpointChange, selectedCountry, selectedEndpointId, selectedLanguage, publicMode = false, vpnActive, vpnBusy, vpnEndpoints, vpnMessage }) {
+    _s();
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const hasNavigation = publicMode && navigationItems.length > 0;
+    return /*#__PURE__*/ _jsxDEV("header", {
+        className: `topbar-shell topbar-shell-lean brain-topbar-shell ${publicMode ? "brain-topbar-shell-public" : ""}`,
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "topbar-main-row brain-topbar-row",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("button", {
+                        className: "brain-topbar-brand",
+                        onClick: ()=>onNavigate?.("overview"),
+                        translate: "no",
+                        type: "button",
+                        children: /*#__PURE__*/ _jsxDEV(BrainBrand, {
+                            compact: true,
+                            subtitle: "Managed AI devices"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                            lineNumber: 106,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                        lineNumber: 100,
+                        columnNumber: 9
+                    }, this),
+                    hasNavigation ? /*#__PURE__*/ _jsxDEV("nav", {
+                        "aria-label": "Primary",
+                        className: "topbar-nav brain-topbar-nav",
+                        children: navigationItems.map((item)=>/*#__PURE__*/ _jsxDEV("button", {
+                                className: `topbar-nav-button brain-topbar-nav-button ${activeNavigationKey === item.key ? "topbar-nav-button-active brain-topbar-nav-button-active" : ""}`,
+                                onClick: ()=>onNavigate?.(item.key),
+                                type: "button",
+                                children: /*#__PURE__*/ _jsxDEV("span", {
+                                    children: item.label
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 122,
+                                    columnNumber: 17
+                                }, this)
+                            }, item.key, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                lineNumber: 112,
+                                columnNumber: 15
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                        lineNumber: 110,
+                        columnNumber: 11
+                    }, this) : null,
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "topbar-main-actions brain-topbar-actions",
+                        children: [
+                            !publicMode ? /*#__PURE__*/ _jsxDEV("span", {
+                                className: "topbar-account brain-topbar-account",
+                                children: currentUserLabel
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                lineNumber: 130,
+                                columnNumber: 13
+                            }, this) : null,
+                            publicMode ? /*#__PURE__*/ _jsxDEV(_Fragment, {
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "brain-topbar-secondary-cta",
+                                        onClick: ()=>onAboutAction?.(),
+                                        type: "button",
+                                        children: "About"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 135,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "brain-topbar-secondary-cta",
+                                        onClick: ()=>onHelpAction?.(),
+                                        type: "button",
+                                        children: "Help"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 142,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "topbar-primary-cta brain-topbar-primary-cta",
+                                        onClick: ()=>onSecondaryAction?.(),
+                                        type: "button",
+                                        children: "Buyer login"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 149,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        "aria-label": "Open region settings",
+                                        className: "topbar-utility-trigger brain-topbar-utility-trigger",
+                                        onClick: ()=>setSettingsOpen((s)=>!s),
+                                        type: "button",
+                                        children: /*#__PURE__*/ _jsxDEV(Settings2, {
+                                            size: 16
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 163,
+                                            columnNumber: 17
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 157,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true) : /*#__PURE__*/ _jsxDEV("button", {
+                                "aria-expanded": settingsOpen,
+                                className: "topbar-utility-trigger brain-topbar-utility-trigger",
+                                onClick: ()=>setSettingsOpen((current)=>!current),
+                                type: "button",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(Settings2, {
+                                        size: 16
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 173,
+                                        columnNumber: 15
+                                    }, this),
+                                    "Region",
+                                    /*#__PURE__*/ _jsxDEV(ChevronDown, {
+                                        className: settingsOpen ? "topbar-chevron-open" : "",
+                                        size: 15
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 175,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                lineNumber: 167,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                        lineNumber: 128,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                lineNumber: 99,
+                columnNumber: 7
+            }, this),
+            settingsOpen ? /*#__PURE__*/ _jsxDEV("div", {
+                className: `topbar-utility-panel brain-topbar-utility-panel ${settingsOpen ? "topbar-utility-panel-open" : ""}`,
+                children: /*#__PURE__*/ _jsxDEV("div", {
+                    className: "topbar-utility-grid brain-topbar-utility-grid",
+                    children: [
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            className: "topbar-control-card topbar-control-card-vpn brain-topbar-control-card",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "topbar-control-header",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "control-heading",
+                                            children: [
+                                                vpnActive ? /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                                                    size: 16
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                                    lineNumber: 194,
+                                                    columnNumber: 32
+                                                }, this) : /*#__PURE__*/ _jsxDEV(Shield, {
+                                                    size: 16
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                                    lineNumber: 194,
+                                                    columnNumber: 60
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("span", {
+                                                    children: "Route"
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                                    lineNumber: 195,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 193,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: `route-chip ${vpnActive ? "route-chip-active" : ""}`,
+                                            children: vpnActive ? "Protected" : "Standard"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 197,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 192,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("select", {
+                                    className: "topbar-select",
+                                    onChange: (event)=>onVpnEndpointChange(event.target.value),
+                                    value: selectedEndpointId,
+                                    children: vpnEndpoints.length > 0 ? vpnEndpoints.map((endpoint)=>/*#__PURE__*/ _jsxDEV("option", {
+                                            value: endpoint.id,
+                                            children: [
+                                                endpoint.location,
+                                                " (",
+                                                endpoint.country,
+                                                ")"
+                                            ]
+                                        }, endpoint.id, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 209,
+                                            columnNumber: 21
+                                        }, this)) : /*#__PURE__*/ _jsxDEV("option", {
+                                        value: "",
+                                        children: "No VPN endpoints"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                        lineNumber: 214,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 202,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("button", {
+                                    className: "topbar-button",
+                                    disabled: vpnBusy || !selectedEndpointId && !vpnActive,
+                                    onClick: onToggleVpn,
+                                    type: "button",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(Wifi, {
+                                            size: 16
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 224,
+                                            columnNumber: 17
+                                        }, this),
+                                        vpnBusy ? "Processing..." : vpnActive ? "Disable route" : "Enable route"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 218,
+                                    columnNumber: 15
+                                }, this),
+                                vpnMessage?.text ? /*#__PURE__*/ _jsxDEV("p", {
+                                    className: `topbar-note ${getMessageToneClass(vpnMessage?.tone)}`,
+                                    children: vpnMessage.text
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 229,
+                                    columnNumber: 17
+                                }, this) : /*#__PURE__*/ _jsxDEV("p", {
+                                    className: "topbar-subtle-text",
+                                    children: "Keep region, language, and route controls tucked into one clean place."
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 233,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                            lineNumber: 191,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("label", {
+                            className: "topbar-control-card brain-topbar-control-card",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("span", {
+                                    className: "control-heading",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(Globe, {
+                                            size: 16
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 241,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            children: "Country"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 242,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 240,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("select", {
+                                    className: "topbar-select",
+                                    onChange: (event)=>onCountryChange(event.target.value),
+                                    value: selectedCountry,
+                                    children: countryOptions.map((country)=>/*#__PURE__*/ _jsxDEV("option", {
+                                            value: country.code,
+                                            children: [
+                                                country.label,
+                                                " (",
+                                                country.code,
+                                                ")"
+                                            ]
+                                        }, country.code, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 250,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 244,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                            lineNumber: 239,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("label", {
+                            className: "topbar-control-card brain-topbar-control-card",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("span", {
+                                    className: "control-heading",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(Languages, {
+                                            size: 16
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 259,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            children: "Language"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 260,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 258,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("select", {
+                                    className: "topbar-select",
+                                    onChange: (event)=>onLanguageChange(event.target.value),
+                                    value: selectedLanguage,
+                                    children: languageOptions.map((language)=>/*#__PURE__*/ _jsxDEV("option", {
+                                            value: language.code,
+                                            children: language.label
+                                        }, language.code, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                            lineNumber: 268,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                                    lineNumber: 262,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                            lineNumber: 257,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                    lineNumber: 190,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+                lineNumber: 185,
+                columnNumber: 9
+            }, this) : null
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx",
+        lineNumber: 94,
+        columnNumber: 5
+    }, this);
+}
+_s(LandingTopBar, "m81HakmNoKD3gYVAhn9M4p62/Ow=");
+_c = LandingTopBar;
+var _c;
+$RefreshReg$(_c, "LandingTopBar");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/LandingTopBar.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkxhbmRpbmdUb3BCYXIudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCI7XG5pbXBvcnQge1xuICBDaGV2cm9uRG93bixcbiAgR2xvYmUsXG4gIExhbmd1YWdlcyxcbiAgU2V0dGluZ3MyLFxuICBTaGllbGQsXG4gIFNoaWVsZENoZWNrLFxuICBXaWZpLFxufSBmcm9tIFwibHVjaWRlLXJlYWN0XCI7XG5pbXBvcnQgdHlwZSB7IENvdW50cnlPcHRpb24sIExhbmd1YWdlT3B0aW9uIH0gZnJvbSBcIi4uL2RhdGEvcnVudGltZU9wdGlvbnNcIjtcbmltcG9ydCB7IEJyYWluQnJhbmQgfSBmcm9tIFwiLi9CcmFpbkJyYW5kXCI7XG5cbnR5cGUgVnBuRW5kcG9pbnQgPSB7XG4gIGlkOiBzdHJpbmc7XG4gIGxvY2F0aW9uOiBzdHJpbmc7XG4gIGNvdW50cnk6IHN0cmluZztcbiAgc3RhdHVzOiBzdHJpbmc7XG59O1xuXG50eXBlIFVpTWVzc2FnZSA9IHtcbiAgdG9uZTogXCJzdWNjZXNzXCIgfCBcImVycm9yXCIgfCBcImluZm9cIjtcbiAgdGV4dDogc3RyaW5nO1xufSB8IG51bGw7XG5cbnR5cGUgTmF2aWdhdGlvbkl0ZW0gPSB7XG4gIGtleTogc3RyaW5nO1xuICBsYWJlbDogc3RyaW5nO1xufTtcblxudHlwZSBMYW5kaW5nVG9wQmFyUHJvcHMgPSB7XG4gIGFjdGl2ZU5hdmlnYXRpb25LZXk/OiBzdHJpbmc7XG4gIGNvdW50cnlPcHRpb25zOiBDb3VudHJ5T3B0aW9uW107XG4gIGN1cnJlbnRVc2VyTGFiZWw6IHN0cmluZztcbiAgbGFuZ3VhZ2VPcHRpb25zOiBMYW5ndWFnZU9wdGlvbltdO1xuICBuYXZpZ2F0aW9uSXRlbXM/OiBOYXZpZ2F0aW9uSXRlbVtdO1xuICBvbk5hdmlnYXRlPzogKGtleTogc3RyaW5nKSA9PiB2b2lkO1xuICBvblNlY29uZGFyeUFjdGlvbj86ICgpID0+IHZvaWQ7XG4gIG9uQWJvdXRBY3Rpb24/OiAoKSA9PiB2b2lkO1xuICBvbkhlbHBBY3Rpb24/OiAoKSA9PiB2b2lkO1xuICBvbkNvdW50cnlDaGFuZ2U6IChjb3VudHJ5Q29kZTogc3RyaW5nKSA9PiB2b2lkO1xuICBvbkxhbmd1YWdlQ2hhbmdlOiAobGFuZ3VhZ2VDb2RlOiBzdHJpbmcpID0+IHZvaWQ7XG4gIG9uVG9nZ2xlVnBuOiAoKSA9PiB2b2lkO1xuICBvblZwbkVuZHBvaW50Q2hhbmdlOiAoZW5kcG9pbnRJZDogc3RyaW5nKSA9PiB2b2lkO1xuICBzZWxlY3RlZENvdW50cnk6IHN0cmluZztcbiAgc2VsZWN0ZWRFbmRwb2ludElkOiBzdHJpbmc7XG4gIHNlbGVjdGVkTGFuZ3VhZ2U6IHN0cmluZztcbiAgcHVibGljTW9kZT86IGJvb2xlYW47XG4gIHZwbkFjdGl2ZTogYm9vbGVhbjtcbiAgdnBuQnVzeTogYm9vbGVhbjtcbiAgdnBuRW5kcG9pbnRzOiBWcG5FbmRwb2ludFtdO1xuICB2cG5NZXNzYWdlOiBVaU1lc3NhZ2U7XG59O1xuXG5mdW5jdGlvbiBnZXRNZXNzYWdlVG9uZUNsYXNzKHRvbmU/OiBcInN1Y2Nlc3NcIiB8IFwiZXJyb3JcIiB8IFwiaW5mb1wiKSB7XG4gIGlmICh0b25lID09PSBcInN1Y2Nlc3NcIikge1xuICAgIHJldHVybiBcInN0YXR1cy10ZXh0LXN1Y2Nlc3NcIjtcbiAgfVxuXG4gIGlmICh0b25lID09PSBcImVycm9yXCIpIHtcbiAgICByZXR1cm4gXCJzdGF0dXMtdGV4dC1lcnJvclwiO1xuICB9XG5cbiAgcmV0dXJuIFwic3RhdHVzLXRleHQtbXV0ZWRcIjtcbn1cblxuZXhwb3J0IGZ1bmN0aW9uIExhbmRpbmdUb3BCYXIoe1xuICBhY3RpdmVOYXZpZ2F0aW9uS2V5LFxuICBjb3VudHJ5T3B0aW9ucyxcbiAgY3VycmVudFVzZXJMYWJlbCxcbiAgbGFuZ3VhZ2VPcHRpb25zLFxuICBuYXZpZ2F0aW9uSXRlbXMgPSBbXSxcbiAgb25OYXZpZ2F0ZSxcbiAgb25BYm91dEFjdGlvbixcbiAgb25IZWxwQWN0aW9uLFxuICBvblNlY29uZGFyeUFjdGlvbixcbiAgb25Db3VudHJ5Q2hhbmdlLFxuICBvbkxhbmd1YWdlQ2hhbmdlLFxuICBvblRvZ2dsZVZwbixcbiAgb25WcG5FbmRwb2ludENoYW5nZSxcbiAgc2VsZWN0ZWRDb3VudHJ5LFxuICBzZWxlY3RlZEVuZHBvaW50SWQsXG4gIHNlbGVjdGVkTGFuZ3VhZ2UsXG4gIHB1YmxpY01vZGUgPSBmYWxzZSxcbiAgdnBuQWN0aXZlLFxuICB2cG5CdXN5LFxuICB2cG5FbmRwb2ludHMsXG4gIHZwbk1lc3NhZ2UsXG59OiBMYW5kaW5nVG9wQmFyUHJvcHMpIHtcbiAgY29uc3QgW3NldHRpbmdzT3Blbiwgc2V0U2V0dGluZ3NPcGVuXSA9IHVzZVN0YXRlKGZhbHNlKTtcbiAgY29uc3QgaGFzTmF2aWdhdGlvbiA9IHB1YmxpY01vZGUgJiYgbmF2aWdhdGlvbkl0ZW1zLmxlbmd0aCA+IDA7XG5cbiAgcmV0dXJuIChcbiAgICA8aGVhZGVyXG4gICAgICBjbGFzc05hbWU9e2B0b3BiYXItc2hlbGwgdG9wYmFyLXNoZWxsLWxlYW4gYnJhaW4tdG9wYmFyLXNoZWxsICR7XG4gICAgICAgIHB1YmxpY01vZGUgPyBcImJyYWluLXRvcGJhci1zaGVsbC1wdWJsaWNcIiA6IFwiXCJcbiAgICAgIH1gfVxuICAgID5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwidG9wYmFyLW1haW4tcm93IGJyYWluLXRvcGJhci1yb3dcIj5cbiAgICAgICAgPGJ1dHRvblxuICAgICAgICAgIGNsYXNzTmFtZT1cImJyYWluLXRvcGJhci1icmFuZFwiXG4gICAgICAgICAgb25DbGljaz17KCkgPT4gb25OYXZpZ2F0ZT8uKFwib3ZlcnZpZXdcIil9XG4gICAgICAgICAgdHJhbnNsYXRlPVwibm9cIlxuICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICA+XG4gICAgICAgICAgPEJyYWluQnJhbmQgY29tcGFjdCBzdWJ0aXRsZT1cIk1hbmFnZWQgQUkgZGV2aWNlc1wiIC8+XG4gICAgICAgIDwvYnV0dG9uPlxuXG4gICAgICAgIHtoYXNOYXZpZ2F0aW9uID8gKFxuICAgICAgICAgIDxuYXYgYXJpYS1sYWJlbD1cIlByaW1hcnlcIiBjbGFzc05hbWU9XCJ0b3BiYXItbmF2IGJyYWluLXRvcGJhci1uYXZcIj5cbiAgICAgICAgICAgIHtuYXZpZ2F0aW9uSXRlbXMubWFwKChpdGVtKSA9PiAoXG4gICAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2B0b3BiYXItbmF2LWJ1dHRvbiBicmFpbi10b3BiYXItbmF2LWJ1dHRvbiAke1xuICAgICAgICAgICAgICAgICAgYWN0aXZlTmF2aWdhdGlvbktleSA9PT0gaXRlbS5rZXlcbiAgICAgICAgICAgICAgICAgICAgPyBcInRvcGJhci1uYXYtYnV0dG9uLWFjdGl2ZSBicmFpbi10b3BiYXItbmF2LWJ1dHRvbi1hY3RpdmVcIlxuICAgICAgICAgICAgICAgICAgICA6IFwiXCJcbiAgICAgICAgICAgICAgICB9YH1cbiAgICAgICAgICAgICAgICBrZXk9e2l0ZW0ua2V5fVxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG9uTmF2aWdhdGU/LihpdGVtLmtleSl9XG4gICAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICA8c3Bhbj57aXRlbS5sYWJlbH08L3NwYW4+XG4gICAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgKSl9XG4gICAgICAgICAgPC9uYXY+XG4gICAgICAgICkgOiBudWxsfVxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidG9wYmFyLW1haW4tYWN0aW9ucyBicmFpbi10b3BiYXItYWN0aW9uc1wiPlxuICAgICAgICAgIHshcHVibGljTW9kZSA/IChcbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRvcGJhci1hY2NvdW50IGJyYWluLXRvcGJhci1hY2NvdW50XCI+e2N1cnJlbnRVc2VyTGFiZWx9PC9zcGFuPlxuICAgICAgICAgICkgOiBudWxsfVxuXG4gICAgICAgICAge3B1YmxpY01vZGUgPyAoXG4gICAgICAgICAgICA8PlxuICAgICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiYnJhaW4tdG9wYmFyLXNlY29uZGFyeS1jdGFcIlxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG9uQWJvdXRBY3Rpb24/LigpfVxuICAgICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgQWJvdXRcbiAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJicmFpbi10b3BiYXItc2Vjb25kYXJ5LWN0YVwiXG4gICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gb25IZWxwQWN0aW9uPy4oKX1cbiAgICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIEhlbHBcbiAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0b3BiYXItcHJpbWFyeS1jdGEgYnJhaW4tdG9wYmFyLXByaW1hcnktY3RhXCJcbiAgICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiBvblNlY29uZGFyeUFjdGlvbj8uKCl9XG4gICAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICBCdXllciBsb2dpblxuICAgICAgICAgICAgICA8L2J1dHRvbj5cblxuICAgICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgICAgYXJpYS1sYWJlbD1cIk9wZW4gcmVnaW9uIHNldHRpbmdzXCJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0b3BiYXItdXRpbGl0eS10cmlnZ2VyIGJyYWluLXRvcGJhci11dGlsaXR5LXRyaWdnZXJcIlxuICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFNldHRpbmdzT3BlbigocykgPT4gIXMpfVxuICAgICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgPFNldHRpbmdzMiBzaXplPXsxNn0gLz5cbiAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8Lz5cbiAgICAgICAgICApIDogKFxuICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICBhcmlhLWV4cGFuZGVkPXtzZXR0aW5nc09wZW59XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInRvcGJhci11dGlsaXR5LXRyaWdnZXIgYnJhaW4tdG9wYmFyLXV0aWxpdHktdHJpZ2dlclwiXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFNldHRpbmdzT3BlbigoY3VycmVudCkgPT4gIWN1cnJlbnQpfVxuICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPFNldHRpbmdzMiBzaXplPXsxNn0gLz5cbiAgICAgICAgICAgICAgUmVnaW9uXG4gICAgICAgICAgICAgIDxDaGV2cm9uRG93blxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT17c2V0dGluZ3NPcGVuID8gXCJ0b3BiYXItY2hldnJvbi1vcGVuXCIgOiBcIlwifVxuICAgICAgICAgICAgICAgIHNpemU9ezE1fVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgKX1cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cblxuICAgICAge3NldHRpbmdzT3BlbiA/IChcbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17YHRvcGJhci11dGlsaXR5LXBhbmVsIGJyYWluLXRvcGJhci11dGlsaXR5LXBhbmVsICR7XG4gICAgICAgICAgICBzZXR0aW5nc09wZW4gPyBcInRvcGJhci11dGlsaXR5LXBhbmVsLW9wZW5cIiA6IFwiXCJcbiAgICAgICAgICB9YH1cbiAgICAgICAgPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidG9wYmFyLXV0aWxpdHktZ3JpZCBicmFpbi10b3BiYXItdXRpbGl0eS1ncmlkXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInRvcGJhci1jb250cm9sLWNhcmQgdG9wYmFyLWNvbnRyb2wtY2FyZC12cG4gYnJhaW4tdG9wYmFyLWNvbnRyb2wtY2FyZFwiPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInRvcGJhci1jb250cm9sLWhlYWRlclwiPlxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY29udHJvbC1oZWFkaW5nXCI+XG4gICAgICAgICAgICAgICAgICB7dnBuQWN0aXZlID8gPFNoaWVsZENoZWNrIHNpemU9ezE2fSAvPiA6IDxTaGllbGQgc2l6ZT17MTZ9IC8+fVxuICAgICAgICAgICAgICAgICAgPHNwYW4+Um91dGU8L3NwYW4+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPXtgcm91dGUtY2hpcCAke3ZwbkFjdGl2ZSA/IFwicm91dGUtY2hpcC1hY3RpdmVcIiA6IFwiXCJ9YH0+XG4gICAgICAgICAgICAgICAgICB7dnBuQWN0aXZlID8gXCJQcm90ZWN0ZWRcIiA6IFwiU3RhbmRhcmRcIn1cbiAgICAgICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0b3BiYXItc2VsZWN0XCJcbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PiBvblZwbkVuZHBvaW50Q2hhbmdlKGV2ZW50LnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgICAgdmFsdWU9e3NlbGVjdGVkRW5kcG9pbnRJZH1cbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIHt2cG5FbmRwb2ludHMubGVuZ3RoID4gMCA/IChcbiAgICAgICAgICAgICAgICAgIHZwbkVuZHBvaW50cy5tYXAoKGVuZHBvaW50KSA9PiAoXG4gICAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtlbmRwb2ludC5pZH0gdmFsdWU9e2VuZHBvaW50LmlkfT5cbiAgICAgICAgICAgICAgICAgICAgICB7ZW5kcG9pbnQubG9jYXRpb259ICh7ZW5kcG9pbnQuY291bnRyeX0pXG4gICAgICAgICAgICAgICAgICAgIDwvb3B0aW9uPlxuICAgICAgICAgICAgICAgICAgKSlcbiAgICAgICAgICAgICAgICApIDogKFxuICAgICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cIlwiPk5vIFZQTiBlbmRwb2ludHM8L29wdGlvbj5cbiAgICAgICAgICAgICAgICApfVxuICAgICAgICAgICAgICA8L3NlbGVjdD5cblxuICAgICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidG9wYmFyLWJ1dHRvblwiXG4gICAgICAgICAgICAgICAgZGlzYWJsZWQ9e3ZwbkJ1c3kgfHwgKCFzZWxlY3RlZEVuZHBvaW50SWQgJiYgIXZwbkFjdGl2ZSl9XG4gICAgICAgICAgICAgICAgb25DbGljaz17b25Ub2dnbGVWcG59XG4gICAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICA8V2lmaSBzaXplPXsxNn0gLz5cbiAgICAgICAgICAgICAgICB7dnBuQnVzeSA/IFwiUHJvY2Vzc2luZy4uLlwiIDogdnBuQWN0aXZlID8gXCJEaXNhYmxlIHJvdXRlXCIgOiBcIkVuYWJsZSByb3V0ZVwifVxuICAgICAgICAgICAgICA8L2J1dHRvbj5cblxuICAgICAgICAgICAgICB7dnBuTWVzc2FnZT8udGV4dCA/IChcbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9e2B0b3BiYXItbm90ZSAke2dldE1lc3NhZ2VUb25lQ2xhc3ModnBuTWVzc2FnZT8udG9uZSl9YH0+XG4gICAgICAgICAgICAgICAgICB7dnBuTWVzc2FnZS50ZXh0fVxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgKSA6IChcbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0b3BiYXItc3VidGxlLXRleHRcIj5cbiAgICAgICAgICAgICAgICAgIEtlZXAgcmVnaW9uLCBsYW5ndWFnZSwgYW5kIHJvdXRlIGNvbnRyb2xzIHR1Y2tlZCBpbnRvIG9uZSBjbGVhbiBwbGFjZS5cbiAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICl9XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cInRvcGJhci1jb250cm9sLWNhcmQgYnJhaW4tdG9wYmFyLWNvbnRyb2wtY2FyZFwiPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJjb250cm9sLWhlYWRpbmdcIj5cbiAgICAgICAgICAgICAgICA8R2xvYmUgc2l6ZT17MTZ9IC8+XG4gICAgICAgICAgICAgICAgPHNwYW4+Q291bnRyeTwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICA8c2VsZWN0XG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidG9wYmFyLXNlbGVjdFwiXG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT4gb25Db3VudHJ5Q2hhbmdlKGV2ZW50LnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgICAgdmFsdWU9e3NlbGVjdGVkQ291bnRyeX1cbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIHtjb3VudHJ5T3B0aW9ucy5tYXAoKGNvdW50cnkpID0+IChcbiAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtjb3VudHJ5LmNvZGV9IHZhbHVlPXtjb3VudHJ5LmNvZGV9PlxuICAgICAgICAgICAgICAgICAgICB7Y291bnRyeS5sYWJlbH0gKHtjb3VudHJ5LmNvZGV9KVxuICAgICAgICAgICAgICAgICAgPC9vcHRpb24+XG4gICAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICAgIDwvc2VsZWN0PlxuICAgICAgICAgICAgPC9sYWJlbD5cblxuICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cInRvcGJhci1jb250cm9sLWNhcmQgYnJhaW4tdG9wYmFyLWNvbnRyb2wtY2FyZFwiPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJjb250cm9sLWhlYWRpbmdcIj5cbiAgICAgICAgICAgICAgICA8TGFuZ3VhZ2VzIHNpemU9ezE2fSAvPlxuICAgICAgICAgICAgICAgIDxzcGFuPkxhbmd1YWdlPC9zcGFuPlxuICAgICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ0b3BiYXItc2VsZWN0XCJcbiAgICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PiBvbkxhbmd1YWdlQ2hhbmdlKGV2ZW50LnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgICAgdmFsdWU9e3NlbGVjdGVkTGFuZ3VhZ2V9XG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICB7bGFuZ3VhZ2VPcHRpb25zLm1hcCgobGFuZ3VhZ2UpID0+IChcbiAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtsYW5ndWFnZS5jb2RlfSB2YWx1ZT17bGFuZ3VhZ2UuY29kZX0+XG4gICAgICAgICAgICAgICAgICAgIHtsYW5ndWFnZS5sYWJlbH1cbiAgICAgICAgICAgICAgICAgIDwvb3B0aW9uPlxuICAgICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgICA8L3NlbGVjdD5cbiAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgKSA6IG51bGx9XG4gICAgPC9oZWFkZXI+XG4gICk7XG59XG4iXSwibmFtZXMiOlsidXNlU3RhdGUiLCJDaGV2cm9uRG93biIsIkdsb2JlIiwiTGFuZ3VhZ2VzIiwiU2V0dGluZ3MyIiwiU2hpZWxkIiwiU2hpZWxkQ2hlY2siLCJXaWZpIiwiQnJhaW5CcmFuZCIsImdldE1lc3NhZ2VUb25lQ2xhc3MiLCJ0b25lIiwiTGFuZGluZ1RvcEJhciIsImFjdGl2ZU5hdmlnYXRpb25LZXkiLCJjb3VudHJ5T3B0aW9ucyIsImN1cnJlbnRVc2VyTGFiZWwiLCJsYW5ndWFnZU9wdGlvbnMiLCJuYXZpZ2F0aW9uSXRlbXMiLCJvbk5hdmlnYXRlIiwib25BYm91dEFjdGlvbiIsIm9uSGVscEFjdGlvbiIsIm9uU2Vjb25kYXJ5QWN0aW9uIiwib25Db3VudHJ5Q2hhbmdlIiwib25MYW5ndWFnZUNoYW5nZSIsIm9uVG9nZ2xlVnBuIiwib25WcG5FbmRwb2ludENoYW5nZSIsInNlbGVjdGVkQ291bnRyeSIsInNlbGVjdGVkRW5kcG9pbnRJZCIsInNlbGVjdGVkTGFuZ3VhZ2UiLCJwdWJsaWNNb2RlIiwidnBuQWN0aXZlIiwidnBuQnVzeSIsInZwbkVuZHBvaW50cyIsInZwbk1lc3NhZ2UiLCJzZXR0aW5nc09wZW4iLCJzZXRTZXR0aW5nc09wZW4iLCJoYXNOYXZpZ2F0aW9uIiwibGVuZ3RoIiwiaGVhZGVyIiwiY2xhc3NOYW1lIiwiZGl2IiwiYnV0dG9uIiwib25DbGljayIsInRyYW5zbGF0ZSIsInR5cGUiLCJjb21wYWN0Iiwic3VidGl0bGUiLCJuYXYiLCJhcmlhLWxhYmVsIiwibWFwIiwiaXRlbSIsImtleSIsInNwYW4iLCJsYWJlbCIsInMiLCJzaXplIiwiYXJpYS1leHBhbmRlZCIsImN1cnJlbnQiLCJzZWxlY3QiLCJvbkNoYW5nZSIsImV2ZW50IiwidGFyZ2V0IiwidmFsdWUiLCJlbmRwb2ludCIsIm9wdGlvbiIsImlkIiwibG9jYXRpb24iLCJjb3VudHJ5IiwiZGlzYWJsZWQiLCJ0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

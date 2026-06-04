@@ -1,0 +1,382 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/AboutPage.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=03b53ff9";
+import { ArrowRight, Bot, Cpu, Layers3, MonitorPlay, ShieldCheck } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=03b53ff9";
+import { BrainBrand } from "/src/components/BrainBrand.tsx";
+const aboutPillars = [
+    {
+        icon: Cpu,
+        title: "Hardware",
+        copy: "A real device for screens, desks, clinics, and edge environments."
+    },
+    {
+        icon: Bot,
+        title: "Software",
+        copy: "AI chat, voice, content, workflow, dashboard, and cloud control."
+    },
+    {
+        icon: ShieldCheck,
+        title: "Managed access",
+        copy: "Plans, tokens, cards, payments, and activation stay connected."
+    }
+];
+export function AboutPage({ landingContent, lightMode, onOpenLogin }) {
+    const publicPlans = landingContent.plans.filter((plan)=>plan.slug !== "free").slice(0, 5);
+    return /*#__PURE__*/ _jsxDEV("main", {
+        className: `brain-help-shell brain-about-shell brain-about-clean ${lightMode ? "light-mode" : ""}`,
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "brain-page-brand-bar",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("a", {
+                        className: "brain-page-brand-link",
+                        href: "/",
+                        children: /*#__PURE__*/ _jsxDEV(BrainBrand, {
+                            showTagline: true,
+                            subtitle: "Managed AI devices"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                            lineNumber: 41,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 40,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("a", {
+                        className: "executive-button-secondary",
+                        href: "/",
+                        children: "Main page"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 43,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                lineNumber: 39,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-about-hero-clean",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-about-hero-copy",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "About brAIn"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 50,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h1", {
+                                className: "brain-help-title",
+                                children: "Hardware + software AI devices."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 51,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "brain-help-copy",
+                                children: "brAIn turns a physical device into a managed AI touchpoint with plans, tokens, and activation handled in one flow."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 52,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-help-actions",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "executive-button-primary",
+                                        onClick: ()=>onOpenLogin?.(),
+                                        type: "button",
+                                        children: [
+                                            "Buyer login",
+                                            /*#__PURE__*/ _jsxDEV(ArrowRight, {
+                                                className: "h-4 w-4"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                                lineNumber: 60,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 58,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("a", {
+                                        className: "executive-button-secondary",
+                                        href: "/help",
+                                        children: "Help"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 62,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 57,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 49,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-about-logo-cinema",
+                        "aria-hidden": "true",
+                        children: /*#__PURE__*/ _jsxDEV("img", {
+                            src: "/brand/brain-logo-final.jpeg",
+                            alt: ""
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                            lineNumber: 69,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 68,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                lineNumber: 48,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-about-pillar-grid",
+                "aria-label": "Platform pillars",
+                children: aboutPillars.map((item)=>{
+                    const Icon = item.icon;
+                    return /*#__PURE__*/ _jsxDEV("article", {
+                        className: "brain-about-pillar-card",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(Icon, {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 79,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: item.title
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 80,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: item.copy
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 81,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, item.title, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 78,
+                        columnNumber: 13
+                    }, this);
+                })
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                lineNumber: 73,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-about-section-clean",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-plans-heading-clean",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "4 sectors"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 89,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h2", {
+                                className: "landing-section-title",
+                                children: "One model per sector"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 90,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 88,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-about-sector-grid",
+                        children: landingContent.sectors.slice(0, 4).map((sector)=>{
+                            const device = landingContent.devices.find((item)=>item.deviceKey === sector.deviceKey) ?? landingContent.devices.find((item)=>item.sectorSlug === sector.slug);
+                            return /*#__PURE__*/ _jsxDEV("article", {
+                                className: "brain-about-sector-card",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(MonitorPlay, {
+                                        className: "h-5 w-5"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 101,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: sector.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 102,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: device?.name ?? "brAIn device"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 103,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("p", {
+                                        children: sector.statValue
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 104,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, sector.slug, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 100,
+                                columnNumber: 15
+                            }, this);
+                        })
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 93,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                lineNumber: 87,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-about-section-clean",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-plans-heading-clean",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "Plans + tokens"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 113,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h2", {
+                                className: "landing-section-title",
+                                children: "Pricing is simple before login"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 114,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 112,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-about-plan-strip",
+                        children: publicPlans.map((plan)=>/*#__PURE__*/ _jsxDEV("article", {
+                                className: "brain-about-plan-pill",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(Layers3, {
+                                        className: "h-4 w-4"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 120,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: plan.name
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 121,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: plan.annualPrice > 0 ? `EUR ${plan.annualPrice}/yr` : "Free"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                        lineNumber: 122,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, plan.slug, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                                lineNumber: 119,
+                                columnNumber: 13
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                        lineNumber: 117,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+                lineNumber: 111,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx",
+        lineNumber: 38,
+        columnNumber: 5
+    }, this);
+}
+_c = AboutPage;
+export default AboutPage;
+var _c;
+$RefreshReg$(_c, "AboutPage");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/AboutPage.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/AboutPage.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/AboutPage.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkFib3V0UGFnZS50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQXJyb3dSaWdodCwgQm90LCBDcHUsIExheWVyczMsIE1vbml0b3JQbGF5LCBTaGllbGRDaGVjayB9IGZyb20gXCJsdWNpZGUtcmVhY3RcIjtcbmltcG9ydCB0eXBlIHsgTGFuZGluZ0NvbnRlbnQgfSBmcm9tIFwiLi4vdHlwZXNcIjtcbmltcG9ydCB7IEJyYWluQnJhbmQgfSBmcm9tIFwiLi9CcmFpbkJyYW5kXCI7XG5cbnR5cGUgQWJvdXRQYWdlUHJvcHMgPSB7XG4gIGxhbmRpbmdDb250ZW50OiBMYW5kaW5nQ29udGVudDtcbiAgbGlnaHRNb2RlOiBib29sZWFuO1xuICBzZWxlY3RlZExhbmd1YWdlPzogc3RyaW5nO1xuICBvbk9wZW5Mb2dpbj86ICgpID0+IHZvaWQ7XG59O1xuXG5jb25zdCBhYm91dFBpbGxhcnMgPSBbXG4gIHtcbiAgICBpY29uOiBDcHUsXG4gICAgdGl0bGU6IFwiSGFyZHdhcmVcIixcbiAgICBjb3B5OiBcIkEgcmVhbCBkZXZpY2UgZm9yIHNjcmVlbnMsIGRlc2tzLCBjbGluaWNzLCBhbmQgZWRnZSBlbnZpcm9ubWVudHMuXCIsXG4gIH0sXG4gIHtcbiAgICBpY29uOiBCb3QsXG4gICAgdGl0bGU6IFwiU29mdHdhcmVcIixcbiAgICBjb3B5OiBcIkFJIGNoYXQsIHZvaWNlLCBjb250ZW50LCB3b3JrZmxvdywgZGFzaGJvYXJkLCBhbmQgY2xvdWQgY29udHJvbC5cIixcbiAgfSxcbiAge1xuICAgIGljb246IFNoaWVsZENoZWNrLFxuICAgIHRpdGxlOiBcIk1hbmFnZWQgYWNjZXNzXCIsXG4gICAgY29weTogXCJQbGFucywgdG9rZW5zLCBjYXJkcywgcGF5bWVudHMsIGFuZCBhY3RpdmF0aW9uIHN0YXkgY29ubmVjdGVkLlwiLFxuICB9LFxuXTtcblxuZXhwb3J0IGZ1bmN0aW9uIEFib3V0UGFnZSh7XG4gIGxhbmRpbmdDb250ZW50LFxuICBsaWdodE1vZGUsXG4gIG9uT3BlbkxvZ2luLFxufTogQWJvdXRQYWdlUHJvcHMpIHtcbiAgY29uc3QgcHVibGljUGxhbnMgPSBsYW5kaW5nQ29udGVudC5wbGFucy5maWx0ZXIoKHBsYW4pID0+IHBsYW4uc2x1ZyAhPT0gXCJmcmVlXCIpLnNsaWNlKDAsIDUpO1xuXG4gIHJldHVybiAoXG4gICAgPG1haW4gY2xhc3NOYW1lPXtgYnJhaW4taGVscC1zaGVsbCBicmFpbi1hYm91dC1zaGVsbCBicmFpbi1hYm91dC1jbGVhbiAke2xpZ2h0TW9kZSA/IFwibGlnaHQtbW9kZVwiIDogXCJcIn1gfT5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tcGFnZS1icmFuZC1iYXJcIj5cbiAgICAgICAgPGEgY2xhc3NOYW1lPVwiYnJhaW4tcGFnZS1icmFuZC1saW5rXCIgaHJlZj1cIi9cIj5cbiAgICAgICAgICA8QnJhaW5CcmFuZCBzaG93VGFnbGluZSBzdWJ0aXRsZT1cIk1hbmFnZWQgQUkgZGV2aWNlc1wiIC8+XG4gICAgICAgIDwvYT5cbiAgICAgICAgPGEgY2xhc3NOYW1lPVwiZXhlY3V0aXZlLWJ1dHRvbi1zZWNvbmRhcnlcIiBocmVmPVwiL1wiPlxuICAgICAgICAgIE1haW4gcGFnZVxuICAgICAgICA8L2E+XG4gICAgICA8L2Rpdj5cblxuICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiYnJhaW4tYWJvdXQtaGVyby1jbGVhblwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWFib3V0LWhlcm8tY29weVwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImxhbmRpbmctaW5saW5lLWxhYmVsXCI+QWJvdXQgYnJBSW48L3NwYW4+XG4gICAgICAgICAgPGgxIGNsYXNzTmFtZT1cImJyYWluLWhlbHAtdGl0bGVcIj5IYXJkd2FyZSArIHNvZnR3YXJlIEFJIGRldmljZXMuPC9oMT5cbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJicmFpbi1oZWxwLWNvcHlcIj5cbiAgICAgICAgICAgIGJyQUluIHR1cm5zIGEgcGh5c2ljYWwgZGV2aWNlIGludG8gYSBtYW5hZ2VkIEFJIHRvdWNocG9pbnQgd2l0aCBwbGFucywgdG9rZW5zLCBhbmRcbiAgICAgICAgICAgIGFjdGl2YXRpb24gaGFuZGxlZCBpbiBvbmUgZmxvdy5cbiAgICAgICAgICA8L3A+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWhlbHAtYWN0aW9uc1wiPlxuICAgICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJleGVjdXRpdmUtYnV0dG9uLXByaW1hcnlcIiBvbkNsaWNrPXsoKSA9PiBvbk9wZW5Mb2dpbj8uKCl9IHR5cGU9XCJidXR0b25cIj5cbiAgICAgICAgICAgICAgQnV5ZXIgbG9naW5cbiAgICAgICAgICAgICAgPEFycm93UmlnaHQgY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICAgIDxhIGNsYXNzTmFtZT1cImV4ZWN1dGl2ZS1idXR0b24tc2Vjb25kYXJ5XCIgaHJlZj1cIi9oZWxwXCI+XG4gICAgICAgICAgICAgIEhlbHBcbiAgICAgICAgICAgIDwvYT5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1hYm91dC1sb2dvLWNpbmVtYVwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiPlxuICAgICAgICAgIDxpbWcgc3JjPVwiL2JyYW5kL2JyYWluLWxvZ28tZmluYWwuanBlZ1wiIGFsdD1cIlwiIC8+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9zZWN0aW9uPlxuXG4gICAgICA8c2VjdGlvbiBjbGFzc05hbWU9XCJicmFpbi1hYm91dC1waWxsYXItZ3JpZFwiIGFyaWEtbGFiZWw9XCJQbGF0Zm9ybSBwaWxsYXJzXCI+XG4gICAgICAgIHthYm91dFBpbGxhcnMubWFwKChpdGVtKSA9PiB7XG4gICAgICAgICAgY29uc3QgSWNvbiA9IGl0ZW0uaWNvbjtcblxuICAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgICA8YXJ0aWNsZSBjbGFzc05hbWU9XCJicmFpbi1hYm91dC1waWxsYXItY2FyZFwiIGtleT17aXRlbS50aXRsZX0+XG4gICAgICAgICAgICAgIDxJY29uIGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPlxuICAgICAgICAgICAgICA8c3Ryb25nPntpdGVtLnRpdGxlfTwvc3Ryb25nPlxuICAgICAgICAgICAgICA8cD57aXRlbS5jb3B5fTwvcD5cbiAgICAgICAgICAgIDwvYXJ0aWNsZT5cbiAgICAgICAgICApO1xuICAgICAgICB9KX1cbiAgICAgIDwvc2VjdGlvbj5cblxuICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiYnJhaW4tYWJvdXQtc2VjdGlvbi1jbGVhblwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXBsYW5zLWhlYWRpbmctY2xlYW5cIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJsYW5kaW5nLWlubGluZS1sYWJlbFwiPjQgc2VjdG9yczwvc3Bhbj5cbiAgICAgICAgICA8aDIgY2xhc3NOYW1lPVwibGFuZGluZy1zZWN0aW9uLXRpdGxlXCI+T25lIG1vZGVsIHBlciBzZWN0b3I8L2gyPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWFib3V0LXNlY3Rvci1ncmlkXCI+XG4gICAgICAgICAge2xhbmRpbmdDb250ZW50LnNlY3RvcnMuc2xpY2UoMCwgNCkubWFwKChzZWN0b3IpID0+IHtcbiAgICAgICAgICAgIGNvbnN0IGRldmljZSA9XG4gICAgICAgICAgICAgIGxhbmRpbmdDb250ZW50LmRldmljZXMuZmluZCgoaXRlbSkgPT4gaXRlbS5kZXZpY2VLZXkgPT09IHNlY3Rvci5kZXZpY2VLZXkpID8/XG4gICAgICAgICAgICAgIGxhbmRpbmdDb250ZW50LmRldmljZXMuZmluZCgoaXRlbSkgPT4gaXRlbS5zZWN0b3JTbHVnID09PSBzZWN0b3Iuc2x1Zyk7XG5cbiAgICAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgICAgIDxhcnRpY2xlIGNsYXNzTmFtZT1cImJyYWluLWFib3V0LXNlY3Rvci1jYXJkXCIga2V5PXtzZWN0b3Iuc2x1Z30+XG4gICAgICAgICAgICAgICAgPE1vbml0b3JQbGF5IGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPlxuICAgICAgICAgICAgICAgIDxzcGFuPntzZWN0b3IubmFtZX08L3NwYW4+XG4gICAgICAgICAgICAgICAgPHN0cm9uZz57ZGV2aWNlPy5uYW1lID8/IFwiYnJBSW4gZGV2aWNlXCJ9PC9zdHJvbmc+XG4gICAgICAgICAgICAgICAgPHA+e3NlY3Rvci5zdGF0VmFsdWV9PC9wPlxuICAgICAgICAgICAgICA8L2FydGljbGU+XG4gICAgICAgICAgICApO1xuICAgICAgICAgIH0pfVxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvc2VjdGlvbj5cblxuICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiYnJhaW4tYWJvdXQtc2VjdGlvbi1jbGVhblwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXBsYW5zLWhlYWRpbmctY2xlYW5cIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJsYW5kaW5nLWlubGluZS1sYWJlbFwiPlBsYW5zICsgdG9rZW5zPC9zcGFuPlxuICAgICAgICAgIDxoMiBjbGFzc05hbWU9XCJsYW5kaW5nLXNlY3Rpb24tdGl0bGVcIj5QcmljaW5nIGlzIHNpbXBsZSBiZWZvcmUgbG9naW48L2gyPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWFib3V0LXBsYW4tc3RyaXBcIj5cbiAgICAgICAgICB7cHVibGljUGxhbnMubWFwKChwbGFuKSA9PiAoXG4gICAgICAgICAgICA8YXJ0aWNsZSBjbGFzc05hbWU9XCJicmFpbi1hYm91dC1wbGFuLXBpbGxcIiBrZXk9e3BsYW4uc2x1Z30+XG4gICAgICAgICAgICAgIDxMYXllcnMzIGNsYXNzTmFtZT1cImgtNCB3LTRcIiAvPlxuICAgICAgICAgICAgICA8c3Bhbj57cGxhbi5uYW1lfTwvc3Bhbj5cbiAgICAgICAgICAgICAgPHN0cm9uZz57cGxhbi5hbm51YWxQcmljZSA+IDAgPyBgRVVSICR7cGxhbi5hbm51YWxQcmljZX0veXJgIDogXCJGcmVlXCJ9PC9zdHJvbmc+XG4gICAgICAgICAgICA8L2FydGljbGU+XG4gICAgICAgICAgKSl9XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9zZWN0aW9uPlxuICAgIDwvbWFpbj5cbiAgKTtcbn1cblxuZXhwb3J0IGRlZmF1bHQgQWJvdXRQYWdlO1xuIl0sIm5hbWVzIjpbIkFycm93UmlnaHQiLCJCb3QiLCJDcHUiLCJMYXllcnMzIiwiTW9uaXRvclBsYXkiLCJTaGllbGRDaGVjayIsIkJyYWluQnJhbmQiLCJhYm91dFBpbGxhcnMiLCJpY29uIiwidGl0bGUiLCJjb3B5IiwiQWJvdXRQYWdlIiwibGFuZGluZ0NvbnRlbnQiLCJsaWdodE1vZGUiLCJvbk9wZW5Mb2dpbiIsInB1YmxpY1BsYW5zIiwicGxhbnMiLCJmaWx0ZXIiLCJwbGFuIiwic2x1ZyIsInNsaWNlIiwibWFpbiIsImNsYXNzTmFtZSIsImRpdiIsImEiLCJocmVmIiwic2hvd1RhZ2xpbmUiLCJzdWJ0aXRsZSIsInNlY3Rpb24iLCJzcGFuIiwiaDEiLCJwIiwiYnV0dG9uIiwib25DbGljayIsInR5cGUiLCJhcmlhLWhpZGRlbiIsImltZyIsInNyYyIsImFsdCIsImFyaWEtbGFiZWwiLCJtYXAiLCJpdGVtIiwiSWNvbiIsImFydGljbGUiLCJzdHJvbmciLCJoMiIsInNlY3RvcnMiLCJzZWN0b3IiLCJkZXZpY2UiLCJkZXZpY2VzIiwiZmluZCIsImRldmljZUtleSIsInNlY3RvclNsdWciLCJuYW1lIiwic3RhdFZhbHVlIiwiYW5udWFsUHJpY2UiXSwibWFwcGluZ3MiOiI7QUFBQSxTQUFTQSxVQUFVLEVBQUVDLEdBQUcsRUFBRUMsR0FBRyxFQUFFQyxPQUFPLEVBQUVDLFdBQVcsRUFBRUMsV0FBVyxRQUFRLGVBQWU7QUFFdkYs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

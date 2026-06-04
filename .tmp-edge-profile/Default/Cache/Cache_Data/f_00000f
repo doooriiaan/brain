@@ -1,0 +1,737 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/DevicesPage.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=df5910ba";
+import { ArrowRight, Cable, Cpu, Layers3, MessageSquare, Mic, Monitor, Plug, Sparkles, Usb, Wifi } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=0a1c872a";
+import { BrainBrand } from "/src/components/BrainBrand.tsx";
+import { DevicePreviewStudio } from "/src/components/DevicePreviewStudio.tsx";
+import { FrontPageChatPopup } from "/src/components/FrontPageChatPopup.tsx";
+function getDeviceForSector(sector, devices) {
+    return devices.find((device)=>device.deviceKey === sector.deviceKey) ?? devices.find((device)=>device.sectorSlug === sector.slug) ?? null;
+}
+const hdmiSetupSteps = [
+    {
+        icon: Cable,
+        label: "HDMI",
+        text: "Plug into the TV or display input."
+    },
+    {
+        icon: Usb,
+        label: "USB power",
+        text: "Power the stick from USB or adapter."
+    },
+    {
+        icon: Wifi,
+        label: "Wi-Fi",
+        text: "Connect the screen to brAIn cloud."
+    }
+];
+export function DevicesPage({ activeDevice, activeSector, landingContent, lightMode, onOpenLogin }) {
+    const resolvedSector = activeSector ?? landingContent.sectors[0] ?? null;
+    const resolvedDevice = activeDevice ?? (resolvedSector ? getDeviceForSector(resolvedSector, landingContent.devices) : null);
+    return /*#__PURE__*/ _jsxDEV("main", {
+        className: `brain-help-shell brain-devices-shell brain-devices-page ${lightMode ? "light-mode" : ""}`,
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "brain-page-brand-bar",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("a", {
+                        className: "brain-page-brand-link",
+                        href: "/",
+                        children: /*#__PURE__*/ _jsxDEV(BrainBrand, {
+                            showTagline: true,
+                            subtitle: "Managed AI devices"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                            lineNumber: 69,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 68,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-page-brand-actions",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("a", {
+                                className: "executive-button-secondary",
+                                href: "/",
+                                children: "Main page"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 72,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("a", {
+                                className: "executive-button-secondary",
+                                href: "/help",
+                                children: "Help"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 75,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 71,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 67,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-devices-hero-text",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("span", {
+                        className: "landing-inline-label",
+                        children: "Devices"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 82,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("h1", {
+                        className: "brain-help-title",
+                        children: "Hardware plus software, shown clearly."
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 83,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("p", {
+                        className: "brain-help-copy",
+                        children: "Choose the sector, see the matching physical device, then continue to buyer login only when the product lane is clear."
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 84,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-help-actions",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("button", {
+                                className: "executive-button-primary",
+                                onClick: onOpenLogin,
+                                type: "button",
+                                children: [
+                                    "Buyer login",
+                                    /*#__PURE__*/ _jsxDEV(ArrowRight, {
+                                        className: "h-4 w-4"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                        lineNumber: 92,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 90,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("a", {
+                                className: "executive-button-secondary",
+                                href: "/#landing-plans",
+                                children: "View plans"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 94,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 89,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 81,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-hdmi-showcase",
+                "aria-label": "brAIn AI Stick HDMI TV setup",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-hdmi-copy",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "landing-inline-label",
+                                children: "HDMI AI Stick"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 102,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h2", {
+                                children: "Turn any TV into an AI-powered smart screen."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 103,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: "For TVs, monitors, kiosks, and screens that do not already have the brAIn layer, the AI Stick plugs into HDMI, takes USB power, and brings voice, apps, suggestions, and buyer-ready messaging to the display."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 104,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-hdmi-steps",
+                                children: hdmiSetupSteps.map((step)=>{
+                                    const Icon = step.icon;
+                                    return /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "brain-hdmi-step",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV(Icon, {
+                                                className: "h-4 w-4"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 116,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: step.label
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 117,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("strong", {
+                                                children: step.text
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 118,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, step.label, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                        lineNumber: 115,
+                                        columnNumber: 17
+                                    }, this);
+                                })
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 110,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 101,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-tv-setup",
+                        "aria-hidden": "true",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-tv-frame",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "brain-tv-screen",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "brain-tv-topline",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                                        children: "brAIn"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 129,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "Home"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 130,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "Apps"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 131,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "Media"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 132,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "Settings"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 133,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 128,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "brain-tv-interface",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "brain-tv-assistant",
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                                children: "Hello!"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 138,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("strong", {
+                                                                children: "How can I help you today?"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 139,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                                className: "brain-tv-wave"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 140,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                                className: "brain-tv-mic",
+                                                                children: /*#__PURE__*/ _jsxDEV(Mic, {
+                                                                    className: "h-7 w-7"
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                    lineNumber: 142,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 141,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 137,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                        className: "brain-tv-prompts",
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                children: "Ask me anything"
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 147,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                                        children: "Latest news"
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                        lineNumber: 149,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ _jsxDEV(MessageSquare, {
+                                                                        className: "h-5 w-5"
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                        lineNumber: 150,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 148,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                                        children: "Weather"
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                        lineNumber: 153,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                                                        className: "h-5 w-5"
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                        lineNumber: 154,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 152,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                                        children: "Find movies"
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                        lineNumber: 157,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ _jsxDEV(Monitor, {
+                                                                        className: "h-5 w-5"
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                        lineNumber: 158,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                                lineNumber: 156,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 146,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 136,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "brain-tv-apps",
+                                                children: [
+                                                    "YouTube",
+                                                    "Netflix",
+                                                    "Prime",
+                                                    "Disney+",
+                                                    "Spotify"
+                                                ].map((app)=>/*#__PURE__*/ _jsxDEV("span", {
+                                                        children: app
+                                                    }, app, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 165,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 163,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                        lineNumber: 127,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "brain-tv-side-panel",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "HDMI"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 171,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "USB"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 172,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "LAN"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 173,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                        lineNumber: 170,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "brain-hdmi-stick",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "brain-hdmi-plug"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 177,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "brain-hdmi-stick-body",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                                        children: "brAIn"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 179,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "AI STICK"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 180,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("i", {}, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                        lineNumber: 181,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                                lineNumber: 178,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                        lineNumber: 176,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 126,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-tv-stand"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 186,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-tv-console",
+                                children: /*#__PURE__*/ _jsxDEV("span", {
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(Plug, {
+                                            className: "h-4 w-4"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                            lineNumber: 189,
+                                            columnNumber: 15
+                                        }, this),
+                                        "Plug. Connect. Talk."
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                    lineNumber: 188,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 187,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 125,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 100,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV(DevicePreviewStudio, {
+                device: resolvedDevice,
+                lightMode: lightMode,
+                sector: resolvedSector
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 196,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-devices-text-grid",
+                "aria-label": "Device lanes",
+                children: landingContent.sectors.slice(0, 4).map((sector)=>{
+                    const device = getDeviceForSector(sector, landingContent.devices);
+                    const active = sector.slug === resolvedSector?.slug;
+                    return /*#__PURE__*/ _jsxDEV("a", {
+                        className: `brain-devices-text-link ${active ? "brain-devices-text-link-active" : ""}`,
+                        href: `/devices?sector=${sector.slug}`,
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(Cpu, {
+                                        className: "h-4 w-4"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                        lineNumber: 210,
+                                        columnNumber: 17
+                                    }, this),
+                                    sector.name
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 209,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: device?.name ?? "brAIn device"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 213,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: device?.tagline ?? sector.summary
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 214,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, sector.slug, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 204,
+                        columnNumber: 13
+                    }, this);
+                })
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 198,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("section", {
+                className: "brain-devices-bottom-text",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 222,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: "Physical device"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 223,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: "Screen, desk, clinic, or edge-ready hardware selected by sector."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 224,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 221,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(Layers3, {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 227,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: "Software layer"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 228,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: "AI chat, cloud control, plans, tokens, activation, and buyer flow."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                                lineNumber: 229,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                        lineNumber: 226,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 220,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV(FrontPageChatPopup, {
+                device: resolvedDevice,
+                plans: landingContent.plans,
+                sector: resolvedSector
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+                lineNumber: 233,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx",
+        lineNumber: 66,
+        columnNumber: 5
+    }, this);
+}
+_c = DevicesPage;
+export default DevicesPage;
+var _c;
+$RefreshReg$(_c, "DevicesPage");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/DevicesPage.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkRldmljZXNQYWdlLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQge1xuICBBcnJvd1JpZ2h0LFxuICBDYWJsZSxcbiAgQ3B1LFxuICBMYXllcnMzLFxuICBNZXNzYWdlU3F1YXJlLFxuICBNaWMsXG4gIE1vbml0b3IsXG4gIFBsdWcsXG4gIFNwYXJrbGVzLFxuICBVc2IsXG4gIFdpZmksXG59IGZyb20gXCJsdWNpZGUtcmVhY3RcIjtcbmltcG9ydCB7IEJyYWluQnJhbmQgfSBmcm9tIFwiLi9CcmFpbkJyYW5kXCI7XG5pbXBvcnQgeyBEZXZpY2VQcmV2aWV3U3R1ZGlvIH0gZnJvbSBcIi4vRGV2aWNlUHJldmlld1N0dWRpb1wiO1xuaW1wb3J0IHsgRnJvbnRQYWdlQ2hhdFBvcHVwIH0gZnJvbSBcIi4vRnJvbnRQYWdlQ2hhdFBvcHVwXCI7XG5pbXBvcnQgdHlwZSB7IERldmljZSwgTGFuZGluZ0NvbnRlbnQsIFNlY3RvciB9IGZyb20gXCIuLi90eXBlc1wiO1xuXG50eXBlIERldmljZXNQYWdlUHJvcHMgPSB7XG4gIGFjdGl2ZURldmljZTogRGV2aWNlIHwgbnVsbDtcbiAgYWN0aXZlU2VjdG9yOiBTZWN0b3IgfCBudWxsO1xuICBsYW5kaW5nQ29udGVudDogTGFuZGluZ0NvbnRlbnQ7XG4gIGxpZ2h0TW9kZTogYm9vbGVhbjtcbiAgb25PcGVuTG9naW46ICgpID0+IHZvaWQ7XG59O1xuXG5mdW5jdGlvbiBnZXREZXZpY2VGb3JTZWN0b3Ioc2VjdG9yOiBTZWN0b3IsIGRldmljZXM6IERldmljZVtdKSB7XG4gIHJldHVybiAoXG4gICAgZGV2aWNlcy5maW5kKChkZXZpY2UpID0+IGRldmljZS5kZXZpY2VLZXkgPT09IHNlY3Rvci5kZXZpY2VLZXkpID8/XG4gICAgZGV2aWNlcy5maW5kKChkZXZpY2UpID0+IGRldmljZS5zZWN0b3JTbHVnID09PSBzZWN0b3Iuc2x1ZykgPz9cbiAgICBudWxsXG4gICk7XG59XG5cbmNvbnN0IGhkbWlTZXR1cFN0ZXBzID0gW1xuICB7XG4gICAgaWNvbjogQ2FibGUsXG4gICAgbGFiZWw6IFwiSERNSVwiLFxuICAgIHRleHQ6IFwiUGx1ZyBpbnRvIHRoZSBUViBvciBkaXNwbGF5IGlucHV0LlwiLFxuICB9LFxuICB7XG4gICAgaWNvbjogVXNiLFxuICAgIGxhYmVsOiBcIlVTQiBwb3dlclwiLFxuICAgIHRleHQ6IFwiUG93ZXIgdGhlIHN0aWNrIGZyb20gVVNCIG9yIGFkYXB0ZXIuXCIsXG4gIH0sXG4gIHtcbiAgICBpY29uOiBXaWZpLFxuICAgIGxhYmVsOiBcIldpLUZpXCIsXG4gICAgdGV4dDogXCJDb25uZWN0IHRoZSBzY3JlZW4gdG8gYnJBSW4gY2xvdWQuXCIsXG4gIH0sXG5dO1xuXG5leHBvcnQgZnVuY3Rpb24gRGV2aWNlc1BhZ2Uoe1xuICBhY3RpdmVEZXZpY2UsXG4gIGFjdGl2ZVNlY3RvcixcbiAgbGFuZGluZ0NvbnRlbnQsXG4gIGxpZ2h0TW9kZSxcbiAgb25PcGVuTG9naW4sXG59OiBEZXZpY2VzUGFnZVByb3BzKSB7XG4gIGNvbnN0IHJlc29sdmVkU2VjdG9yID0gYWN0aXZlU2VjdG9yID8/IGxhbmRpbmdDb250ZW50LnNlY3RvcnNbMF0gPz8gbnVsbDtcbiAgY29uc3QgcmVzb2x2ZWREZXZpY2UgPVxuICAgIGFjdGl2ZURldmljZSA/P1xuICAgIChyZXNvbHZlZFNlY3RvciA/IGdldERldmljZUZvclNlY3RvcihyZXNvbHZlZFNlY3RvciwgbGFuZGluZ0NvbnRlbnQuZGV2aWNlcykgOiBudWxsKTtcblxuICByZXR1cm4gKFxuICAgIDxtYWluIGNsYXNzTmFtZT17YGJyYWluLWhlbHAtc2hlbGwgYnJhaW4tZGV2aWNlcy1zaGVsbCBicmFpbi1kZXZpY2VzLXBhZ2UgJHtsaWdodE1vZGUgPyBcImxpZ2h0LW1vZGVcIiA6IFwiXCJ9YH0+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXBhZ2UtYnJhbmQtYmFyXCI+XG4gICAgICAgIDxhIGNsYXNzTmFtZT1cImJyYWluLXBhZ2UtYnJhbmQtbGlua1wiIGhyZWY9XCIvXCI+XG4gICAgICAgICAgPEJyYWluQnJhbmQgc2hvd1RhZ2xpbmUgc3VidGl0bGU9XCJNYW5hZ2VkIEFJIGRldmljZXNcIiAvPlxuICAgICAgICA8L2E+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tcGFnZS1icmFuZC1hY3Rpb25zXCI+XG4gICAgICAgICAgPGEgY2xhc3NOYW1lPVwiZXhlY3V0aXZlLWJ1dHRvbi1zZWNvbmRhcnlcIiBocmVmPVwiL1wiPlxuICAgICAgICAgICAgTWFpbiBwYWdlXG4gICAgICAgICAgPC9hPlxuICAgICAgICAgIDxhIGNsYXNzTmFtZT1cImV4ZWN1dGl2ZS1idXR0b24tc2Vjb25kYXJ5XCIgaHJlZj1cIi9oZWxwXCI+XG4gICAgICAgICAgICBIZWxwXG4gICAgICAgICAgPC9hPlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8c2VjdGlvbiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2VzLWhlcm8tdGV4dFwiPlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJsYW5kaW5nLWlubGluZS1sYWJlbFwiPkRldmljZXM8L3NwYW4+XG4gICAgICAgIDxoMSBjbGFzc05hbWU9XCJicmFpbi1oZWxwLXRpdGxlXCI+SGFyZHdhcmUgcGx1cyBzb2Z0d2FyZSwgc2hvd24gY2xlYXJseS48L2gxPlxuICAgICAgICA8cCBjbGFzc05hbWU9XCJicmFpbi1oZWxwLWNvcHlcIj5cbiAgICAgICAgICBDaG9vc2UgdGhlIHNlY3Rvciwgc2VlIHRoZSBtYXRjaGluZyBwaHlzaWNhbCBkZXZpY2UsIHRoZW4gY29udGludWUgdG8gYnV5ZXIgbG9naW4gb25seVxuICAgICAgICAgIHdoZW4gdGhlIHByb2R1Y3QgbGFuZSBpcyBjbGVhci5cbiAgICAgICAgPC9wPlxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4taGVscC1hY3Rpb25zXCI+XG4gICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJleGVjdXRpdmUtYnV0dG9uLXByaW1hcnlcIiBvbkNsaWNrPXtvbk9wZW5Mb2dpbn0gdHlwZT1cImJ1dHRvblwiPlxuICAgICAgICAgICAgQnV5ZXIgbG9naW5cbiAgICAgICAgICAgIDxBcnJvd1JpZ2h0IGNsYXNzTmFtZT1cImgtNCB3LTRcIiAvPlxuICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgIDxhIGNsYXNzTmFtZT1cImV4ZWN1dGl2ZS1idXR0b24tc2Vjb25kYXJ5XCIgaHJlZj1cIi8jbGFuZGluZy1wbGFuc1wiPlxuICAgICAgICAgICAgVmlldyBwbGFuc1xuICAgICAgICAgIDwvYT5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L3NlY3Rpb24+XG5cbiAgICAgIDxzZWN0aW9uIGNsYXNzTmFtZT1cImJyYWluLWhkbWktc2hvd2Nhc2VcIiBhcmlhLWxhYmVsPVwiYnJBSW4gQUkgU3RpY2sgSERNSSBUViBzZXR1cFwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWhkbWktY29weVwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImxhbmRpbmctaW5saW5lLWxhYmVsXCI+SERNSSBBSSBTdGljazwvc3Bhbj5cbiAgICAgICAgICA8aDI+VHVybiBhbnkgVFYgaW50byBhbiBBSS1wb3dlcmVkIHNtYXJ0IHNjcmVlbi48L2gyPlxuICAgICAgICAgIDxwPlxuICAgICAgICAgICAgRm9yIFRWcywgbW9uaXRvcnMsIGtpb3NrcywgYW5kIHNjcmVlbnMgdGhhdCBkbyBub3QgYWxyZWFkeSBoYXZlIHRoZSBickFJbiBsYXllcixcbiAgICAgICAgICAgIHRoZSBBSSBTdGljayBwbHVncyBpbnRvIEhETUksIHRha2VzIFVTQiBwb3dlciwgYW5kIGJyaW5ncyB2b2ljZSwgYXBwcywgc3VnZ2VzdGlvbnMsXG4gICAgICAgICAgICBhbmQgYnV5ZXItcmVhZHkgbWVzc2FnaW5nIHRvIHRoZSBkaXNwbGF5LlxuICAgICAgICAgIDwvcD5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4taGRtaS1zdGVwc1wiPlxuICAgICAgICAgICAge2hkbWlTZXR1cFN0ZXBzLm1hcCgoc3RlcCkgPT4ge1xuICAgICAgICAgICAgICBjb25zdCBJY29uID0gc3RlcC5pY29uO1xuXG4gICAgICAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1oZG1pLXN0ZXBcIiBrZXk9e3N0ZXAubGFiZWx9PlxuICAgICAgICAgICAgICAgICAgPEljb24gY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICAgICAgICA8c3Bhbj57c3RlcC5sYWJlbH08L3NwYW4+XG4gICAgICAgICAgICAgICAgICA8c3Ryb25nPntzdGVwLnRleHR9PC9zdHJvbmc+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICk7XG4gICAgICAgICAgICB9KX1cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi10di1zZXR1cFwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtZnJhbWVcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtc2NyZWVuXCI+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtdG9wbGluZVwiPlxuICAgICAgICAgICAgICAgIDxzdHJvbmc+YnJBSW48L3N0cm9uZz5cbiAgICAgICAgICAgICAgICA8c3Bhbj5Ib21lPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxzcGFuPkFwcHM8L3NwYW4+XG4gICAgICAgICAgICAgICAgPHNwYW4+TWVkaWE8L3NwYW4+XG4gICAgICAgICAgICAgICAgPHNwYW4+U2V0dGluZ3M8L3NwYW4+XG4gICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtaW50ZXJmYWNlXCI+XG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi10di1hc3Npc3RhbnRcIj5cbiAgICAgICAgICAgICAgICAgIDxzcGFuPkhlbGxvITwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDxzdHJvbmc+SG93IGNhbiBJIGhlbHAgeW91IHRvZGF5Pzwvc3Ryb25nPlxuICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi10di13YXZlXCIgLz5cbiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtbWljXCI+XG4gICAgICAgICAgICAgICAgICAgIDxNaWMgY2xhc3NOYW1lPVwiaC03IHctN1wiIC8+XG4gICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtcHJvbXB0c1wiPlxuICAgICAgICAgICAgICAgICAgPHA+QXNrIG1lIGFueXRoaW5nPC9wPlxuICAgICAgICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgICAgICAgPHNwYW4+TGF0ZXN0IG5ld3M8L3NwYW4+XG4gICAgICAgICAgICAgICAgICAgIDxNZXNzYWdlU3F1YXJlIGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPlxuICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICAgICAgICA8c3Bhbj5XZWF0aGVyPC9zcGFuPlxuICAgICAgICAgICAgICAgICAgICA8U3BhcmtsZXMgY2xhc3NOYW1lPVwiaC01IHctNVwiIC8+XG4gICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgICAgIDxzcGFuPkZpbmQgbW92aWVzPC9zcGFuPlxuICAgICAgICAgICAgICAgICAgICA8TW9uaXRvciBjbGFzc05hbWU9XCJoLTUgdy01XCIgLz5cbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLXR2LWFwcHNcIj5cbiAgICAgICAgICAgICAgICB7W1wiWW91VHViZVwiLCBcIk5ldGZsaXhcIiwgXCJQcmltZVwiLCBcIkRpc25leStcIiwgXCJTcG90aWZ5XCJdLm1hcCgoYXBwKSA9PiAoXG4gICAgICAgICAgICAgICAgICA8c3BhbiBrZXk9e2FwcH0+e2FwcH08L3NwYW4+XG4gICAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tdHYtc2lkZS1wYW5lbFwiPlxuICAgICAgICAgICAgICA8c3Bhbj5IRE1JPC9zcGFuPlxuICAgICAgICAgICAgICA8c3Bhbj5VU0I8L3NwYW4+XG4gICAgICAgICAgICAgIDxzcGFuPkxBTjwvc3Bhbj5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWhkbWktc3RpY2tcIj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1oZG1pLXBsdWdcIiAvPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWhkbWktc3RpY2stYm9keVwiPlxuICAgICAgICAgICAgICAgIDxzdHJvbmc+YnJBSW48L3N0cm9uZz5cbiAgICAgICAgICAgICAgICA8c3Bhbj5BSSBTVElDSzwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8aSAvPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi10di1zdGFuZFwiIC8+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi10di1jb25zb2xlXCI+XG4gICAgICAgICAgICA8c3Bhbj5cbiAgICAgICAgICAgICAgPFBsdWcgY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICAgIFBsdWcuIENvbm5lY3QuIFRhbGsuXG4gICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9zZWN0aW9uPlxuXG4gICAgICA8RGV2aWNlUHJldmlld1N0dWRpbyBkZXZpY2U9e3Jlc29sdmVkRGV2aWNlfSBsaWdodE1vZGU9e2xpZ2h0TW9kZX0gc2VjdG9yPXtyZXNvbHZlZFNlY3Rvcn0gLz5cblxuICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlcy10ZXh0LWdyaWRcIiBhcmlhLWxhYmVsPVwiRGV2aWNlIGxhbmVzXCI+XG4gICAgICAgIHtsYW5kaW5nQ29udGVudC5zZWN0b3JzLnNsaWNlKDAsIDQpLm1hcCgoc2VjdG9yKSA9PiB7XG4gICAgICAgICAgY29uc3QgZGV2aWNlID0gZ2V0RGV2aWNlRm9yU2VjdG9yKHNlY3RvciwgbGFuZGluZ0NvbnRlbnQuZGV2aWNlcyk7XG4gICAgICAgICAgY29uc3QgYWN0aXZlID0gc2VjdG9yLnNsdWcgPT09IHJlc29sdmVkU2VjdG9yPy5zbHVnO1xuXG4gICAgICAgICAgcmV0dXJuIChcbiAgICAgICAgICAgIDxhXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17YGJyYWluLWRldmljZXMtdGV4dC1saW5rICR7YWN0aXZlID8gXCJicmFpbi1kZXZpY2VzLXRleHQtbGluay1hY3RpdmVcIiA6IFwiXCJ9YH1cbiAgICAgICAgICAgICAgaHJlZj17YC9kZXZpY2VzP3NlY3Rvcj0ke3NlY3Rvci5zbHVnfWB9XG4gICAgICAgICAgICAgIGtleT17c2VjdG9yLnNsdWd9XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxzcGFuPlxuICAgICAgICAgICAgICAgIDxDcHUgY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICAgICAge3NlY3Rvci5uYW1lfVxuICAgICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICAgIDxzdHJvbmc+e2RldmljZT8ubmFtZSA/PyBcImJyQUluIGRldmljZVwifTwvc3Ryb25nPlxuICAgICAgICAgICAgICA8cD57ZGV2aWNlPy50YWdsaW5lID8/IHNlY3Rvci5zdW1tYXJ5fTwvcD5cbiAgICAgICAgICAgIDwvYT5cbiAgICAgICAgICApO1xuICAgICAgICB9KX1cbiAgICAgIDwvc2VjdGlvbj5cblxuICAgICAgPHNlY3Rpb24gY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlcy1ib3R0b20tdGV4dFwiPlxuICAgICAgICA8ZGl2PlxuICAgICAgICAgIDxTcGFya2xlcyBjbGFzc05hbWU9XCJoLTUgdy01XCIgLz5cbiAgICAgICAgICA8c3Ryb25nPlBoeXNpY2FsIGRldmljZTwvc3Ryb25nPlxuICAgICAgICAgIDxwPlNjcmVlbiwgZGVzaywgY2xpbmljLCBvciBlZGdlLXJlYWR5IGhhcmR3YXJlIHNlbGVjdGVkIGJ5IHNlY3Rvci48L3A+XG4gICAgICAgIDwvZGl2PlxuICAgICAgICA8ZGl2PlxuICAgICAgICAgIDxMYXllcnMzIGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPlxuICAgICAgICAgIDxzdHJvbmc+U29mdHdhcmUgbGF5ZXI8L3N0cm9uZz5cbiAgICAgICAgICA8cD5BSSBjaGF0LCBjbG91ZCBjb250cm9sLCBwbGFucywgdG9rZW5zLCBhY3RpdmF0aW9uLCBhbmQgYnV5ZXIgZmxvdy48L3A+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9zZWN0aW9uPlxuXG4gICAgICA8RnJvbnRQYWdlQ2hhdFBvcHVwXG4gICAgICAgIGRldmljZT17cmVzb2x2ZWREZXZpY2V9XG4gICAgICAgIHBsYW5zPXtsYW5kaW5nQ29udGVudC5wbGFuc31cbiAgICAgICAgc2VjdG9yPXtyZXNvbHZlZFNlY3Rvcn1cbiAgICAgIC8+XG4gICAgPC9tYWluPlxuICApO1xufVxuXG5leHBvcnQgZGVmYXVsdCBEZXZpY2VzUGFnZTtcbiJdLCJuYW1lcyI6WyJBcnJvd1JpZ2h0IiwiQ2FibGUiLCJDcHUiLCJMYXllcnMzIiwiTWVzc2FnZVNxdWFyZSIsIk1pYyIsIk1vbml0b3IiLCJQbHVnIiwiU3BhcmtsZXMiLCJVc2IiLCJXaWZpIiwiQnJhaW5CcmFuZCIsIkRldmljZVByZXZpZXdTdHVkaW8iLCJGcm9udFBhZ2VDaGF0UG9wdXAiLCJnZXREZXZpY2VGb3JTZWN0b3IiLCJzZWN0b3IiLCJkZXZpY2VzIiwiZmluZCIsImRldmljZSIsImRldmljZUtleSIsInNlY3RvclNsdWciLCJzbHVnIiwiaGRtaVNldHVwU3RlcHMiLCJpY29uIiwibGFiZWwiLCJ0ZXh0IiwiRGV2aWNlc1BhZ2UiLCJhY3RpdmVEZXZpY2UiLCJhY3RpdmVTZWN0b3IiLCJsYW5kaW5nQ29udGVudCIsImxpZ2h0TW9kZSIsIm9uT3BlbkxvZ2luIiwicmVzb2x2ZWRTZWN0b3IiLCJzZWN0b3JzIiwicmVzb2x2ZWREZXZpY2UiLCJtYWluIiwiY2xhc3NOYW1lIiwiZGl2IiwiYSIsImhyZWYiLCJzaG93VGFnbGluZSIsInN1YnRpdGxlIiwic2VjdGlvbiIsInNwYW4iLCJoMSIsInAiLCJidXR0b24iLCJvbkNsaWNrIiwidHlwZSIsImFyaWEtbGFiZWwiLCJoMiIsIm1hcCIsInN0ZXAiLCJJY29uIiwic3Ryb25nIiwiYXJpYS1oaWRkZW4iLCJhcHAiLCJpIiwic2xpY2UiLCJhY3RpdmUiLCJuYW1lIiwidGFnbGluZSIsInN1bW1hcnkiLCJwbGFucyJdLCJtYXBwaW5ncyI6IjtBQUFBLFNBQ0VBLFVBQVUsRUFDVkMsS0FBSyxFQUNMQyxHQUFHLEVBQ0hDLE9BQU8sRUFDUEMsYUFBYSxFQUNiQyxHQUFHLEVBQ0hDLE9BQU8sRUFDUEMsSUFBSSxFQUNKQyxRQUFRLEVBQ1JDLEdBQUcsRUFDSEMsSUFBSSxRQUNDLGVBQWU7QUFDdEIsU0FBU0MsVUFBVSxRQUFRLGVBQWU7QUFDMUMsU0FBU0MsbUJBQW1CLFFBQVEsd0JB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

@@ -1,0 +1,559 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/DevicePreviewStudio.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"]; const _Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=03b53ff9";
+import { motion } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/framer-motion.js?v=03b53ff9";
+import { Sparkles } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=03b53ff9";
+const LIGHT_MODE_ACCENT = "#2368ff";
+function hexToRgba(hex, alpha) {
+    const normalized = hex.replace("#", "");
+    if (normalized.length !== 6) {
+        return `rgba(212, 90, 52, ${alpha})`;
+    }
+    const red = Number.parseInt(normalized.slice(0, 2), 16);
+    const green = Number.parseInt(normalized.slice(2, 4), 16);
+    const blue = Number.parseInt(normalized.slice(4, 6), 16);
+    return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+function buildSectorPreviewVars(accent, lightMode = false) {
+    const themeAccent = lightMode ? LIGHT_MODE_ACCENT : accent;
+    if (lightMode) {
+        return {
+            "--accent": themeAccent,
+            "--accent-strong": "#111111",
+            "--accent-soft": hexToRgba(themeAccent, 0.12),
+            "--accent-secondary": themeAccent,
+            "--accent-secondary-soft": hexToRgba(themeAccent, 0.08),
+            "--aura-primary": hexToRgba(themeAccent, 0.16),
+            "--aura-secondary": hexToRgba(themeAccent, 0.1),
+            "--line": "rgba(0, 0, 0, 0.12)",
+            "--panel-line": hexToRgba(themeAccent, 0.26),
+            "--panel-top": "rgba(255, 255, 255, 0.99)",
+            "--panel-bottom": "rgba(255, 255, 255, 0.97)",
+            "--panel-alt-top": "rgba(255, 255, 255, 0.99)",
+            "--panel-alt-bottom": "rgba(255, 255, 255, 0.97)"
+        };
+    }
+    return {
+        "--accent": themeAccent,
+        "--accent-strong": "#f4fff8",
+        "--accent-soft": hexToRgba(themeAccent, 0.18),
+        "--accent-secondary": themeAccent,
+        "--accent-secondary-soft": hexToRgba(themeAccent, 0.12),
+        "--aura-primary": hexToRgba(themeAccent, 0.28),
+        "--aura-secondary": hexToRgba(themeAccent, 0.2),
+        "--line": hexToRgba(themeAccent, 0.18),
+        "--panel-line": hexToRgba(themeAccent, 0.24),
+        "--panel-top": "rgba(8, 23, 17, 0.96)",
+        "--panel-bottom": "rgba(4, 10, 8, 0.94)"
+    };
+}
+function resolveDeviceModelVariant(sectorSlug) {
+    if (sectorSlug === "commercial") {
+        return "stick";
+    }
+    if (sectorSlug === "healthcare") {
+        return "med";
+    }
+    if (sectorSlug === "industry") {
+        return "edge";
+    }
+    return "hub";
+}
+export function DeviceLiveModel({ compact = false, device, sector }) {
+    const variant = resolveDeviceModelVariant(sector.slug);
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: `brain-device-live-model brain-device-live-model-${variant} ${compact ? "brain-device-live-model-compact" : ""}`,
+        "aria-label": device?.name ?? sector.name,
+        children: [
+            variant === "stick" ? /*#__PURE__*/ _jsxDEV(_Fragment, {
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-stick-cap"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 98,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-stick-body",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-stick-screen",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {
+                                        children: device?.name ?? "brAIn AI Stick"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 101,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                        children: "Plug & Play"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 102,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 100,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-stick-led"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 104,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 99,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-stick-plug"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 106,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true) : variant === "med" ? /*#__PURE__*/ _jsxDEV(_Fragment, {
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-med-body",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-med-camera"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 111,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-med-status"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 112,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: device?.name ?? "brAIn MED"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 113,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-med-speaker"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 114,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 110,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-med-base"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 116,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true) : variant === "edge" ? /*#__PURE__*/ _jsxDEV(_Fragment, {
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-edge-antenna brain-device-live-edge-antenna-left"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 120,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-edge-antenna brain-device-live-edge-antenna-right"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 121,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-edge-box",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-edge-ridges"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 123,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: device?.name ?? "brAIn Edge Box"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 124,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-edge-ports",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 126,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 127,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 128,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 125,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-edge-lights",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 131,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 132,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 133,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 130,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 122,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true) : /*#__PURE__*/ _jsxDEV(_Fragment, {
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-hub-screen",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("strong", {
+                                children: device?.name ?? "brAIn Hub"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 140,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "brain-device-live-hub-grid",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 142,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 143,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 144,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("span", {}, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                        lineNumber: 145,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 141,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                children: sector.statValue
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 147,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 139,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-hub-speaker"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 149,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "brain-device-live-hub-stand"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 150,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "brain-device-live-shadow"
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                lineNumber: 154,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+        lineNumber: 90,
+        columnNumber: 5
+    }, this);
+}
+_c = DeviceLiveModel;
+export function DevicePreviewStudio({ device, lightMode = false, sector }) {
+    if (!device || !sector) {
+        return null;
+    }
+    return /*#__PURE__*/ _jsxDEV("section", {
+        className: "device-preview-shell",
+        id: "landing-device-page",
+        style: buildSectorPreviewVars(sector.accent, lightMode),
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "device-preview-copy",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("span", {
+                        className: "device-preview-pill",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                size: 15
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 176,
+                                columnNumber: 11
+                            }, this),
+                            "Hardware + software"
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 175,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("h2", {
+                        children: device.name
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 179,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("p", {
+                        children: [
+                            "Clean device page for the ",
+                            sector.name,
+                            " lane, showing the physical setup and the cloud software layer without extra framed blocks."
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 180,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                lineNumber: 174,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "device-preview-stage",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "device-preview-stage-glow device-preview-stage-glow-a"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 188,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "device-preview-stage-glow device-preview-stage-glow-b"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 189,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "device-preview-orbit device-preview-orbit-a"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 190,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "device-preview-orbit device-preview-orbit-b"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 191,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "device-preview-platform"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 192,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(motion.div, {
+                        animate: {
+                            rotateY: [
+                                -20,
+                                14,
+                                -20
+                            ],
+                            rotateX: [
+                                10,
+                                3,
+                                10
+                            ],
+                            y: [
+                                0,
+                                -18,
+                                0
+                            ]
+                        },
+                        className: "device-preview-cube",
+                        transition: {
+                            rotateY: {
+                                duration: 8.2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            },
+                            rotateX: {
+                                duration: 6.8,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            },
+                            y: {
+                                duration: 5.1,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }
+                        },
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "device-preview-face device-preview-front",
+                                children: /*#__PURE__*/ _jsxDEV(DeviceLiveModel, {
+                                    device: device,
+                                    sector: sector
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                    lineNumber: 207,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 206,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "device-preview-face device-preview-back"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 209,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "device-preview-face device-preview-top"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 210,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "device-preview-face device-preview-side"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                                lineNumber: 211,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 193,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "device-preview-reflection"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                        lineNumber: 213,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+                lineNumber: 187,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx",
+        lineNumber: 169,
+        columnNumber: 5
+    }, this);
+}
+_c1 = DevicePreviewStudio;
+var _c, _c1;
+$RefreshReg$(_c, "DeviceLiveModel");
+$RefreshReg$(_c1, "DevicePreviewStudio");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/DevicePreviewStudio.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkRldmljZVByZXZpZXdTdHVkaW8udHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB0eXBlIHsgQ1NTUHJvcGVydGllcyB9IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgbW90aW9uIH0gZnJvbSBcImZyYW1lci1tb3Rpb25cIjtcbmltcG9ydCB7IFNwYXJrbGVzIH0gZnJvbSBcImx1Y2lkZS1yZWFjdFwiO1xuaW1wb3J0IHR5cGUgeyBEZXZpY2UsIFNlY3RvciB9IGZyb20gXCIuLi90eXBlc1wiO1xuXG50eXBlIERldmljZVByZXZpZXdTdHVkaW9Qcm9wcyA9IHtcbiAgZGV2aWNlOiBEZXZpY2UgfCBudWxsO1xuICBsaWdodE1vZGU/OiBib29sZWFuO1xuICBzZWN0b3I6IFNlY3RvciB8IG51bGw7XG59O1xuXG50eXBlIERldmljZUxpdmVNb2RlbFByb3BzID0ge1xuICBjb21wYWN0PzogYm9vbGVhbjtcbiAgZGV2aWNlOiBEZXZpY2UgfCBudWxsO1xuICBzZWN0b3I6IFNlY3Rvcjtcbn07XG5cbmNvbnN0IExJR0hUX01PREVfQUNDRU5UID0gXCIjMjM2OGZmXCI7XG5cbmZ1bmN0aW9uIGhleFRvUmdiYShoZXg6IHN0cmluZywgYWxwaGE6IG51bWJlcikge1xuICBjb25zdCBub3JtYWxpemVkID0gaGV4LnJlcGxhY2UoXCIjXCIsIFwiXCIpO1xuXG4gIGlmIChub3JtYWxpemVkLmxlbmd0aCAhPT0gNikge1xuICAgIHJldHVybiBgcmdiYSgyMTIsIDkwLCA1MiwgJHthbHBoYX0pYDtcbiAgfVxuXG4gIGNvbnN0IHJlZCA9IE51bWJlci5wYXJzZUludChub3JtYWxpemVkLnNsaWNlKDAsIDIpLCAxNik7XG4gIGNvbnN0IGdyZWVuID0gTnVtYmVyLnBhcnNlSW50KG5vcm1hbGl6ZWQuc2xpY2UoMiwgNCksIDE2KTtcbiAgY29uc3QgYmx1ZSA9IE51bWJlci5wYXJzZUludChub3JtYWxpemVkLnNsaWNlKDQsIDYpLCAxNik7XG5cbiAgcmV0dXJuIGByZ2JhKCR7cmVkfSwgJHtncmVlbn0sICR7Ymx1ZX0sICR7YWxwaGF9KWA7XG59XG5cbmZ1bmN0aW9uIGJ1aWxkU2VjdG9yUHJldmlld1ZhcnMoYWNjZW50OiBzdHJpbmcsIGxpZ2h0TW9kZSA9IGZhbHNlKTogQ1NTUHJvcGVydGllcyB7XG4gIGNvbnN0IHRoZW1lQWNjZW50ID0gbGlnaHRNb2RlID8gTElHSFRfTU9ERV9BQ0NFTlQgOiBhY2NlbnQ7XG5cbiAgaWYgKGxpZ2h0TW9kZSkge1xuICAgIHJldHVybiB7XG4gICAgICBcIi0tYWNjZW50XCI6IHRoZW1lQWNjZW50LFxuICAgICAgXCItLWFjY2VudC1zdHJvbmdcIjogXCIjMTExMTExXCIsXG4gICAgICBcIi0tYWNjZW50LXNvZnRcIjogaGV4VG9SZ2JhKHRoZW1lQWNjZW50LCAwLjEyKSxcbiAgICAgIFwiLS1hY2NlbnQtc2Vjb25kYXJ5XCI6IHRoZW1lQWNjZW50LFxuICAgICAgXCItLWFjY2VudC1zZWNvbmRhcnktc29mdFwiOiBoZXhUb1JnYmEodGhlbWVBY2NlbnQsIDAuMDgpLFxuICAgICAgXCItLWF1cmEtcHJpbWFyeVwiOiBoZXhUb1JnYmEodGhlbWVBY2NlbnQsIDAuMTYpLFxuICAgICAgXCItLWF1cmEtc2Vjb25kYXJ5XCI6IGhleFRvUmdiYSh0aGVtZUFjY2VudCwgMC4xKSxcbiAgICAgIFwiLS1saW5lXCI6IFwicmdiYSgwLCAwLCAwLCAwLjEyKVwiLFxuICAgICAgXCItLXBhbmVsLWxpbmVcIjogaGV4VG9SZ2JhKHRoZW1lQWNjZW50LCAwLjI2KSxcbiAgICAgIFwiLS1wYW5lbC10b3BcIjogXCJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOTkpXCIsXG4gICAgICBcIi0tcGFuZWwtYm90dG9tXCI6IFwicmdiYSgyNTUsIDI1NSwgMjU1LCAwLjk3KVwiLFxuICAgICAgXCItLXBhbmVsLWFsdC10b3BcIjogXCJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOTkpXCIsXG4gICAgICBcIi0tcGFuZWwtYWx0LWJvdHRvbVwiOiBcInJnYmEoMjU1LCAyNTUsIDI1NSwgMC45NylcIixcbiAgICB9IGFzIENTU1Byb3BlcnRpZXM7XG4gIH1cblxuICByZXR1cm4ge1xuICAgIFwiLS1hY2NlbnRcIjogdGhlbWVBY2NlbnQsXG4gICAgXCItLWFjY2VudC1zdHJvbmdcIjogXCIjZjRmZmY4XCIsXG4gICAgXCItLWFjY2VudC1zb2Z0XCI6IGhleFRvUmdiYSh0aGVtZUFjY2VudCwgMC4xOCksXG4gICAgXCItLWFjY2VudC1zZWNvbmRhcnlcIjogdGhlbWVBY2NlbnQsXG4gICAgXCItLWFjY2VudC1zZWNvbmRhcnktc29mdFwiOiBoZXhUb1JnYmEodGhlbWVBY2NlbnQsIDAuMTIpLFxuICAgIFwiLS1hdXJhLXByaW1hcnlcIjogaGV4VG9SZ2JhKHRoZW1lQWNjZW50LCAwLjI4KSxcbiAgICBcIi0tYXVyYS1zZWNvbmRhcnlcIjogaGV4VG9SZ2JhKHRoZW1lQWNjZW50LCAwLjIpLFxuICAgIFwiLS1saW5lXCI6IGhleFRvUmdiYSh0aGVtZUFjY2VudCwgMC4xOCksXG4gICAgXCItLXBhbmVsLWxpbmVcIjogaGV4VG9SZ2JhKHRoZW1lQWNjZW50LCAwLjI0KSxcbiAgICBcIi0tcGFuZWwtdG9wXCI6IFwicmdiYSg4LCAyMywgMTcsIDAuOTYpXCIsXG4gICAgXCItLXBhbmVsLWJvdHRvbVwiOiBcInJnYmEoNCwgMTAsIDgsIDAuOTQpXCIsXG4gIH0gYXMgQ1NTUHJvcGVydGllcztcbn1cblxuZnVuY3Rpb24gcmVzb2x2ZURldmljZU1vZGVsVmFyaWFudChzZWN0b3JTbHVnOiBzdHJpbmcpIHtcbiAgaWYgKHNlY3RvclNsdWcgPT09IFwiY29tbWVyY2lhbFwiKSB7XG4gICAgcmV0dXJuIFwic3RpY2tcIjtcbiAgfVxuXG4gIGlmIChzZWN0b3JTbHVnID09PSBcImhlYWx0aGNhcmVcIikge1xuICAgIHJldHVybiBcIm1lZFwiO1xuICB9XG5cbiAgaWYgKHNlY3RvclNsdWcgPT09IFwiaW5kdXN0cnlcIikge1xuICAgIHJldHVybiBcImVkZ2VcIjtcbiAgfVxuXG4gIHJldHVybiBcImh1YlwiO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gRGV2aWNlTGl2ZU1vZGVsKHsgY29tcGFjdCA9IGZhbHNlLCBkZXZpY2UsIHNlY3RvciB9OiBEZXZpY2VMaXZlTW9kZWxQcm9wcykge1xuICBjb25zdCB2YXJpYW50ID0gcmVzb2x2ZURldmljZU1vZGVsVmFyaWFudChzZWN0b3Iuc2x1Zyk7XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2XG4gICAgICBjbGFzc05hbWU9e2BicmFpbi1kZXZpY2UtbGl2ZS1tb2RlbCBicmFpbi1kZXZpY2UtbGl2ZS1tb2RlbC0ke3ZhcmlhbnR9ICR7XG4gICAgICAgIGNvbXBhY3QgPyBcImJyYWluLWRldmljZS1saXZlLW1vZGVsLWNvbXBhY3RcIiA6IFwiXCJcbiAgICAgIH1gfVxuICAgICAgYXJpYS1sYWJlbD17ZGV2aWNlPy5uYW1lID8/IHNlY3Rvci5uYW1lfVxuICAgID5cbiAgICAgIHt2YXJpYW50ID09PSBcInN0aWNrXCIgPyAoXG4gICAgICAgIDw+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1zdGljay1jYXBcIiAvPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtc3RpY2stYm9keVwiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1zdGljay1zY3JlZW5cIj5cbiAgICAgICAgICAgICAgPHNwYW4+e2RldmljZT8ubmFtZSA/PyBcImJyQUluIEFJIFN0aWNrXCJ9PC9zcGFuPlxuICAgICAgICAgICAgICA8c3Ryb25nPlBsdWcgJiBQbGF5PC9zdHJvbmc+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtc3RpY2stbGVkXCIgLz5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWRldmljZS1saXZlLXN0aWNrLXBsdWdcIiAvPlxuICAgICAgICA8Lz5cbiAgICAgICkgOiB2YXJpYW50ID09PSBcIm1lZFwiID8gKFxuICAgICAgICA8PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtbWVkLWJvZHlcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtbWVkLWNhbWVyYVwiIC8+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWRldmljZS1saXZlLW1lZC1zdGF0dXNcIiAvPlxuICAgICAgICAgICAgPHN0cm9uZz57ZGV2aWNlPy5uYW1lID8/IFwiYnJBSW4gTUVEXCJ9PC9zdHJvbmc+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWRldmljZS1saXZlLW1lZC1zcGVha2VyXCIgLz5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWRldmljZS1saXZlLW1lZC1iYXNlXCIgLz5cbiAgICAgICAgPC8+XG4gICAgICApIDogdmFyaWFudCA9PT0gXCJlZGdlXCIgPyAoXG4gICAgICAgIDw+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1lZGdlLWFudGVubmEgYnJhaW4tZGV2aWNlLWxpdmUtZWRnZS1hbnRlbm5hLWxlZnRcIiAvPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtZWRnZS1hbnRlbm5hIGJyYWluLWRldmljZS1saXZlLWVkZ2UtYW50ZW5uYS1yaWdodFwiIC8+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1lZGdlLWJveFwiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1lZGdlLXJpZGdlc1wiIC8+XG4gICAgICAgICAgICA8c3Ryb25nPntkZXZpY2U/Lm5hbWUgPz8gXCJickFJbiBFZGdlIEJveFwifTwvc3Ryb25nPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1lZGdlLXBvcnRzXCI+XG4gICAgICAgICAgICAgIDxzcGFuIC8+XG4gICAgICAgICAgICAgIDxzcGFuIC8+XG4gICAgICAgICAgICAgIDxzcGFuIC8+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtZWRnZS1saWdodHNcIj5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8Lz5cbiAgICAgICkgOiAoXG4gICAgICAgIDw+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJicmFpbi1kZXZpY2UtbGl2ZS1odWItc2NyZWVuXCI+XG4gICAgICAgICAgICA8c3Ryb25nPntkZXZpY2U/Lm5hbWUgPz8gXCJickFJbiBIdWJcIn08L3N0cm9uZz5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtaHViLWdyaWRcIj5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgICAgPHNwYW4gLz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPHA+e3NlY3Rvci5zdGF0VmFsdWV9PC9wPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtaHViLXNwZWFrZXJcIiAvPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYnJhaW4tZGV2aWNlLWxpdmUtaHViLXN0YW5kXCIgLz5cbiAgICAgICAgPC8+XG4gICAgICApfVxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImJyYWluLWRldmljZS1saXZlLXNoYWRvd1wiIC8+XG4gICAgPC9kaXY+XG4gICk7XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBEZXZpY2VQcmV2aWV3U3R1ZGlvKHtcbiAgZGV2aWNlLFxuICBsaWdodE1vZGUgPSBmYWxzZSxcbiAgc2VjdG9yLFxufTogRGV2aWNlUHJldmlld1N0dWRpb1Byb3BzKSB7XG4gIGlmICghZGV2aWNlIHx8ICFzZWN0b3IpIHtcbiAgICByZXR1cm4gbnVsbDtcbiAgfVxuXG4gIHJldHVybiAoXG4gICAgPHNlY3Rpb25cbiAgICAgIGNsYXNzTmFtZT1cImRldmljZS1wcmV2aWV3LXNoZWxsXCJcbiAgICAgIGlkPVwibGFuZGluZy1kZXZpY2UtcGFnZVwiXG4gICAgICBzdHlsZT17YnVpbGRTZWN0b3JQcmV2aWV3VmFycyhzZWN0b3IuYWNjZW50LCBsaWdodE1vZGUpfVxuICAgID5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZGV2aWNlLXByZXZpZXctY29weVwiPlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJkZXZpY2UtcHJldmlldy1waWxsXCI+XG4gICAgICAgICAgPFNwYXJrbGVzIHNpemU9ezE1fSAvPlxuICAgICAgICAgIEhhcmR3YXJlICsgc29mdHdhcmVcbiAgICAgICAgPC9zcGFuPlxuICAgICAgICA8aDI+e2RldmljZS5uYW1lfTwvaDI+XG4gICAgICAgIDxwPlxuICAgICAgICAgIENsZWFuIGRldmljZSBwYWdlIGZvciB0aGUge3NlY3Rvci5uYW1lfSBsYW5lLCBzaG93aW5nIHRoZSBwaHlzaWNhbCBzZXR1cCBhbmQgdGhlIGNsb3VkXG4gICAgICAgICAgc29mdHdhcmUgbGF5ZXIgd2l0aG91dCBleHRyYSBmcmFtZWQgYmxvY2tzLlxuICAgICAgICA8L3A+XG5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImRldmljZS1wcmV2aWV3LXN0YWdlXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZGV2aWNlLXByZXZpZXctc3RhZ2UtZ2xvdyBkZXZpY2UtcHJldmlldy1zdGFnZS1nbG93LWFcIiAvPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRldmljZS1wcmV2aWV3LXN0YWdlLWdsb3cgZGV2aWNlLXByZXZpZXctc3RhZ2UtZ2xvdy1iXCIgLz5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkZXZpY2UtcHJldmlldy1vcmJpdCBkZXZpY2UtcHJldmlldy1vcmJpdC1hXCIgLz5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkZXZpY2UtcHJldmlldy1vcmJpdCBkZXZpY2UtcHJldmlldy1vcmJpdC1iXCIgLz5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkZXZpY2UtcHJldmlldy1wbGF0Zm9ybVwiIC8+XG4gICAgICAgIDxtb3Rpb24uZGl2XG4gICAgICAgICAgYW5pbWF0ZT17e1xuICAgICAgICAgICAgcm90YXRlWTogWy0yMCwgMTQsIC0yMF0sXG4gICAgICAgICAgICByb3RhdGVYOiBbMTAsIDMsIDEwXSxcbiAgICAgICAgICAgIHk6IFswLCAtMTgsIDBdLFxuICAgICAgICAgIH19XG4gICAgICAgICAgY2xhc3NOYW1lPVwiZGV2aWNlLXByZXZpZXctY3ViZVwiXG4gICAgICAgICAgdHJhbnNpdGlvbj17e1xuICAgICAgICAgICAgcm90YXRlWTogeyBkdXJhdGlvbjogOC4yLCByZXBlYXQ6IEluZmluaXR5LCBlYXNlOiBcImVhc2VJbk91dFwiIH0sXG4gICAgICAgICAgICByb3RhdGVYOiB7IGR1cmF0aW9uOiA2LjgsIHJlcGVhdDogSW5maW5pdHksIGVhc2U6IFwiZWFzZUluT3V0XCIgfSxcbiAgICAgICAgICAgIHk6IHsgZHVyYXRpb246IDUuMSwgcmVwZWF0OiBJbmZpbml0eSwgZWFzZTogXCJlYXNlSW5PdXRcIiB9LFxuICAgICAgICAgIH19XG4gICAgICAgID5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRldmljZS1wcmV2aWV3LWZhY2UgZGV2aWNlLXByZXZpZXctZnJvbnRcIj5cbiAgICAgICAgICAgIDxEZXZpY2VMaXZlTW9kZWwgZGV2aWNlPXtkZXZpY2V9IHNlY3Rvcj17c2VjdG9yfSAvPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZGV2aWNlLXByZXZpZXctZmFjZSBkZXZpY2UtcHJldmlldy1iYWNrXCIgLz5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRldmljZS1wcmV2aWV3LWZhY2UgZGV2aWNlLXByZXZpZXctdG9wXCIgLz5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImRldmljZS1wcmV2aWV3LWZhY2UgZGV2aWNlLXByZXZpZXctc2lkZVwiIC8+XG4gICAgICAgIDwvbW90aW9uLmRpdj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJkZXZpY2UtcHJldmlldy1yZWZsZWN0aW9uXCIgLz5cbiAgICAgIDwvZGl2PlxuICAgIDwvc2VjdGlvbj5cbiAgKTtcbn1cbiJdLCJuYW1lcyI6WyJtb3Rpb24iLCJTcGFya2xlcyIsIkxJR0hUX01PREVfQUNDRU5UIiwiaGV4VG9SZ2JhIiwiaGV4IiwiYWxwaGEiLCJub3JtYWxpemVkIiwicmVwbGFjZSIsImxlbmd0aCIsInJlZCIsIk51bWJlciIsInBhcnNlSW50Iiwic2xpY2UiLCJncmVlbiIsImJsdWUiLCJidWlsZFNlY3RvclByZXZpZXdWYXJzIiwiYWNjZW50IiwibGlnaHRNb2RlIiwidGhlbWVBY2NlbnQiLCJyZXNvbHZlRGV2aWNlTW9kZWxWYXJpYW50Iiwic2VjdG9yU2x1ZyIsIkRldmljZUxpdmVNb2RlbCIsImNvbXBhY3QiLCJkZXZpY2UiLCJzZWN0b3IiLCJ2YXJpYW50Iiwic2x1ZyIsImRpdiIsImNsYXNzTmFtZSIsImFyaWEtbGFiZWwiLCJuYW1lIiwic3BhbiIsInN0cm9uZyIsInAiLCJzdGF0VmFsdWUiLCJEZXZpY2VQcmV2aWV3U3R1ZGlvIiwic2VjdGlvbiIsImlkIiwic3R5bGUiLCJzaXplIiwiaDIiLCJhbmltYXRlIiwicm90YXRlWSIsInJvdGF0ZVgiLCJ5Iiwi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

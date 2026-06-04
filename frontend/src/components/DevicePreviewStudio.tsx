@@ -1,19 +1,21 @@
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
-import { Cpu, HardDrive, Sparkles, Wifi } from "lucide-react";
-import type { Device, Plan, Sector } from "../types";
-import { SectorLiveMiniBoard } from "./SectorLiveBoard";
+import { Sparkles } from "lucide-react";
+import type { Device, Sector } from "../types";
 
 type DevicePreviewStudioProps = {
   device: Device | null;
   lightMode?: boolean;
-  onSelectDevice: (deviceKey: string) => void;
   sector: Sector | null;
-  plans: Plan[];
-  relatedDevices: Device[];
 };
 
-const LIGHT_MODE_ACCENT = "#d45a34";
+type DeviceLiveModelProps = {
+  compact?: boolean;
+  device: Device | null;
+  sector: Sector;
+};
+
+const LIGHT_MODE_ACCENT = "#2368ff";
 
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");
@@ -65,13 +67,99 @@ function buildSectorPreviewVars(accent: string, lightMode = false): CSSPropertie
   } as CSSProperties;
 }
 
+function resolveDeviceModelVariant(sectorSlug: string) {
+  if (sectorSlug === "commercial") {
+    return "stick";
+  }
+
+  if (sectorSlug === "healthcare") {
+    return "med";
+  }
+
+  if (sectorSlug === "industry") {
+    return "edge";
+  }
+
+  return "hub";
+}
+
+export function DeviceLiveModel({ compact = false, device, sector }: DeviceLiveModelProps) {
+  const variant = resolveDeviceModelVariant(sector.slug);
+
+  return (
+    <div
+      className={`brain-device-live-model brain-device-live-model-${variant} ${
+        compact ? "brain-device-live-model-compact" : ""
+      }`}
+      aria-label={device?.name ?? sector.name}
+    >
+      {variant === "stick" ? (
+        <>
+          <div className="brain-device-live-stick-cap" />
+          <div className="brain-device-live-stick-body">
+            <div className="brain-device-live-stick-screen">
+              <span>{device?.name ?? "brAIn AI Stick"}</span>
+              <strong>Plug & Play</strong>
+            </div>
+            <div className="brain-device-live-stick-led" />
+          </div>
+          <div className="brain-device-live-stick-plug" />
+        </>
+      ) : variant === "med" ? (
+        <>
+          <div className="brain-device-live-med-body">
+            <div className="brain-device-live-med-camera" />
+            <div className="brain-device-live-med-status" />
+            <strong>{device?.name ?? "brAIn MED"}</strong>
+            <div className="brain-device-live-med-speaker" />
+          </div>
+          <div className="brain-device-live-med-base" />
+        </>
+      ) : variant === "edge" ? (
+        <>
+          <div className="brain-device-live-edge-antenna brain-device-live-edge-antenna-left" />
+          <div className="brain-device-live-edge-antenna brain-device-live-edge-antenna-right" />
+          <div className="brain-device-live-edge-box">
+            <div className="brain-device-live-edge-ridges" />
+            <strong>{device?.name ?? "brAIn Edge Box"}</strong>
+            <div className="brain-device-live-edge-ports">
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className="brain-device-live-edge-lights">
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="brain-device-live-hub-screen">
+            <strong>{device?.name ?? "brAIn Hub"}</strong>
+            <div className="brain-device-live-hub-grid">
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <p>{sector.statValue}</p>
+          </div>
+          <div className="brain-device-live-hub-speaker" />
+          <div className="brain-device-live-hub-stand" />
+        </>
+      )}
+
+      <div className="brain-device-live-shadow" />
+    </div>
+  );
+}
+
 export function DevicePreviewStudio({
   device,
   lightMode = false,
-  onSelectDevice,
   sector,
-  plans,
-  relatedDevices,
 }: DevicePreviewStudioProps) {
   if (!device || !sector) {
     return null;
@@ -86,60 +174,13 @@ export function DevicePreviewStudio({
       <div className="device-preview-copy">
         <span className="device-preview-pill">
           <Sparkles size={15} />
-          Device overview
+          Hardware + software
         </span>
-        <h2>{device.name} device overview</h2>
+        <h2>{device.name}</h2>
         <p>
-          A focused hardware view for the {sector.name} lane. The active device,
-          sector fit, and rollout posture stay visible before the buyer moves
-          into login.
+          Clean device page for the {sector.name} lane, showing the physical setup and the cloud
+          software layer without extra framed blocks.
         </p>
-
-        <div className="device-preview-insight-grid">
-          <div className="device-preview-insight-card">
-            <span>Sector fit</span>
-            <strong>{sector.audience}</strong>
-            <p>{device.tagline}</p>
-          </div>
-          <div className="device-preview-insight-card">
-            <span>Best for</span>
-            <strong>{device.suitedFor[0] || "On-site deployment"}</strong>
-            <p>{device.description}</p>
-          </div>
-        </div>
-
-        <div className="device-preview-stats">
-          {device.metrics.map((metric) => (
-            <div className="device-preview-stat" key={metric.label}>
-              <span>{metric.label}</span>
-              <strong>{metric.value}</strong>
-            </div>
-          ))}
-        </div>
-
-        <div className="device-preview-ports">
-          {device.ports.slice(0, 6).map((port) => (
-            <span key={port}>{port}</span>
-          ))}
-        </div>
-
-        <div className="device-preview-switcher">
-          {relatedDevices.map((item) => (
-            <button
-              className={`device-preview-switcher-button ${
-                item.deviceKey === device.deviceKey
-                  ? "device-preview-switcher-button-active"
-                  : ""
-              }`}
-              key={item.deviceKey}
-              onClick={() => onSelectDevice(item.deviceKey)}
-              type="button"
-            >
-              <strong>{item.name}</strong>
-              <small>{item.category}</small>
-            </button>
-          ))}
-        </div>
 
       </div>
 
@@ -163,42 +204,13 @@ export function DevicePreviewStudio({
           }}
         >
           <div className="device-preview-face device-preview-front">
-            <SectorLiveMiniBoard
-              className="h-full"
-              dense
-              device={device}
-              lightMode={lightMode}
-              mode="screen"
-              plans={plans}
-              sector={sector}
-            />
+            <DeviceLiveModel device={device} sector={sector} />
           </div>
           <div className="device-preview-face device-preview-back" />
           <div className="device-preview-face device-preview-top" />
           <div className="device-preview-face device-preview-side" />
         </motion.div>
         <div className="device-preview-reflection" />
-
-        <div className="device-preview-hud">
-          <div className="device-preview-hud-item">
-            <Cpu size={16} />
-            <span>{device.category}</span>
-          </div>
-          <div className="device-preview-hud-item">
-            <Wifi size={16} />
-            <span>{sector.statValue}</span>
-          </div>
-          <div className="device-preview-hud-item">
-            <HardDrive size={16} />
-            <span>{device.suitedFor[0] || "On-site deployment"}</span>
-          </div>
-        </div>
-
-        <div className="device-preview-side-panel">
-          <p className="device-preview-side-kicker">Active device</p>
-          <h3>{device.name}</h3>
-          <p>{sector.summary}</p>
-        </div>
       </div>
     </section>
   );

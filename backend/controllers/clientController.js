@@ -34,7 +34,10 @@ export const getClientDashboard = controller((request, response) => {
       ? request.authSession.user.company
       : requestedCompany;
 
-  const overview = getClientOverview(company);
+  const isClientSession = request.authSession?.user.role === "client";
+  const overview = getClientOverview(company, {
+    includeClients: !isClientSession,
+  });
 
   response.json({
     ...overview,

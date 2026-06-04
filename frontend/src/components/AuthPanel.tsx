@@ -67,6 +67,26 @@ type AuthPanelProps = {
   vpnActive: boolean;
 };
 
+const demoLoginOptions: Array<{
+  email: string;
+  label: string;
+  password: string;
+  role: AuthRole;
+}> = [
+  {
+    email: "factory@brain-ai.com",
+    label: "Demo client",
+    password: "Client123!",
+    role: "client",
+  },
+  {
+    email: "admin@brain-ai.com",
+    label: "Demo admin",
+    password: "Admin123!",
+    role: "admin",
+  },
+];
+
 function getMessageToneClass(tone?: "success" | "error" | "info") {
   if (tone === "success") {
     return "message-success";
@@ -202,6 +222,25 @@ export function AuthPanel({
               <Lock size={15} />
               Admin
             </button>
+          </div>
+
+          <div className="auth-demo-row" aria-label="Demo login shortcuts">
+            {demoLoginOptions.map((option) => (
+              <button
+                className="auth-demo-button"
+                key={option.email}
+                onClick={() =>
+                  onLoginChange({
+                    email: option.email,
+                    password: option.password,
+                    role: option.role,
+                  })
+                }
+                type="button"
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
 
           <label className="field-shell">

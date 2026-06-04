@@ -1,0 +1,1025 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/PortalAccountCenter.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"]; const _Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"];const useEffect = __vite__cjsImport1_react["useEffect"]; const useMemo = __vite__cjsImport1_react["useMemo"]; const useState = __vite__cjsImport1_react["useState"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=df5910ba";
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react.js?v=74dc72f6";
+import { ArrowRight, CheckCircle2, CreditCard, KeyRound, ShieldCheck, Sparkles, UserRound } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=0a1c872a";
+function AccountMessage({ message }) {
+    if (!message) {
+        return null;
+    }
+    const toneClass = message.tone === "success" ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-100" : message.tone === "error" ? "border-rose-400/20 bg-rose-400/10 text-rose-100" : "border-cyan-400/20 bg-cyan-400/10 text-cyan-100";
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: `rounded-2xl border px-4 py-3 text-sm leading-6 ${toneClass}`,
+        children: message.text
+    }, void 0, false, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+        lineNumber: 62,
+        columnNumber: 5
+    }, this);
+}
+_c = AccountMessage;
+export function PortalAccountCenter({ role, userName, userEmail, company, sessionLabel, sectorLabel, planName, routeLabel, availablePlans, selectedPlanSlug, pendingPaymentsCount, openTicketsCount, linkedCardsCount, saveBusy, passwordBusy, saveMessage, passwordMessage, onSaveProfile, onChangePassword, onPrimaryAction, onSecondaryAction, primaryActionLabel, secondaryActionLabel, onPickPlan }) {
+    _s();
+    const [profileForm, setProfileForm] = useState({
+        name: userName,
+        email: userEmail
+    });
+    const [passwordForm, setPasswordForm] = useState({
+        currentPassword: "",
+        nextPassword: "",
+        confirmPassword: ""
+    });
+    useEffect(()=>{
+        setProfileForm({
+            name: userName,
+            email: userEmail
+        });
+    }, [
+        userEmail,
+        userName
+    ]);
+    useEffect(()=>{
+        if (passwordMessage?.tone === "success") {
+            setPasswordForm({
+                currentPassword: "",
+                nextPassword: "",
+                confirmPassword: ""
+            });
+        }
+    }, [
+        passwordMessage
+    ]);
+    const initials = useMemo(()=>{
+        const source = userName || company || "B";
+        return source.split(/\s+/).filter(Boolean).slice(0, 2).map((part)=>part[0]?.toUpperCase() ?? "").join("");
+    }, [
+        company,
+        userName
+    ]);
+    const featuredPlans = useMemo(()=>{
+        const preferredOrder = [
+            "free",
+            "starter",
+            "business",
+            "platinum-plus"
+        ];
+        const filtered = availablePlans.filter((plan)=>preferredOrder.includes(plan.slug) || plan.featured);
+        return preferredOrder.map((slug)=>filtered.find((plan)=>plan.slug === slug)).filter((plan)=>Boolean(plan)).slice(0, 4);
+    }, [
+        availablePlans
+    ]);
+    const accountCards = [
+        {
+            label: "Workspace",
+            value: company,
+            copy: role === "admin" ? "Admin control layer" : "Active client company"
+        },
+        {
+            label: "Plan",
+            value: planName,
+            copy: role === "admin" ? "Commercial queues and rollout stay visible here." : "Current commercial package attached to this account."
+        },
+        {
+            label: "Route",
+            value: routeLabel,
+            copy: "Current network path for the active session."
+        },
+        {
+            label: "Session",
+            value: sessionLabel,
+            copy: "Latest authenticated workspace session."
+        }
+    ];
+    const actionCopy = role === "admin" ? "Keep identity, queue visibility, and rollout shortcuts together so the workspace feels managed end to end." : "Update your profile here, then jump directly into plan, billing, or support without hunting through the portal.";
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: "workspace-runtime-theme grid gap-6 xl:grid-cols-[0.9fr_1.1fr]",
+        children: [
+            /*#__PURE__*/ _jsxDEV("article", {
+                className: "rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_22px_65px_rgba(0,0,0,0.22)]",
+                children: /*#__PURE__*/ _jsxDEV("div", {
+                    className: "flex flex-col gap-5",
+                    children: [
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            className: "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "flex items-start gap-4",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "flex h-[4.5rem] w-[4.5rem] shrink-0 items-center justify-center rounded-[24px] border border-white/10 bg-white/[0.06] text-2xl font-black text-white shadow-[0_16px_40px_rgba(0,0,0,0.18)]",
+                                            children: initials || "B"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 180,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "min-w-0",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV("span", {
+                                                    className: "workspace-badge",
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                                            className: "h-3.5 w-3.5"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                            lineNumber: 185,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        role === "admin" ? "Admin account center" : "Client account center"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                    lineNumber: 184,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("h2", {
+                                                    className: "mt-4 text-3xl font-black text-white",
+                                                    children: userName || "Workspace user"
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                    lineNumber: 188,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("p", {
+                                                    className: "mt-2 break-all text-sm leading-7 text-slate-300",
+                                                    children: userEmail
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                    lineNumber: 191,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 183,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 179,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "flex flex-wrap gap-2",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "workspace-summary-pill",
+                                            children: sectorLabel
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 198,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "workspace-summary-pill",
+                                            children: planName
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 199,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "workspace-summary-pill",
+                                            children: routeLabel
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 200,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 197,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                            lineNumber: 178,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("p", {
+                            className: "text-sm leading-7 text-slate-300",
+                            children: actionCopy
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                            lineNumber: 204,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            className: "grid gap-4 sm:grid-cols-2",
+                            children: accountCards.map((card)=>/*#__PURE__*/ _jsxDEV("div", {
+                                    className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("p", {
+                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                            children: card.label
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 212,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("strong", {
+                                            className: "mt-2 block text-lg font-black text-white",
+                                            children: card.value
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 215,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("p", {
+                                            className: "mt-2 text-sm leading-6 text-slate-400",
+                                            children: card.copy
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 218,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, card.label, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 208,
+                                    columnNumber: 15
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                            lineNumber: 206,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            className: "grid gap-4 sm:grid-cols-3",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("p", {
+                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                            children: "Pending payments"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 225,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("strong", {
+                                            className: "mt-2 block text-2xl font-black text-white",
+                                            children: pendingPaymentsCount
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 228,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 224,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("p", {
+                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                            children: "Linked access"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 233,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("strong", {
+                                            className: "mt-2 block text-2xl font-black text-white",
+                                            children: linkedCardsCount
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 236,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 232,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("p", {
+                                            className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                            children: "Open tickets"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 241,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("strong", {
+                                            className: "mt-2 block text-2xl font-black text-white",
+                                            children: openTicketsCount
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 244,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 240,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                            lineNumber: 223,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            className: "grid gap-3 sm:grid-cols-2",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("button", {
+                                    className: "executive-button-primary inline-flex items-center justify-center gap-2",
+                                    onClick: onPrimaryAction,
+                                    type: "button",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(ArrowRight, {
+                                            className: "h-4 w-4"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 256,
+                                            columnNumber: 15
+                                        }, this),
+                                        primaryActionLabel
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 251,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("button", {
+                                    className: "executive-button-secondary inline-flex items-center justify-center gap-2",
+                                    onClick: onSecondaryAction,
+                                    type: "button",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(CreditCard, {
+                                            className: "h-4 w-4"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 264,
+                                            columnNumber: 15
+                                        }, this),
+                                        secondaryActionLabel
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 259,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                            lineNumber: 250,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                    lineNumber: 177,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                lineNumber: 176,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "grid gap-6",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("article", {
+                        className: "rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_22px_65px_rgba(0,0,0,0.22)]",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "flex items-center justify-between gap-4",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "text-xs uppercase tracking-[0.2em] text-slate-500",
+                                                children: "Profile"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 275,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("h3", {
+                                                className: "mt-2 text-2xl font-black text-white",
+                                                children: "Update your user details"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 278,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 274,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV(UserRound, {
+                                        className: "h-6 w-6 text-cyan-200"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 282,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 273,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "mt-5 grid gap-4 md:grid-cols-2",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("label", {
+                                        className: "field-shell",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "Name"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 287,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("input", {
+                                                className: "field-input",
+                                                onChange: (event)=>setProfileForm((current)=>({
+                                                            ...current,
+                                                            name: event.target.value
+                                                        })),
+                                                placeholder: "Your name",
+                                                type: "text",
+                                                value: profileForm.name
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 288,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 286,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("label", {
+                                        className: "field-shell",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "Email"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 302,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("input", {
+                                                className: "field-input",
+                                                onChange: (event)=>setProfileForm((current)=>({
+                                                            ...current,
+                                                            email: event.target.value
+                                                        })),
+                                                placeholder: "you@company.com",
+                                                type: "email",
+                                                value: profileForm.email
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 303,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 301,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("label", {
+                                        className: "field-shell md:col-span-2",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("span", {
+                                                children: "Company / workspace"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 317,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("input", {
+                                                className: "field-input opacity-80",
+                                                disabled: true,
+                                                type: "text",
+                                                value: company
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 318,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 316,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 285,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "mt-4 text-sm leading-7 text-slate-400",
+                                children: "Workspace company remains locked here so linked plans, cards, tickets, and rollout history stay consistent."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 322,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "mt-4",
+                                children: /*#__PURE__*/ _jsxDEV(AccountMessage, {
+                                    message: saveMessage
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                    lineNumber: 328,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 327,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("button", {
+                                className: "executive-button-primary mt-5 inline-flex items-center gap-2",
+                                disabled: saveBusy,
+                                onClick: ()=>onSaveProfile(profileForm),
+                                type: "button",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV(CheckCircle2, {
+                                        className: "h-4 w-4"
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 337,
+                                        columnNumber: 13
+                                    }, this),
+                                    saveBusy ? "Saving profile..." : "Save profile"
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 331,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                        lineNumber: 272,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "grid gap-6 lg:grid-cols-[0.96fr_1.04fr]",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("article", {
+                                className: "rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_22px_65px_rgba(0,0,0,0.22)]",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex items-center justify-between gap-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-xs uppercase tracking-[0.2em] text-slate-500",
+                                                        children: "Security"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 346,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("h3", {
+                                                        className: "mt-2 text-2xl font-black text-white",
+                                                        children: "Change password"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 349,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 345,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV(KeyRound, {
+                                                className: "h-6 w-6 text-cyan-200"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 353,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 344,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "mt-5 grid gap-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("label", {
+                                                className: "field-shell",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "Current password"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 358,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("input", {
+                                                        className: "field-input",
+                                                        onChange: (event)=>setPasswordForm((current)=>({
+                                                                    ...current,
+                                                                    currentPassword: event.target.value
+                                                                })),
+                                                        placeholder: "Current password",
+                                                        type: "password",
+                                                        value: passwordForm.currentPassword
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 359,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 357,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("label", {
+                                                className: "field-shell",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "New password"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 373,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("input", {
+                                                        className: "field-input",
+                                                        onChange: (event)=>setPasswordForm((current)=>({
+                                                                    ...current,
+                                                                    nextPassword: event.target.value
+                                                                })),
+                                                        placeholder: "At least 8 characters",
+                                                        type: "password",
+                                                        value: passwordForm.nextPassword
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 374,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 372,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("label", {
+                                                className: "field-shell",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                        children: "Confirm new password"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 388,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("input", {
+                                                        className: "field-input",
+                                                        onChange: (event)=>setPasswordForm((current)=>({
+                                                                    ...current,
+                                                                    confirmPassword: event.target.value
+                                                                })),
+                                                        placeholder: "Repeat the new password",
+                                                        type: "password",
+                                                        value: passwordForm.confirmPassword
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 389,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 387,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 356,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "mt-4",
+                                        children: /*#__PURE__*/ _jsxDEV(AccountMessage, {
+                                            message: passwordMessage
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                            lineNumber: 405,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 404,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("button", {
+                                        className: "executive-button-secondary mt-5 inline-flex items-center gap-2",
+                                        disabled: passwordBusy,
+                                        onClick: ()=>onChangePassword(passwordForm),
+                                        type: "button",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                                                className: "h-4 w-4"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 414,
+                                                columnNumber: 15
+                                            }, this),
+                                            passwordBusy ? "Updating password..." : "Update password"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 408,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 343,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("article", {
+                                className: "rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,16,30,0.98),rgba(5,11,21,0.94))] p-6 shadow-[0_22px_65px_rgba(0,0,0,0.22)]",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex items-center justify-between gap-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-xs uppercase tracking-[0.2em] text-slate-500",
+                                                        children: role === "admin" ? "Controls" : "Plan control"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 422,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("h3", {
+                                                        className: "mt-2 text-2xl font-black text-white",
+                                                        children: role === "admin" ? "Open the boards that need attention" : "Choose the commercial path that fits"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 425,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 421,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV(CreditCard, {
+                                                className: "h-6 w-6 text-cyan-200"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 431,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 420,
+                                        columnNumber: 13
+                                    }, this),
+                                    role === "client" ? /*#__PURE__*/ _jsxDEV(_Fragment, {
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "mt-4 text-sm leading-7 text-slate-300",
+                                                children: "Pick a plan here, then jump straight into the access or billing board to continue the upgrade flow."
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 436,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "mt-5 grid gap-3",
+                                                children: featuredPlans.map((plan)=>{
+                                                    const selected = selectedPlanSlug === plan.slug;
+                                                    return /*#__PURE__*/ _jsxDEV("button", {
+                                                        className: `rounded-[24px] border px-4 py-4 text-left transition ${selected ? "border-[rgba(212,90,52,0.3)] bg-[rgba(212,90,52,0.12)]" : "border-white/10 bg-black/20 hover:-translate-y-0.5 hover:bg-white/[0.05]"}`,
+                                                        onClick: ()=>onPickPlan?.(plan.slug),
+                                                        type: "button",
+                                                        children: [
+                                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                                className: "flex items-start justify-between gap-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ _jsxDEV("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                                className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                                                children: plan.featured ? "Recommended" : plan.slug === "free" ? "Free" : "Managed"
+                                                                            }, void 0, false, {
+                                                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                                                lineNumber: 458,
+                                                                                columnNumber: 29
+                                                                            }, this),
+                                                                            /*#__PURE__*/ _jsxDEV("strong", {
+                                                                                className: "mt-2 block text-lg font-black text-white",
+                                                                                children: plan.name
+                                                                            }, void 0, false, {
+                                                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                                                lineNumber: 461,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                                        lineNumber: 457,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ _jsxDEV("span", {
+                                                                        className: "workspace-summary-pill",
+                                                                        children: plan.deviceAllowance
+                                                                    }, void 0, false, {
+                                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                                        lineNumber: 465,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                                lineNumber: 456,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                                className: "mt-3 text-sm leading-6 text-slate-300",
+                                                                children: plan.summary
+                                                            }, void 0, false, {
+                                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                                lineNumber: 467,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, plan.slug, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 446,
+                                                        columnNumber: 23
+                                                    }, this);
+                                                })
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 441,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true) : /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "mt-5 grid gap-3",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                        children: "Payment queue"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 476,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                                        className: "mt-2 block text-lg font-black text-white",
+                                                        children: [
+                                                            pendingPaymentsCount,
+                                                            " requests waiting"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 479,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-2 text-sm leading-6 text-slate-400",
+                                                        children: "Review pending upgrades and unblock the rollout path."
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 482,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 475,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                className: "rounded-[24px] border border-white/10 bg-black/20 p-4",
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                        children: "Support signal"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 487,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("strong", {
+                                                        className: "mt-2 block text-lg font-black text-white",
+                                                        children: [
+                                                            openTicketsCount,
+                                                            " open tickets"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 490,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-2 text-sm leading-6 text-slate-400",
+                                                        children: "Keep identity and operational follow-up in one clean admin view."
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                        lineNumber: 493,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                                lineNumber: 486,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                        lineNumber: 474,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                                lineNumber: 419,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                        lineNumber: 342,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+                lineNumber: 271,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx",
+        lineNumber: 175,
+        columnNumber: 5
+    }, this);
+}
+_s(PortalAccountCenter, "2er8iLOQkn99hh9QV0gcgA7gLx4=");
+_c1 = PortalAccountCenter;
+export default PortalAccountCenter;
+var _c, _c1;
+$RefreshReg$(_c, "AccountMessage");
+$RefreshReg$(_c1, "PortalAccountCenter");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/PortalAccountCenter.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlBvcnRhbEFjY291bnRDZW50ZXIudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHVzZUVmZmVjdCwgdXNlTWVtbywgdXNlU3RhdGUgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCB7XG4gIEFycm93UmlnaHQsXG4gIENoZWNrQ2lyY2xlMixcbiAgQ3JlZGl0Q2FyZCxcbiAgS2V5Um91bmQsXG4gIFNoaWVsZENoZWNrLFxuICBTcGFya2xlcyxcbiAgVXNlclJvdW5kLFxufSBmcm9tIFwibHVjaWRlLXJlYWN0XCI7XG5pbXBvcnQgdHlwZSB7IFBsYW4gfSBmcm9tIFwiLi4vdHlwZXNcIjtcblxudHlwZSBVaU1lc3NhZ2UgPSB7XG4gIHRvbmU6IFwic3VjY2Vzc1wiIHwgXCJlcnJvclwiIHwgXCJpbmZvXCI7XG4gIHRleHQ6IHN0cmluZztcbn0gfCBudWxsO1xuXG50eXBlIFBvcnRhbEFjY291bnRDZW50ZXJQcm9wcyA9IHtcbiAgcm9sZTogXCJhZG1pblwiIHwgXCJjbGllbnRcIjtcbiAgdXNlck5hbWU6IHN0cmluZztcbiAgdXNlckVtYWlsOiBzdHJpbmc7XG4gIGNvbXBhbnk6IHN0cmluZztcbiAgc2Vzc2lvbkxhYmVsOiBzdHJpbmc7XG4gIHNlY3RvckxhYmVsOiBzdHJpbmc7XG4gIHBsYW5OYW1lOiBzdHJpbmc7XG4gIHJvdXRlTGFiZWw6IHN0cmluZztcbiAgYXZhaWxhYmxlUGxhbnM6IFBsYW5bXTtcbiAgc2VsZWN0ZWRQbGFuU2x1Zz86IHN0cmluZyB8IG51bGw7XG4gIHBlbmRpbmdQYXltZW50c0NvdW50OiBudW1iZXI7XG4gIG9wZW5UaWNrZXRzQ291bnQ6IG51bWJlcjtcbiAgbGlua2VkQ2FyZHNDb3VudDogbnVtYmVyO1xuICBzYXZlQnVzeTogYm9vbGVhbjtcbiAgcGFzc3dvcmRCdXN5OiBib29sZWFuO1xuICBzYXZlTWVzc2FnZTogVWlNZXNzYWdlO1xuICBwYXNzd29yZE1lc3NhZ2U6IFVpTWVzc2FnZTtcbiAgb25TYXZlUHJvZmlsZTogKHBheWxvYWQ6IHsgbmFtZTogc3RyaW5nOyBlbWFpbDogc3RyaW5nIH0pID0+IHZvaWQ7XG4gIG9uQ2hhbmdlUGFzc3dvcmQ6IChwYXlsb2FkOiB7XG4gICAgY3VycmVudFBhc3N3b3JkOiBzdHJpbmc7XG4gICAgbmV4dFBhc3N3b3JkOiBzdHJpbmc7XG4gICAgY29uZmlybVBhc3N3b3JkOiBzdHJpbmc7XG4gIH0pID0+IHZvaWQ7XG4gIG9uUHJpbWFyeUFjdGlvbjogKCkgPT4gdm9pZDtcbiAgb25TZWNvbmRhcnlBY3Rpb246ICgpID0+IHZvaWQ7XG4gIHByaW1hcnlBY3Rpb25MYWJlbDogc3RyaW5nO1xuICBzZWNvbmRhcnlBY3Rpb25MYWJlbDogc3RyaW5nO1xuICBvblBpY2tQbGFuPzogKHBsYW5TbHVnOiBzdHJpbmcpID0+IHZvaWQ7XG59O1xuXG5mdW5jdGlvbiBBY2NvdW50TWVzc2FnZSh7IG1lc3NhZ2UgfTogeyBtZXNzYWdlOiBVaU1lc3NhZ2UgfSkge1xuICBpZiAoIW1lc3NhZ2UpIHtcbiAgICByZXR1cm4gbnVsbDtcbiAgfVxuXG4gIGNvbnN0IHRvbmVDbGFzcyA9XG4gICAgbWVzc2FnZS50b25lID09PSBcInN1Y2Nlc3NcIlxuICAgICAgPyBcImJvcmRlci1lbWVyYWxkLTQwMC8yMCBiZy1lbWVyYWxkLTQwMC8xMCB0ZXh0LWVtZXJhbGQtMTAwXCJcbiAgICAgIDogbWVzc2FnZS50b25lID09PSBcImVycm9yXCJcbiAgICAgICAgPyBcImJvcmRlci1yb3NlLTQwMC8yMCBiZy1yb3NlLTQwMC8xMCB0ZXh0LXJvc2UtMTAwXCJcbiAgICAgICAgOiBcImJvcmRlci1jeWFuLTQwMC8yMCBiZy1jeWFuLTQwMC8xMCB0ZXh0LWN5YW4tMTAwXCI7XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT17YHJvdW5kZWQtMnhsIGJvcmRlciBweC00IHB5LTMgdGV4dC1zbSBsZWFkaW5nLTYgJHt0b25lQ2xhc3N9YH0+XG4gICAgICB7bWVzc2FnZS50ZXh0fVxuICAgIDwvZGl2PlxuICApO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gUG9ydGFsQWNjb3VudENlbnRlcih7XG4gIHJvbGUsXG4gIHVzZXJOYW1lLFxuICB1c2VyRW1haWwsXG4gIGNvbXBhbnksXG4gIHNlc3Npb25MYWJlbCxcbiAgc2VjdG9yTGFiZWwsXG4gIHBsYW5OYW1lLFxuICByb3V0ZUxhYmVsLFxuICBhdmFpbGFibGVQbGFucyxcbiAgc2VsZWN0ZWRQbGFuU2x1ZyxcbiAgcGVuZGluZ1BheW1lbnRzQ291bnQsXG4gIG9wZW5UaWNrZXRzQ291bnQsXG4gIGxpbmtlZENhcmRzQ291bnQsXG4gIHNhdmVCdXN5LFxuICBwYXNzd29yZEJ1c3ksXG4gIHNhdmVNZXNzYWdlLFxuICBwYXNzd29yZE1lc3NhZ2UsXG4gIG9uU2F2ZVByb2ZpbGUsXG4gIG9uQ2hhbmdlUGFzc3dvcmQsXG4gIG9uUHJpbWFyeUFjdGlvbixcbiAgb25TZWNvbmRhcnlBY3Rpb24sXG4gIHByaW1hcnlBY3Rpb25MYWJlbCxcbiAgc2Vjb25kYXJ5QWN0aW9uTGFiZWwsXG4gIG9uUGlja1BsYW4sXG59OiBQb3J0YWxBY2NvdW50Q2VudGVyUHJvcHMpIHtcbiAgY29uc3QgW3Byb2ZpbGVGb3JtLCBzZXRQcm9maWxlRm9ybV0gPSB1c2VTdGF0ZSh7XG4gICAgbmFtZTogdXNlck5hbWUsXG4gICAgZW1haWw6IHVzZXJFbWFpbCxcbiAgfSk7XG4gIGNvbnN0IFtwYXNzd29yZEZvcm0sIHNldFBhc3N3b3JkRm9ybV0gPSB1c2VTdGF0ZSh7XG4gICAgY3VycmVudFBhc3N3b3JkOiBcIlwiLFxuICAgIG5leHRQYXNzd29yZDogXCJcIixcbiAgICBjb25maXJtUGFzc3dvcmQ6IFwiXCIsXG4gIH0pO1xuXG4gIHVzZUVmZmVjdCgoKSA9PiB7XG4gICAgc2V0UHJvZmlsZUZvcm0oe1xuICAgICAgbmFtZTogdXNlck5hbWUsXG4gICAgICBlbWFpbDogdXNlckVtYWlsLFxuICAgIH0pO1xuICB9LCBbdXNlckVtYWlsLCB1c2VyTmFtZV0pO1xuXG4gIHVzZUVmZmVjdCgoKSA9PiB7XG4gICAgaWYgKHBhc3N3b3JkTWVzc2FnZT8udG9uZSA9PT0gXCJzdWNjZXNzXCIpIHtcbiAgICAgIHNldFBhc3N3b3JkRm9ybSh7XG4gICAgICAgIGN1cnJlbnRQYXNzd29yZDogXCJcIixcbiAgICAgICAgbmV4dFBhc3N3b3JkOiBcIlwiLFxuICAgICAgICBjb25maXJtUGFzc3dvcmQ6IFwiXCIsXG4gICAgICB9KTtcbiAgICB9XG4gIH0sIFtwYXNzd29yZE1lc3NhZ2VdKTtcblxuICBjb25zdCBpbml0aWFscyA9IHVzZU1lbW8oKCkgPT4ge1xuICAgIGNvbnN0IHNvdXJjZSA9IHVzZXJOYW1lIHx8IGNvbXBhbnkgfHwgXCJCXCI7XG4gICAgcmV0dXJuIHNvdXJjZVxuICAgICAgLnNwbGl0KC9cXHMrLylcbiAgICAgIC5maWx0ZXIoQm9vbGVhbilcbiAgICAgIC5zbGljZSgwLCAyKVxuICAgICAgLm1hcCgocGFydCkgPT4gcGFydFswXT8udG9VcHBlckNhc2UoKSA/PyBcIlwiKVxuICAgICAgLmpvaW4oXCJcIik7XG4gIH0sIFtjb21wYW55LCB1c2VyTmFtZV0pO1xuXG4gIGNvbnN0IGZlYXR1cmVkUGxhbnMgPSB1c2VNZW1vKCgpID0+IHtcbiAgICBjb25zdCBwcmVmZXJyZWRPcmRlciA9IFtcImZyZWVcIiwgXCJzdGFydGVyXCIsIFwiYnVzaW5lc3NcIiwgXCJwbGF0aW51bS1wbHVzXCJdO1xuICAgIGNvbnN0IGZpbHRlcmVkID0gYXZhaWxhYmxlUGxhbnMuZmlsdGVyKChwbGFuKSA9PlxuICAgICAgcHJlZmVycmVkT3JkZXIuaW5jbHVkZXMocGxhbi5zbHVnKSB8fCBwbGFuLmZlYXR1cmVkLFxuICAgICk7XG5cbiAgICByZXR1cm4gcHJlZmVycmVkT3JkZXJcbiAgICAgIC5tYXAoKHNsdWcpID0+IGZpbHRlcmVkLmZpbmQoKHBsYW4pID0+IHBsYW4uc2x1ZyA9PT0gc2x1ZykpXG4gICAgICAuZmlsdGVyKChwbGFuKTogcGxhbiBpcyBQbGFuID0+IEJvb2xlYW4ocGxhbikpXG4gICAgICAuc2xpY2UoMCwgNCk7XG4gIH0sIFthdmFpbGFibGVQbGFuc10pO1xuXG4gIGNvbnN0IGFjY291bnRDYXJkcyA9IFtcbiAgICB7XG4gICAgICBsYWJlbDogXCJXb3Jrc3BhY2VcIixcbiAgICAgIHZhbHVlOiBjb21wYW55LFxuICAgICAgY29weTogcm9sZSA9PT0gXCJhZG1pblwiID8gXCJBZG1pbiBjb250cm9sIGxheWVyXCIgOiBcIkFjdGl2ZSBjbGllbnQgY29tcGFueVwiLFxuICAgIH0sXG4gICAge1xuICAgICAgbGFiZWw6IFwiUGxhblwiLFxuICAgICAgdmFsdWU6IHBsYW5OYW1lLFxuICAgICAgY29weTpcbiAgICAgICAgcm9sZSA9PT0gXCJhZG1pblwiXG4gICAgICAgICAgPyBcIkNvbW1lcmNpYWwgcXVldWVzIGFuZCByb2xsb3V0IHN0YXkgdmlzaWJsZSBoZXJlLlwiXG4gICAgICAgICAgOiBcIkN1cnJlbnQgY29tbWVyY2lhbCBwYWNrYWdlIGF0dGFjaGVkIHRvIHRoaXMgYWNjb3VudC5cIixcbiAgICB9LFxuICAgIHtcbiAgICAgIGxhYmVsOiBcIlJvdXRlXCIsXG4gICAgICB2YWx1ZTogcm91dGVMYWJlbCxcbiAgICAgIGNvcHk6IFwiQ3VycmVudCBuZXR3b3JrIHBhdGggZm9yIHRoZSBhY3RpdmUgc2Vzc2lvbi5cIixcbiAgICB9LFxuICAgIHtcbiAgICAgIGxhYmVsOiBcIlNlc3Npb25cIixcbiAgICAgIHZhbHVlOiBzZXNzaW9uTGFiZWwsXG4gICAgICBjb3B5OiBcIkxhdGVzdCBhdXRoZW50aWNhdGVkIHdvcmtzcGFjZSBzZXNzaW9uLlwiLFxuICAgIH0sXG4gIF07XG5cbiAgY29uc3QgYWN0aW9uQ29weSA9XG4gICAgcm9sZSA9PT0gXCJhZG1pblwiXG4gICAgICA/IFwiS2VlcCBpZGVudGl0eSwgcXVldWUgdmlzaWJpbGl0eSwgYW5kIHJvbGxvdXQgc2hvcnRjdXRzIHRvZ2V0aGVyIHNvIHRoZSB3b3Jrc3BhY2UgZmVlbHMgbWFuYWdlZCBlbmQgdG8gZW5kLlwiXG4gICAgICA6IFwiVXBkYXRlIHlvdXIgcHJvZmlsZSBoZXJlLCB0aGVuIGp1bXAgZGlyZWN0bHkgaW50byBwbGFuLCBiaWxsaW5nLCBvciBzdXBwb3J0IHdpdGhvdXQgaHVudGluZyB0aHJvdWdoIHRoZSBwb3J0YWwuXCI7XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cIndvcmtzcGFjZS1ydW50aW1lLXRoZW1lIGdyaWQgZ2FwLTYgeGw6Z3JpZC1jb2xzLVswLjlmcl8xLjFmcl1cIj5cbiAgICAgIDxhcnRpY2xlIGNsYXNzTmFtZT1cInJvdW5kZWQtWzM0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctW2xpbmVhci1ncmFkaWVudCgxODBkZWcscmdiYSg4LDE2LDMwLDAuOTgpLHJnYmEoNSwxMSwyMSwwLjk0KSldIHAtNiBzaGFkb3ctWzBfMjJweF82NXB4X3JnYmEoMCwwLDAsMC4yMildXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBmbGV4LWNvbCBnYXAtNVwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBmbGV4LWNvbCBnYXAtNCBzbTpmbGV4LXJvdyBzbTppdGVtcy1zdGFydCBzbTpqdXN0aWZ5LWJldHdlZW5cIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1zdGFydCBnYXAtNFwiPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaC1bNC41cmVtXSB3LVs0LjVyZW1dIHNocmluay0wIGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciByb3VuZGVkLVsyNHB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlL1swLjA2XSB0ZXh0LTJ4bCBmb250LWJsYWNrIHRleHQtd2hpdGUgc2hhZG93LVswXzE2cHhfNDBweF9yZ2JhKDAsMCwwLDAuMTgpXVwiPlxuICAgICAgICAgICAgICAgIHtpbml0aWFscyB8fCBcIkJcIn1cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWluLXctMFwiPlxuICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIndvcmtzcGFjZS1iYWRnZVwiPlxuICAgICAgICAgICAgICAgICAgPFNwYXJrbGVzIGNsYXNzTmFtZT1cImgtMy41IHctMy41XCIgLz5cbiAgICAgICAgICAgICAgICAgIHtyb2xlID09PSBcImFkbWluXCIgPyBcIkFkbWluIGFjY291bnQgY2VudGVyXCIgOiBcIkNsaWVudCBhY2NvdW50IGNlbnRlclwifVxuICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8aDIgY2xhc3NOYW1lPVwibXQtNCB0ZXh0LTN4bCBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgIHt1c2VyTmFtZSB8fCBcIldvcmtzcGFjZSB1c2VyXCJ9XG4gICAgICAgICAgICAgICAgPC9oMj5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0yIGJyZWFrLWFsbCB0ZXh0LXNtIGxlYWRpbmctNyB0ZXh0LXNsYXRlLTMwMFwiPlxuICAgICAgICAgICAgICAgICAge3VzZXJFbWFpbH1cbiAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBmbGV4LXdyYXAgZ2FwLTJcIj5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwid29ya3NwYWNlLXN1bW1hcnktcGlsbFwiPntzZWN0b3JMYWJlbH08L3NwYW4+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIndvcmtzcGFjZS1zdW1tYXJ5LXBpbGxcIj57cGxhbk5hbWV9PC9zcGFuPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ3b3Jrc3BhY2Utc3VtbWFyeS1waWxsXCI+e3JvdXRlTGFiZWx9PC9zcGFuPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIGxlYWRpbmctNyB0ZXh0LXNsYXRlLTMwMFwiPnthY3Rpb25Db3B5fTwvcD5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBnYXAtNCBzbTpncmlkLWNvbHMtMlwiPlxuICAgICAgICAgICAge2FjY291bnRDYXJkcy5tYXAoKGNhcmQpID0+IChcbiAgICAgICAgICAgICAgPGRpdlxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtWzI0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC00XCJcbiAgICAgICAgICAgICAgICBrZXk9e2NhcmQubGFiZWx9XG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAge2NhcmQubGFiZWx9XG4gICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPVwibXQtMiBibG9jayB0ZXh0LWxnIGZvbnQtYmxhY2sgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAge2NhcmQudmFsdWV9XG4gICAgICAgICAgICAgICAgPC9zdHJvbmc+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LXNtIGxlYWRpbmctNiB0ZXh0LXNsYXRlLTQwMFwiPntjYXJkLmNvcHl9PC9wPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC00IHNtOmdyaWQtY29scy0zXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtWzI0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC00XCI+XG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgUGVuZGluZyBwYXltZW50c1xuICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPVwibXQtMiBibG9jayB0ZXh0LTJ4bCBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICB7cGVuZGluZ1BheW1lbnRzQ291bnR9XG4gICAgICAgICAgICAgIDwvc3Ryb25nPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtWzI0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC00XCI+XG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgTGlua2VkIGFjY2Vzc1xuICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPVwibXQtMiBibG9jayB0ZXh0LTJ4bCBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICB7bGlua2VkQ2FyZHNDb3VudH1cbiAgICAgICAgICAgICAgPC9zdHJvbmc+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicm91bmRlZC1bMjRweF0gYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8yMCBwLTRcIj5cbiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC14cyB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMThlbV0gdGV4dC1zbGF0ZS01MDBcIj5cbiAgICAgICAgICAgICAgICBPcGVuIHRpY2tldHNcbiAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICA8c3Ryb25nIGNsYXNzTmFtZT1cIm10LTIgYmxvY2sgdGV4dC0yeGwgZm9udC1ibGFjayB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAge29wZW5UaWNrZXRzQ291bnR9XG4gICAgICAgICAgICAgIDwvc3Ryb25nPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdyaWQgZ2FwLTMgc206Z3JpZC1jb2xzLTJcIj5cbiAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZXhlY3V0aXZlLWJ1dHRvbi1wcmltYXJ5IGlubGluZS1mbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBnYXAtMlwiXG4gICAgICAgICAgICAgIG9uQ2xpY2s9e29uUHJpbWFyeUFjdGlvbn1cbiAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxBcnJvd1JpZ2h0IGNsYXNzTmFtZT1cImgtNCB3LTRcIiAvPlxuICAgICAgICAgICAgICB7cHJpbWFyeUFjdGlvbkxhYmVsfVxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImV4ZWN1dGl2ZS1idXR0b24tc2Vjb25kYXJ5IGlubGluZS1mbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBnYXAtMlwiXG4gICAgICAgICAgICAgIG9uQ2xpY2s9e29uU2Vjb25kYXJ5QWN0aW9ufVxuICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPENyZWRpdENhcmQgY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+XG4gICAgICAgICAgICAgIHtzZWNvbmRhcnlBY3Rpb25MYWJlbH1cbiAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvYXJ0aWNsZT5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC02XCI+XG4gICAgICAgIDxhcnRpY2xlIGNsYXNzTmFtZT1cInJvdW5kZWQtWzM0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctW2xpbmVhci1ncmFkaWVudCgxODBkZWcscmdiYSg4LDE2LDMwLDAuOTgpLHJnYmEoNSwxMSwyMSwwLjk0KSldIHAtNiBzaGFkb3ctWzBfMjJweF82NXB4X3JnYmEoMCwwLDAsMC4yMildXCI+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWJldHdlZW4gZ2FwLTRcIj5cbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjJlbV0gdGV4dC1zbGF0ZS01MDBcIj5cbiAgICAgICAgICAgICAgICBQcm9maWxlXG4gICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cIm10LTIgdGV4dC0yeGwgZm9udC1ibGFjayB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAgVXBkYXRlIHlvdXIgdXNlciBkZXRhaWxzXG4gICAgICAgICAgICAgIDwvaDM+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxVc2VyUm91bmQgY2xhc3NOYW1lPVwiaC02IHctNiB0ZXh0LWN5YW4tMjAwXCIgLz5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXQtNSBncmlkIGdhcC00IG1kOmdyaWQtY29scy0yXCI+XG4gICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiZmllbGQtc2hlbGxcIj5cbiAgICAgICAgICAgICAgPHNwYW4+TmFtZTwvc3Bhbj5cbiAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXRcIlxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZXZlbnQpID0+XG4gICAgICAgICAgICAgICAgICBzZXRQcm9maWxlRm9ybSgoY3VycmVudCkgPT4gKHtcbiAgICAgICAgICAgICAgICAgICAgLi4uY3VycmVudCxcbiAgICAgICAgICAgICAgICAgICAgbmFtZTogZXZlbnQudGFyZ2V0LnZhbHVlLFxuICAgICAgICAgICAgICAgICAgfSkpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiWW91ciBuYW1lXCJcbiAgICAgICAgICAgICAgICB0eXBlPVwidGV4dFwiXG4gICAgICAgICAgICAgICAgdmFsdWU9e3Byb2ZpbGVGb3JtLm5hbWV9XG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8L2xhYmVsPlxuICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImZpZWxkLXNoZWxsXCI+XG4gICAgICAgICAgICAgIDxzcGFuPkVtYWlsPC9zcGFuPlxuICAgICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJmaWVsZC1pbnB1dFwiXG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT5cbiAgICAgICAgICAgICAgICAgIHNldFByb2ZpbGVGb3JtKChjdXJyZW50KSA9PiAoe1xuICAgICAgICAgICAgICAgICAgICAuLi5jdXJyZW50LFxuICAgICAgICAgICAgICAgICAgICBlbWFpbDogZXZlbnQudGFyZ2V0LnZhbHVlLFxuICAgICAgICAgICAgICAgICAgfSkpXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwieW91QGNvbXBhbnkuY29tXCJcbiAgICAgICAgICAgICAgICB0eXBlPVwiZW1haWxcIlxuICAgICAgICAgICAgICAgIHZhbHVlPXtwcm9maWxlRm9ybS5lbWFpbH1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwiZmllbGQtc2hlbGwgbWQ6Y29sLXNwYW4tMlwiPlxuICAgICAgICAgICAgICA8c3Bhbj5Db21wYW55IC8gd29ya3NwYWNlPC9zcGFuPlxuICAgICAgICAgICAgICA8aW5wdXQgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXQgb3BhY2l0eS04MFwiIGRpc2FibGVkIHR5cGU9XCJ0ZXh0XCIgdmFsdWU9e2NvbXBhbnl9IC8+XG4gICAgICAgICAgICA8L2xhYmVsPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtNCB0ZXh0LXNtIGxlYWRpbmctNyB0ZXh0LXNsYXRlLTQwMFwiPlxuICAgICAgICAgICAgV29ya3NwYWNlIGNvbXBhbnkgcmVtYWlucyBsb2NrZWQgaGVyZSBzbyBsaW5rZWQgcGxhbnMsIGNhcmRzLCB0aWNrZXRzLCBhbmQgcm9sbG91dFxuICAgICAgICAgICAgaGlzdG9yeSBzdGF5IGNvbnNpc3RlbnQuXG4gICAgICAgICAgPC9wPlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC00XCI+XG4gICAgICAgICAgICA8QWNjb3VudE1lc3NhZ2UgbWVzc2FnZT17c2F2ZU1lc3NhZ2V9IC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICBjbGFzc05hbWU9XCJleGVjdXRpdmUtYnV0dG9uLXByaW1hcnkgbXQtNSBpbmxpbmUtZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTJcIlxuICAgICAgICAgICAgZGlzYWJsZWQ9e3NhdmVCdXN5fVxuICAgICAgICAgICAgb25DbGljaz17KCkgPT4gb25TYXZlUHJvZmlsZShwcm9maWxlRm9ybSl9XG4gICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICA+XG4gICAgICAgICAgICA8Q2hlY2tDaXJjbGUyIGNsYXNzTmFtZT1cImgtNCB3LTRcIiAvPlxuICAgICAgICAgICAge3NhdmVCdXN5ID8gXCJTYXZpbmcgcHJvZmlsZS4uLlwiIDogXCJTYXZlIHByb2ZpbGVcIn1cbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPC9hcnRpY2xlPlxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBnYXAtNiBsZzpncmlkLWNvbHMtWzAuOTZmcl8xLjA0ZnJdXCI+XG4gICAgICAgICAgPGFydGljbGUgY2xhc3NOYW1lPVwicm91bmRlZC1bMzRweF0gYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1bbGluZWFyLWdyYWRpZW50KDE4MGRlZyxyZ2JhKDgsMTYsMzAsMC45OCkscmdiYSg1LDExLDIxLDAuOTQpKV0gcC02IHNoYWRvdy1bMF8yMnB4XzY1cHhfcmdiYSgwLDAsMCwwLjIyKV1cIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGdhcC00XCI+XG4gICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC14cyB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMmVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgU2VjdXJpdHlcbiAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cIm10LTIgdGV4dC0yeGwgZm9udC1ibGFjayB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAgICBDaGFuZ2UgcGFzc3dvcmRcbiAgICAgICAgICAgICAgICA8L2gzPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPEtleVJvdW5kIGNsYXNzTmFtZT1cImgtNiB3LTYgdGV4dC1jeWFuLTIwMFwiIC8+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC01IGdyaWQgZ2FwLTRcIj5cbiAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImZpZWxkLXNoZWxsXCI+XG4gICAgICAgICAgICAgICAgPHNwYW4+Q3VycmVudCBwYXNzd29yZDwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImZpZWxkLWlucHV0XCJcbiAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZXZlbnQpID0+XG4gICAgICAgICAgICAgICAgICAgIHNldFBhc3N3b3JkRm9ybSgoY3VycmVudCkgPT4gKHtcbiAgICAgICAgICAgICAgICAgICAgICAuLi5jdXJyZW50LFxuICAgICAgICAgICAgICAgICAgICAgIGN1cnJlbnRQYXNzd29yZDogZXZlbnQudGFyZ2V0LnZhbHVlLFxuICAgICAgICAgICAgICAgICAgICB9KSlcbiAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiQ3VycmVudCBwYXNzd29yZFwiXG4gICAgICAgICAgICAgICAgICB0eXBlPVwicGFzc3dvcmRcIlxuICAgICAgICAgICAgICAgICAgdmFsdWU9e3Bhc3N3b3JkRm9ybS5jdXJyZW50UGFzc3dvcmR9XG4gICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT1cImZpZWxkLXNoZWxsXCI+XG4gICAgICAgICAgICAgICAgPHNwYW4+TmV3IHBhc3N3b3JkPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXRcIlxuICAgICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT5cbiAgICAgICAgICAgICAgICAgICAgc2V0UGFzc3dvcmRGb3JtKChjdXJyZW50KSA9PiAoe1xuICAgICAgICAgICAgICAgICAgICAgIC4uLmN1cnJlbnQsXG4gICAgICAgICAgICAgICAgICAgICAgbmV4dFBhc3N3b3JkOiBldmVudC50YXJnZXQudmFsdWUsXG4gICAgICAgICAgICAgICAgICAgIH0pKVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJBdCBsZWFzdCA4IGNoYXJhY3RlcnNcIlxuICAgICAgICAgICAgICAgICAgdHlwZT1cInBhc3N3b3JkXCJcbiAgICAgICAgICAgICAgICAgIHZhbHVlPXtwYXNzd29yZEZvcm0ubmV4dFBhc3N3b3JkfVxuICAgICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9XCJmaWVsZC1zaGVsbFwiPlxuICAgICAgICAgICAgICAgIDxzcGFuPkNvbmZpcm0gbmV3IHBhc3N3b3JkPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiZmllbGQtaW5wdXRcIlxuICAgICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhldmVudCkgPT5cbiAgICAgICAgICAgICAgICAgICAgc2V0UGFzc3dvcmRGb3JtKChjdXJyZW50KSA9PiAoe1xuICAgICAgICAgICAgICAgICAgICAgIC4uLmN1cnJlbnQsXG4gICAgICAgICAgICAgICAgICAgICAgY29uZmlybVBhc3N3b3JkOiBldmVudC50YXJnZXQudmFsdWUsXG4gICAgICAgICAgICAgICAgICAgIH0pKVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJSZXBlYXQgdGhlIG5ldyBwYXNzd29yZFwiXG4gICAgICAgICAgICAgICAgICB0eXBlPVwicGFzc3dvcmRcIlxuICAgICAgICAgICAgICAgICAgdmFsdWU9e3Bhc3N3b3JkRm9ybS5jb25maXJtUGFzc3dvcmR9XG4gICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTRcIj5cbiAgICAgICAgICAgICAgPEFjY291bnRNZXNzYWdlIG1lc3NhZ2U9e3Bhc3N3b3JkTWVzc2FnZX0gLz5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImV4ZWN1dGl2ZS1idXR0b24tc2Vjb25kYXJ5IG10LTUgaW5saW5lLWZsZXggaXRlbXMtY2VudGVyIGdhcC0yXCJcbiAgICAgICAgICAgICAgZGlzYWJsZWQ9e3Bhc3N3b3JkQnVzeX1cbiAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gb25DaGFuZ2VQYXNzd29yZChwYXNzd29yZEZvcm0pfVxuICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPFNoaWVsZENoZWNrIGNsYXNzTmFtZT1cImgtNCB3LTRcIiAvPlxuICAgICAgICAgICAgICB7cGFzc3dvcmRCdXN5ID8gXCJVcGRhdGluZyBwYXNzd29yZC4uLlwiIDogXCJVcGRhdGUgcGFzc3dvcmRcIn1cbiAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgIDwvYXJ0aWNsZT5cblxuICAgICAgICAgIDxhcnRpY2xlIGNsYXNzTmFtZT1cInJvdW5kZWQtWzM0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctW2xpbmVhci1ncmFkaWVudCgxODBkZWcscmdiYSg4LDE2LDMwLDAuOTgpLHJnYmEoNSwxMSwyMSwwLjk0KSldIHAtNiBzaGFkb3ctWzBfMjJweF82NXB4X3JnYmEoMCwwLDAsMC4yMildXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiBnYXAtNFwiPlxuICAgICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjJlbV0gdGV4dC1zbGF0ZS01MDBcIj5cbiAgICAgICAgICAgICAgICAgIHtyb2xlID09PSBcImFkbWluXCIgPyBcIkNvbnRyb2xzXCIgOiBcIlBsYW4gY29udHJvbFwifVxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LTJ4bCBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgIHtyb2xlID09PSBcImFkbWluXCJcbiAgICAgICAgICAgICAgICAgICAgPyBcIk9wZW4gdGhlIGJvYXJkcyB0aGF0IG5lZWQgYXR0ZW50aW9uXCJcbiAgICAgICAgICAgICAgICAgICAgOiBcIkNob29zZSB0aGUgY29tbWVyY2lhbCBwYXRoIHRoYXQgZml0c1wifVxuICAgICAgICAgICAgICAgIDwvaDM+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICA8Q3JlZGl0Q2FyZCBjbGFzc05hbWU9XCJoLTYgdy02IHRleHQtY3lhbi0yMDBcIiAvPlxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIHtyb2xlID09PSBcImNsaWVudFwiID8gKFxuICAgICAgICAgICAgICA8PlxuICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIm10LTQgdGV4dC1zbSBsZWFkaW5nLTcgdGV4dC1zbGF0ZS0zMDBcIj5cbiAgICAgICAgICAgICAgICAgIFBpY2sgYSBwbGFuIGhlcmUsIHRoZW4ganVtcCBzdHJhaWdodCBpbnRvIHRoZSBhY2Nlc3Mgb3IgYmlsbGluZyBib2FyZCB0byBjb250aW51ZVxuICAgICAgICAgICAgICAgICAgdGhlIHVwZ3JhZGUgZmxvdy5cbiAgICAgICAgICAgICAgICA8L3A+XG5cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTUgZ3JpZCBnYXAtM1wiPlxuICAgICAgICAgICAgICAgICAge2ZlYXR1cmVkUGxhbnMubWFwKChwbGFuKSA9PiB7XG4gICAgICAgICAgICAgICAgICAgIGNvbnN0IHNlbGVjdGVkID0gc2VsZWN0ZWRQbGFuU2x1ZyA9PT0gcGxhbi5zbHVnO1xuXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPXtgcm91bmRlZC1bMjRweF0gYm9yZGVyIHB4LTQgcHktNCB0ZXh0LWxlZnQgdHJhbnNpdGlvbiAke1xuICAgICAgICAgICAgICAgICAgICAgICAgICBzZWxlY3RlZFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gXCJib3JkZXItW3JnYmEoMjEyLDkwLDUyLDAuMyldIGJnLVtyZ2JhKDIxMiw5MCw1MiwwLjEyKV1cIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogXCJib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgaG92ZXI6LXRyYW5zbGF0ZS15LTAuNSBob3ZlcjpiZy13aGl0ZS9bMC4wNV1cIlxuICAgICAgICAgICAgICAgICAgICAgICAgfWB9XG4gICAgICAgICAgICAgICAgICAgICAgICBrZXk9e3BsYW4uc2x1Z31cbiAgICAgICAgICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG9uUGlja1BsYW4/LihwbGFuLnNsdWcpfVxuICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLXN0YXJ0IGp1c3RpZnktYmV0d2VlbiBnYXAtM1wiPlxuICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIHRyYWNraW5nLVswLjE4ZW1dIHRleHQtc2xhdGUtNTAwXCI+XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7cGxhbi5mZWF0dXJlZCA/IFwiUmVjb21tZW5kZWRcIiA6IHBsYW4uc2x1ZyA9PT0gXCJmcmVlXCIgPyBcIkZyZWVcIiA6IFwiTWFuYWdlZFwifVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8c3Ryb25nIGNsYXNzTmFtZT1cIm10LTIgYmxvY2sgdGV4dC1sZyBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtwbGFuLm5hbWV9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9zdHJvbmc+XG4gICAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ3b3Jrc3BhY2Utc3VtbWFyeS1waWxsXCI+e3BsYW4uZGV2aWNlQWxsb3dhbmNlfTwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMyB0ZXh0LXNtIGxlYWRpbmctNiB0ZXh0LXNsYXRlLTMwMFwiPntwbGFuLnN1bW1hcnl9PC9wPlxuICAgICAgICAgICAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgICAgICAgICApO1xuICAgICAgICAgICAgICAgICAgfSl9XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDwvPlxuICAgICAgICAgICAgKSA6IChcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC01IGdyaWQgZ2FwLTNcIj5cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtWzI0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC00XCI+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgICBQYXltZW50IHF1ZXVlXG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgICA8c3Ryb25nIGNsYXNzTmFtZT1cIm10LTIgYmxvY2sgdGV4dC1sZyBmb250LWJsYWNrIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgICAge3BlbmRpbmdQYXltZW50c0NvdW50fSByZXF1ZXN0cyB3YWl0aW5nXG4gICAgICAgICAgICAgICAgICA8L3N0cm9uZz5cbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIm10LTIgdGV4dC1zbSBsZWFkaW5nLTYgdGV4dC1zbGF0ZS00MDBcIj5cbiAgICAgICAgICAgICAgICAgICAgUmV2aWV3IHBlbmRpbmcgdXBncmFkZXMgYW5kIHVuYmxvY2sgdGhlIHJvbGxvdXQgcGF0aC5cbiAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtWzI0cHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMjAgcC00XCI+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4xOGVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgICBTdXBwb3J0IHNpZ25hbFxuICAgICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgICAgPHN0cm9uZyBjbGFzc05hbWU9XCJtdC0yIGJsb2NrIHRleHQtbGcgZm9udC1ibGFjayB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAgICAgIHtvcGVuVGlja2V0c0NvdW50fSBvcGVuIHRpY2tldHNcbiAgICAgICAgICAgICAgICAgIDwvc3Ryb25nPlxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LXNtIGxlYWRpbmctNiB0ZXh0LXNsYXRlLTQwMFwiPlxuICAgICAgICAgICAgICAgICAgICBLZWVwIGlkZW50aXR5IGFuZCBvcGVyYXRpb25hbCBmb2xsb3ctdXAgaW4gb25lIGNsZWFuIGFkbWluIHZpZXcuXG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgKX1cbiAgICAgICAgICA8L2FydGljbGU+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59XG5cbmV4cG9ydCBkZWZhdWx0IFBvcnRhbEFjY291bnRDZW50ZXI7XG4iXSwibmFtZXMiOlsidXNlRWZmZWN0IiwidXNlTWVtbyIsInVzZVN0YXRlIiwiQXJyb3dSaWdodCIsIkNoZWNrQ2lyY2xlMiIsIkNyZWRpdENhcmQiLCJLZXlSb3VuZCIsIlNoaWVsZENoZWNrIiwiU3BhcmtsZXMiLCJVc2VyUm91bmQiLCJBY2NvdW50TWVzc2FnZSIsIm1lc3NhZ2UiLCJ0b25lQ2xhc3MiLCJ0b25lIiwiZGl2IiwiY2xhc3NOYW1lIiwidGV4dCIsIlBvcnRhbEFjY291bnRDZW50ZXIiLCJyb2xlIiwidXNlck5hbWUiLCJ1c2VyRW1haWwiLCJjb21wYW55Iiwic2Vzc2lvbkxhYmVsIiwic2VjdG9yTGFiZWwiLCJwbGFuTmFtZSIsInJvdXRlTGFiZWwiLCJhdmFpbGFibGVQbGFucyIsInNlbGVjdGVkUGxhblNsdWciLCJwZW5kaW5nUGF5bWVudHNDb3VudCIsIm9wZW5UaWNrZXRzQ291bnQiLCJsaW5rZWRDYXJkc0NvdW50Iiwic2F2ZUJ1c3kiLCJwYXNzd29yZEJ1c3kiLCJzYXZlTWVzc2FnZSIsInBhc3N3b3JkTWVzc2FnZSIsIm9uU2F2ZVByb2ZpbGUiLCJvbkNoYW5nZVBhc3N3b3JkIiwib25QcmltYXJ5QWN0aW9uIiwib25TZWNvbmRhcnlBY3Rpb24iLCJwcmltYXJ5QWN0aW9uTGFiZWwiLCJzZWNvbmRhcnlBY3Rpb25MYWJlbCIsIm9uUGlja1BsYW4iLCJwcm9maWxlRm9ybSIsInNldFByb2ZpbGVGb3JtIiwibmFtZSIsImVtYWlsIiwicGFzc3dvcmRGb3JtIiwic2V0UGFzc3dvcmRGb3JtIiwiY3VycmVudFBhc3N3b3JkIiwibmV4dFBhc3N3b3JkIiwiY29uZmlybVBhc3N3b3JkIiwiaW5pdGlhbHMiLCJzb3VyY2UiLCJzcGxpdCIsImZpbHRlciIsIkJvb2xlYW4iLCJzbGljZSIsIm1hcCIsInBhcnQiLCJ0b1VwcGVyQ2FzZSIsImpvaW4iLCJmZWF0dXJlZFBsYW5zIiwicHJlZmVycmVkT3JkZXIiLCJmaWx0ZXJlZCIsInBsYW4iLCJpbmNsdWRlcyIsInNsdWciLCJmZWF0dXJlZCIsImZpbmQiLCJhY2NvdW50Q2FyZHMiLCJsYWJlbCIsInZhbHVlIiwiY29weSIsImFjdGlvbkNvcHkiLCJhcnRpY2xlIiwic3BhbiIsImgyIiwicCIsImNhcmQiLCJzdHJvbmciLCJidXR0b24iLCJvbkNsaWNrIiwidHlwZSIsImgzIiwiaW5wdXQiLCJvbkNoYW5nZSIsImV2ZW50IiwiY3VycmVudCIsInRhcmdldCIsInBsYWNlaG9sZGVyIiwiZGlzYWJsZWQiLCJzZWxlY3RlZCIsImRldmljZUFsbG93YW5jZSIsInN1bW1hcnkiXSwibWFwcGluZ3MiOiI7O0FBQUEsU0FBU0EsU0FBUyxFQUFFQyxPQUFPLEVBQUVDLFFBQVEsUUFBUSxRQUFRO0FBQ3JELFNBQ0VDLFVBQVUsRUFDVkMsWUFBWSxFQUNaQyxVQUFVLEVBQ1ZDLFFBQVEsRUFDUkMsV0FBVyxFQUNYQyxRQUFRLEVBQ1JDLFNBQVMsUUFDSixlQUFlO0FBdUN0QixTQUFTQyxlQUFlLEVBQUVDLE9BQU8sRUFBMEI7SUFDekQsSUFBSSxDQUFDQSxTQUFTO1FBQ1osT0FBTztJQUNUO0lBRUEsTUFBTUMsWUFDSkQsUUFBUUUsSUFBSSxLQUFLLFlBQ2IsNkRBQ0FGLFFBQVFFLElBQUksS0FBSyxVQUNmLG9EQUNBO0lBRVIscUJBQ0UsUUFBQ0M7UUFBSUMsV0FBVyxDQUFDLCtDQUErQyxFQUFFSCxXQUFXO2tCQUMxRUQsUUFBUUssSUFBSTs7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

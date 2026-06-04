@@ -3,6 +3,7 @@ import activationRoutes from "./activationRoutes.js";
 import adminRoutes from "./adminRoutes.js";
 import authRoutes from "./authRoutes.js";
 import clientRoutes from "./clientRoutes.js";
+import chatRoutes from "./chatRoutes.js";
 import healthRoutes from "./healthRoutes.js";
 import contentRoutes from "./contentRoutes.js";
 import leadRoutes from "./leadRoutes.js";
@@ -36,5 +37,6 @@ router.use("/tickets", ticketRoutes);
 router.use("/admin", adminRoutes);
 router.use("/client", clientRoutes);
 router.use("/uploads", uploadRoutes);
+router.use("/chat", chatRoutes);
 
 export default router;

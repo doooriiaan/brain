@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MessageSquare, Send, Sparkles, X } from "lucide-react";
+import { askFrontPageChat, getRequestErrorMessage } from "../services/api";
 import type { Device, Plan, Sector } from "../types";
 import {
   formatPlanLimit,
@@ -10,6 +11,7 @@ import {
 
 type MessageItem = {
   id: string;
+  pending?: boolean;
   role: "assistant" | "user";
   text: string;
 };
@@ -17,13 +19,12 @@ type MessageItem = {
 type FrontPageChatPopupProps = {
   device: Device | null;
   embedded?: boolean;
-  onNavigate: (target: "devices" | "access" | "help" | "sectors") => void;
   plans: Plan[];
   sector: Sector | null;
 };
 
 type ChatReply = {
-  nextAction: "devices" | "access" | "help" | "sectors";
+  nextAction: "devices" | "access" | "help" | "plans" | "sectors";
   reply: string;
   suggestions: string[];
 };
@@ -143,7 +144,7 @@ function createReply(
         : formatPlanLimit(parsePlanTokenLimit(mentionedPlan), "tokens");
 
     return {
-      nextAction: "help",
+      nextAction: "plans",
       reply:
         language === "sq"
           ? `${mentionedPlan.name} eshte ${formatPlanPrice(mentionedPlan)} dhe ${formatPlanYear(
@@ -169,7 +170,7 @@ function createReply(
     normalized.includes("krahas")
   ) {
     return {
-      nextAction: "help" as const,
+      nextAction: "plans" as const,
       reply:
         language === "sq"
           ? recommendedPlan
@@ -265,15 +266,35 @@ function createReply(
     normalized.includes("kontakt")
   ) {
     return {
+      nextAction: "plans",
+      reply:
+        language === "sq"
+          ? "Mund te pergjigjem ketu direkt. Per cmime, krahasim dhe token limits, hape pjesen e planeve ne landing ose help-in per pyetje me te gjata."
+          : "I can answer directly here. For pricing, comparison, and token limits, open the plan section on the landing page or the help page for deeper questions.",
+      suggestions:
+        language === "sq"
+          ? ["Hap planet", "Cili plan me pershtatet?", "Hap help"]
+          : ["Open plans", "Which plan fits me?", "Open help"],
+    };
+  }
+
+  if (
+    normalized.includes("about") ||
+    normalized.includes("company") ||
+    normalized.includes("platform") ||
+    normalized.includes("kush") ||
+    normalized.includes("rreth")
+  ) {
+    return {
       nextAction: "help",
       reply:
         language === "sq"
-          ? "Mund te rrim ketu per pyetje te shpejta, por pricing/help window eshte vendi ku e sheh krahasimin, limitet e planeve dhe guidat me qarte."
-          : "I can stay here for quick guidance, but the pricing/help window is where you see the comparison, plan limits, and rollout guidance more clearly.",
+          ? "brAIn eshte platforme me pajisje fizike plus software: e vendos pajisjen ne ambient, e lidh me cloud, pastaj menaxhon sektorin, planin, tokenat dhe aktivizimin prej portalit."
+          : "brAIn is a hardware plus software platform: place the device on site, connect it to the cloud, then manage the sector, plan, tokens, and activation from the portal.",
       suggestions:
         language === "sq"
-          ? ["Hap pricing", "Cili plan me pershtatet?", "Hap buyer login"]
-          : ["Open pricing", "Which plan fits me?", "Open buyer login"],
+          ? ["Hap help", "Cfare ben pajisja?", "Hap buyer login"]
+          : ["Open help", "What does the device do?", "Open buyer login"],
     };
   }
 
@@ -294,45 +315,46 @@ function createReply(
   }
 
   return {
-    nextAction: recommendedPlan ? "help" : "devices",
+    nextAction: "help",
     reply:
       language === "sq"
-        ? recommendedPlan
-          ? `Per kete kontekst, me duket mire me nis me ${recommendedPlan.name}, me pa ${device?.name ?? "pajisjen"} live, dhe pastaj me kalu ne pricing ose login.`
-          : "Mund te te drejtoj te produktet, pricing, ose buyer login. Nise me pajisjen nese don me e pa faqen me real."
-        : recommendedPlan
-          ? `For this context, I would start with ${recommendedPlan.name}, keep ${device?.name ?? "the device"} visible, and then move into pricing or login.`
-          : "I can point you to products, pricing, or buyer login. Start with the device view if you want the page to feel more concrete.",
-    suggestions: getDefaultSuggestions(language, device, sector),
+        ? `Mund te pyesesh cfare te duash ketu. Nese pyetja lidhet me brAIn, e perdor kontekstin aktiv: ${device?.name ?? "pajisja"} / ${sector?.name ?? "sektori"}${
+            recommendedPlan ? ` / ${recommendedPlan.name}` : ""
+          }. Nese pyetja eshte jashte produktit, pergjigjem si asistent i lire dhe ta mbaj biseden ne kontekst.`
+        : `You can ask anything here. If it is about brAIn, I will use the active context: ${device?.name ?? "device"} / ${sector?.name ?? "sector"}${
+            recommendedPlan ? ` / ${recommendedPlan.name}` : ""
+          }. If it is outside the product, I will answer like a free-form assistant and keep the conversation context.`,
+    suggestions:
+      language === "sq"
+        ? ["Shpjegoje thjesht", "Me jep hapat", "Kthehu te brAIn"]
+        : ["Explain it simply", "Give me the steps", "Back to brAIn"],
   };
 }
 
 export function FrontPageChatPopup({
   device,
   embedded = false,
-  onNavigate,
   plans,
   sector,
 }: FrontPageChatPopupProps) {
   const language = useMemo(() => getLanguage(), []);
   const [open, setOpen] = useState(embedded);
   const [input, setInput] = useState("");
-  const [nextAction, setNextAction] = useState<
-    "devices" | "access" | "help" | "sectors" | null
-  >(null);
+  const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const isOpen = embedded || open;
 
   const welcomeMessage = useMemo(() => {
     if (language === "sq") {
       return device && sector
-        ? `${device.name} eshte hapur per ${sector.name}. Mund te te ndihmoj me produktin, pricing ose buyer login.`
-        : "Jam ne front page per me te drejtu te produktet, pricing ose buyer login.";
+        ? `${device.name} eshte hapur per ${sector.name}. Pyet cfare te duash — per brAIn, kod, ide, plan, ose hapa konkrete.`
+        : "Jam ketu si chat i lire. Pyet cfare te duash dhe e mbaj biseden ne kontekst.";
     }
 
     return device && sector
-      ? `${device.name} is open for ${sector.name}. I can guide you to the product view, pricing, or buyer login.`
-      : "I am here on the front page to guide you to products, pricing, or buyer login.";
+      ? `${device.name} is open for ${sector.name}. Ask anything — brAIn, code, ideas, plans, or concrete next steps.`
+      : "I am here as a free-form chat. Ask anything and I will keep the conversation in context.";
   }, [device, language, sector]);
 
   const [messages, setMessages] = useState<MessageItem[]>([
@@ -342,10 +364,6 @@ export function FrontPageChatPopup({
       text: welcomeMessage,
     },
   ]);
-
-  const [suggestions, setSuggestions] = useState<string[]>(
-    getDefaultSuggestions(language, device, sector),
-  );
 
   useEffect(() => {
     setMessages((current) => {
@@ -359,7 +377,6 @@ export function FrontPageChatPopup({
 
       return [{ ...current[0], text: welcomeMessage }];
     });
-    setSuggestions(getDefaultSuggestions(language, device, sector));
   }, [device, language, sector, welcomeMessage]);
 
   useEffect(() => {
@@ -370,41 +387,105 @@ export function FrontPageChatPopup({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [isOpen, messages]);
 
-  function handleNavigate(target: "devices" | "access" | "help" | "sectors") {
-    onNavigate(target);
-    setNextAction(null);
-  }
-
-  function sendMessage(messageText: string) {
+  async function sendMessage(messageText: string) {
     const trimmed = messageText.trim();
 
-    if (!trimmed) {
+    if (!trimmed || loading) {
       return;
     }
 
-    const reply = createReply(trimmed, language, device, sector, plans);
+    const localReply = createReply(trimmed, language, device, sector, plans);
+    const userMessage: MessageItem = {
+      id: `${Date.now()}-user`,
+      role: "user",
+      text: trimmed,
+    };
+    const assistantMessageId = `${Date.now()}-assistant`;
+    const pendingMessage: MessageItem = {
+      id: assistantMessageId,
+      pending: true,
+      role: "assistant",
+      text: language === "sq" ? "Po mendoj..." : "Thinking...",
+    };
+    const chatHistory = messages
+      .filter((message) => !message.pending)
+      .slice(-8)
+      .map((message) => ({
+        role: message.role,
+        text: message.text,
+      }));
 
     setMessages((current) => [
       ...current,
-      {
-        id: `${Date.now()}-user`,
-        role: "user",
-        text: trimmed,
-      },
-      {
-        id: `${Date.now()}-assistant`,
-        role: "assistant",
-        text: reply.reply,
-      },
+      userMessage,
+      pendingMessage,
     ]);
-    setSuggestions(reply.suggestions);
-    setNextAction(reply.nextAction);
+    setStatusMessage("");
     setInput("");
+    setLoading(true);
+
+    try {
+      const aiReply = await askFrontPageChat({
+        context: {
+          device,
+          plans,
+          sector,
+        },
+        history: chatHistory,
+        language,
+        message: trimmed,
+      });
+
+      const resolvedReply =
+        aiReply.source === "setup" ? localReply.reply : aiReply.reply || localReply.reply;
+
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === assistantMessageId
+            ? {
+                ...message,
+                pending: false,
+                text: resolvedReply,
+              }
+            : message,
+        ),
+      );
+
+      if (aiReply.source === "setup") {
+        setStatusMessage(
+          language === "sq"
+            ? "Live AI nuk eshte lidhur ende, prandaj po perdor pergjigje lokale."
+            : "Live AI is not connected yet, so local answers are active.",
+        );
+      }
+    } catch (error) {
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === assistantMessageId
+            ? {
+                ...message,
+                pending: false,
+                text: localReply.reply,
+              }
+            : message,
+        ),
+      );
+      setStatusMessage(
+        getRequestErrorMessage(
+          error,
+          language === "sq"
+            ? "AI nuk u lidh tani, prandaj u perdor pergjigjja lokale."
+            : "AI could not connect right now, so the local reply was used.",
+        ),
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   const teaser = language === "sq"
-    ? "Pyet per produktin, planin ose login"
-    : "Ask about product, plan, or login";
+    ? "Pyet cfare te duash"
+    : "Ask anything";
   const shellClassName = embedded
     ? "support-agent-shell support-agent-shell-embedded"
     : "support-agent-shell";
@@ -436,11 +517,11 @@ export function FrontPageChatPopup({
                 <Sparkles className="h-4 w-4" />
               </span>
               <div>
-                <strong>brAIn front page chat</strong>
+                <strong>brAIn Chat</strong>
                 <p>
                   {language === "sq"
-                    ? "Pergjigje te shpejta per produktin, pricing dhe buyer flow"
-                    : "Quick answers for product, pricing, and buyer flow"}
+                    ? "Asistent i lire, si ChatGPT"
+                    : "Free-form assistant, ChatGPT-style"}
                 </p>
               </div>
             </div>
@@ -457,18 +538,6 @@ export function FrontPageChatPopup({
             ) : null}
           </div>
 
-          <div className="support-agent-context">
-            {sector?.name ? (
-              <span className="support-agent-context-chip">{sector.name}</span>
-            ) : null}
-            {device?.name ? (
-              <span className="support-agent-context-chip">{device.name}</span>
-            ) : null}
-            <span className="support-agent-context-chip">
-              {language === "sq" ? "Front page" : "Front page"}
-            </span>
-          </div>
-
           <div className="support-agent-messages">
             {messages.map((message) => (
               <div
@@ -476,7 +545,7 @@ export function FrontPageChatPopup({
                   message.role === "assistant"
                     ? "support-agent-bubble-assistant"
                     : "support-agent-bubble-user"
-                }`}
+                } ${message.pending ? "support-agent-bubble-pending" : ""}`}
                 key={message.id}
               >
                 {message.text}
@@ -484,47 +553,6 @@ export function FrontPageChatPopup({
             ))}
             <div ref={messagesEndRef} />
           </div>
-
-          <div className="support-agent-chip-row">
-            {suggestions.map((suggestion) => (
-              <button
-                className="support-agent-chip"
-                key={suggestion}
-                onClick={() => sendMessage(suggestion)}
-                type="button"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-
-          {nextAction ? (
-            <button
-              className="support-agent-next-action"
-              onClick={() => handleNavigate(nextAction)}
-              type="button"
-            >
-              {nextAction === "devices"
-                ? language === "sq"
-                  ? "Hap produktet"
-                  : "Open products"
-                : nextAction === "access"
-                  ? language === "sq"
-                    ? "Hap buyer login"
-                    : "Open buyer login"
-                : nextAction === "sectors"
-                    ? language === "sq"
-                      ? "Hap solutions"
-                      : "Open solutions"
-                    : language === "sq"
-                      ? embedded
-                        ? "Hap help page"
-                        : "Hap pricing"
-                      : embedded
-                        ? "Open help page"
-                        : "Open pricing"}
-            </button>
-          ) : null}
 
           <form
             className="support-agent-form"
@@ -538,15 +566,17 @@ export function FrontPageChatPopup({
               onChange={(event) => setInput(event.target.value)}
               placeholder={
                 language === "sq"
-                  ? "Pyet cfare plani, cila pajisje, ose si vazhdohet..."
-                  : "Ask which plan, which device, or how to continue..."
+                  ? "Pyet cfare te duash..."
+                  : "Ask anything..."
               }
+              disabled={loading}
               value={input}
             />
-            <button className="support-agent-send" type="submit">
+            <button className="support-agent-send" disabled={loading} type="submit">
               <Send className="h-4 w-4" />
             </button>
           </form>
+          {statusMessage ? <p className="support-agent-status">{statusMessage}</p> : null}
         </div>
       )}
     </div>

@@ -1,0 +1,1093 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/dashboard/ClientDashboardOverview.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=03b53ff9";
+import { motion } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/framer-motion.js?v=03b53ff9";
+import { Activity, ArrowUpRight, CheckCircle2, CreditCard, ShieldCheck, Sparkles, Ticket, UserRound, Wallet } from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/lucide-react.js?v=03b53ff9";
+function DashboardStatCard({ accentClass, hint, icon, title, value }) {
+    return /*#__PURE__*/ _jsxDEV(motion.div, {
+        whileHover: {
+            y: -4,
+            scale: 1.01
+        },
+        transition: {
+            type: "spring",
+            stiffness: 220,
+            damping: 18
+        },
+        className: "h-full rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl",
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "mb-4 flex items-start justify-between gap-4",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "text-sm text-slate-300",
+                                children: title
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 44,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("h3", {
+                                className: "mt-2 text-2xl font-semibold text-white",
+                                children: value
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 45,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 43,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: `rounded-2xl border border-white/10 p-3 ${accentClass}`,
+                        children: icon
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 48,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 42,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("p", {
+                className: "text-sm text-slate-400",
+                children: hint
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 53,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+        lineNumber: 37,
+        columnNumber: 5
+    }, this);
+}
+_c = DashboardStatCard;
+function QuickActionCard({ body, icon, onClick, title, toneClass }) {
+    return /*#__PURE__*/ _jsxDEV("button", {
+        className: "group h-full rounded-[30px] border border-white/10 bg-white/[0.04] p-6 text-left transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]",
+        onClick: onClick,
+        type: "button",
+        children: [
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: `mb-4 inline-flex rounded-2xl border border-white/10 p-3 ${toneClass}`,
+                children: icon
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 77,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "flex items-start justify-between gap-3",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("h3", {
+                                className: "text-xl font-bold text-white",
+                                children: title
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 85,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "mt-2 text-sm leading-7 text-slate-400",
+                                children: body
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 86,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 84,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(ArrowUpRight, {
+                        className: "mt-1 h-5 w-5 text-slate-500 transition group-hover:text-cyan-300"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 89,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 83,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+        lineNumber: 72,
+        columnNumber: 5
+    }, this);
+}
+_c1 = QuickActionCard;
+function SignalBars({ values }) {
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: "flex h-36 items-end gap-2",
+        children: values.map((value, index)=>/*#__PURE__*/ _jsxDEV(motion.div, {
+                initial: {
+                    height: 0,
+                    opacity: 0
+                },
+                animate: {
+                    height: `${value}%`,
+                    opacity: 1
+                },
+                transition: {
+                    delay: index * 0.04,
+                    duration: 0.45
+                },
+                className: "flex-1 rounded-t-[18px] bg-gradient-to-t from-blue-600/80 via-cyan-400/80 to-sky-300/90"
+            }, `${value}-${index}`, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 99,
+                columnNumber: 9
+            }, this))
+    }, void 0, false, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+        lineNumber: 97,
+        columnNumber: 5
+    }, this);
+}
+_c2 = SignalBars;
+export function ClientDashboardOverview({ account, activations, clients, company, notifications, onOpenAccount, onOpenCards, onOpenPayments, onOpenSupport, onSelectCompany, payments, smartCards, userEmail, userName, formatMoney }) {
+    const totalPaid = payments.reduce((sum, payment)=>sum + payment.amount, 0);
+    const planName = account?.planName ?? "No active plan";
+    const creditsRemaining = account?.creditsRemaining ?? 0;
+    const usagePercent = creditsRemaining > 0 && account ? Math.min(account.monthlyUsage / Math.max(creditsRemaining, 1) * 100, 100) : 0;
+    const usageState = smartCards.length === 0 ? "Prepare activation" : usagePercent >= 85 ? "Watch capacity" : usagePercent >= 45 ? "Balanced usage" : "Healthy usage";
+    const paymentState = payments.length > 0 ? `${payments.length} captured` : "No payments yet";
+    const latestNotification = notifications[0];
+    const signalValues = Array.from({
+        length: 11
+    }, (_, index)=>Math.max(22, Math.min(88, Math.round(24 + smartCards.length * 3 + activations.length * 4 + payments.length * 5 + index * 4 - usagePercent * 0.18))));
+    return /*#__PURE__*/ _jsxDEV("div", {
+        className: "workspace-runtime-theme space-y-5",
+        children: [
+            /*#__PURE__*/ _jsxDEV(motion.div, {
+                initial: {
+                    opacity: 0,
+                    y: 20
+                },
+                animate: {
+                    opacity: 1,
+                    y: 0
+                },
+                transition: {
+                    duration: 0.5
+                },
+                className: "rounded-[36px] border border-cyan-400/10 bg-white/5 p-8 shadow-[0_20px_80px_rgba(2,12,27,0.55)] backdrop-blur-xl",
+                children: /*#__PURE__*/ _jsxDEV("div", {
+                    className: "grid gap-8 xl:grid-cols-[1.18fr_0.82fr]",
+                    children: [
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.22em] text-cyan-200",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                                            size: 16
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 192,
+                                            columnNumber: 15
+                                        }, this),
+                                        "Client Workspace"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 191,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("h1", {
+                                    className: "text-4xl font-black leading-tight md:text-5xl",
+                                    children: [
+                                        "Welcome back",
+                                        " ",
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "bg-gradient-to-r from-cyan-300 via-sky-300 to-indigo-300 bg-clip-text text-transparent",
+                                            children: userName || "Client"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 198,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 196,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("p", {
+                                    className: "mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-base",
+                                    children: "Keep your plan, payments, SC cards, activations, and support in one calm live view built around the brAIn system."
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 203,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "mt-5 flex flex-wrap gap-3",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-300",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV(Sparkles, {
+                                                    size: 16
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 210,
+                                                    columnNumber: 17
+                                                }, this),
+                                                "CLIENT"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 209,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-300",
+                                            children: account?.status ?? "active"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 214,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-sm text-white",
+                                            children: planName
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 218,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("span", {
+                                            className: "rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-sm text-slate-300",
+                                            children: usageState
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 222,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 208,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "mt-6 flex flex-wrap gap-3",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("button", {
+                                            className: "inline-flex items-center gap-2 rounded-2xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300",
+                                            onClick: onOpenCards,
+                                            type: "button",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV(Ticket, {
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 233,
+                                                    columnNumber: 17
+                                                }, this),
+                                                "Open SC Cards"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 228,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("button", {
+                                            className: "inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-3 font-semibold text-white transition hover:bg-white/[0.1]",
+                                            onClick: onOpenPayments,
+                                            type: "button",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV(ArrowUpRight, {
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 242,
+                                                    columnNumber: 17
+                                                }, this),
+                                                "Open Payments"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 237,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("button", {
+                                            className: "inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-3 font-semibold text-white transition hover:bg-white/[0.08]",
+                                            onClick: onOpenAccount,
+                                            type: "button",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV(UserRound, {
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 251,
+                                                    columnNumber: 17
+                                                }, this),
+                                                "Profile + password"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 246,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 227,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 190,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("div", {
+                            className: "h-full rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.72),rgba(15,23,42,0.92))] p-6",
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "flex items-start justify-between gap-4",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV("p", {
+                                                    className: "text-xs uppercase tracking-[0.2em] text-slate-500",
+                                                    children: "Workspace brief"
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 260,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("h2", {
+                                                    className: "mt-2 text-3xl font-black text-white",
+                                                    children: "Live account status"
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 263,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("p", {
+                                                    className: "mt-2 text-sm leading-7 text-slate-400",
+                                                    children: "A compact read on plan health, billing state, and client access."
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 266,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 259,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("div", {
+                                            className: "rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-3 text-cyan-300",
+                                            children: /*#__PURE__*/ _jsxDEV(Activity, {
+                                                size: 24
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 272,
+                                                columnNumber: 17
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 271,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 258,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "mt-6 grid gap-4 sm:grid-cols-2",
+                                    children: [
+                                        {
+                                            label: "Mode",
+                                            value: "Live workspace",
+                                            hint: "Plan, cards, and support stay connected here.",
+                                            toneClass: "bg-cyan-400/10 text-cyan-200"
+                                        },
+                                        {
+                                            label: "Health",
+                                            value: usageState,
+                                            hint: "Current readiness based on usage and linked assets.",
+                                            toneClass: "bg-emerald-400/10 text-emerald-200"
+                                        },
+                                        {
+                                            label: "Plan",
+                                            value: planName,
+                                            hint: "Current commercial package tied to this company.",
+                                            toneClass: "bg-indigo-400/10 text-indigo-200"
+                                        },
+                                        {
+                                            label: "Payments",
+                                            value: paymentState,
+                                            hint: "Latest payment posture for this workspace.",
+                                            toneClass: "bg-violet-400/10 text-violet-200"
+                                        }
+                                    ].map((item)=>/*#__PURE__*/ _jsxDEV("div", {
+                                            className: "rounded-2xl border border-white/10 bg-black/10 p-4",
+                                            children: [
+                                                /*#__PURE__*/ _jsxDEV("div", {
+                                                    className: "flex items-center justify-between gap-4",
+                                                    children: [
+                                                        /*#__PURE__*/ _jsxDEV("div", {
+                                                            children: [
+                                                                /*#__PURE__*/ _jsxDEV("p", {
+                                                                    className: "text-xs uppercase tracking-[0.18em] text-slate-500",
+                                                                    children: item.label
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                                    lineNumber: 309,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ _jsxDEV("p", {
+                                                                    className: "mt-2 text-xl font-bold text-white",
+                                                                    children: item.value
+                                                                }, void 0, false, {
+                                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                                    lineNumber: 312,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                            lineNumber: 308,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ _jsxDEV("span", {
+                                                            className: `rounded-full px-3 py-1 text-xs font-semibold ${item.toneClass}`,
+                                                            children: "Live"
+                                                        }, void 0, false, {
+                                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                            lineNumber: 317,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 307,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ _jsxDEV("p", {
+                                                    className: "mt-3 text-sm leading-6 text-slate-400",
+                                                    children: item.hint
+                                                }, void 0, false, {
+                                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                    lineNumber: 324,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, item.label, true, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 303,
+                                            columnNumber: 17
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 276,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("div", {
+                                    className: "mt-4 rounded-2xl border border-cyan-400/15 bg-cyan-500/5 p-4",
+                                    children: /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex flex-wrap items-center justify-between gap-3",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "text-sm font-semibold text-white",
+                                                        children: account?.company ?? company
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 334,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-2 text-sm leading-7 text-slate-300",
+                                                        children: [
+                                                            userEmail || "Client email",
+                                                            " / ",
+                                                            account?.sectorLabel ?? "brAIn workspace"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 337,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 333,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("select", {
+                                                className: "select-shell max-w-[16rem]",
+                                                onChange: (event)=>onSelectCompany(event.target.value),
+                                                value: company,
+                                                children: clients.map((client)=>/*#__PURE__*/ _jsxDEV("option", {
+                                                        value: client.company,
+                                                        children: [
+                                                            client.company,
+                                                            " / ",
+                                                            client.sectorLabel
+                                                        ]
+                                                    }, client.company, true, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 348,
+                                                        columnNumber: 21
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 342,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 332,
+                                        columnNumber: 15
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                    lineNumber: 331,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 257,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                    lineNumber: 189,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 183,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "grid gap-5 md:grid-cols-2 xl:grid-cols-4",
+                children: [
+                    /*#__PURE__*/ _jsxDEV(DashboardStatCard, {
+                        accentClass: "bg-cyan-400/10",
+                        hint: "The active commercial plan tied to this client workspace.",
+                        icon: /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                            className: "h-6 w-6 text-cyan-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 363,
+                            columnNumber: 17
+                        }, this),
+                        title: "Plan",
+                        value: planName
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 360,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(DashboardStatCard, {
+                        accentClass: "bg-sky-400/10",
+                        hint: "Assigned and active smart cards connected to this workspace.",
+                        icon: /*#__PURE__*/ _jsxDEV(Ticket, {
+                            className: "h-6 w-6 text-sky-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 370,
+                            columnNumber: 17
+                        }, this),
+                        title: "SC Cards",
+                        value: String(smartCards.length)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 367,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(DashboardStatCard, {
+                        accentClass: "bg-indigo-400/10",
+                        hint: "Provisioning and deployment requests tracked by the client portal.",
+                        icon: /*#__PURE__*/ _jsxDEV(CheckCircle2, {
+                            className: "h-6 w-6 text-indigo-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 377,
+                            columnNumber: 17
+                        }, this),
+                        title: "Activations",
+                        value: String(activations.length)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 374,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(DashboardStatCard, {
+                        accentClass: "bg-emerald-400/10",
+                        hint: "Approved payment value captured for this account.",
+                        icon: /*#__PURE__*/ _jsxDEV(Wallet, {
+                            className: "h-6 w-6 text-emerald-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 384,
+                            columnNumber: 17
+                        }, this),
+                        title: "Payments",
+                        value: formatMoney(totalPaid)
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 381,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 359,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "grid gap-5 md:grid-cols-2 xl:grid-cols-4",
+                children: [
+                    /*#__PURE__*/ _jsxDEV(QuickActionCard, {
+                        body: "Open the live payment form and review recent payment activity.",
+                        icon: /*#__PURE__*/ _jsxDEV(CreditCard, {
+                            className: "h-7 w-7 text-cyan-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 393,
+                            columnNumber: 17
+                        }, this),
+                        onClick: onOpenPayments,
+                        title: "Payments",
+                        toneClass: "bg-cyan-400/10"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 391,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(QuickActionCard, {
+                        body: "Reveal, validate, and activate assigned smart cards from one place.",
+                        icon: /*#__PURE__*/ _jsxDEV(Ticket, {
+                            className: "h-7 w-7 text-emerald-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 400,
+                            columnNumber: 17
+                        }, this),
+                        onClick: onOpenCards,
+                        title: "SC Reveal",
+                        toneClass: "bg-emerald-400/10"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 398,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(QuickActionCard, {
+                        body: "Queue deployment support, installation requests, and activation follow-ups.",
+                        icon: /*#__PURE__*/ _jsxDEV(ShieldCheck, {
+                            className: "h-7 w-7 text-amber-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 407,
+                            columnNumber: 17
+                        }, this),
+                        onClick: onOpenSupport,
+                        title: "Support + Deploy",
+                        toneClass: "bg-amber-400/10"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 405,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV(QuickActionCard, {
+                        body: latestNotification?.title ?? "Keep the latest portal signals and company updates close.",
+                        icon: /*#__PURE__*/ _jsxDEV(Sparkles, {
+                            className: "h-7 w-7 text-violet-200"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                            lineNumber: 417,
+                            columnNumber: 17
+                        }, this),
+                        onClick: onOpenSupport,
+                        title: "Latest Signal",
+                        toneClass: "bg-violet-400/10"
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 412,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 390,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("div", {
+                className: "grid gap-6 xl:grid-cols-[1.08fr_0.92fr]",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "mb-5 flex items-center justify-between gap-4",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("h2", {
+                                                className: "text-xl font-bold text-white",
+                                                children: "Client signal"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 428,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "mt-1 text-sm text-slate-400",
+                                                children: "A compact visual pulse for plan usage, payments, SC cards, and deployment activity."
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 429,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 427,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-300",
+                                        children: /*#__PURE__*/ _jsxDEV(Activity, {
+                                            className: "h-5 w-5"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                            lineNumber: 436,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 435,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 426,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV(SignalBars, {
+                                values: signalValues
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 440,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "mt-6 grid gap-4 sm:grid-cols-3",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-2xl border border-white/10 bg-black/10 p-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "text-sm text-slate-400",
+                                                children: "Plan"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 444,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "mt-2 text-lg font-semibold text-white",
+                                                children: planName
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 445,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 443,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-2xl border border-white/10 bg-black/10 p-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "text-sm text-slate-400",
+                                                children: "Credits"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 448,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "mt-2 text-lg font-semibold text-white",
+                                                children: creditsRemaining.toLocaleString("en-GB")
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 449,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 447,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "rounded-2xl border border-white/10 bg-black/10 p-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "text-sm text-slate-400",
+                                                children: "Billing"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 454,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("p", {
+                                                className: "mt-2 text-lg font-semibold text-white",
+                                                children: paymentState
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 455,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 453,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 442,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 425,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("div", {
+                        className: "rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("h2", {
+                                className: "text-xl font-bold text-white",
+                                children: "Client direction"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 461,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("p", {
+                                className: "mt-1 text-sm text-slate-400",
+                                children: "The client dashboard now centers the real brAIn flow instead of isolated stats."
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 462,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("div", {
+                                className: "mt-5 space-y-3",
+                                children: [
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex items-start gap-3 rounded-2xl border border-white/10 bg-black/10 p-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV(CheckCircle2, {
+                                                className: "mt-0.5 h-5 w-5 text-cyan-300"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 469,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "font-semibold text-white",
+                                                        children: "Plan first"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 471,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-1 text-sm leading-6 text-slate-400",
+                                                        children: "Every client company keeps its active plan visible at the top."
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 472,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 470,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 468,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex items-start gap-3 rounded-2xl border border-white/10 bg-black/10 p-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV(CheckCircle2, {
+                                                className: "mt-0.5 h-5 w-5 text-emerald-300"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 478,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "font-semibold text-white",
+                                                        children: "Payment to SC card"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 480,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-1 text-sm leading-6 text-slate-400",
+                                                        children: "Billing, linked card inventory, and activation now stay in the same dashboard story."
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 481,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 479,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 477,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ _jsxDEV("div", {
+                                        className: "flex items-start gap-3 rounded-2xl border border-white/10 bg-black/10 p-4",
+                                        children: [
+                                            /*#__PURE__*/ _jsxDEV(CheckCircle2, {
+                                                className: "mt-0.5 h-5 w-5 text-violet-300"
+                                            }, void 0, false, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 488,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ _jsxDEV("div", {
+                                                children: [
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "font-semibold text-white",
+                                                        children: "Reveal and support"
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 490,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ _jsxDEV("p", {
+                                                        className: "mt-1 text-sm leading-6 text-slate-400",
+                                                        children: "Smart-card reveal and deploy support remain one click away."
+                                                    }, void 0, false, {
+                                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                        lineNumber: 491,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                                lineNumber: 489,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                        lineNumber: 487,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                                lineNumber: 467,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                        lineNumber: 460,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+                lineNumber: 424,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx",
+        lineNumber: 182,
+        columnNumber: 5
+    }, this);
+}
+_c3 = ClientDashboardOverview;
+var _c, _c1, _c2, _c3;
+$RefreshReg$(_c, "DashboardStatCard");
+$RefreshReg$(_c1, "QuickActionCard");
+$RefreshReg$(_c2, "SignalBars");
+$RefreshReg$(_c3, "ClientDashboardOverview");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/dashboard/ClientDashboardOverview.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkNsaWVudERhc2hib2FyZE92ZXJ2aWV3LnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgdHlwZSB7IFJlYWN0Tm9kZSB9IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgbW90aW9uIH0gZnJvbSBcImZyYW1lci1tb3Rpb25cIjtcbmltcG9ydCB7XG4gIEFjdGl2aXR5LFxuICBBcnJvd1VwUmlnaHQsXG4gIENoZWNrQ2lyY2xlMixcbiAgQ3JlZGl0Q2FyZCxcbiAgU2hpZWxkQ2hlY2ssXG4gIFNwYXJrbGVzLFxuICBUaWNrZXQsXG4gIFVzZXJSb3VuZCxcbiAgV2FsbGV0LFxufSBmcm9tIFwibHVjaWRlLXJlYWN0XCI7XG5pbXBvcnQgdHlwZSB7XG4gIEFjdGl2YXRpb25JdGVtLFxuICBDbGllbnRQaWNrZXJJdGVtLFxuICBOb3RpZmljYXRpb25JdGVtLFxuICBQYXltZW50UmVjb3JkLFxuICBTbWFydENhcmRJdGVtLFxuICBBY2NvdW50SXRlbSxcbn0gZnJvbSBcIi4uLy4uL3R5cGVzXCI7XG5cbmZ1bmN0aW9uIERhc2hib2FyZFN0YXRDYXJkKHtcbiAgYWNjZW50Q2xhc3MsXG4gIGhpbnQsXG4gIGljb24sXG4gIHRpdGxlLFxuICB2YWx1ZSxcbn06IHtcbiAgYWNjZW50Q2xhc3M6IHN0cmluZztcbiAgaGludDogc3RyaW5nO1xuICBpY29uOiBSZWFjdE5vZGU7XG4gIHRpdGxlOiBzdHJpbmc7XG4gIHZhbHVlOiBzdHJpbmc7XG59KSB7XG4gIHJldHVybiAoXG4gICAgPG1vdGlvbi5kaXZcbiAgICAgIHdoaWxlSG92ZXI9e3sgeTogLTQsIHNjYWxlOiAxLjAxIH19XG4gICAgICB0cmFuc2l0aW9uPXt7IHR5cGU6IFwic3ByaW5nXCIsIHN0aWZmbmVzczogMjIwLCBkYW1waW5nOiAxOCB9fVxuICAgICAgY2xhc3NOYW1lPVwiaC1mdWxsIHJvdW5kZWQtM3hsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctd2hpdGUvNSBwLTUgc2hhZG93LVswXzEwcHhfMzBweF9yZ2JhKDAsMCwwLDAuMjIpXSBiYWNrZHJvcC1ibHVyLXhsXCJcbiAgICA+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1iLTQgZmxleCBpdGVtcy1zdGFydCBqdXN0aWZ5LWJldHdlZW4gZ2FwLTRcIj5cbiAgICAgICAgPGRpdj5cbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIHRleHQtc2xhdGUtMzAwXCI+e3RpdGxlfTwvcD5cbiAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LTJ4bCBmb250LXNlbWlib2xkIHRleHQtd2hpdGVcIj57dmFsdWV9PC9oMz5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9e2Byb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIHAtMyAke2FjY2VudENsYXNzfWB9PlxuICAgICAgICAgIHtpY29ufVxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIHRleHQtc2xhdGUtNDAwXCI+e2hpbnR9PC9wPlxuICAgIDwvbW90aW9uLmRpdj5cbiAgKTtcbn1cblxuZnVuY3Rpb24gUXVpY2tBY3Rpb25DYXJkKHtcbiAgYm9keSxcbiAgaWNvbixcbiAgb25DbGljayxcbiAgdGl0bGUsXG4gIHRvbmVDbGFzcyxcbn06IHtcbiAgYm9keTogc3RyaW5nO1xuICBpY29uOiBSZWFjdE5vZGU7XG4gIG9uQ2xpY2s6ICgpID0+IHZvaWQ7XG4gIHRpdGxlOiBzdHJpbmc7XG4gIHRvbmVDbGFzczogc3RyaW5nO1xufSkge1xuICByZXR1cm4gKFxuICAgIDxidXR0b25cbiAgICAgIGNsYXNzTmFtZT1cImdyb3VwIGgtZnVsbCByb3VuZGVkLVszMHB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlL1swLjA0XSBwLTYgdGV4dC1sZWZ0IHRyYW5zaXRpb24gaG92ZXI6LXRyYW5zbGF0ZS15LTEgaG92ZXI6Ym9yZGVyLXdoaXRlLzIwIGhvdmVyOmJnLXdoaXRlL1swLjA3XVwiXG4gICAgICBvbkNsaWNrPXtvbkNsaWNrfVxuICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgPlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2BtYi00IGlubGluZS1mbGV4IHJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgcC0zICR7dG9uZUNsYXNzfWB9XG4gICAgICA+XG4gICAgICAgIHtpY29ufVxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1zdGFydCBqdXN0aWZ5LWJldHdlZW4gZ2FwLTNcIj5cbiAgICAgICAgPGRpdj5cbiAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwidGV4dC14bCBmb250LWJvbGQgdGV4dC13aGl0ZVwiPnt0aXRsZX08L2gzPlxuICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIm10LTIgdGV4dC1zbSBsZWFkaW5nLTcgdGV4dC1zbGF0ZS00MDBcIj57Ym9keX08L3A+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxBcnJvd1VwUmlnaHQgY2xhc3NOYW1lPVwibXQtMSBoLTUgdy01IHRleHQtc2xhdGUtNTAwIHRyYW5zaXRpb24gZ3JvdXAtaG92ZXI6dGV4dC1jeWFuLTMwMFwiIC8+XG4gICAgICA8L2Rpdj5cbiAgICA8L2J1dHRvbj5cbiAgKTtcbn1cblxuZnVuY3Rpb24gU2lnbmFsQmFycyh7IHZhbHVlcyB9OiB7IHZhbHVlczogbnVtYmVyW10gfSkge1xuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBoLTM2IGl0ZW1zLWVuZCBnYXAtMlwiPlxuICAgICAge3ZhbHVlcy5tYXAoKHZhbHVlLCBpbmRleCkgPT4gKFxuICAgICAgICA8bW90aW9uLmRpdlxuICAgICAgICAgIGtleT17YCR7dmFsdWV9LSR7aW5kZXh9YH1cbiAgICAgICAgICBpbml0aWFsPXt7IGhlaWdodDogMCwgb3BhY2l0eTogMCB9fVxuICAgICAgICAgIGFuaW1hdGU9e3sgaGVpZ2h0OiBgJHt2YWx1ZX0lYCwgb3BhY2l0eTogMSB9fVxuICAgICAgICAgIHRyYW5zaXRpb249e3sgZGVsYXk6IGluZGV4ICogMC4wNCwgZHVyYXRpb246IDAuNDUgfX1cbiAgICAgICAgICBjbGFzc05hbWU9XCJmbGV4LTEgcm91bmRlZC10LVsxOHB4XSBiZy1ncmFkaWVudC10by10IGZyb20tYmx1ZS02MDAvODAgdmlhLWN5YW4tNDAwLzgwIHRvLXNreS0zMDAvOTBcIlxuICAgICAgICAvPlxuICAgICAgKSl9XG4gICAgPC9kaXY+XG4gICk7XG59XG5cbnR5cGUgQ2xpZW50RGFzaGJvYXJkT3ZlcnZpZXdQcm9wcyA9IHtcbiAgYWNjb3VudDogQWNjb3VudEl0ZW0gfCBudWxsO1xuICBhY3RpdmF0aW9uczogQWN0aXZhdGlvbkl0ZW1bXTtcbiAgY2xpZW50czogQ2xpZW50UGlja2VySXRlbVtdO1xuICBjb21wYW55OiBzdHJpbmc7XG4gIG5vdGlmaWNhdGlvbnM6IE5vdGlmaWNhdGlvbkl0ZW1bXTtcbiAgb25PcGVuQWNjb3VudDogKCkgPT4gdm9pZDtcbiAgb25PcGVuQ2FyZHM6ICgpID0+IHZvaWQ7XG4gIG9uT3BlblBheW1lbnRzOiAoKSA9PiB2b2lkO1xuICBvbk9wZW5TdXBwb3J0OiAoKSA9PiB2b2lkO1xuICBvblNlbGVjdENvbXBhbnk6IChjb21wYW55OiBzdHJpbmcpID0+IHZvaWQ7XG4gIHBheW1lbnRzOiBQYXltZW50UmVjb3JkW107XG4gIHNtYXJ0Q2FyZHM6IFNtYXJ0Q2FyZEl0ZW1bXTtcbiAgdXNlckVtYWlsOiBzdHJpbmc7XG4gIHVzZXJOYW1lOiBzdHJpbmc7XG4gIGZvcm1hdE1vbmV5OiAodmFsdWU6IG51bWJlcikgPT4gc3RyaW5nO1xufTtcblxuZXhwb3J0IGZ1bmN0aW9uIENsaWVudERhc2hib2FyZE92ZXJ2aWV3KHtcbiAgYWNjb3VudCxcbiAgYWN0aXZhdGlvbnMsXG4gIGNsaWVudHMsXG4gIGNvbXBhbnksXG4gIG5vdGlmaWNhdGlvbnMsXG4gIG9uT3BlbkFjY291bnQsXG4gIG9uT3BlbkNhcmRzLFxuICBvbk9wZW5QYXltZW50cyxcbiAgb25PcGVuU3VwcG9ydCxcbiAgb25TZWxlY3RDb21wYW55LFxuICBwYXltZW50cyxcbiAgc21hcnRDYXJkcyxcbiAgdXNlckVtYWlsLFxuICB1c2VyTmFtZSxcbiAgZm9ybWF0TW9uZXksXG59OiBDbGllbnREYXNoYm9hcmRPdmVydmlld1Byb3BzKSB7XG4gIGNvbnN0IHRvdGFsUGFpZCA9IHBheW1lbnRzLnJlZHVjZSgoc3VtLCBwYXltZW50KSA9PiBzdW0gKyBwYXltZW50LmFtb3VudCwgMCk7XG4gIGNvbnN0IHBsYW5OYW1lID0gYWNjb3VudD8ucGxhbk5hbWUgPz8gXCJObyBhY3RpdmUgcGxhblwiO1xuICBjb25zdCBjcmVkaXRzUmVtYWluaW5nID0gYWNjb3VudD8uY3JlZGl0c1JlbWFpbmluZyA/PyAwO1xuICBjb25zdCB1c2FnZVBlcmNlbnQgPVxuICAgIGNyZWRpdHNSZW1haW5pbmcgPiAwICYmIGFjY291bnRcbiAgICAgID8gTWF0aC5taW4oKGFjY291bnQubW9udGhseVVzYWdlIC8gTWF0aC5tYXgoY3JlZGl0c1JlbWFpbmluZywgMSkpICogMTAwLCAxMDApXG4gICAgICA6IDA7XG4gIGNvbnN0IHVzYWdlU3RhdGUgPVxuICAgIHNtYXJ0Q2FyZHMubGVuZ3RoID09PSAwXG4gICAgICA/IFwiUHJlcGFyZSBhY3RpdmF0aW9uXCJcbiAgICAgIDogdXNhZ2VQZXJjZW50ID49IDg1XG4gICAgICAgID8gXCJXYXRjaCBjYXBhY2l0eVwiXG4gICAgICAgIDogdXNhZ2VQZXJjZW50ID49IDQ1XG4gICAgICAgICAgPyBcIkJhbGFuY2VkIHVzYWdlXCJcbiAgICAgICAgICA6IFwiSGVhbHRoeSB1c2FnZVwiO1xuICBjb25zdCBwYXltZW50U3RhdGUgPVxuICAgIHBheW1lbnRzLmxlbmd0aCA+IDAgPyBgJHtwYXltZW50cy5sZW5ndGh9IGNhcHR1cmVkYCA6IFwiTm8gcGF5bWVudHMgeWV0XCI7XG4gIGNvbnN0IGxhdGVzdE5vdGlmaWNhdGlvbiA9IG5vdGlmaWNhdGlvbnNbMF07XG4gIGNvbnN0IHNpZ25hbFZhbHVlcyA9IEFycmF5LmZyb20oeyBsZW5ndGg6IDExIH0sIChfLCBpbmRleCkgPT5cbiAgICBNYXRoLm1heChcbiAgICAgIDIyLFxuICAgICAgTWF0aC5taW4oXG4gICAgICAgIDg4LFxuICAgICAgICBNYXRoLnJvdW5kKFxuICAgICAgICAgIDI0ICtcbiAgICAgICAgICAgIHNtYXJ0Q2FyZHMubGVuZ3RoICogMyArXG4gICAgICAgICAgICBhY3RpdmF0aW9ucy5sZW5ndGggKiA0ICtcbiAgICAgICAgICAgIHBheW1lbnRzLmxlbmd0aCAqIDUgK1xuICAgICAgICAgICAgaW5kZXggKiA0IC1cbiAgICAgICAgICAgIHVzYWdlUGVyY2VudCAqIDAuMTgsXG4gICAgICAgICksXG4gICAgICApLFxuICAgICksXG4gICk7XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cIndvcmtzcGFjZS1ydW50aW1lLXRoZW1lIHNwYWNlLXktNVwiPlxuICAgICAgPG1vdGlvbi5kaXZcbiAgICAgICAgaW5pdGlhbD17eyBvcGFjaXR5OiAwLCB5OiAyMCB9fVxuICAgICAgICBhbmltYXRlPXt7IG9wYWNpdHk6IDEsIHk6IDAgfX1cbiAgICAgICAgdHJhbnNpdGlvbj17eyBkdXJhdGlvbjogMC41IH19XG4gICAgICAgIGNsYXNzTmFtZT1cInJvdW5kZWQtWzM2cHhdIGJvcmRlciBib3JkZXItY3lhbi00MDAvMTAgYmctd2hpdGUvNSBwLTggc2hhZG93LVswXzIwcHhfODBweF9yZ2JhKDIsMTIsMjcsMC41NSldIGJhY2tkcm9wLWJsdXIteGxcIlxuICAgICAgPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdyaWQgZ2FwLTggeGw6Z3JpZC1jb2xzLVsxLjE4ZnJfMC44MmZyXVwiPlxuICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1iLTMgaW5saW5lLWZsZXggaXRlbXMtY2VudGVyIGdhcC0yIHJvdW5kZWQtZnVsbCBib3JkZXIgYm9yZGVyLWN5YW4tMzAwLzIwIGJnLWN5YW4tMzAwLzEwIHB4LTQgcHktMiB0ZXh0LXhzIHVwcGVyY2FzZSB0cmFja2luZy1bMC4yMmVtXSB0ZXh0LWN5YW4tMjAwXCI+XG4gICAgICAgICAgICAgIDxTaGllbGRDaGVjayBzaXplPXsxNn0gLz5cbiAgICAgICAgICAgICAgQ2xpZW50IFdvcmtzcGFjZVxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxoMSBjbGFzc05hbWU9XCJ0ZXh0LTR4bCBmb250LWJsYWNrIGxlYWRpbmctdGlnaHQgbWQ6dGV4dC01eGxcIj5cbiAgICAgICAgICAgICAgV2VsY29tZSBiYWNre1wiIFwifVxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJiZy1ncmFkaWVudC10by1yIGZyb20tY3lhbi0zMDAgdmlhLXNreS0zMDAgdG8taW5kaWdvLTMwMCBiZy1jbGlwLXRleHQgdGV4dC10cmFuc3BhcmVudFwiPlxuICAgICAgICAgICAgICAgIHt1c2VyTmFtZSB8fCBcIkNsaWVudFwifVxuICAgICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICA8L2gxPlxuXG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC00IG1heC13LTN4bCB0ZXh0LXNtIGxlYWRpbmctNyB0ZXh0LXNsYXRlLTMwMCBtZDp0ZXh0LWJhc2VcIj5cbiAgICAgICAgICAgICAgS2VlcCB5b3VyIHBsYW4sIHBheW1lbnRzLCBTQyBjYXJkcywgYWN0aXZhdGlvbnMsIGFuZCBzdXBwb3J0IGluIG9uZVxuICAgICAgICAgICAgICBjYWxtIGxpdmUgdmlldyBidWlsdCBhcm91bmQgdGhlIGJyQUluIHN5c3RlbS5cbiAgICAgICAgICAgIDwvcD5cblxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC01IGZsZXggZmxleC13cmFwIGdhcC0zXCI+XG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImlubGluZS1mbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiByb3VuZGVkLWZ1bGwgYm9yZGVyIGJvcmRlci1jeWFuLTQwMC8yMCBiZy1jeWFuLTQwMC8xMCBweC0zIHB5LTEgdGV4dC1zbSB0ZXh0LWN5YW4tMzAwXCI+XG4gICAgICAgICAgICAgICAgPFNwYXJrbGVzIHNpemU9ezE2fSAvPlxuICAgICAgICAgICAgICAgIENMSUVOVFxuICAgICAgICAgICAgICA8L3NwYW4+XG5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwicm91bmRlZC1mdWxsIGJvcmRlciBib3JkZXItZW1lcmFsZC00MDAvMjAgYmctZW1lcmFsZC00MDAvMTAgcHgtMyBweS0xIHRleHQtc20gdGV4dC1lbWVyYWxkLTMwMFwiPlxuICAgICAgICAgICAgICAgIHthY2NvdW50Py5zdGF0dXMgPz8gXCJhY3RpdmVcIn1cbiAgICAgICAgICAgICAgPC9zcGFuPlxuXG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInJvdW5kZWQtZnVsbCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlL1swLjA1XSBweC0zIHB5LTEgdGV4dC1zbSB0ZXh0LXdoaXRlXCI+XG4gICAgICAgICAgICAgICAge3BsYW5OYW1lfVxuICAgICAgICAgICAgICA8L3NwYW4+XG5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwicm91bmRlZC1mdWxsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctd2hpdGUvWzAuMDVdIHB4LTMgcHktMSB0ZXh0LXNtIHRleHQtc2xhdGUtMzAwXCI+XG4gICAgICAgICAgICAgICAge3VzYWdlU3RhdGV9XG4gICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTYgZmxleCBmbGV4LXdyYXAgZ2FwLTNcIj5cbiAgICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImlubGluZS1mbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiByb3VuZGVkLTJ4bCBiZy1jeWFuLTQwMCBweC01IHB5LTMgZm9udC1zZW1pYm9sZCB0ZXh0LXNsYXRlLTk1MCB0cmFuc2l0aW9uIGhvdmVyOmJnLWN5YW4tMzAwXCJcbiAgICAgICAgICAgICAgICBvbkNsaWNrPXtvbk9wZW5DYXJkc31cbiAgICAgICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIDxUaWNrZXQgc2l6ZT17MTh9IC8+XG4gICAgICAgICAgICAgICAgT3BlbiBTQyBDYXJkc1xuICAgICAgICAgICAgICA8L2J1dHRvbj5cblxuICAgICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiaW5saW5lLWZsZXggaXRlbXMtY2VudGVyIGdhcC0yIHJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctd2hpdGUvWzAuMDVdIHB4LTUgcHktMyBmb250LXNlbWlib2xkIHRleHQtd2hpdGUgdHJhbnNpdGlvbiBob3ZlcjpiZy13aGl0ZS9bMC4xXVwiXG4gICAgICAgICAgICAgICAgb25DbGljaz17b25PcGVuUGF5bWVudHN9XG4gICAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICA8QXJyb3dVcFJpZ2h0IHNpemU9ezE4fSAvPlxuICAgICAgICAgICAgICAgIE9wZW4gUGF5bWVudHNcbiAgICAgICAgICAgICAgPC9idXR0b24+XG5cbiAgICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cImlubGluZS1mbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiByb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlL1swLjAzXSBweC01IHB5LTMgZm9udC1zZW1pYm9sZCB0ZXh0LXdoaXRlIHRyYW5zaXRpb24gaG92ZXI6Ymctd2hpdGUvWzAuMDhdXCJcbiAgICAgICAgICAgICAgICBvbkNsaWNrPXtvbk9wZW5BY2NvdW50fVxuICAgICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICA+XG4gICAgICAgICAgICAgICAgPFVzZXJSb3VuZCBzaXplPXsxOH0gLz5cbiAgICAgICAgICAgICAgICBQcm9maWxlICsgcGFzc3dvcmRcbiAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiaC1mdWxsIHJvdW5kZWQtWzMwcHhdIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctW2xpbmVhci1ncmFkaWVudCgxODBkZWcscmdiYSgxNSwyMyw0MiwwLjcyKSxyZ2JhKDE1LDIzLDQyLDAuOTIpKV0gcC02XCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaXRlbXMtc3RhcnQganVzdGlmeS1iZXR3ZWVuIGdhcC00XCI+XG4gICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC14cyB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMmVtXSB0ZXh0LXNsYXRlLTUwMFwiPlxuICAgICAgICAgICAgICAgICAgV29ya3NwYWNlIGJyaWVmXG4gICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgIDxoMiBjbGFzc05hbWU9XCJtdC0yIHRleHQtM3hsIGZvbnQtYmxhY2sgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgTGl2ZSBhY2NvdW50IHN0YXR1c1xuICAgICAgICAgICAgICAgIDwvaDI+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LXNtIGxlYWRpbmctNyB0ZXh0LXNsYXRlLTQwMFwiPlxuICAgICAgICAgICAgICAgICAgQSBjb21wYWN0IHJlYWQgb24gcGxhbiBoZWFsdGgsIGJpbGxpbmcgc3RhdGUsIGFuZCBjbGllbnQgYWNjZXNzLlxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLWN5YW4tNDAwLzIwIGJnLWN5YW4tNTAwLzEwIHAtMyB0ZXh0LWN5YW4tMzAwXCI+XG4gICAgICAgICAgICAgICAgPEFjdGl2aXR5IHNpemU9ezI0fSAvPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTYgZ3JpZCBnYXAtNCBzbTpncmlkLWNvbHMtMlwiPlxuICAgICAgICAgICAgICB7W1xuICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgIGxhYmVsOiBcIk1vZGVcIixcbiAgICAgICAgICAgICAgICAgIHZhbHVlOiBcIkxpdmUgd29ya3NwYWNlXCIsXG4gICAgICAgICAgICAgICAgICBoaW50OiBcIlBsYW4sIGNhcmRzLCBhbmQgc3VwcG9ydCBzdGF5IGNvbm5lY3RlZCBoZXJlLlwiLFxuICAgICAgICAgICAgICAgICAgdG9uZUNsYXNzOiBcImJnLWN5YW4tNDAwLzEwIHRleHQtY3lhbi0yMDBcIixcbiAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgIGxhYmVsOiBcIkhlYWx0aFwiLFxuICAgICAgICAgICAgICAgICAgdmFsdWU6IHVzYWdlU3RhdGUsXG4gICAgICAgICAgICAgICAgICBoaW50OiBcIkN1cnJlbnQgcmVhZGluZXNzIGJhc2VkIG9uIHVzYWdlIGFuZCBsaW5rZWQgYXNzZXRzLlwiLFxuICAgICAgICAgICAgICAgICAgdG9uZUNsYXNzOiBcImJnLWVtZXJhbGQtNDAwLzEwIHRleHQtZW1lcmFsZC0yMDBcIixcbiAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgIGxhYmVsOiBcIlBsYW5cIixcbiAgICAgICAgICAgICAgICAgIHZhbHVlOiBwbGFuTmFtZSxcbiAgICAgICAgICAgICAgICAgIGhpbnQ6IFwiQ3VycmVudCBjb21tZXJjaWFsIHBhY2thZ2UgdGllZCB0byB0aGlzIGNvbXBhbnkuXCIsXG4gICAgICAgICAgICAgICAgICB0b25lQ2xhc3M6IFwiYmctaW5kaWdvLTQwMC8xMCB0ZXh0LWluZGlnby0yMDBcIixcbiAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgIGxhYmVsOiBcIlBheW1lbnRzXCIsXG4gICAgICAgICAgICAgICAgICB2YWx1ZTogcGF5bWVudFN0YXRlLFxuICAgICAgICAgICAgICAgICAgaGludDogXCJMYXRlc3QgcGF5bWVudCBwb3N0dXJlIGZvciB0aGlzIHdvcmtzcGFjZS5cIixcbiAgICAgICAgICAgICAgICAgIHRvbmVDbGFzczogXCJiZy12aW9sZXQtNDAwLzEwIHRleHQtdmlvbGV0LTIwMFwiLFxuICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgIF0ubWFwKChpdGVtKSA9PiAoXG4gICAgICAgICAgICAgICAgPGRpdlxuICAgICAgICAgICAgICAgICAga2V5PXtpdGVtLmxhYmVsfVxuICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwicm91bmRlZC0yeGwgYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy1ibGFjay8xMCBwLTRcIlxuICAgICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGdhcC00XCI+XG4gICAgICAgICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC14cyB1cHBlcmNhc2UgdHJhY2tpbmctWzAuMThlbV0gdGV4dC1zbGF0ZS01MDBcIj5cbiAgICAgICAgICAgICAgICAgICAgICAgIHtpdGVtLmxhYmVsfVxuICAgICAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0yIHRleHQteGwgZm9udC1ib2xkIHRleHQtd2hpdGVcIj5cbiAgICAgICAgICAgICAgICAgICAgICAgIHtpdGVtLnZhbHVlfVxuICAgICAgICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgICAgICAgPHNwYW5cbiAgICAgICAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2Byb3VuZGVkLWZ1bGwgcHgtMyBweS0xIHRleHQteHMgZm9udC1zZW1pYm9sZCAke2l0ZW0udG9uZUNsYXNzfWB9XG4gICAgICAgICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICAgICAgICBMaXZlXG4gICAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0zIHRleHQtc20gbGVhZGluZy02IHRleHQtc2xhdGUtNDAwXCI+XG4gICAgICAgICAgICAgICAgICAgIHtpdGVtLmhpbnR9XG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXQtNCByb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLWN5YW4tNDAwLzE1IGJnLWN5YW4tNTAwLzUgcC00XCI+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBmbGV4LXdyYXAgaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiBnYXAtM1wiPlxuICAgICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgICAgICB7YWNjb3VudD8uY29tcGFueSA/PyBjb21wYW55fVxuICAgICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LXNtIGxlYWRpbmctNyB0ZXh0LXNsYXRlLTMwMFwiPlxuICAgICAgICAgICAgICAgICAgICB7dXNlckVtYWlsIHx8IFwiQ2xpZW50IGVtYWlsXCJ9IC8ge2FjY291bnQ/LnNlY3RvckxhYmVsID8/IFwiYnJBSW4gd29ya3NwYWNlXCJ9XG4gICAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgICAgICA8c2VsZWN0XG4gICAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJzZWxlY3Qtc2hlbGwgbWF4LXctWzE2cmVtXVwiXG4gICAgICAgICAgICAgICAgICBvbkNoYW5nZT17KGV2ZW50KSA9PiBvblNlbGVjdENvbXBhbnkoZXZlbnQudGFyZ2V0LnZhbHVlKX1cbiAgICAgICAgICAgICAgICAgIHZhbHVlPXtjb21wYW55fVxuICAgICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICAgIHtjbGllbnRzLm1hcCgoY2xpZW50KSA9PiAoXG4gICAgICAgICAgICAgICAgICAgIDxvcHRpb24ga2V5PXtjbGllbnQuY29tcGFueX0gdmFsdWU9e2NsaWVudC5jb21wYW55fT5cbiAgICAgICAgICAgICAgICAgICAgICB7Y2xpZW50LmNvbXBhbnl9IC8ge2NsaWVudC5zZWN0b3JMYWJlbH1cbiAgICAgICAgICAgICAgICAgICAgPC9vcHRpb24+XG4gICAgICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgICAgICA8L3NlbGVjdD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L21vdGlvbi5kaXY+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBnYXAtNSBtZDpncmlkLWNvbHMtMiB4bDpncmlkLWNvbHMtNFwiPlxuICAgICAgICA8RGFzaGJvYXJkU3RhdENhcmRcbiAgICAgICAgICBhY2NlbnRDbGFzcz1cImJnLWN5YW4tNDAwLzEwXCJcbiAgICAgICAgICBoaW50PVwiVGhlIGFjdGl2ZSBjb21tZXJjaWFsIHBsYW4gdGllZCB0byB0aGlzIGNsaWVudCB3b3Jrc3BhY2UuXCJcbiAgICAgICAgICBpY29uPXs8U2hpZWxkQ2hlY2sgY2xhc3NOYW1lPVwiaC02IHctNiB0ZXh0LWN5YW4tMjAwXCIgLz59XG4gICAgICAgICAgdGl0bGU9XCJQbGFuXCJcbiAgICAgICAgICB2YWx1ZT17cGxhbk5hbWV9XG4gICAgICAgIC8+XG4gICAgICAgIDxEYXNoYm9hcmRTdGF0Q2FyZFxuICAgICAgICAgIGFjY2VudENsYXNzPVwiYmctc2t5LTQwMC8xMFwiXG4gICAgICAgICAgaGludD1cIkFzc2lnbmVkIGFuZCBhY3RpdmUgc21hcnQgY2FyZHMgY29ubmVjdGVkIHRvIHRoaXMgd29ya3NwYWNlLlwiXG4gICAgICAgICAgaWNvbj17PFRpY2tldCBjbGFzc05hbWU9XCJoLTYgdy02IHRleHQtc2t5LTIwMFwiIC8+fVxuICAgICAgICAgIHRpdGxlPVwiU0MgQ2FyZHNcIlxuICAgICAgICAgIHZhbHVlPXtTdHJpbmcoc21hcnRDYXJkcy5sZW5ndGgpfVxuICAgICAgICAvPlxuICAgICAgICA8RGFzaGJvYXJkU3RhdENhcmRcbiAgICAgICAgICBhY2NlbnRDbGFzcz1cImJnLWluZGlnby00MDAvMTBcIlxuICAgICAgICAgIGhpbnQ9XCJQcm92aXNpb25pbmcgYW5kIGRlcGxveW1lbnQgcmVxdWVzdHMgdHJhY2tlZCBieSB0aGUgY2xpZW50IHBvcnRhbC5cIlxuICAgICAgICAgIGljb249ezxDaGVja0NpcmNsZTIgY2xhc3NOYW1lPVwiaC02IHctNiB0ZXh0LWluZGlnby0yMDBcIiAvPn1cbiAgICAgICAgICB0aXRsZT1cIkFjdGl2YXRpb25zXCJcbiAgICAgICAgICB2YWx1ZT17U3RyaW5nKGFjdGl2YXRpb25zLmxlbmd0aCl9XG4gICAgICAgIC8+XG4gICAgICAgIDxEYXNoYm9hcmRTdGF0Q2FyZFxuICAgICAgICAgIGFjY2VudENsYXNzPVwiYmctZW1lcmFsZC00MDAvMTBcIlxuICAgICAgICAgIGhpbnQ9XCJBcHByb3ZlZCBwYXltZW50IHZhbHVlIGNhcHR1cmVkIGZvciB0aGlzIGFjY291bnQuXCJcbiAgICAgICAgICBpY29uPXs8V2FsbGV0IGNsYXNzTmFtZT1cImgtNiB3LTYgdGV4dC1lbWVyYWxkLTIwMFwiIC8+fVxuICAgICAgICAgIHRpdGxlPVwiUGF5bWVudHNcIlxuICAgICAgICAgIHZhbHVlPXtmb3JtYXRNb25leSh0b3RhbFBhaWQpfVxuICAgICAgICAvPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBnYXAtNSBtZDpncmlkLWNvbHMtMiB4bDpncmlkLWNvbHMtNFwiPlxuICAgICAgICA8UXVpY2tBY3Rpb25DYXJkXG4gICAgICAgICAgYm9keT1cIk9wZW4gdGhlIGxpdmUgcGF5bWVudCBmb3JtIGFuZCByZXZpZXcgcmVjZW50IHBheW1lbnQgYWN0aXZpdHkuXCJcbiAgICAgICAgICBpY29uPXs8Q3JlZGl0Q2FyZCBjbGFzc05hbWU9XCJoLTcgdy03IHRleHQtY3lhbi0yMDBcIiAvPn1cbiAgICAgICAgICBvbkNsaWNrPXtvbk9wZW5QYXltZW50c31cbiAgICAgICAgICB0aXRsZT1cIlBheW1lbnRzXCJcbiAgICAgICAgICB0b25lQ2xhc3M9XCJiZy1jeWFuLTQwMC8xMFwiXG4gICAgICAgIC8+XG4gICAgICAgIDxRdWlja0FjdGlvbkNhcmRcbiAgICAgICAgICBib2R5PVwiUmV2ZWFsLCB2YWxpZGF0ZSwgYW5kIGFjdGl2YXRlIGFzc2lnbmVkIHNtYXJ0IGNhcmRzIGZyb20gb25lIHBsYWNlLlwiXG4gICAgICAgICAgaWNvbj17PFRpY2tldCBjbGFzc05hbWU9XCJoLTcgdy03IHRleHQtZW1lcmFsZC0yMDBcIiAvPn1cbiAgICAgICAgICBvbkNsaWNrPXtvbk9wZW5DYXJkc31cbiAgICAgICAgICB0aXRsZT1cIlNDIFJldmVhbFwiXG4gICAgICAgICAgdG9uZUNsYXNzPVwiYmctZW1lcmFsZC00MDAvMTBcIlxuICAgICAgICAvPlxuICAgICAgICA8UXVpY2tBY3Rpb25DYXJkXG4gICAgICAgICAgYm9keT1cIlF1ZXVlIGRlcGxveW1lbnQgc3VwcG9ydCwgaW5zdGFsbGF0aW9uIHJlcXVlc3RzLCBhbmQgYWN0aXZhdGlvbiBmb2xsb3ctdXBzLlwiXG4gICAgICAgICAgaWNvbj17PFNoaWVsZENoZWNrIGNsYXNzTmFtZT1cImgtNyB3LTcgdGV4dC1hbWJlci0yMDBcIiAvPn1cbiAgICAgICAgICBvbkNsaWNrPXtvbk9wZW5TdXBwb3J0fVxuICAgICAgICAgIHRpdGxlPVwiU3VwcG9ydCArIERlcGxveVwiXG4gICAgICAgICAgdG9uZUNsYXNzPVwiYmctYW1iZXItNDAwLzEwXCJcbiAgICAgICAgLz5cbiAgICAgICAgPFF1aWNrQWN0aW9uQ2FyZFxuICAgICAgICAgIGJvZHk9e1xuICAgICAgICAgICAgbGF0ZXN0Tm90aWZpY2F0aW9uPy50aXRsZSA/P1xuICAgICAgICAgICAgXCJLZWVwIHRoZSBsYXRlc3QgcG9ydGFsIHNpZ25hbHMgYW5kIGNvbXBhbnkgdXBkYXRlcyBjbG9zZS5cIlxuICAgICAgICAgIH1cbiAgICAgICAgICBpY29uPXs8U3BhcmtsZXMgY2xhc3NOYW1lPVwiaC03IHctNyB0ZXh0LXZpb2xldC0yMDBcIiAvPn1cbiAgICAgICAgICBvbkNsaWNrPXtvbk9wZW5TdXBwb3J0fVxuICAgICAgICAgIHRpdGxlPVwiTGF0ZXN0IFNpZ25hbFwiXG4gICAgICAgICAgdG9uZUNsYXNzPVwiYmctdmlvbGV0LTQwMC8xMFwiXG4gICAgICAgIC8+XG4gICAgICA8L2Rpdj5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC02IHhsOmdyaWQtY29scy1bMS4wOGZyXzAuOTJmcl1cIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLVszMnB4XSBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlLzUgcC02IGJhY2tkcm9wLWJsdXIteGxcIj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1iLTUgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGdhcC00XCI+XG4gICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICA8aDIgY2xhc3NOYW1lPVwidGV4dC14bCBmb250LWJvbGQgdGV4dC13aGl0ZVwiPkNsaWVudCBzaWduYWw8L2gyPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0xIHRleHQtc20gdGV4dC1zbGF0ZS00MDBcIj5cbiAgICAgICAgICAgICAgICBBIGNvbXBhY3QgdmlzdWFsIHB1bHNlIGZvciBwbGFuIHVzYWdlLCBwYXltZW50cywgU0MgY2FyZHMsIGFuZFxuICAgICAgICAgICAgICAgIGRlcGxveW1lbnQgYWN0aXZpdHkuXG4gICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItY3lhbi00MDAvMjAgYmctY3lhbi00MDAvMTAgcC0zIHRleHQtY3lhbi0zMDBcIj5cbiAgICAgICAgICAgICAgPEFjdGl2aXR5IGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8U2lnbmFsQmFycyB2YWx1ZXM9e3NpZ25hbFZhbHVlc30gLz5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXQtNiBncmlkIGdhcC00IHNtOmdyaWQtY29scy0zXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMTAgcC00XCI+XG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtc20gdGV4dC1zbGF0ZS00MDBcIj5QbGFuPC9wPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0yIHRleHQtbGcgZm9udC1zZW1pYm9sZCB0ZXh0LXdoaXRlXCI+e3BsYW5OYW1lfTwvcD5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzEwIHAtNFwiPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIHRleHQtc2xhdGUtNDAwXCI+Q3JlZGl0czwvcD5cbiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LWxnIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiPlxuICAgICAgICAgICAgICAgIHtjcmVkaXRzUmVtYWluaW5nLnRvTG9jYWxlU3RyaW5nKFwiZW4tR0JcIil9XG4gICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzEwIHAtNFwiPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIHRleHQtc2xhdGUtNDAwXCI+QmlsbGluZzwvcD5cbiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMiB0ZXh0LWxnIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiPntwYXltZW50U3RhdGV9PC9wPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicm91bmRlZC1bMzJweF0gYm9yZGVyIGJvcmRlci13aGl0ZS8xMCBiZy13aGl0ZS81IHAtNiBiYWNrZHJvcC1ibHVyLXhsXCI+XG4gICAgICAgICAgPGgyIGNsYXNzTmFtZT1cInRleHQteGwgZm9udC1ib2xkIHRleHQtd2hpdGVcIj5DbGllbnQgZGlyZWN0aW9uPC9oMj5cbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0xIHRleHQtc20gdGV4dC1zbGF0ZS00MDBcIj5cbiAgICAgICAgICAgIFRoZSBjbGllbnQgZGFzaGJvYXJkIG5vdyBjZW50ZXJzIHRoZSByZWFsIGJyQUluIGZsb3cgaW5zdGVhZCBvZlxuICAgICAgICAgICAgaXNvbGF0ZWQgc3RhdHMuXG4gICAgICAgICAgPC9wPlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC01IHNwYWNlLXktM1wiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLXN0YXJ0IGdhcC0zIHJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMTAgcC00XCI+XG4gICAgICAgICAgICAgIDxDaGVja0NpcmNsZTIgY2xhc3NOYW1lPVwibXQtMC41IGgtNSB3LTUgdGV4dC1jeWFuLTMwMFwiIC8+XG4gICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwiZm9udC1zZW1pYm9sZCB0ZXh0LXdoaXRlXCI+UGxhbiBmaXJzdDwvcD5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0xIHRleHQtc20gbGVhZGluZy02IHRleHQtc2xhdGUtNDAwXCI+XG4gICAgICAgICAgICAgICAgICBFdmVyeSBjbGllbnQgY29tcGFueSBrZWVwcyBpdHMgYWN0aXZlIHBsYW4gdmlzaWJsZSBhdCB0aGUgdG9wLlxuICAgICAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1zdGFydCBnYXAtMyByb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLWJsYWNrLzEwIHAtNFwiPlxuICAgICAgICAgICAgICA8Q2hlY2tDaXJjbGUyIGNsYXNzTmFtZT1cIm10LTAuNSBoLTUgdy01IHRleHQtZW1lcmFsZC0zMDBcIiAvPlxuICAgICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZVwiPlBheW1lbnQgdG8gU0MgY2FyZDwvcD5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0xIHRleHQtc20gbGVhZGluZy02IHRleHQtc2xhdGUtNDAwXCI+XG4gICAgICAgICAgICAgICAgICBCaWxsaW5nLCBsaW5rZWQgY2FyZCBpbnZlbnRvcnksIGFuZCBhY3RpdmF0aW9uIG5vdyBzdGF5IGluIHRoZVxuICAgICAgICAgICAgICAgICAgc2FtZSBkYXNoYm9hcmQgc3RvcnkuXG4gICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLXN0YXJ0IGdhcC0zIHJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItd2hpdGUvMTAgYmctYmxhY2svMTAgcC00XCI+XG4gICAgICAgICAgICAgIDxDaGVja0NpcmNsZTIgY2xhc3NOYW1lPVwibXQtMC41IGgtNSB3LTUgdGV4dC12aW9sZXQtMzAwXCIgLz5cbiAgICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJmb250LXNlbWlib2xkIHRleHQtd2hpdGVcIj5SZXZlYWwgYW5kIHN1cHBvcnQ8L3A+XG4gICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwibXQtMSB0ZXh0LXNtIGxlYWRpbmctNiB0ZXh0LXNsYXRlLTQwMFwiPlxuICAgICAgICAgICAgICAgICAgU21hcnQtY2FyZCByZXZlYWwgYW5kIGRlcGxveSBzdXBwb3J0IHJlbWFpbiBvbmUgY2xpY2sgYXdheS5cbiAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwibmFtZXMiOlsibW90aW9uIiwiQWN0aXZpdHkiLCJBcnJvd1VwUmlnaHQiLCJDaGVja0NpcmNsZTIiLCJDcmVkaXRDYXJkIiwiU2hpZWxkQ2hlY2siLCJTcGFya2xlcyIsIlRpY2tldCIsIlVzZXJSb3VuZCIsIldhbGxldCIsIkRhc2hib2FyZFN0YXRDYXJkIiwiYWNjZW50Q2xhc3MiLCJoaW50IiwiaWNvbiIsInRpdGxlIiwidmFsdWUiLCJkaXYiLCJ3aGlsZUhvdmVyIiwieSIsInNjYWxlIiwidHJhbnNpdGlvbiIsInR5cGUiLCJzdGlmZm5lc3MiLCJkYW1waW5nIiwiY2xhc3NOYW1lIiwicCIsImgzIiwiUXVpY2tBY3Rpb25DYXJkIiwiYm9keSIsIm9uQ2xpY2siLCJ0b25lQ2xhc3MiLCJidXR0b24iLCJTaWduYWxCYXJzIiwidmFsdWVzIiwibWFwIiwiaW5kZXgiLCJpbml0aWFsIiwiaGVpZ2h0Iiwib3BhY2l0eSIsImFuaW1hdGUiLCJkZWxheSIsImR1cmF0aW9uIiwiQ2xpZW50RGFzaGJvYXJkT3ZlcnZpZXciLCJhY2NvdW50IiwiYWN0aXZhdGlvbnMiLCJjbGllbnRzIiwiY29tcGFueSIsIm5vdGlmaWNhdGlvbnMiLCJvbk9wZW5BY2NvdW50Iiwib25PcGVuQ2FyZHMiLCJvbk9wZW5QYXltZW50cyIsIm9uT3BlblN1cHBvcnQiLCJvblNlbGVjdENvbXBhbnkiLCJwYXltZW50cyIsInNtYXJ0Q2FyZHMiLCJ1c2VyRW1haWwiLCJ1c2VyTmFtZSIsImZvcm1hdE1vbmV5IiwidG90YWxQYWlkIiwicmVkdWNlIiwic3VtIiwicGF5bWVudCIsImFtb3VudCIsInBsYW5OYW1lIiwiY3JlZGl0c1JlbWFpbmluZyIsInVzYWdlUGVyY2VudCIsIk1hdGgiLCJtaW4iLCJtb250aGx5VXNhZ2UiLCJtYXgiLCJ1c2FnZVN0YXRlIiwibGVuZ3RoIiwicGF5bWVudFN0YXRlIiwibGF0ZXN0Tm90aWZpY2F0aW9uIiwic2lnbmFsVmFsdWVzIiwiQXJyYXkiLCJmcm9tIiwiXyIsInJvdW5kIiwic2l6ZSIsImgxIiwic3BhbiIsInN0YXR1cyIsImgyIiwibGFiZWwiLCJpdGVtIiwic2VjdG9yTGFiZWwiLCJzZWxlY3QiLCJvbkNoYW5nZSIsImV2ZW50IiwidGFyZ2V0IiwiY2xpZW50Iiwib3B0aW9uIiwiU3RyaW5nIiwidG9Mb2NhbGVTdHJpbmciXSwibWFwcGluZ3MiOiI7QUFDQSxTQUFTQSxNQUFNLFFBQVEsZ0JBQWdCO0FBQ3ZDLFNBQ0VDLFFBQVEsRUFDUkMsWUFBWSxFQUNaQyxZQUFZLEVBQ1pDLFVBQVUsRUFDVkMsV0FBVyxFQUNYQyxRQUFRLEVBQ1JDLE1BQU0sRUFDTkMsU0FBUyxFQUNUQyxNQUFNLFFBQ0QsZUFBZTtBQVV0QixTQUFTQyxrQkFBa0IsRUFDekJDLFdBQVcsRUFDWEMsSUFBSSxFQUNKQyxJQUFJLEVBQ0pDLEtBQUssRUFDTEMsS0FBSyxFQU9OO0lBQ0MscUJBQ0UsUUFBQ2YsT0FBT2dCLEdBQUc7UUFDVEMsWUFBWTtZQUFFQyxHQUFHLENBQUM7WUFBR0MsT0FBTztRQUFLO1FBQ2pDQyxZQUFZO1lBQUVDLE1BQU07WUFBVUMsV0FBVztZQUFLQyxTQUFTO1FBQUc7UUFDMURDLFdBQVU7OzBCQUVWLFFBQUNSO2dCQUFJUSxXQUFVOztrQ0FDYixRQUFDUjs7MENBQ0MsUUFBQ1M7Z0NBQUVELFdBQVU7MENBQTBCVjs7Ozs7OzBDQUN2QyxRQUFDWTtnQ0FBR0YsV0FBVTswQ0FBMENUOzs7Ozs7Ozs7Ozs7a0NBRzFELFFBQUNDO3dCQUFJUSxXQUFXLENBQUMsdUNBQXVDLEVBQUViLGFBQWE7a0NBQ3BFRTs7Ozs7Ozs7Ozs7OzBCQUlMLFFBQUNZO2dCQUFFRCxXQUFVOzBCQUEwQlo7Ozs7Ozs7Ozs7OztBQUc3QztLQWpDU0Y7QUFtQ1QsU0FBU2lCLGdCQUFnQixFQUN2QkMsSUFBSSxFQUNKZixJQUFJLEVBQ0pnQixPQUFPLEVBQ1BmLEtB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

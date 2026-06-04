@@ -4,10 +4,18 @@ import { getPayments } from "./paymentService.js";
 import { getSmartCards } from "./smartCardService.js";
 import { getTickets } from "./ticketService.js";
 
-export function getClientOverview(company) {
+export function getClientOverview(company, { includeClients = true } = {}) {
   const accounts = getAccounts();
   const account =
-    accounts.find((item) => item.company === company) ?? accounts[0] ?? null;
+    (company
+      ? accounts.find((item) => item.company === company) ?? null
+      : accounts[0] ?? null);
+  const clients = includeClients
+    ? accounts.map((item) => ({
+        company: item.company,
+        sectorLabel: item.sectorLabel,
+      }))
+    : [];
 
   if (!account) {
     return {
@@ -18,7 +26,7 @@ export function getClientOverview(company) {
       tickets: [],
       notifications: [],
       quickMetrics: [],
-      clients: accounts,
+      clients,
     };
   }
 
@@ -37,10 +45,7 @@ export function getClientOverview(company) {
 
   return {
     account,
-    clients: accounts.map((item) => ({
-      company: item.company,
-      sectorLabel: item.sectorLabel,
-    })),
+    clients,
     payments: payments.slice(0, 8),
     smartCards: smartCards.slice(0, 20),
     activations: activations.slice(0, 8),

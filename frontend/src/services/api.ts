@@ -1,11 +1,35 @@
 import axios from "axios";
 import io from "socket.io-client";
+import type { Device, Plan, Sector } from "../types";
 
 type RuntimeHeaderConfig = {
   language: string;
   country: string;
   networkLabel: string;
   networkMode: "live" | "country" | "private";
+};
+
+type ChatMessagePayload = {
+  role: "assistant" | "user";
+  text: string;
+};
+
+type FrontPageChatPayload = {
+  context: {
+    device: Device | null;
+    plans: Plan[];
+    sector: Sector | null;
+  };
+  history: ChatMessagePayload[];
+  language: "sq" | "en";
+  message: string;
+};
+
+type FrontPageChatResponse = {
+  nextAction: "devices" | "access" | "help" | "plans" | "sectors";
+  reply: string;
+  source: "openai" | "setup";
+  suggestions: string[];
 };
 
 let socket: ReturnType<typeof io> | null = null;
@@ -60,6 +84,11 @@ export function syncRuntimeHeaders({
   axios.defaults.headers.common["x-brain-network"] = networkLabel;
   axios.defaults.headers.common["x-brain-vpn-active"] =
     networkMode === "private" ? "true" : "false";
+}
+
+export async function askFrontPageChat(payload: FrontPageChatPayload) {
+  const response = await axios.post<FrontPageChatResponse>("/api/chat/front-page", payload);
+  return response.data;
 }
 
 /**

@@ -1,0 +1,372 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/BrainBrand.tsx");const _jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react_jsxDevRuntime from "/@fs/C:/Users/doria/brain/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=03b53ff9";
+export function BrainBrand({ compact = false, showTagline = false, subtitle = "Managed AI devices" }) {
+    return /*#__PURE__*/ _jsxDEV("span", {
+        className: `brain-brand-lockup ${compact ? "brain-brand-lockup-compact" : ""}`,
+        translate: "no",
+        children: [
+            /*#__PURE__*/ _jsxDEV("span", {
+                className: "brain-brand-mark",
+                "aria-hidden": "true",
+                children: /*#__PURE__*/ _jsxDEV("svg", {
+                    className: "brain-brand-mark-svg",
+                    viewBox: "0 0 92 92",
+                    xmlns: "http://www.w3.org/2000/svg",
+                    children: [
+                        /*#__PURE__*/ _jsxDEV("defs", {
+                            children: [
+                                /*#__PURE__*/ _jsxDEV("linearGradient", {
+                                    id: "brainBrandCircuit",
+                                    x1: "18",
+                                    x2: "78",
+                                    y1: "10",
+                                    y2: "82",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("stop", {
+                                            offset: "0%",
+                                            stopColor: "#24c7ff"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                            lineNumber: 25,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("stop", {
+                                            offset: "60%",
+                                            stopColor: "#4b6bff"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                            lineNumber: 26,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("stop", {
+                                            offset: "100%",
+                                            stopColor: "#b941ff"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                            lineNumber: 27,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                    lineNumber: 24,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ _jsxDEV("linearGradient", {
+                                    id: "brainBrandChip",
+                                    x1: "30",
+                                    x2: "62",
+                                    y1: "30",
+                                    y2: "62",
+                                    children: [
+                                        /*#__PURE__*/ _jsxDEV("stop", {
+                                            offset: "0%",
+                                            stopColor: "#0d1730"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                            lineNumber: 30,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ _jsxDEV("stop", {
+                                            offset: "100%",
+                                            stopColor: "#172754"
+                                        }, void 0, false, {
+                                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                            lineNumber: 31,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                    lineNumber: 29,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 23,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M43 12C35 12 29 16 26 22C18 23 12 30 12 39C12 44 14 49 18 53C16 57 15 60 15 64C15 76 25 84 37 84C49 84 57 76 57 64V28C57 19 51 12 43 12Z",
+                            fill: "#0d1730"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 35,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M35 24C29 24 25 28 24 34",
+                            fill: "none",
+                            stroke: "#f8fbff",
+                            strokeLinecap: "round",
+                            strokeWidth: "3.5"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 39,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M28 50C34 50 39 45 39 39",
+                            fill: "none",
+                            stroke: "#f8fbff",
+                            strokeLinecap: "round",
+                            strokeWidth: "3.5"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 46,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M29 67C35 65 39 59 39 53",
+                            fill: "none",
+                            stroke: "#f8fbff",
+                            strokeLinecap: "round",
+                            strokeWidth: "3.5"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 53,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M49 15C62 15 73 25 73 38C79 42 82 49 82 56C82 71 70 82 56 82",
+                            fill: "none",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            strokeWidth: "4.5"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 60,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M50 29H63L70 22",
+                            fill: "none",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeLinecap: "round",
+                            strokeWidth: "4"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 68,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M50 43H70",
+                            fill: "none",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeLinecap: "round",
+                            strokeWidth: "4"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 75,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M50 57H63L72 65",
+                            fill: "none",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeLinecap: "round",
+                            strokeWidth: "4"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 82,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("path", {
+                            d: "M50 70H59L66 77",
+                            fill: "none",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeLinecap: "round",
+                            strokeWidth: "4"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 89,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("circle", {
+                            cx: "70",
+                            cy: "22",
+                            fill: "#ffffff",
+                            r: "4.8",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeWidth: "3"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 96,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("circle", {
+                            cx: "72",
+                            cy: "43",
+                            fill: "#ffffff",
+                            r: "4.8",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeWidth: "3"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 97,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("circle", {
+                            cx: "72",
+                            cy: "65",
+                            fill: "#ffffff",
+                            r: "4.8",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeWidth: "3"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 98,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("circle", {
+                            cx: "66",
+                            cy: "77",
+                            fill: "#ffffff",
+                            r: "4.8",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeWidth: "3"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 99,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("rect", {
+                            x: "31",
+                            y: "31",
+                            width: "30",
+                            height: "30",
+                            rx: "9",
+                            fill: "url(#brainBrandChip)",
+                            stroke: "url(#brainBrandCircuit)",
+                            strokeWidth: "3"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 100,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDEV("text", {
+                            x: "46",
+                            y: "51",
+                            fill: "#ffffff",
+                            fontFamily: "Manrope, Arial, sans-serif",
+                            fontSize: "13",
+                            fontWeight: "800",
+                            textAnchor: "middle",
+                            children: "AI"
+                        }, void 0, false, {
+                            fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                            lineNumber: 110,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                    lineNumber: 18,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                lineNumber: 17,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ _jsxDEV("span", {
+                className: "brain-brand-text-block",
+                children: [
+                    /*#__PURE__*/ _jsxDEV("span", {
+                        className: "brain-brand-wordmark notranslate",
+                        children: [
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "brain-brand-word brain-brand-word-dark",
+                                children: "br"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                lineNumber: 126,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "brain-brand-word brain-brand-word-accent-a",
+                                children: "A"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                lineNumber: 127,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "brain-brand-word brain-brand-word-accent-i",
+                                children: "I"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                lineNumber: 128,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ _jsxDEV("span", {
+                                className: "brain-brand-word brain-brand-word-dark",
+                                children: "n"
+                            }, void 0, false, {
+                                fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                                lineNumber: 129,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                        lineNumber: 125,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ _jsxDEV("span", {
+                        className: "brain-brand-subtitle",
+                        children: subtitle
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                        lineNumber: 131,
+                        columnNumber: 9
+                    }, this),
+                    showTagline ? /*#__PURE__*/ _jsxDEV("span", {
+                        className: "brain-brand-tagline",
+                        children: "Your business brain. Powered by AI."
+                    }, void 0, false, {
+                        fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                        lineNumber: 133,
+                        columnNumber: 11
+                    }, this) : null
+                ]
+            }, void 0, true, {
+                fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+                lineNumber: 124,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx",
+        lineNumber: 13,
+        columnNumber: 5
+    }, this);
+}
+_c = BrainBrand;
+var _c;
+$RefreshReg$(_c, "BrainBrand");
+
+
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react-swc can't detect preamble. Something is wrong."
+    );
+  }
+
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/doria/brain/frontend/src/components/BrainBrand.tsx" + ' ' + id) }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkJyYWluQnJhbmQudHN4Il0sInNvdXJjZXNDb250ZW50IjpbInR5cGUgQnJhaW5CcmFuZFByb3BzID0ge1xuICBjb21wYWN0PzogYm9vbGVhbjtcbiAgc2hvd1RhZ2xpbmU/OiBib29sZWFuO1xuICBzdWJ0aXRsZT86IHN0cmluZztcbn07XG5cbmV4cG9ydCBmdW5jdGlvbiBCcmFpbkJyYW5kKHtcbiAgY29tcGFjdCA9IGZhbHNlLFxuICBzaG93VGFnbGluZSA9IGZhbHNlLFxuICBzdWJ0aXRsZSA9IFwiTWFuYWdlZCBBSSBkZXZpY2VzXCIsXG59OiBCcmFpbkJyYW5kUHJvcHMpIHtcbiAgcmV0dXJuIChcbiAgICA8c3BhblxuICAgICAgY2xhc3NOYW1lPXtgYnJhaW4tYnJhbmQtbG9ja3VwICR7Y29tcGFjdCA/IFwiYnJhaW4tYnJhbmQtbG9ja3VwLWNvbXBhY3RcIiA6IFwiXCJ9YH1cbiAgICAgIHRyYW5zbGF0ZT1cIm5vXCJcbiAgICA+XG4gICAgICA8c3BhbiBjbGFzc05hbWU9XCJicmFpbi1icmFuZC1tYXJrXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+XG4gICAgICAgIDxzdmdcbiAgICAgICAgICBjbGFzc05hbWU9XCJicmFpbi1icmFuZC1tYXJrLXN2Z1wiXG4gICAgICAgICAgdmlld0JveD1cIjAgMCA5MiA5MlwiXG4gICAgICAgICAgeG1sbnM9XCJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Z1wiXG4gICAgICAgID5cbiAgICAgICAgICA8ZGVmcz5cbiAgICAgICAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD1cImJyYWluQnJhbmRDaXJjdWl0XCIgeDE9XCIxOFwiIHgyPVwiNzhcIiB5MT1cIjEwXCIgeTI9XCI4MlwiPlxuICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCIwJVwiIHN0b3BDb2xvcj1cIiMyNGM3ZmZcIiAvPlxuICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCI2MCVcIiBzdG9wQ29sb3I9XCIjNGI2YmZmXCIgLz5cbiAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PVwiMTAwJVwiIHN0b3BDb2xvcj1cIiNiOTQxZmZcIiAvPlxuICAgICAgICAgICAgPC9saW5lYXJHcmFkaWVudD5cbiAgICAgICAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD1cImJyYWluQnJhbmRDaGlwXCIgeDE9XCIzMFwiIHgyPVwiNjJcIiB5MT1cIjMwXCIgeTI9XCI2MlwiPlxuICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCIwJVwiIHN0b3BDb2xvcj1cIiMwZDE3MzBcIiAvPlxuICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCIxMDAlXCIgc3RvcENvbG9yPVwiIzE3Mjc1NFwiIC8+XG4gICAgICAgICAgICA8L2xpbmVhckdyYWRpZW50PlxuICAgICAgICAgIDwvZGVmcz5cblxuICAgICAgICAgIDxwYXRoXG4gICAgICAgICAgICBkPVwiTTQzIDEyQzM1IDEyIDI5IDE2IDI2IDIyQzE4IDIzIDEyIDMwIDEyIDM5QzEyIDQ0IDE0IDQ5IDE4IDUzQzE2IDU3IDE1IDYwIDE1IDY0QzE1IDc2IDI1IDg0IDM3IDg0QzQ5IDg0IDU3IDc2IDU3IDY0VjI4QzU3IDE5IDUxIDEyIDQzIDEyWlwiXG4gICAgICAgICAgICBmaWxsPVwiIzBkMTczMFwiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8cGF0aFxuICAgICAgICAgICAgZD1cIk0zNSAyNEMyOSAyNCAyNSAyOCAyNCAzNFwiXG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCIjZjhmYmZmXCJcbiAgICAgICAgICAgIHN0cm9rZUxpbmVjYXA9XCJyb3VuZFwiXG4gICAgICAgICAgICBzdHJva2VXaWR0aD1cIjMuNVwiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8cGF0aFxuICAgICAgICAgICAgZD1cIk0yOCA1MEMzNCA1MCAzOSA0NSAzOSAzOVwiXG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCIjZjhmYmZmXCJcbiAgICAgICAgICAgIHN0cm9rZUxpbmVjYXA9XCJyb3VuZFwiXG4gICAgICAgICAgICBzdHJva2VXaWR0aD1cIjMuNVwiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8cGF0aFxuICAgICAgICAgICAgZD1cIk0yOSA2N0MzNSA2NSAzOSA1OSAzOSA1M1wiXG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCIjZjhmYmZmXCJcbiAgICAgICAgICAgIHN0cm9rZUxpbmVjYXA9XCJyb3VuZFwiXG4gICAgICAgICAgICBzdHJva2VXaWR0aD1cIjMuNVwiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8cGF0aFxuICAgICAgICAgICAgZD1cIk00OSAxNUM2MiAxNSA3MyAyNSA3MyAzOEM3OSA0MiA4MiA0OSA4MiA1NkM4MiA3MSA3MCA4MiA1NiA4MlwiXG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCJ1cmwoI2JyYWluQnJhbmRDaXJjdWl0KVwiXG4gICAgICAgICAgICBzdHJva2VMaW5lY2FwPVwicm91bmRcIlxuICAgICAgICAgICAgc3Ryb2tlTGluZWpvaW49XCJyb3VuZFwiXG4gICAgICAgICAgICBzdHJva2VXaWR0aD1cIjQuNVwiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8cGF0aFxuICAgICAgICAgICAgZD1cIk01MCAyOUg2M0w3MCAyMlwiXG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCJ1cmwoI2JyYWluQnJhbmRDaXJjdWl0KVwiXG4gICAgICAgICAgICBzdHJva2VMaW5lY2FwPVwicm91bmRcIlxuICAgICAgICAgICAgc3Ryb2tlV2lkdGg9XCI0XCJcbiAgICAgICAgICAvPlxuICAgICAgICAgIDxwYXRoXG4gICAgICAgICAgICBkPVwiTTUwIDQzSDcwXCJcbiAgICAgICAgICAgIGZpbGw9XCJub25lXCJcbiAgICAgICAgICAgIHN0cm9rZT1cInVybCgjYnJhaW5CcmFuZENpcmN1aXQpXCJcbiAgICAgICAgICAgIHN0cm9rZUxpbmVjYXA9XCJyb3VuZFwiXG4gICAgICAgICAgICBzdHJva2VXaWR0aD1cIjRcIlxuICAgICAgICAgIC8+XG4gICAgICAgICAgPHBhdGhcbiAgICAgICAgICAgIGQ9XCJNNTAgNTdINjNMNzIgNjVcIlxuICAgICAgICAgICAgZmlsbD1cIm5vbmVcIlxuICAgICAgICAgICAgc3Ryb2tlPVwidXJsKCNicmFpbkJyYW5kQ2lyY3VpdClcIlxuICAgICAgICAgICAgc3Ryb2tlTGluZWNhcD1cInJvdW5kXCJcbiAgICAgICAgICAgIHN0cm9rZVdpZHRoPVwiNFwiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8cGF0aFxuICAgICAgICAgICAgZD1cIk01MCA3MEg1OUw2NiA3N1wiXG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCJ1cmwoI2JyYWluQnJhbmRDaXJjdWl0KVwiXG4gICAgICAgICAgICBzdHJva2VMaW5lY2FwPVwicm91bmRcIlxuICAgICAgICAgICAgc3Ryb2tlV2lkdGg9XCI0XCJcbiAgICAgICAgICAvPlxuICAgICAgICAgIDxjaXJjbGUgY3g9XCI3MFwiIGN5PVwiMjJcIiBmaWxsPVwiI2ZmZmZmZlwiIHI9XCI0LjhcIiBzdHJva2U9XCJ1cmwoI2JyYWluQnJhbmRDaXJjdWl0KVwiIHN0cm9rZVdpZHRoPVwiM1wiIC8+XG4gICAgICAgICAgPGNpcmNsZSBjeD1cIjcyXCIgY3k9XCI0M1wiIGZpbGw9XCIjZmZmZmZmXCIgcj1cIjQuOFwiIHN0cm9rZT1cInVybCgjYnJhaW5CcmFuZENpcmN1aXQpXCIgc3Ryb2tlV2lkdGg9XCIzXCIgLz5cbiAgICAgICAgICA8Y2lyY2xlIGN4PVwiNzJcIiBjeT1cIjY1XCIgZmlsbD1cIiNmZmZmZmZcIiByPVwiNC44XCIgc3Ryb2tlPVwidXJsKCNicmFpbkJyYW5kQ2lyY3VpdClcIiBzdHJva2VXaWR0aD1cIjNcIiAvPlxuICAgICAgICAgIDxjaXJjbGUgY3g9XCI2NlwiIGN5PVwiNzdcIiBmaWxsPVwiI2ZmZmZmZlwiIHI9XCI0LjhcIiBzdHJva2U9XCJ1cmwoI2JyYWluQnJhbmRDaXJjdWl0KVwiIHN0cm9rZVdpZHRoPVwiM1wiIC8+XG4gICAgICAgICAgPHJlY3RcbiAgICAgICAgICAgIHg9XCIzMVwiXG4gICAgICAgICAgICB5PVwiMzFcIlxuICAgICAgICAgICAgd2lkdGg9XCIzMFwiXG4gICAgICAgICAgICBoZWlnaHQ9XCIzMFwiXG4gICAgICAgICAgICByeD1cIjlcIlxuICAgICAgICAgICAgZmlsbD1cInVybCgjYnJhaW5CcmFuZENoaXApXCJcbiAgICAgICAgICAgIHN0cm9rZT1cInVybCgjYnJhaW5CcmFuZENpcmN1aXQpXCJcbiAgICAgICAgICAgIHN0cm9rZVdpZHRoPVwiM1wiXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8dGV4dFxuICAgICAgICAgICAgeD1cIjQ2XCJcbiAgICAgICAgICAgIHk9XCI1MVwiXG4gICAgICAgICAgICBmaWxsPVwiI2ZmZmZmZlwiXG4gICAgICAgICAgICBmb250RmFtaWx5PVwiTWFucm9wZSwgQXJpYWwsIHNhbnMtc2VyaWZcIlxuICAgICAgICAgICAgZm9udFNpemU9XCIxM1wiXG4gICAgICAgICAgICBmb250V2VpZ2h0PVwiODAwXCJcbiAgICAgICAgICAgIHRleHRBbmNob3I9XCJtaWRkbGVcIlxuICAgICAgICAgID5cbiAgICAgICAgICAgIEFJXG4gICAgICAgICAgPC90ZXh0PlxuICAgICAgICA8L3N2Zz5cbiAgICAgIDwvc3Bhbj5cblxuICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYnJhaW4tYnJhbmQtdGV4dC1ibG9ja1wiPlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJicmFpbi1icmFuZC13b3JkbWFyayBub3RyYW5zbGF0ZVwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImJyYWluLWJyYW5kLXdvcmQgYnJhaW4tYnJhbmQtd29yZC1kYXJrXCI+YnI8L3NwYW4+XG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYnJhaW4tYnJhbmQtd29yZCBicmFpbi1icmFuZC13b3JkLWFjY2VudC1hXCI+QTwvc3Bhbj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJicmFpbi1icmFuZC13b3JkIGJyYWluLWJyYW5kLXdvcmQtYWNjZW50LWlcIj5JPC9zcGFuPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImJyYWluLWJyYW5kLXdvcmQgYnJhaW4tYnJhbmQtd29yZC1kYXJrXCI+bjwvc3Bhbj5cbiAgICAgICAgPC9zcGFuPlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJicmFpbi1icmFuZC1zdWJ0aXRsZVwiPntzdWJ0aXRsZX08L3NwYW4+XG4gICAgICAgIHtzaG93VGFnbGluZSA/IChcbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJicmFpbi1icmFuZC10YWdsaW5lXCI+WW91ciBidXNpbmVzcyBicmFpbi4gUG93ZXJlZCBieSBBSS48L3NwYW4+XG4gICAgICAgICkgOiBudWxsfVxuICAgICAgPC9zcGFuPlxuICAgIDwvc3Bhbj5cbiAgKTtcbn1cbiJdLCJuYW1lcyI6WyJCcmFpbkJyYW5kIiwiY29tcGFjdCIsInNob3dUYWdsaW5lIiwic3VidGl0bGUiLCJzcGFuIiwiY2xhc3NOYW1lIiwidHJhbnNsYXRlIiwiYXJpYS1oaWRkZW4iLCJzdmciLCJ2aWV3Qm94IiwieG1sbnMiLCJkZWZzIiwibGluZWFyR3JhZGllbnQiLCJpZCIsIngxIiwieDIiLCJ5MSIsInkyIiwic3RvcCIsIm9mZnNldCIsInN0b3BDb2xvciIsInBhdGgiLCJkIiwiZmlsbCIsInN0cm9rZSIsInN0cm9rZUxpbmVjYXAiLCJzdHJva2VXaWR0aCIsInN0cm9rZUxpbmVqb2luIiwiY2lyY2xlIiwiY3giLCJjeSIsInIiLCJyZWN0IiwieCIsInkiLCJ3aWR0aCIsImhlaWdodCIsInJ4IiwidGV4dCIsImZvbnRGYW1pbHkiLCJmb250U2l6ZSIsImZvbnRXZWlnaHQiLCJ0ZXh0QW5jaG9yIl0sIm1hcHBpbmdzIjoi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
