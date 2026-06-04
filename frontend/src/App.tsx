@@ -2891,10 +2891,6 @@ function App() {
                 languageOptions={languageOptions}
                 navigationItems={[
                   { key: "overview", label: "Home" },
-                  ...landingContent.sectors.slice(0, 4).map((sector) => ({
-                    key: `sector:${sector.slug}`,
-                    label: sector.name,
-                  })),
                   { key: "devices", label: "Devices" },
                   { key: "plans", label: "Plans" },
                 ]}

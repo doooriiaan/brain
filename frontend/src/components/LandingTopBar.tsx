@@ -7,9 +7,14 @@ import {
   Shield,
   ShieldCheck,
   Wifi,
+  Briefcase,
+  Zap,
+  Heart,
+  Cog,
 } from "lucide-react";
 import type { CountryOption, LanguageOption } from "../data/runtimeOptions";
 import { BrainBrand } from "./BrainBrand";
+import { HamburgerMenu } from "./HamburgerMenu";
 
 type VpnEndpoint = {
   id: string;
@@ -27,6 +32,13 @@ type NavigationItem = {
   key: string;
   label: string;
 };
+
+const SECTOR_ITEMS = [
+  { key: "business", label: "Business", icon: <Briefcase size={18} /> },
+  { key: "commercial", label: "Commercial", icon: <Zap size={18} /> },
+  { key: "healthcare", label: "Healthcare", icon: <Heart size={18} /> },
+  { key: "industry", label: "Industry", icon: <Cog size={18} /> },
+];
 
 type LandingTopBarProps = {
   activeNavigationKey?: string;
@@ -132,6 +144,12 @@ export function LandingTopBar({
 
           {publicMode ? (
             <>
+              <HamburgerMenu
+                sectors={SECTOR_ITEMS}
+                onNavigate={(sectorKey) => onNavigate?.(`sector:${sectorKey}`)}
+                showLabel={true}
+              />
+
               <button
                 className="brain-topbar-secondary-cta"
                 onClick={() => onAboutAction?.()}
