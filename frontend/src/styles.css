@@ -14779,3 +14779,1259 @@ body.app-light-mode.app-theme-client {
   color: #0d6b60 !important;
 }
 
+/* Devices page interactive flow reset */
+.brain-topbar-mobile-devices {
+  display: none !important;
+}
+
+.brain-devices-flow-page {
+  --device-blue: var(--brand-blue, #2368ff);
+  --device-deep: var(--brand-blue-deep, #081a3a);
+  --device-cyan: var(--brand-cyan, #18bdf6);
+  --device-violet: var(--brand-violet, #7d4dff);
+  --device-line: var(--brand-line, rgba(8, 26, 58, 0.12));
+  --device-muted: var(--brand-muted, rgba(8, 26, 58, 0.68));
+  --device-soft: var(--brand-soft, rgba(35, 104, 255, 0.08));
+  width: calc(100% - clamp(1rem, 4vw, 5rem));
+  max-width: 1500px;
+  margin-inline: auto;
+  padding: clamp(0.45rem, 1.2vw, 0.9rem) 0 clamp(2rem, 4vw, 3.5rem);
+  color: var(--device-deep);
+}
+
+.brain-devices-flow-page .brain-page-brand-bar {
+  align-items: center;
+  margin-bottom: clamp(0.7rem, 1.6vw, 1.2rem);
+}
+
+.brain-devices-flow-page .brain-page-brand-link {
+  border-color: var(--device-line);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 34px rgba(8, 26, 58, 0.08);
+}
+
+.brain-devices-flow-page .brain-help-title {
+  max-width: 15ch;
+  color: var(--device-deep);
+  font-size: clamp(2.7rem, 6.6vw, 6.2rem);
+  line-height: 0.94;
+}
+
+.brain-devices-flow-page .brain-help-copy {
+  max-width: 58rem;
+  color: var(--device-muted);
+  font-size: clamp(1rem, 1.45vw, 1.16rem);
+  line-height: 1.7;
+}
+
+.brain-devices-flow-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.42fr);
+  align-items: end;
+  gap: clamp(1rem, 4vw, 4rem);
+  padding: clamp(0.8rem, 2vw, 1.6rem) 0 clamp(1.2rem, 3vw, 2rem);
+}
+
+.brain-devices-flow-copy,
+.brain-device-section-heading {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.brain-devices-flow-summary {
+  display: grid;
+  gap: 0.45rem;
+  border: 1px solid var(--device-line);
+  border-radius: 0.5rem;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(35, 104, 255, 0.06) 100%);
+  padding: 1rem;
+  box-shadow: 0 16px 38px rgba(8, 26, 58, 0.08);
+}
+
+.brain-devices-flow-summary > span,
+.brain-device-section-heading .landing-inline-label {
+  justify-self: start;
+}
+
+.brain-devices-flow-summary > span,
+.brain-devices-flow-summary div span {
+  color: var(--device-blue);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-devices-flow-summary strong {
+  color: var(--device-deep);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.1;
+}
+
+.brain-devices-flow-summary p {
+  margin: 0;
+  color: var(--device-muted);
+  line-height: 1.55;
+}
+
+.brain-devices-flow-summary div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.3rem;
+}
+
+.brain-devices-flow-summary div span {
+  border: 1px solid rgba(35, 104, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(35, 104, 255, 0.08);
+  padding: 0.35rem 0.55rem;
+}
+
+.brain-device-section-heading h2 {
+  max-width: 16ch;
+  margin: 0;
+  color: var(--device-deep);
+  font-size: clamp(1.8rem, 3.6vw, 3.25rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.brain-device-switchboard,
+.brain-device-plan-board,
+.brain-device-connection-board {
+  display: grid;
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+}
+
+.brain-device-lane-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1rem);
+}
+
+.brain-device-lane-card {
+  display: grid;
+  min-height: 9rem;
+  align-content: start;
+  gap: 0.55rem;
+  border: 1px solid transparent;
+  border-top-color: rgba(35, 104, 255, 0.2);
+  border-radius: 0.5rem;
+  background: transparent;
+  padding: 0.9rem 0.8rem;
+  color: inherit;
+  text-align: left;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.brain-device-lane-card:hover,
+.brain-device-lane-card-active {
+  transform: translateY(-2px);
+  border-color: rgba(35, 104, 255, 0.26);
+  background: rgba(35, 104, 255, 0.06);
+  box-shadow: 0 16px 34px rgba(8, 26, 58, 0.08);
+}
+
+.brain-device-lane-card span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: var(--device-blue);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-lane-card strong {
+  color: var(--device-deep);
+  font-size: 1.06rem;
+  line-height: 1.2;
+}
+
+.brain-device-lane-card p {
+  margin: 0;
+  color: var(--device-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.brain-device-flow-stage {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.52fr) minmax(34rem, 1.4fr) minmax(18rem, 0.7fr);
+  align-items: stretch;
+  gap: clamp(0.9rem, 2vw, 1.2rem);
+  overflow: hidden;
+  border: 1px solid rgba(35, 104, 255, 0.14);
+  border-radius: 0.75rem;
+  background:
+    linear-gradient(135deg, rgba(35, 104, 255, 0.07), rgba(24, 189, 246, 0.04)),
+    #ffffff;
+  padding: clamp(0.8rem, 2vw, 1.15rem);
+  box-shadow: 0 20px 52px rgba(8, 26, 58, 0.09);
+}
+
+.brain-device-flow-rail {
+  display: grid;
+  align-content: start;
+  gap: 0.62rem;
+}
+
+.brain-device-flow-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  min-height: 4.7rem;
+  border: 1px solid var(--device-line);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 0.7rem;
+  color: var(--device-deep);
+  text-align: left;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.brain-device-flow-step:hover,
+.brain-device-flow-step-active {
+  transform: translateY(-1px);
+  border-color: rgba(35, 104, 255, 0.34);
+  background: #ffffff;
+}
+
+.brain-device-flow-step-done {
+  border-color: rgba(24, 189, 246, 0.3);
+}
+
+.brain-device-flow-step-icon {
+  display: grid;
+  width: 2.2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 0.45rem;
+  background: rgba(35, 104, 255, 0.08);
+  color: var(--device-blue);
+}
+
+.brain-device-flow-step-active .brain-device-flow-step-icon {
+  background: linear-gradient(135deg, var(--device-blue), var(--device-cyan));
+  color: #ffffff;
+}
+
+.brain-device-flow-step small,
+.brain-device-flow-inspector .landing-inline-label {
+  color: var(--device-blue);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-flow-step strong {
+  display: block;
+  color: var(--device-deep);
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.brain-device-flow-scene {
+  position: relative;
+  display: grid;
+  min-height: clamp(31rem, 39vw, 41rem);
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(8, 26, 58, 0.08);
+  border-radius: 0.65rem;
+  background:
+    linear-gradient(rgba(35, 104, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(35, 104, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #ffffff 0%, rgba(35, 104, 255, 0.05) 100%);
+  background-size: 44px 44px, 44px 44px, auto;
+}
+
+.brain-device-cloud-node {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: min(16rem, 42%);
+  border: 1px solid rgba(35, 104, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.48rem 0.68rem;
+  color: var(--device-blue);
+  font-size: 0.78rem;
+  font-weight: 900;
+  box-shadow: 0 12px 26px rgba(8, 26, 58, 0.08);
+}
+
+.brain-device-cloud-node span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brain-device-cloud-node-plan {
+  top: clamp(0.75rem, 2vw, 1.2rem);
+  left: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.brain-device-cloud-node-card {
+  top: clamp(0.75rem, 2vw, 1.2rem);
+  right: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.brain-device-tv-wrap {
+  position: relative;
+  display: grid;
+  width: min(100%, 54rem);
+  min-height: 29rem;
+  place-items: center;
+  padding: 3.2rem 5rem 4.8rem 2rem;
+}
+
+.brain-device-tv-frame {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 44rem);
+  aspect-ratio: 16 / 9.4;
+  border-radius: 0.78rem;
+  background: linear-gradient(145deg, #1f2937, #050816 58%, #111827);
+  box-shadow:
+    inset 0 0 0 0.24rem #111827,
+    inset 0 0 0 0.32rem rgba(255, 255, 255, 0.08),
+    0 28px 68px rgba(8, 26, 58, 0.22);
+}
+
+.brain-device-tv-screen {
+  position: absolute;
+  inset: 0.72rem;
+  overflow: hidden;
+  border-radius: 0.48rem;
+  background:
+    linear-gradient(135deg, rgba(35, 104, 255, 0.22), transparent 36%),
+    linear-gradient(225deg, rgba(125, 77, 255, 0.18), transparent 34%),
+    linear-gradient(135deg, #050816 0%, #081426 58%, #020617 100%);
+  color: #f8fbff;
+}
+
+.brain-device-tv-topbar {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.42rem, 1.1vw, 0.85rem);
+  padding: clamp(0.62rem, 1.2vw, 0.9rem) clamp(0.7rem, 1.5vw, 1.15rem);
+}
+
+.brain-device-tv-topbar strong {
+  margin-right: auto;
+  font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+  font-weight: 900;
+}
+
+.brain-device-tv-topbar span {
+  color: rgba(248, 251, 255, 0.72);
+  font-size: clamp(0.56rem, 0.92vw, 0.76rem);
+  font-weight: 800;
+}
+
+.brain-device-tv-grid {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.72fr) minmax(0, 1fr);
+  gap: clamp(0.7rem, 1.7vw, 1.1rem);
+  padding: 0 clamp(0.7rem, 1.5vw, 1.15rem);
+}
+
+.brain-device-tv-assistant {
+  display: grid;
+  min-height: clamp(9rem, 16vw, 13.5rem);
+  align-content: center;
+  justify-items: center;
+  gap: clamp(0.4rem, 0.9vw, 0.65rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  padding: clamp(0.55rem, 1.2vw, 0.85rem);
+  text-align: center;
+}
+
+.brain-device-tv-assistant span {
+  color: rgba(248, 251, 255, 0.78);
+  font-size: clamp(0.72rem, 1.1vw, 0.88rem);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-tv-assistant strong {
+  max-width: 12rem;
+  color: #ffffff;
+  font-size: clamp(1rem, 1.8vw, 1.52rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.brain-device-tv-wave {
+  width: min(8.8rem, 78%);
+  height: 0.28rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--device-blue), var(--device-cyan), var(--device-violet), transparent);
+  box-shadow: 0 0 20px rgba(125, 77, 255, 0.65);
+}
+
+.brain-device-tv-mic {
+  display: grid;
+  width: clamp(3rem, 5.8vw, 4.5rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--device-blue), var(--device-violet));
+  box-shadow: 0 0 0 0.42rem rgba(35, 104, 255, 0.12);
+}
+
+.brain-device-tv-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+  gap: clamp(0.45rem, 1vw, 0.72rem);
+}
+
+.brain-device-tv-cards p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: rgba(248, 251, 255, 0.82);
+  font-size: clamp(0.65rem, 1vw, 0.8rem);
+  font-weight: 800;
+}
+
+.brain-device-tv-cards div {
+  display: grid;
+  min-height: clamp(4.4rem, 7.6vw, 6rem);
+  align-content: space-between;
+  gap: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.48rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: clamp(0.48rem, 0.9vw, 0.68rem);
+}
+
+.brain-device-tv-cards span {
+  color: #ffffff;
+  font-size: clamp(0.56rem, 0.88vw, 0.74rem);
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.brain-device-tv-cards svg {
+  justify-self: end;
+  color: rgba(248, 251, 255, 0.72);
+}
+
+.brain-device-tv-dock {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.36rem, 0.8vw, 0.55rem);
+  padding: clamp(0.66rem, 1.25vw, 0.9rem) clamp(0.7rem, 1.5vw, 1.15rem);
+}
+
+.brain-device-tv-dock span {
+  display: grid;
+  min-height: clamp(1.95rem, 3.4vw, 2.65rem);
+  place-items: center;
+  border-radius: 0.42rem;
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+  font-size: clamp(0.5rem, 0.82vw, 0.68rem);
+  font-weight: 900;
+}
+
+.brain-device-tv-ports {
+  position: absolute;
+  top: 24%;
+  right: -0.72rem;
+  display: grid;
+  gap: 0.5rem;
+  width: 1.45rem;
+  padding: 0.52rem 0.22rem;
+  border-radius: 0.32rem;
+  background: linear-gradient(180deg, #111827, #030712);
+  box-shadow: 0 14px 28px rgba(8, 26, 58, 0.22);
+}
+
+.brain-device-tv-ports span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.44rem;
+  font-weight: 900;
+}
+
+.brain-device-hdmi-stick {
+  position: absolute;
+  z-index: 3;
+  top: 43%;
+  right: -5rem;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 20px 34px rgba(8, 26, 58, 0.3));
+  transition:
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+.brain-device-hdmi-plug {
+  width: 2.35rem;
+  height: 1.35rem;
+  border: 1px solid rgba(15, 23, 42, 0.24);
+  border-radius: 0.2rem 0 0 0.2rem;
+  background: linear-gradient(180deg, #f8fafc, #cbd5e1);
+}
+
+.brain-device-hdmi-body {
+  display: grid;
+  width: clamp(4.4rem, 7vw, 5.9rem);
+  height: clamp(6.6rem, 10.2vw, 8.2rem);
+  align-content: center;
+  justify-items: center;
+  gap: 0.26rem;
+  border-radius: 0.7rem;
+  background: linear-gradient(145deg, #111827, #020617);
+  color: #ffffff;
+  transform: rotate(90deg);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 18px 34px rgba(8, 26, 58, 0.3);
+}
+
+.brain-device-hdmi-body strong {
+  color: #ffffff;
+  font-size: clamp(0.95rem, 1.35vw, 1.18rem);
+  font-weight: 900;
+}
+
+.brain-device-hdmi-body span {
+  color: var(--device-cyan);
+  font-size: clamp(0.42rem, 0.66vw, 0.54rem);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-hdmi-body i {
+  width: 0.42rem;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--device-cyan);
+  box-shadow: 0 0 16px rgba(24, 189, 246, 0.86);
+}
+
+.brain-device-flow-scene-connect .brain-device-hdmi-stick,
+.brain-device-flow-scene-live .brain-device-hdmi-stick {
+  transform: translateX(-0.4rem) scale(1.04);
+  filter: drop-shadow(0 24px 38px rgba(35, 104, 255, 0.34));
+}
+
+.brain-device-tv-stand {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 4.4rem;
+  width: min(14rem, 34%);
+  height: 3.8rem;
+  transform: translateX(-50%);
+  border-radius: 0 0 0.65rem 0.65rem;
+  background:
+    linear-gradient(100deg, transparent 0 28%, #111827 29% 39%, transparent 40% 60%, #111827 61% 71%, transparent 72%),
+    linear-gradient(180deg, transparent 0 58%, #111827 59% 100%);
+}
+
+.brain-device-payment-card,
+.brain-device-smart-card {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 0.28rem;
+  width: min(15rem, 42%);
+  min-height: 6.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.62rem;
+  padding: 0.85rem;
+  box-shadow: 0 18px 38px rgba(8, 26, 58, 0.16);
+}
+
+.brain-device-payment-card {
+  left: 1rem;
+  bottom: 0.4rem;
+  background:
+    linear-gradient(135deg, rgba(35, 104, 255, 0.86), rgba(24, 189, 246, 0.76)),
+    #2368ff;
+  color: #ffffff;
+}
+
+.brain-device-smart-card {
+  right: 2.4rem;
+  bottom: 0.4rem;
+  background:
+    linear-gradient(135deg, #111827, #020617 72%),
+    #111827;
+  color: #ffffff;
+}
+
+.brain-device-payment-card span,
+.brain-device-smart-card span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-payment-card strong,
+.brain-device-smart-card strong {
+  color: #ffffff;
+  font-size: 1.08rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.brain-device-payment-card i {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.brain-device-card-chip {
+  width: 2.4rem;
+  height: 1.8rem;
+  border-radius: 0.28rem;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.24), transparent 42%),
+    linear-gradient(135deg, #d9b65d, #f4d989);
+}
+
+.brain-device-flow-scene-payment .brain-device-payment-card,
+.brain-device-flow-scene-card .brain-device-smart-card,
+.brain-device-flow-scene-live .brain-device-smart-card {
+  outline: 3px solid rgba(24, 189, 246, 0.22);
+}
+
+.brain-device-flow-inspector {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  border: 1px solid rgba(35, 104, 255, 0.12);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 1rem;
+}
+
+.brain-device-flow-inspector h2 {
+  margin: 0;
+  color: var(--device-deep);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 900;
+  line-height: 1.08;
+}
+
+.brain-device-flow-inspector p {
+  margin: 0;
+  color: var(--device-muted);
+  line-height: 1.65;
+}
+
+.brain-device-inspector-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.brain-device-inspector-grid div {
+  display: grid;
+  gap: 0.25rem;
+  border-top: 1px solid rgba(35, 104, 255, 0.14);
+  padding-top: 0.65rem;
+}
+
+.brain-device-inspector-grid span {
+  color: var(--device-blue);
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-inspector-grid strong {
+  color: var(--device-deep);
+  font-size: 0.92rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.brain-device-next-step {
+  width: 100%;
+  justify-content: center;
+}
+
+.brain-device-next-step:disabled {
+  cursor: default;
+  opacity: 0.64;
+}
+
+.brain-device-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.brain-device-plan-card {
+  display: grid;
+  min-height: 14.6rem;
+  align-content: start;
+  gap: 0.5rem;
+  border: 1px solid var(--device-line);
+  border-radius: 0.5rem;
+  background: #ffffff;
+  padding: 0.9rem;
+  color: var(--device-deep);
+  text-align: left;
+  box-shadow: 0 14px 32px rgba(8, 26, 58, 0.06);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.brain-device-plan-card:hover,
+.brain-device-plan-card-active {
+  transform: translateY(-2px);
+  border-color: rgba(35, 104, 255, 0.34);
+  box-shadow: 0 18px 42px rgba(35, 104, 255, 0.14);
+}
+
+.brain-device-plan-icon {
+  display: grid;
+  width: 2.45rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 0.5rem;
+  background: rgba(35, 104, 255, 0.08);
+  color: var(--device-blue);
+}
+
+.brain-device-plan-card-active .brain-device-plan-icon {
+  background: linear-gradient(135deg, var(--device-blue), var(--device-cyan));
+  color: #ffffff;
+}
+
+.brain-device-plan-name {
+  color: var(--device-blue);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-plan-card strong {
+  color: var(--device-deep);
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.brain-device-plan-card small,
+.brain-device-plan-card p,
+.brain-device-plan-card em {
+  margin: 0;
+  color: var(--device-muted);
+  line-height: 1.45;
+}
+
+.brain-device-plan-card small {
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.brain-device-plan-card p {
+  font-size: 0.9rem;
+}
+
+.brain-device-plan-card em {
+  align-self: end;
+  border-top: 1px solid rgba(35, 104, 255, 0.12);
+  padding-top: 0.65rem;
+  font-size: 0.84rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.brain-device-connection-board {
+  grid-template-columns: minmax(18rem, 0.62fr) minmax(24rem, 1fr);
+  align-items: start;
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, #2368ff 0%, #0d3db8 100%);
+  padding: clamp(1rem, 2.2vw, 1.35rem);
+  color: #ffffff;
+}
+
+.brain-device-connection-copy {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.brain-device-connection-copy .landing-inline-label,
+.brain-device-connection-copy h2,
+.brain-device-connection-copy p {
+  color: #ffffff !important;
+}
+
+.brain-device-connection-copy h2 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 900;
+  line-height: 0.98;
+}
+
+.brain-device-connection-copy p {
+  margin: 0;
+  max-width: 42rem;
+  line-height: 1.68;
+}
+
+.brain-device-connection-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.brain-device-connection-item {
+  display: grid;
+  min-height: 8rem;
+  align-content: start;
+  gap: 0.42rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.85rem;
+}
+
+.brain-device-connection-item svg,
+.brain-device-connection-item span,
+.brain-device-connection-item strong {
+  color: #ffffff;
+}
+
+.brain-device-connection-item span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brain-device-connection-item strong {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.brain-device-layer-strip {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.brain-device-layer-strip div {
+  display: grid;
+  gap: 0.36rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  padding-top: 0.85rem;
+}
+
+.brain-device-layer-strip svg,
+.brain-device-layer-strip strong,
+.brain-device-layer-strip p {
+  color: #ffffff;
+}
+
+.brain-device-layer-strip p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+@media (max-width: 1180px) {
+  .brain-device-flow-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brain-device-flow-rail {
+    grid-template-columns: repeat(5, minmax(10rem, 1fr));
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .brain-device-flow-step {
+    min-width: 10rem;
+  }
+
+  .brain-device-plan-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .brain-devices-flow-hero,
+  .brain-device-connection-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brain-device-lane-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brain-device-connection-list,
+  .brain-device-layer-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 759px) {
+  .brain-topbar-mobile-devices {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .landing-shell.theme-landing .brain-topbar-actions {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .landing-shell.theme-landing .brain-topbar-actions button {
+    font-size: 0.76rem !important;
+  }
+
+  .brain-topbar-mobile-devices span {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .brain-devices-flow-page {
+    width: calc(100% - 1rem);
+    padding-top: 0.45rem;
+  }
+
+  .brain-devices-flow-page .brain-page-brand-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .brain-devices-flow-page .brain-page-brand-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brain-devices-flow-page .brain-help-title {
+    max-width: 10.5ch;
+    font-size: clamp(2.2rem, 13vw, 3.35rem);
+  }
+
+  .brain-device-section-heading h2 {
+    max-width: 12ch;
+    font-size: clamp(1.75rem, 9vw, 2.5rem);
+  }
+
+  .brain-device-lane-grid,
+  .brain-device-plan-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brain-device-flow-stage {
+    padding: 0.7rem;
+  }
+
+  .brain-device-flow-scene {
+    min-height: 31rem;
+  }
+
+  .brain-device-cloud-node {
+    max-width: 46%;
+    font-size: 0.68rem;
+    padding: 0.38rem 0.48rem;
+  }
+
+  .brain-device-tv-wrap {
+    width: 100%;
+    min-height: 27rem;
+    padding: 3.2rem 2.7rem 5.9rem 0.4rem;
+  }
+
+  .brain-device-tv-frame {
+    width: min(100%, 34rem);
+  }
+
+  .brain-device-tv-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brain-device-tv-assistant {
+    min-height: 7.5rem;
+  }
+
+  .brain-device-tv-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brain-device-tv-cards div:nth-of-type(3) {
+    display: none;
+  }
+
+  .brain-device-tv-dock {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brain-device-tv-dock span:nth-child(n + 4) {
+    display: none;
+  }
+
+  .brain-device-hdmi-stick {
+    right: -3.4rem;
+    transform: scale(0.76);
+  }
+
+  .brain-device-flow-scene-connect .brain-device-hdmi-stick,
+  .brain-device-flow-scene-live .brain-device-hdmi-stick {
+    transform: translateX(-0.25rem) scale(0.82);
+  }
+
+  .brain-device-tv-stand {
+    bottom: 5.5rem;
+  }
+
+  .brain-device-payment-card,
+  .brain-device-smart-card {
+    width: calc(50% - 0.75rem);
+    min-height: 5.6rem;
+    padding: 0.72rem;
+  }
+
+  .brain-device-payment-card {
+    left: 0.35rem;
+    bottom: 0.5rem;
+  }
+
+  .brain-device-smart-card {
+    right: 0.35rem;
+    bottom: 0.5rem;
+  }
+
+  .brain-device-payment-card strong,
+  .brain-device-smart-card strong {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 460px) {
+  .landing-shell.theme-landing .brain-topbar-actions {
+    gap: 0.34rem !important;
+  }
+
+  .landing-shell.theme-landing .brain-topbar-actions button {
+    min-height: 2.35rem !important;
+    padding-inline: 0.28rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hamburger-menu-toggle {
+    gap: 0.22rem;
+  }
+
+  .brain-devices-flow-page .brain-help-title {
+    font-size: clamp(2rem, 12.5vw, 3rem);
+  }
+
+  .brain-device-tv-wrap {
+    min-height: 24.5rem;
+    padding-right: 1.8rem;
+    padding-bottom: 5.4rem;
+  }
+
+  .brain-device-tv-topbar span:nth-of-type(n + 3) {
+    display: none;
+  }
+
+  .brain-device-tv-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brain-device-tv-cards div:nth-of-type(2) {
+    display: none;
+  }
+
+  .brain-device-hdmi-stick {
+    right: -3rem;
+    transform: scale(0.65);
+  }
+
+  .brain-device-flow-scene-connect .brain-device-hdmi-stick,
+  .brain-device-flow-scene-live .brain-device-hdmi-stick {
+    transform: translateX(-0.2rem) scale(0.72);
+  }
+
+  .brain-device-payment-card span,
+  .brain-device-smart-card span {
+    font-size: 0.62rem;
+  }
+
+  .brain-device-inspector-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.landing-shell.theme-landing .brain-topbar-shell-public .brain-topbar-mobile-devices {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 759px) {
+  .landing-shell.theme-landing .brain-topbar-shell-public .brain-topbar-mobile-devices {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+}
+
+/* Devices page: moving 3D HDMI stick docking into the TV */
+.brain-device-tv-wrap {
+  perspective: 1200px;
+}
+
+.brain-device-tv-frame::after {
+  content: "";
+  position: absolute;
+  top: 43.5%;
+  right: -0.22rem;
+  z-index: 4;
+  width: 0.58rem;
+  height: 2.4rem;
+  border-radius: 0.2rem;
+  background: linear-gradient(180deg, rgba(24, 189, 246, 0.85), rgba(35, 104, 255, 0.3));
+  box-shadow: 0 0 18px rgba(24, 189, 246, 0.42);
+  opacity: 0.72;
+}
+
+.brain-device-hdmi-stick {
+  --stick-dock-shift: 0rem;
+  --stick-scale: 1;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  animation: brainDeviceStickDock 4.8s ease-in-out infinite;
+}
+
+.brain-device-flow-scene-connect .brain-device-hdmi-stick,
+.brain-device-flow-scene-live .brain-device-hdmi-stick {
+  --stick-dock-shift: -0.45rem;
+  filter: drop-shadow(0 24px 38px rgba(35, 104, 255, 0.34));
+}
+
+.brain-device-hdmi-plug {
+  position: relative;
+  transform: rotateX(8deg) rotateY(-18deg);
+  transform-style: preserve-3d;
+}
+
+.brain-device-hdmi-plug::before,
+.brain-device-hdmi-plug::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.brain-device-hdmi-plug::before {
+  transform: translateZ(-0.28rem);
+  background: #94a3b8;
+}
+
+.brain-device-hdmi-plug::after {
+  inset: 0.28rem 0.38rem;
+  border: 1px solid rgba(15, 23, 42, 0.24);
+  border-radius: 0.12rem;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.brain-device-hdmi-body {
+  position: relative;
+  overflow: visible;
+  transform: rotateZ(90deg) rotateY(-20deg) rotateX(8deg);
+  transform-style: preserve-3d;
+}
+
+.brain-device-hdmi-body::before,
+.brain-device-hdmi-body::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.brain-device-hdmi-body::before {
+  inset: 0.28rem;
+  z-index: -1;
+  border-radius: 0.62rem;
+  background: linear-gradient(145deg, #020617, #0b1221);
+  transform: translateZ(-0.58rem);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.brain-device-hdmi-body::after {
+  top: 0.55rem;
+  right: -0.44rem;
+  width: 0.52rem;
+  height: calc(100% - 1.1rem);
+  border-radius: 0 0.48rem 0.48rem 0;
+  background: linear-gradient(180deg, #1f2937, #020617);
+  transform: rotateY(76deg) translateZ(0.2rem);
+}
+
+.brain-device-hdmi-body strong,
+.brain-device-hdmi-body span,
+.brain-device-hdmi-body i {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes brainDeviceStickDock {
+  0%,
+  100% {
+    transform:
+      translate3d(calc(var(--stick-dock-shift) + 1.45rem), 0.15rem, 3rem)
+      rotateX(9deg)
+      rotateY(-26deg)
+      scale(var(--stick-scale));
+  }
+
+  44%,
+  62% {
+    transform:
+      translate3d(var(--stick-dock-shift), 0, 0)
+      rotateX(4deg)
+      rotateY(-8deg)
+      scale(var(--stick-scale));
+  }
+}
+
+@media (max-width: 759px) {
+  .brain-device-hdmi-stick {
+    --stick-scale: 0.76;
+  }
+}
+
+@media (max-width: 460px) {
+  .brain-device-hdmi-stick {
+    --stick-scale: 0.65;
+  }
+}
+

@@ -11,6 +11,7 @@ import {
   Zap,
   Heart,
   Cog,
+  Monitor,
 } from "lucide-react";
 import type { CountryOption, LanguageOption } from "../data/runtimeOptions";
 import { BrainBrand } from "./BrainBrand";
@@ -149,6 +150,15 @@ export function LandingTopBar({
                 onNavigate={(sectorKey) => onNavigate?.(`sector:${sectorKey}`)}
                 showLabel={true}
               />
+
+              <button
+                className="brain-topbar-secondary-cta brain-topbar-mobile-devices"
+                onClick={() => onNavigate?.("devices")}
+                type="button"
+              >
+                <Monitor size={16} />
+                <span>Devices</span>
+              </button>
 
               <button
                 className="brain-topbar-secondary-cta"
