@@ -1,26 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowRight,
-  Cable,
-  CheckCircle2,
-  ChevronRight,
-  CircleDollarSign,
-  Cpu,
-  CreditCard,
-  KeyRound,
-  Layers3,
-  MessageSquare,
-  Mic,
-  Monitor,
-  ShieldCheck,
-  Sparkles,
-  Usb,
-  Wifi,
-  Zap,
-} from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ArrowRight, Cpu, Layers3, Monitor, ShieldCheck, Volume2 } from "lucide-react";
 import { BrainBrand } from "./BrainBrand";
 import { FrontPageChatPopup } from "./FrontPageChatPopup";
-import type { Device, LandingContent, Plan, Sector } from "../types";
+import type { Device, LandingContent, Sector } from "../types";
 
 type DevicesPageProps = {
   activeDevice: Device | null;
@@ -30,58 +12,64 @@ type DevicesPageProps = {
   onOpenLogin: () => void;
 };
 
-const devicePlanOrder = ["starter", "professional", "business", "platinum", "platinum-plus"];
+type SectorWorkflowStory = {
+  moment: string;
+  assistantLine: string;
+  voiceLine: string;
+  workflow: string[];
+  screenApps: string[];
+};
 
-const deviceFlowSteps = [
-  {
-    key: "plan",
-    icon: CreditCard,
-    kicker: "Step 01",
-    title: "Choose the plan",
-    detail:
-      "The buyer starts from the plan board, picks the annual package, and sees the matching device lane before logging in.",
-  },
-  {
-    key: "payment",
-    icon: CircleDollarSign,
-    kicker: "Step 02",
-    title: "Payment request",
-    detail:
-      "The selected plan moves through buyer login, payment details, and admin approval so the rollout stays controlled.",
-  },
-  {
-    key: "card",
-    icon: KeyRound,
-    kicker: "Step 03",
-    title: "SC card is linked",
-    detail:
-      "After approval, an SC code is assigned to the plan, sector, and device. This is the secure bridge between payment and activation.",
-  },
-  {
-    key: "connect",
-    icon: Cable,
-    kicker: "Step 04",
-    title: "Plug in the AI Stick",
-    detail:
-      "The HDMI stick connects to the TV, takes USB power, and joins Wi-Fi so the screen can reach the brAIn cloud.",
-  },
-  {
-    key: "live",
-    icon: Monitor,
-    kicker: "Step 05",
-    title: "TV becomes an AI screen",
-    detail:
-      "The display opens the brAIn assistant layer with voice, apps, suggestions, and buyer-ready messaging on the screen.",
-  },
-] as const;
+type SectorMetric = {
+  label: string;
+  value: string;
+};
 
-type DeviceFlowKey = (typeof deviceFlowSteps)[number]["key"];
+type SectorBoardVisual = {
+  badge: string;
+  deviceLabel: string;
+  panels: string[];
+  accessories: string[];
+};
 
-const connectionChecklist = [
-  { icon: Cable, label: "HDMI", text: "Stick into TV input" },
-  { icon: Usb, label: "USB power", text: "Power from adapter or TV" },
-  { icon: Wifi, label: "Wi-Fi", text: "Connect to brAIn cloud" },
-];
+const sectorWorkflowStories: Record<string, SectorWorkflowStory> = {
+  commercial: {
+    moment: "Retail assistant",
+    assistantLine: "Hi, I can help you find the right product.",
+    voiceLine: "Hello, I am brAIn AI Stick, your commercial screen assistant.",
+    workflow: ["Product help", "Offer match", "Lead capture"],
+    screenApps: ["Offers", "Products", "Help"],
+  },
+  business: {
+    moment: "Office workflow",
+    assistantLine: "Good morning, your sales recap is ready.",
+    voiceLine: "Hello, I am brAIn Hub, your business workflow assistant.",
+    workflow: ["Calls", "Tasks", "Analytics"],
+    screenApps: ["Calls", "Tasks", "Reports"],
+  },
+  healthcare: {
+    moment: "Clinic assistant",
+    assistantLine: "Hey John, your therapy starts at 09:30.",
+    voiceLine: "Hello, I am brAIn MED Assistant. Hey John, your therapy starts at 09:30.",
+    workflow: ["Patient queue", "Therapy reminder", "Staff support"],
+    screenApps: ["Queue", "Therapy", "Staff"],
+  },
+  industry: {
+    moment: "Industrial monitor",
+    assistantLine: "Line 2 needs inspection before the next cycle.",
+    voiceLine: "Hello, I am brAIn Industry Edge, monitoring machines and alerts.",
+    workflow: ["Sensor signal", "Alert routing", "Ops status"],
+    screenApps: ["Sensors", "Alerts", "Uptime"],
+  },
+};
+
+const defaultWorkflowStory: SectorWorkflowStory = {
+  moment: "Live assistant",
+  assistantLine: "How can I help today?",
+  voiceLine: "Hello, I am your brAIn assistant.",
+  workflow: ["Listen", "Assist", "Report"],
+  screenApps: ["Assistant", "Insights", "Tasks"],
+};
 
 function getDeviceForSector(sector: Sector | null, devices: Device[]) {
   if (!sector) {
@@ -95,234 +83,216 @@ function getDeviceForSector(sector: Sector | null, devices: Device[]) {
   );
 }
 
-function getOrderedDevicePlans(plans: Plan[]) {
-  const ordered = devicePlanOrder
-    .map((slug) => plans.find((plan) => plan.slug === slug))
-    .filter((plan): plan is Plan => Boolean(plan));
-  const rest = plans.filter(
-    (plan) => plan.slug !== "free" && !devicePlanOrder.includes(plan.slug),
-  );
-
-  return [...ordered, ...rest];
-}
-
-function getDefaultPlanSlug(plans: Plan[]) {
-  return (
-    plans.find((plan) => plan.slug === "business")?.slug ??
-    plans.find((plan) => plan.slug !== "free")?.slug ??
-    plans[0]?.slug ??
-    ""
-  );
-}
-
-function getPlanTokenLabel(plan: Plan | null) {
-  if (!plan) {
-    return "Plan-based tokens";
+function getWorkflowStoryForSector(sector: Sector | null) {
+  if (!sector) {
+    return defaultWorkflowStory;
   }
 
-  return plan.features.find((feature) => /token/i.test(feature)) ?? "Plan-based tokens";
+  return sectorWorkflowStories[sector.slug] ?? defaultWorkflowStory;
 }
 
-function getPlanPriceLabel(plan: Plan | null) {
-  if (!plan) {
-    return "Choose plan";
-  }
-
-  if (plan.annualPrice <= 0) {
-    return "Free";
-  }
-
-  return `EUR ${plan.annualPrice.toLocaleString("en-GB")}`;
-}
-
-function getPlanMonthLabel(plan: Plan | null) {
-  if (!plan) {
-    return "Annual";
-  }
-
-  if (plan.monthlyPrice <= 0) {
-    return "Validation";
-  }
-
-  return `EUR ${plan.monthlyPrice}/month`;
-}
-
-function getSmartCardCode(plan: Plan | null, sector: Sector | null) {
-  const planCode = (plan?.slug ?? "plan").replace(/[^a-z0-9]/gi, "").slice(0, 3).toUpperCase();
-  const sectorCode = (sector?.slug ?? "tv").replace(/[^a-z0-9]/gi, "").slice(0, 3).toUpperCase();
-
-  return `SC-${planCode || "BIZ"}-${sectorCode || "TV"}-248`;
-}
-
-type DeviceFlowVisualProps = {
-  activeStep: DeviceFlowKey;
-  device: Device | null;
-  plan: Plan | null;
-  sector: Sector | null;
-};
-
-function DeviceFlowVisual({ activeStep, device, plan, sector }: DeviceFlowVisualProps) {
-  const smartCardCode = getSmartCardCode(plan, sector);
-  const sceneCopy: Record<DeviceFlowKey, { title: string; prompt: string; secondary: string }> = {
-    plan: {
-      title: plan?.name ?? "Choose plan",
-      prompt: "Pick the package",
-      secondary: plan?.deviceAllowance ?? "Device allowance",
-    },
-    payment: {
-      title: "Request pending",
-      prompt: "Confirm details",
-      secondary: "Admin approval",
-    },
-    card: {
-      title: smartCardCode,
-      prompt: "Link card",
-      secondary: sector?.name ?? "Device lane",
-    },
-    connect: {
-      title: "HDMI + USB + Wi-Fi",
-      prompt: "Plug and pair",
-      secondary: "Cloud handshake",
-    },
-    live: {
-      title: "How can I help today?",
-      prompt: "Ask anything",
-      secondary: "Apps + assistant",
-    },
+function getSectorStyle(sector: Sector): CSSProperties {
+  const projectAccents: Record<string, string> = {
+    commercial: "var(--device-blue)",
+    business: "var(--device-cyan)",
+    healthcare: "var(--device-violet)",
+    industry: "#0d63ce",
   };
-  const copy = sceneCopy[activeStep];
-  const tvMetrics = [
-    { label: "Plan value", value: getPlanPriceLabel(plan), tone: "blue" },
-    { label: "Calls handled", value: activeStep === "live" ? "28" : "Ready", tone: "green" },
-    { label: "Tasks automated", value: activeStep === "connect" ? "Pairing" : "56", tone: "violet" },
-    { label: "New leads", value: activeStep === "card" ? "Linked" : "14", tone: "gold" },
+
+  return {
+    "--sector-accent": projectAccents[sector.slug] ?? sector.accent ?? "var(--device-blue)",
+  } as CSSProperties;
+}
+
+function getSectorIcon(sector: Sector) {
+  if (sector.slug === "commercial") {
+    return Monitor;
+  }
+
+  if (sector.slug === "healthcare") {
+    return ShieldCheck;
+  }
+
+  if (sector.slug === "industry") {
+    return Layers3;
+  }
+
+  return Cpu;
+}
+
+function getSectorMetrics(sector: Sector, device: Device | null): SectorMetric[] {
+  const metrics = device?.metrics.slice(0, 3) ?? [];
+
+  if (metrics.length > 0) {
+    return metrics;
+  }
+
+  return [
+    { label: sector.statLabel, value: sector.statValue },
+    { label: "Audience", value: sector.audience },
+    { label: "Mode", value: "Ready" },
   ];
-  const quickActions = ["Create content", "Analyze data", "Automate task", "Answer calls"];
+}
+
+function getSectorBoardVisual(sector: Sector, device: Device | null): SectorBoardVisual {
+  if (sector.slug === "commercial") {
+    return {
+      badge: "brAIn AI Stick",
+      deviceLabel: "AI Stick",
+      panels: ["Product finder", "Offer board", "Customer help"],
+      accessories: device?.ports.slice(0, 4) ?? ["HDMI", "USB-C", "Wi-Fi", "Cloud"],
+    };
+  }
+
+  if (sector.slug === "healthcare") {
+    return {
+      badge: "brAIn MED kit",
+      deviceLabel: "MED",
+      panels: ["Patient queue", "Therapy time", "Staff alert"],
+      accessories: device?.ports.slice(0, 4) ?? ["Camera", "Cloud", "Voice", "Queue"],
+    };
+  }
+
+  if (sector.slug === "industry") {
+    return {
+      badge: "brAIn Industry Edge",
+      deviceLabel: "Edge",
+      panels: ["Line status", "Sensor map", "Ops alerts"],
+      accessories: device?.ports.slice(0, 4) ?? ["LAN", "RS-485", "Sensors", "Relay"],
+    };
+  }
+
+  return {
+    badge: "brAIn Business Hub",
+    deviceLabel: "Hub",
+    panels: ["Calls", "Tasks", "Analytics"],
+    accessories: device?.ports.slice(0, 4) ?? ["Mic array", "Wi-Fi", "HD screen", "Cloud"],
+  };
+}
+
+function GeneratedDeviceShowcase({ label, sector }: { label: string; sector: Sector }) {
+  return (
+    <div className={`brain-device-generated-showcase brain-device-generated-showcase-${sector.slug}`}>
+      {sector.slug === "commercial" ? (
+        <>
+          <div className="brain-device-generated-stick brain-device-generated-stick-main">
+            <span>brAIn</span>
+            <strong>{label}</strong>
+            <i />
+          </div>
+          <div className="brain-device-generated-stick brain-device-generated-stick-mini">
+            <span>HDMI</span>
+          </div>
+          <div className="brain-device-generated-cable" />
+        </>
+      ) : sector.slug === "business" ? (
+        <>
+          <div className="brain-device-generated-hub-screen">
+            <span>brAIn</span>
+            <strong>{label}</strong>
+            <i />
+          </div>
+          <div className="brain-device-generated-hub-side">
+            <span>Voice</span>
+          </div>
+          <div className="brain-device-generated-hub-base" />
+        </>
+      ) : sector.slug === "healthcare" ? (
+        <>
+          <div className="brain-device-generated-med-device brain-device-generated-med-main">
+            <span>brAIn</span>
+            <strong>{label}</strong>
+            <i />
+          </div>
+          <div className="brain-device-generated-med-device brain-device-generated-med-mini">
+            <span>TV</span>
+          </div>
+          <div className="brain-device-generated-med-card">
+            <span>SC</span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="brain-device-generated-edge-box">
+            <span>brAIn</span>
+            <strong>{label}</strong>
+            <i />
+          </div>
+          <div className="brain-device-generated-edge-antenna brain-device-generated-edge-antenna-left" />
+          <div className="brain-device-generated-edge-antenna brain-device-generated-edge-antenna-right" />
+          <div className="brain-device-generated-edge-panel">
+            <span>OPS</span>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function SectorGeneratedBoard({
+  device,
+  metrics,
+  sector,
+  story,
+}: {
+  device: Device | null;
+  metrics: SectorMetric[];
+  sector: Sector;
+  story: SectorWorkflowStory;
+}) {
+  const visual = getSectorBoardVisual(sector, device);
 
   return (
-    <div className={`brain-device-flow-scene brain-device-flow-scene-${activeStep}`}>
-      <div className="brain-device-cloud-node brain-device-cloud-node-plan">
-        <CreditCard className="h-4 w-4" />
-        <span>{plan?.name ?? "Plan"}</span>
+    <div className={`brain-device-generated-board brain-device-generated-board-${sector.slug}`}>
+      <div className="brain-device-generated-header">
+        <span>{visual.badge}</span>
+        <strong>{device?.name ?? sector.name}</strong>
+        <em>{story.moment}</em>
       </div>
 
-      <div className="brain-device-cloud-node brain-device-cloud-node-card">
-        <KeyRound className="h-4 w-4" />
-        <span>{smartCardCode}</span>
+      <div className="brain-device-generated-main">
+        <div className="brain-device-generated-screen">
+          <div className="brain-device-generated-screen-top">
+            <strong>brAIn</strong>
+            <span>Live</span>
+            <span>Voice</span>
+            <span>Cloud</span>
+          </div>
+          <div className="brain-device-generated-screen-body">
+            <div className="brain-device-generated-assistant">
+              <span />
+              <strong>{story.assistantLine}</strong>
+              <small>Voice ready</small>
+            </div>
+            <div className="brain-device-generated-panel-grid">
+              {visual.panels.map((panel) => (
+                <div key={panel}>
+                  <span>{panel}</span>
+                  <i />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="brain-device-generated-device-stage">
+          <GeneratedDeviceShowcase label={visual.deviceLabel} sector={sector} />
+        </div>
       </div>
 
-      <div className="brain-device-tv-wrap" aria-hidden="true">
-        <div className="brain-device-tv-frame">
-          <div className="brain-device-tv-screen">
-            <div className="brain-device-tv-topbar">
-              <strong>
-                <span className="brain-device-tv-logo-mark" />
-                brAIn
-              </strong>
-              <span>Home</span>
-              <span>Analytics</span>
-              <span>Automation</span>
-              <span>Communication</span>
-              <span>Settings</span>
-              <Wifi className="h-4 w-4" />
-              <span>10:30 AM</span>
-            </div>
-
-            <div className="brain-device-tv-grid">
-              <div className="brain-device-tv-assistant">
-                <div className="brain-device-tv-wave-large" />
-                <span>Hello!</span>
-                <strong>{copy.title}</strong>
-                <div className="brain-device-tv-mic">
-                  <Mic className="h-6 w-6" />
-                </div>
-                <p>Press the mic and speak</p>
-              </div>
-
-              <div className="brain-device-tv-dashboard">
-                <span className="brain-device-tv-overview-label">Overview</span>
-
-                <div className="brain-device-tv-metrics-row">
-                  {tvMetrics.map((metric) => (
-                    <div
-                      className={`brain-device-tv-metric brain-device-tv-metric-${metric.tone}`}
-                      key={metric.label}
-                    >
-                      <span>{metric.label}</span>
-                      <strong>{metric.value}</strong>
-                      <i />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="brain-device-tv-actions-row">
-                  {quickActions.map((action) => (
-                    <span key={action}>
-                      <Zap className="h-4 w-4" />
-                      {action}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="brain-device-tv-lower-row">
-                  <div className="brain-device-tv-activity">
-                    <span>Recent activity</span>
-                    <p>AI assistant is online</p>
-                    <p>{smartCardCode} linked</p>
-                    <p>{device?.name ?? "AI Stick"} handshake ready</p>
-                  </div>
-
-                  <div className="brain-device-tv-suggestion">
-                    <span>AI suggestion</span>
-                    <strong>{copy.prompt}</strong>
-                    <p>{copy.secondary}</p>
-                  </div>
-
-                  <div className="brain-device-tv-upgrade">
-                    <Sparkles className="h-5 w-5" />
-                    <span>Active plan</span>
-                    <strong>{plan?.name ?? "Business"}</strong>
-                    <p>{getPlanTokenLabel(plan)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="brain-device-tv-footer">
-              <MessageSquare className="h-4 w-4" />
-              <span>Try saying: "Show today status" or "Summarize new leads."</span>
-            </div>
+      <div className="brain-device-generated-metrics">
+        {metrics.slice(0, 3).map((metric) => (
+          <div key={metric.label}>
+            <span>{metric.label}</span>
+            <strong>{metric.value}</strong>
           </div>
+        ))}
+      </div>
 
-          <div className="brain-device-tv-ports">
-            <span>HDMI</span>
-            <span>USB</span>
-            <span>LAN</span>
-          </div>
-
-          <div className="brain-device-hdmi-stick">
-            <div className="brain-device-hdmi-plug" />
-            <div className="brain-device-hdmi-body">
-              <strong>brAIn</strong>
-              <span>AI STICK</span>
-              <i />
-            </div>
-          </div>
-        </div>
-
-        <div className="brain-device-tv-stand" />
-
-        <div className="brain-device-payment-card">
-          <span>Plan payment</span>
-          <strong>{getPlanPriceLabel(plan)}</strong>
-          <i>{getPlanMonthLabel(plan)}</i>
-        </div>
-
-        <div className="brain-device-smart-card">
-          <div className="brain-device-card-chip" />
-          <span>Secure card</span>
-          <strong>{smartCardCode}</strong>
-        </div>
+      <div className="brain-device-generated-accessories">
+        {visual.accessories.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
       </div>
     </div>
   );
@@ -335,32 +305,18 @@ export function DevicesPage({
   lightMode,
   onOpenLogin,
 }: DevicesPageProps) {
-  const defaultSectorSlug = activeSector?.slug ?? landingContent.sectors[0]?.slug ?? "";
+  const sectorSections = landingContent.sectors.slice(0, 4);
+  const defaultSectorSlug = activeSector?.slug ?? sectorSections[0]?.slug ?? "";
   const [selectedSectorSlug, setSelectedSectorSlug] = useState(defaultSectorSlug);
-  const [selectedPlanSlug, setSelectedPlanSlug] = useState(() =>
-    getDefaultPlanSlug(landingContent.plans),
-  );
-  const [activeStep, setActiveStep] = useState<DeviceFlowKey>("plan");
-
-  const devicePlans = useMemo(
-    () => getOrderedDevicePlans(landingContent.plans),
-    [landingContent.plans],
-  );
+  const [activeVoiceSectorSlug, setActiveVoiceSectorSlug] = useState<string | null>(null);
+  const voiceStopTimerRef = useRef<number | null>(null);
   const selectedSector =
-    landingContent.sectors.find((sector) => sector.slug === selectedSectorSlug) ??
+    sectorSections.find((sector) => sector.slug === selectedSectorSlug) ??
     activeSector ??
-    landingContent.sectors[0] ??
+    sectorSections[0] ??
     null;
   const selectedDevice =
     getDeviceForSector(selectedSector, landingContent.devices) ?? activeDevice ?? null;
-  const selectedPlan =
-    landingContent.plans.find((plan) => plan.slug === selectedPlanSlug) ??
-    devicePlans[0] ??
-    landingContent.plans[0] ??
-    null;
-  const activeStepIndex = deviceFlowSteps.findIndex((step) => step.key === activeStep);
-  const activeFlowStep = deviceFlowSteps[activeStepIndex] ?? deviceFlowSteps[0];
-  const smartCardCode = getSmartCardCode(selectedPlan, selectedSector);
 
   useEffect(() => {
     if (activeSector?.slug) {
@@ -370,25 +326,72 @@ export function DevicesPage({
 
   useEffect(() => {
     if (
-      landingContent.sectors.length > 0 &&
-      !landingContent.sectors.some((sector) => sector.slug === selectedSectorSlug)
+      sectorSections.length > 0 &&
+      !sectorSections.some((sector) => sector.slug === selectedSectorSlug)
     ) {
-      setSelectedSectorSlug(landingContent.sectors[0].slug);
+      setSelectedSectorSlug(sectorSections[0].slug);
     }
-  }, [landingContent.sectors, selectedSectorSlug]);
+  }, [sectorSections, selectedSectorSlug]);
 
   useEffect(() => {
-    if (
-      landingContent.plans.length > 0 &&
-      !landingContent.plans.some((plan) => plan.slug === selectedPlanSlug)
-    ) {
-      setSelectedPlanSlug(getDefaultPlanSlug(landingContent.plans));
-    }
-  }, [landingContent.plans, selectedPlanSlug]);
+    return () => {
+      if (voiceStopTimerRef.current !== null) {
+        window.clearTimeout(voiceStopTimerRef.current);
+      }
 
-  function moveToNextStep() {
-    const nextStep = deviceFlowSteps[Math.min(activeStepIndex + 1, deviceFlowSteps.length - 1)];
-    setActiveStep(nextStep.key);
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  function clearVoiceTimer() {
+    if (voiceStopTimerRef.current !== null) {
+      window.clearTimeout(voiceStopTimerRef.current);
+      voiceStopTimerRef.current = null;
+    }
+  }
+
+  function selectSector(sectorSlug: string) {
+    setSelectedSectorSlug(sectorSlug);
+
+    requestAnimationFrame(() => {
+      document.getElementById(`device-sector-${sectorSlug}`)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
+
+  function playSectorVoice(sector: Sector, story: SectorWorkflowStory) {
+    setSelectedSectorSlug(sector.slug);
+    clearVoiceTimer();
+    setActiveVoiceSectorSlug(sector.slug);
+
+    if (
+      typeof window !== "undefined" &&
+      "speechSynthesis" in window &&
+      typeof SpeechSynthesisUtterance !== "undefined"
+    ) {
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(story.voiceLine);
+      utterance.rate = 0.94;
+      utterance.pitch =
+        sector.slug === "healthcare" ? 1.08 : sector.slug === "industry" ? 0.88 : 1;
+      utterance.volume = 1;
+      utterance.onend = () => {
+        setActiveVoiceSectorSlug((current) => (current === sector.slug ? null : current));
+        clearVoiceTimer();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    voiceStopTimerRef.current = window.setTimeout(() => {
+      setActiveVoiceSectorSlug((current) => (current === sector.slug ? null : current));
+      voiceStopTimerRef.current = null;
+    }, 11000);
   }
 
   return (
@@ -411,13 +414,13 @@ export function DevicesPage({
         </div>
       </div>
 
-      <section className="brain-devices-flow-hero" aria-label="Devices activation flow">
+      <section className="brain-devices-flow-hero" aria-label="Devices by sector">
         <div className="brain-devices-flow-copy">
           <span className="landing-inline-label">Devices</span>
-          <h1 className="brain-help-title">Plan, SC card, HDMI stick, live AI screen.</h1>
+          <h1 className="brain-help-title">Four sectors, four devices.</h1>
           <p className="brain-help-copy">
-            This is the full device flow: choose a plan, send the payment request, link the secure
-            SC card, plug the HDMI stick into the TV, and bring the brAIn assistant layer live.
+            Each sector has its own brAIn device, live assistant moment, device metrics, and voice
+            sample in one clean responsive page.
           </p>
 
           <div className="brain-help-actions">
@@ -432,194 +435,146 @@ export function DevicesPage({
         </div>
 
         <div className="brain-devices-flow-summary" aria-label="Selected device summary">
-          <span>Selected setup</span>
-          <strong>{selectedDevice?.name ?? "brAIn AI Stick"}</strong>
-          <p>{selectedDevice?.tagline ?? "A managed AI device connected through plan and SC card."}</p>
+          <span>Selected sector</span>
+          <strong>{selectedSector?.name ?? "Sector device"}</strong>
+          <p>{selectedDevice?.name ?? "brAIn device"}</p>
           <div>
-            <span>{selectedPlan?.name ?? "Plan"}</span>
-            <span>{smartCardCode}</span>
+            <span>{sectorSections.length || 4} sectors</span>
+            <span>Voice ready</span>
           </div>
         </div>
       </section>
 
-      <section className="brain-device-switchboard" aria-label="Choose device lane">
+      <nav className="brain-device-sector-tabs" aria-label="Device sector navigation">
+        {sectorSections.map((sector, index) => {
+          const Icon = getSectorIcon(sector);
+          const active = sector.slug === selectedSector?.slug;
+
+          return (
+            <button
+              className={`brain-device-sector-tab ${
+                active ? "brain-device-sector-tab-active" : ""
+              }`}
+              key={sector.slug}
+              onClick={() => selectSector(sector.slug)}
+              style={getSectorStyle(sector)}
+              type="button"
+            >
+              <Icon className="h-4 w-4" />
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{sector.name}</strong>
+            </button>
+          );
+        })}
+      </nav>
+
+      <section className="brain-device-sector-workflows" aria-label="Four sector device sections">
         <div className="brain-device-section-heading">
-          <span className="landing-inline-label">Device lanes</span>
-          <h2>Pick the sector, then watch the same activation flow.</h2>
+          <span className="landing-inline-label">Sector devices</span>
+          <h2>Structured by sector.</h2>
         </div>
 
-        <div className="brain-device-lane-grid">
-          {landingContent.sectors.map((sector) => {
+        <div className="brain-device-sector-workflow-list">
+          {sectorSections.map((sector, index) => {
             const device = getDeviceForSector(sector, landingContent.devices);
+            const story = getWorkflowStoryForSector(sector);
+            const metrics = getSectorMetrics(sector, device);
             const active = sector.slug === selectedSector?.slug;
+            const voiceActive = activeVoiceSectorSlug === sector.slug;
+            const Icon = getSectorIcon(sector);
+            const ports = device?.ports.slice(0, 4) ?? story.screenApps;
 
             return (
-              <button
-                className={`brain-device-lane-card ${active ? "brain-device-lane-card-active" : ""}`}
+              <article
+                className={`brain-device-sector-workflow-card ${
+                  active ? "brain-device-sector-workflow-card-active" : ""
+                } ${voiceActive ? "brain-device-sector-workflow-card-speaking" : ""}`}
+                id={`device-sector-${sector.slug}`}
                 key={sector.slug}
-                onClick={() => {
-                  setSelectedSectorSlug(sector.slug);
-                  setActiveStep("plan");
-                }}
-                type="button"
+                style={getSectorStyle(sector)}
               >
-                <span>
-                  <Cpu className="h-4 w-4" />
-                  {sector.name}
-                </span>
-                <strong>{device?.name ?? "brAIn device"}</strong>
-                <p>{device?.tagline ?? sector.summary}</p>
-              </button>
+                <div className="brain-device-sector-workflow-head">
+                  <span>
+                    <Icon className="h-4 w-4" />
+                    Sector {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <strong>{sector.name}</strong>
+                  <p>{sector.summary}</p>
+                  <div className="brain-device-sector-capabilities">
+                    {sector.capabilities.slice(0, 3).map((capability) => (
+                      <em key={capability}>{capability}</em>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="brain-device-sector-media">
+                  <div className="brain-device-sector-image">
+                    <SectorGeneratedBoard
+                      device={device}
+                      metrics={metrics}
+                      sector={sector}
+                      story={story}
+                    />
+                  </div>
+                  <div className="brain-device-sector-live-card">
+                    <span>{story.moment}</span>
+                    <strong>{story.assistantLine}</strong>
+                    <div className="brain-device-sector-apps">
+                      {story.screenApps.map((app) => (
+                        <small key={app}>{app}</small>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="brain-device-sector-detail">
+                  <div className="brain-device-sector-device-name">
+                    <span>Device</span>
+                    <strong>{device?.name ?? "brAIn device"}</strong>
+                    <p>{device?.tagline ?? sector.title}</p>
+                  </div>
+
+                  <div className="brain-device-sector-specs">
+                    {metrics.map((metric) => (
+                      <div key={metric.label}>
+                        <span>{metric.label}</span>
+                        <strong>{metric.value}</strong>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="brain-device-sector-runtime">
+                    <span>Workflow</span>
+                    <ol className="brain-device-sector-flow-list">
+                      {story.workflow.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <div className="brain-device-sector-port-list" aria-label="Device ports">
+                    {ports.map((port) => (
+                      <span key={port}>{port}</span>
+                    ))}
+                  </div>
+
+                  <button
+                    className="brain-device-sector-voice"
+                    onClick={() => playSectorVoice(sector, story)}
+                    type="button"
+                  >
+                    <span className="brain-device-sector-voice-orb">
+                      <Volume2 className="h-5 w-5" />
+                    </span>
+                    <span>
+                      <small>{voiceActive ? "Playing voice" : "Voice sample"}</small>
+                      <strong>Play device voice</strong>
+                    </span>
+                  </button>
+                </div>
+              </article>
             );
           })}
-        </div>
-      </section>
-
-      <section className="brain-device-flow-stage" aria-label="Interactive device flow">
-        <div className="brain-device-flow-rail">
-          {deviceFlowSteps.map((step, index) => {
-            const Icon = step.icon;
-            const active = step.key === activeStep;
-            const done = index < activeStepIndex;
-
-            return (
-              <button
-                className={`brain-device-flow-step ${active ? "brain-device-flow-step-active" : ""} ${
-                  done ? "brain-device-flow-step-done" : ""
-                }`}
-                key={step.key}
-                onClick={() => setActiveStep(step.key)}
-                type="button"
-              >
-                <span className="brain-device-flow-step-icon">
-                  <Icon className="h-4 w-4" />
-                </span>
-                <span>
-                  <small>{step.kicker}</small>
-                  <strong>{step.title}</strong>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <DeviceFlowVisual
-          activeStep={activeStep}
-          device={selectedDevice}
-          plan={selectedPlan}
-          sector={selectedSector}
-        />
-
-        <aside className="brain-device-flow-inspector">
-          <span className="landing-inline-label">{activeFlowStep.kicker}</span>
-          <h2>{activeFlowStep.title}</h2>
-          <p>{activeFlowStep.detail}</p>
-
-          <div className="brain-device-inspector-grid">
-            <div>
-              <span>Plan</span>
-              <strong>{selectedPlan?.name ?? "Choose plan"}</strong>
-            </div>
-            <div>
-              <span>SC card</span>
-              <strong>{smartCardCode}</strong>
-            </div>
-            <div>
-              <span>Device</span>
-              <strong>{selectedDevice?.name ?? "brAIn AI Stick"}</strong>
-            </div>
-            <div>
-              <span>Status</span>
-              <strong>{activeStep === "live" ? "Live screen" : "In flow"}</strong>
-            </div>
-          </div>
-
-          <button
-            className="executive-button-primary brain-device-next-step"
-            disabled={activeStepIndex === deviceFlowSteps.length - 1}
-            onClick={moveToNextStep}
-            type="button"
-          >
-            Next step
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </aside>
-      </section>
-
-      <section className="brain-device-plan-board" aria-label="Plan cards for device flow">
-        <div className="brain-device-section-heading">
-          <span className="landing-inline-label">Plans + payment</span>
-          <h2>Plans drive payment, payment releases the SC card.</h2>
-        </div>
-
-        <div className="brain-device-plan-grid">
-          {devicePlans.map((plan) => {
-            const active = plan.slug === selectedPlan?.slug;
-
-            return (
-              <button
-                className={`brain-device-plan-card ${active ? "brain-device-plan-card-active" : ""}`}
-                key={plan.slug}
-                onClick={() => {
-                  setSelectedPlanSlug(plan.slug);
-                  setActiveStep("payment");
-                }}
-                type="button"
-              >
-                <span className="brain-device-plan-icon">
-                  {active ? <CheckCircle2 className="h-5 w-5" /> : <CreditCard className="h-5 w-5" />}
-                </span>
-                <span className="brain-device-plan-name">{plan.name}</span>
-                <strong>{getPlanPriceLabel(plan)}</strong>
-                <small>{getPlanMonthLabel(plan)}</small>
-                <p>{plan.deviceAllowance}</p>
-                <em>{getPlanTokenLabel(plan)}</em>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="brain-device-connection-board" aria-label="HDMI stick setup">
-        <div className="brain-device-connection-copy">
-          <span className="landing-inline-label">HDMI AI Stick</span>
-          <h2>Any TV can become the device.</h2>
-          <p>
-            The physical part is simple: plug the stick into HDMI, power it through USB, connect it
-            to the network, and the software layer appears on the display.
-          </p>
-        </div>
-
-        <div className="brain-device-connection-list">
-          {connectionChecklist.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <div className="brain-device-connection-item" key={item.label}>
-                <Icon className="h-5 w-5" />
-                <span>{item.label}</span>
-                <strong>{item.text}</strong>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="brain-device-layer-strip">
-          <div>
-            <Layers3 className="h-5 w-5" />
-            <strong>Software layer</strong>
-            <p>Plans, tokens, SC card activation, chat, apps, and cloud control.</p>
-          </div>
-          <div>
-            <ShieldCheck className="h-5 w-5" />
-            <strong>Managed rollout</strong>
-            <p>Admin approval keeps paid devices, cards, and activations in sync.</p>
-          </div>
-          <div>
-            <MessageSquare className="h-5 w-5" />
-            <strong>Screen assistant</strong>
-            <p>The TV becomes the customer-facing brAIn assistant surface.</p>
-          </div>
         </div>
       </section>
 
