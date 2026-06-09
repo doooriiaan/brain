@@ -25,11 +25,16 @@ type SectorMetric = {
   value: string;
 };
 
-type SectorBoardVisual = {
-  badge: string;
-  deviceLabel: string;
-  panels: string[];
-  accessories: string[];
+type SectorProductImage = {
+  className?: string;
+  kind?: "image" | "project-stick";
+  label: string;
+  src?: string;
+};
+
+type SectorProductVisual = {
+  eyebrow: string;
+  images: SectorProductImage[];
 };
 
 const sectorWorkflowStories: Record<string, SectorWorkflowStory> = {
@@ -69,6 +74,49 @@ const defaultWorkflowStory: SectorWorkflowStory = {
   voiceLine: "Hello, I am your brAIn assistant.",
   workflow: ["Listen", "Assist", "Report"],
   screenApps: ["Assistant", "Insights", "Tasks"],
+};
+
+const sectorProductVisuals: Record<string, SectorProductVisual> = {
+  commercial: {
+    eyebrow: "brAIn AI Stick",
+    images: [
+      {
+        className: "brain-device-product-frame-main brain-device-product-frame-commercial-tv",
+        label: "Commercial AI Stick",
+        src: "/media/commercial-stick.jpeg",
+      },
+    ],
+  },
+  business: {
+    eyebrow: "brAIn Business Hub",
+    images: [
+      {
+        className: "brain-device-product-frame-main brain-device-product-frame-business-live",
+        label: "Business Hub",
+        src: "/media/business-hub.jpeg",
+      },
+    ],
+  },
+  healthcare: {
+    eyebrow: "brAIn Medical Assistant",
+    images: [
+      {
+        className: "brain-device-product-frame-main brain-device-product-frame-healthcare-stick",
+        label: "Medical Assistant",
+        src: "/media/healthcare-med.jpeg",
+      },
+    ],
+  },
+  industry: {
+    eyebrow: "brAIn Industry Edge",
+    images: [
+      {
+        className: "brain-device-product-frame-main brain-device-product-frame-industry-main",
+        label: "Industry Edge",
+        src: "/media/industry-edge.jpeg",
+      },
+    ],
+  },
 };
 
 function getDeviceForSector(sector: Sector | null, devices: Device[]) {
@@ -134,154 +182,65 @@ function getSectorMetrics(sector: Sector, device: Device | null): SectorMetric[]
   ];
 }
 
-function getSectorBoardVisual(sector: Sector, device: Device | null): SectorBoardVisual {
-  if (sector.slug === "commercial") {
-    return {
-      badge: "brAIn AI Stick",
-      deviceLabel: "AI Stick",
-      panels: ["Product finder", "Offer board", "Customer help"],
-      accessories: device?.ports.slice(0, 4) ?? ["HDMI", "USB-C", "Wi-Fi", "Cloud"],
-    };
-  }
-
-  if (sector.slug === "healthcare") {
-    return {
-      badge: "brAIn MED kit",
-      deviceLabel: "MED",
-      panels: ["Patient queue", "Therapy time", "Staff alert"],
-      accessories: device?.ports.slice(0, 4) ?? ["Camera", "Cloud", "Voice", "Queue"],
-    };
-  }
-
-  if (sector.slug === "industry") {
-    return {
-      badge: "brAIn Industry Edge",
-      deviceLabel: "Edge",
-      panels: ["Line status", "Sensor map", "Ops alerts"],
-      accessories: device?.ports.slice(0, 4) ?? ["LAN", "RS-485", "Sensors", "Relay"],
-    };
-  }
-
-  return {
-    badge: "brAIn Business Hub",
-    deviceLabel: "Hub",
-    panels: ["Calls", "Tasks", "Analytics"],
-    accessories: device?.ports.slice(0, 4) ?? ["Mic array", "Wi-Fi", "HD screen", "Cloud"],
-  };
-}
-
-function GeneratedDeviceShowcase({ label, sector }: { label: string; sector: Sector }) {
+function getSectorProductVisual(sector: Sector, device: Device | null): SectorProductVisual {
   return (
-    <div className={`brain-device-generated-showcase brain-device-generated-showcase-${sector.slug}`}>
-      {sector.slug === "commercial" ? (
-        <>
-          <div className="brain-device-generated-stick brain-device-generated-stick-main">
-            <span>brAIn</span>
-            <strong>{label}</strong>
-            <i />
-          </div>
-          <div className="brain-device-generated-stick brain-device-generated-stick-mini">
-            <span>HDMI</span>
-          </div>
-          <div className="brain-device-generated-cable" />
-        </>
-      ) : sector.slug === "business" ? (
-        <>
-          <div className="brain-device-generated-hub-screen">
-            <span>brAIn</span>
-            <strong>{label}</strong>
-            <i />
-          </div>
-          <div className="brain-device-generated-hub-side">
-            <span>Voice</span>
-          </div>
-          <div className="brain-device-generated-hub-base" />
-        </>
-      ) : sector.slug === "healthcare" ? (
-        <>
-          <div className="brain-device-generated-med-device brain-device-generated-med-main">
-            <span>brAIn</span>
-            <strong>{label}</strong>
-            <i />
-          </div>
-          <div className="brain-device-generated-med-device brain-device-generated-med-mini">
-            <span>TV</span>
-          </div>
-          <div className="brain-device-generated-med-card">
-            <span>SC</span>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="brain-device-generated-edge-box">
-            <span>brAIn</span>
-            <strong>{label}</strong>
-            <i />
-          </div>
-          <div className="brain-device-generated-edge-antenna brain-device-generated-edge-antenna-left" />
-          <div className="brain-device-generated-edge-antenna brain-device-generated-edge-antenna-right" />
-          <div className="brain-device-generated-edge-panel">
-            <span>OPS</span>
-          </div>
-        </>
-      )}
-    </div>
+    sectorProductVisuals[sector.slug] ?? {
+      eyebrow: device?.name ?? sector.name,
+      images: [
+        {
+          className: "brain-device-product-frame-main",
+          label: device?.name ?? sector.name,
+          src: device?.imageUrl ?? sector.imageUrl,
+        },
+      ],
+    }
   );
 }
 
-function SectorGeneratedBoard({
+function SectorProductBoard({
   device,
   metrics,
   sector,
-  story,
 }: {
   device: Device | null;
   metrics: SectorMetric[];
   sector: Sector;
-  story: SectorWorkflowStory;
 }) {
-  const visual = getSectorBoardVisual(sector, device);
+  const visual = getSectorProductVisual(sector, device);
 
   return (
-    <div className={`brain-device-generated-board brain-device-generated-board-${sector.slug}`}>
-      <div className="brain-device-generated-header">
-        <span>{visual.badge}</span>
+    <div className={`brain-device-product-board brain-device-product-board-${sector.slug}`}>
+      <div className="brain-device-product-board-header">
+        <span>{visual.eyebrow}</span>
         <strong>{device?.name ?? sector.name}</strong>
-        <em>{story.moment}</em>
       </div>
 
-      <div className="brain-device-generated-main">
-        <div className="brain-device-generated-screen">
-          <div className="brain-device-generated-screen-top">
-            <strong>brAIn</strong>
-            <span>Live</span>
-            <span>Voice</span>
-            <span>Cloud</span>
-          </div>
-          <div className="brain-device-generated-screen-body">
-            <div className="brain-device-generated-assistant">
-              <span />
-              <strong>{story.assistantLine}</strong>
-              <small>Voice ready</small>
-            </div>
-            <div className="brain-device-generated-panel-grid">
-              {visual.panels.map((panel) => (
-                <div key={panel}>
-                  <span>{panel}</span>
+      <div
+        aria-label={`${device?.name ?? sector.name} product photos`}
+        className="brain-device-product-gallery"
+      >
+        {visual.images.map((image) => (
+          <figure className={`brain-device-product-frame ${image.className ?? ""}`} key={image.label}>
+            {image.kind === "project-stick" ? (
+              <div className="brain-device-project-stick" aria-label={image.label} role="img">
+                <span className="brain-device-project-stick-logo">brAIn</span>
+                <span className="brain-device-project-stick-core">
                   <i />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="brain-device-generated-device-stage">
-          <GeneratedDeviceShowcase label={visual.deviceLabel} sector={sector} />
-        </div>
+                  <strong>AI</strong>
+                </span>
+                <span className="brain-device-project-stick-led" />
+                <span className="brain-device-project-stick-plug" />
+              </div>
+            ) : (
+              <img alt={image.label} loading="lazy" src={image.src} />
+            )}
+            <figcaption>{image.label}</figcaption>
+          </figure>
+        ))}
       </div>
 
-      <div className="brain-device-generated-metrics">
-        {metrics.slice(0, 3).map((metric) => (
+      <div className="brain-device-product-strip">
+        {metrics.slice(0, 2).map((metric) => (
           <div key={metric.label}>
             <span>{metric.label}</span>
             <strong>{metric.value}</strong>
@@ -289,11 +248,6 @@ function SectorGeneratedBoard({
         ))}
       </div>
 
-      <div className="brain-device-generated-accessories">
-        {visual.accessories.map((item) => (
-          <span key={item}>{item}</span>
-        ))}
-      </div>
     </div>
   );
 }
@@ -419,8 +373,8 @@ export function DevicesPage({
           <span className="landing-inline-label">Devices</span>
           <h1 className="brain-help-title">Four sectors, four devices.</h1>
           <p className="brain-help-copy">
-            Each sector has its own brAIn device, live assistant moment, device metrics, and voice
-            sample in one clean responsive page.
+            A product-first view for each sector, with real device photos, closeups, and the core
+            rollout details kept tight.
           </p>
 
           <div className="brain-help-actions">
@@ -471,7 +425,7 @@ export function DevicesPage({
       <section className="brain-device-sector-workflows" aria-label="Four sector device sections">
         <div className="brain-device-section-heading">
           <span className="landing-inline-label">Sector devices</span>
-          <h2>Structured by sector.</h2>
+          <h2>Product sectors.</h2>
         </div>
 
         <div className="brain-device-sector-workflow-list">
@@ -482,7 +436,7 @@ export function DevicesPage({
             const active = sector.slug === selectedSector?.slug;
             const voiceActive = activeVoiceSectorSlug === sector.slug;
             const Icon = getSectorIcon(sector);
-            const ports = device?.ports.slice(0, 4) ?? story.screenApps;
+            const ports = device?.ports.slice(0, 3) ?? story.screenApps;
 
             return (
               <article
@@ -499,9 +453,9 @@ export function DevicesPage({
                     Sector {String(index + 1).padStart(2, "0")}
                   </span>
                   <strong>{sector.name}</strong>
-                  <p>{sector.summary}</p>
+                  <p>{sector.title}</p>
                   <div className="brain-device-sector-capabilities">
-                    {sector.capabilities.slice(0, 3).map((capability) => (
+                    {sector.capabilities.slice(0, 2).map((capability) => (
                       <em key={capability}>{capability}</em>
                     ))}
                   </div>
@@ -509,21 +463,7 @@ export function DevicesPage({
 
                 <div className="brain-device-sector-media">
                   <div className="brain-device-sector-image">
-                    <SectorGeneratedBoard
-                      device={device}
-                      metrics={metrics}
-                      sector={sector}
-                      story={story}
-                    />
-                  </div>
-                  <div className="brain-device-sector-live-card">
-                    <span>{story.moment}</span>
-                    <strong>{story.assistantLine}</strong>
-                    <div className="brain-device-sector-apps">
-                      {story.screenApps.map((app) => (
-                        <small key={app}>{app}</small>
-                      ))}
-                    </div>
+                    <SectorProductBoard device={device} metrics={metrics} sector={sector} />
                   </div>
                 </div>
 
@@ -535,7 +475,7 @@ export function DevicesPage({
                   </div>
 
                   <div className="brain-device-sector-specs">
-                    {metrics.map((metric) => (
+                    {metrics.slice(0, 2).map((metric) => (
                       <div key={metric.label}>
                         <span>{metric.label}</span>
                         <strong>{metric.value}</strong>

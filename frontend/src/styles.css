@@ -17388,6 +17388,240 @@ body.app-light-mode.app-theme-client {
   object-fit: contain;
 }
 
+.brain-device-product-board {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: clamp(18rem, 28vw, 25rem);
+  gap: 0.7rem;
+}
+
+.brain-device-product-board-header {
+  display: grid;
+  gap: 0.24rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--sector-accent, var(--device-blue)) 16%, transparent);
+  padding-bottom: 0.55rem;
+}
+
+.brain-device-product-board-header span {
+  color: var(--sector-accent, var(--device-blue));
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.brain-device-product-board-header strong {
+  color: var(--device-deep);
+  font-size: clamp(1rem, 1.45vw, 1.28rem);
+  line-height: 1.12;
+}
+
+.brain-device-product-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(20rem, auto);
+  gap: 0.55rem;
+  min-height: 0;
+  place-items: center;
+  width: 100%;
+}
+
+.brain-device-product-frame {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--sector-accent, var(--device-blue)) 18%, rgba(35, 104, 255, 0.1));
+  border-radius: 0.48rem;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--sector-accent, var(--device-blue)) 10%, transparent), transparent 54%),
+    #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.78);
+}
+
+.brain-device-product-frame-main {
+  grid-row: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.brain-device-sector-image .brain-device-product-frame img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  transform: scale(1.03);
+}
+
+.brain-device-product-frame figcaption {
+  position: absolute;
+  left: 0.48rem;
+  right: 0.48rem;
+  bottom: 0.42rem;
+  display: inline-flex;
+  width: fit-content;
+  max-width: calc(100% - 0.96rem);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 999px;
+  background: rgba(6, 18, 37, 0.76);
+  padding: 0.25rem 0.42rem;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.brain-device-product-frame-commercial-tv img {
+  object-position: 81% 12%;
+  transform: scale(1.08);
+}
+
+.brain-device-product-frame-business-live img {
+  object-position: 18% 14%;
+  transform: scale(1.1);
+}
+
+.brain-device-product-frame-business-package img {
+  object-position: 15% 58%;
+  transform: scale(1.18);
+}
+
+.brain-device-product-frame-healthcare-stick img {
+  object-position: 70% 12%;
+  transform: scale(1.22);
+}
+
+.brain-device-product-frame-healthcare-unboxed img {
+  object-position: 58% 74%;
+  transform: scale(1.24);
+}
+
+.brain-device-product-frame-healthcare-card img {
+  object-position: 91% 13%;
+  transform: scale(1.2);
+}
+
+.brain-device-product-frame-industry-main img {
+  object-position: 35% 16%;
+  transform: scale(1.08);
+}
+
+.brain-device-product-frame-industry-use img {
+  object-position: 82% 15%;
+  transform: scale(1.08);
+}
+
+.brain-device-project-stick {
+  position: relative;
+  align-self: center;
+  justify-self: center;
+  display: grid;
+  width: min(6.2rem, 64%);
+  aspect-ratio: 0.48;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--device-cyan) 42%, rgba(255, 255, 255, 0.24));
+  border-radius: 0.7rem;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.16), transparent 20% 80%, rgba(255, 255, 255, 0.08)),
+    linear-gradient(145deg, var(--device-blue), #061225 56%, #020713);
+  color: #ffffff;
+  box-shadow:
+    0 24px 36px rgba(8, 26, 58, 0.2),
+    0 0 26px color-mix(in srgb, var(--device-cyan) 34%, transparent);
+  transform: rotate(-13deg);
+}
+
+.brain-device-project-stick::before {
+  content: "";
+  position: absolute;
+  inset: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.48rem;
+}
+
+.brain-device-project-stick-logo {
+  align-self: start;
+  margin-top: 1.15rem;
+  font-size: clamp(0.9rem, 1.6vw, 1.18rem);
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.brain-device-project-stick-core {
+  display: grid;
+  justify-items: center;
+  gap: 0.28rem;
+  color: var(--device-cyan);
+}
+
+.brain-device-project-stick-core i {
+  width: 2.1rem;
+  aspect-ratio: 1;
+  border: 0.26rem solid currentColor;
+  border-radius: 999px;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--device-cyan) 58%, transparent);
+}
+
+.brain-device-project-stick-core strong {
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.brain-device-project-stick-led {
+  position: absolute;
+  bottom: 1.05rem;
+  width: 0.48rem;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--device-cyan);
+  box-shadow: 0 0 18px var(--device-cyan);
+}
+
+.brain-device-project-stick-plug {
+  position: absolute;
+  bottom: -1.5rem;
+  width: 2.4rem;
+  height: 1.55rem;
+  border-radius: 0 0 0.22rem 0.22rem;
+  background: linear-gradient(180deg, #c9d7ea, #7b8ba3);
+  box-shadow: 0 12px 20px rgba(8, 26, 58, 0.16);
+}
+
+.brain-device-product-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.48rem;
+}
+
+.brain-device-product-strip div {
+  display: grid;
+  min-height: 3.65rem;
+  align-content: start;
+  gap: 0.18rem;
+  border: 1px solid color-mix(in srgb, var(--sector-accent, var(--device-blue)) 14%, transparent);
+  border-radius: 0.42rem;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 0.55rem;
+}
+
+.brain-device-product-strip span {
+  color: var(--sector-accent, var(--device-blue));
+  font-size: 0.62rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.brain-device-product-strip strong {
+  color: var(--device-deep);
+  font-size: 0.82rem;
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
 .brain-device-sector-live-card {
   display: grid;
   gap: 0.45rem;
